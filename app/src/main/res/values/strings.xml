@@ -9,4 +9,6 @@
     <string name="authButton">Login</string>
     <string name="flagApp">Ricordami</string>
     <string name="signText">Registrati</string>
+    <string name="permission_necessary">Permessi necessari</string>
+    <string name="storage_permission_is_encessary_to_wrote_event">Permessi per scrivere in memoria</string>
 </resources>
