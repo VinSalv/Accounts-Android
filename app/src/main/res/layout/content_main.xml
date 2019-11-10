@@ -81,42 +81,47 @@
         android:textAlignment="center"
         tools:targetApi="o" />
 
-    <Switch
-        android:id="@+id/flagApp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/authButton"
-        android:layout_alignRight="@id/nameApp"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="64dp"
-        android:text="Ricordami"
-        android:textColor="#FF7D27"
-        android:textStyle="bold|italic"
-        android:theme="@style/SelectionSwitch" />
-
-    <TextView
-        android:id="@+id/signText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/authButton"
-        android:layout_alignLeft="@id/nameApp"
-        android:layout_marginLeft="107dp"
-        android:layout_marginTop="15dp"
-        android:text="Registrati"
-        android:textColor="#FF7D27"
-        android:textStyle="bold|italic" />
-
     <Button
         android:id="@+id/authButton"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_below="@id/passApp"
         android:layout_centerHorizontal="true"
-        android:layout_margin="15dp"
+        android:layout_marginStart="15dp"
         android:layout_marginTop="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="15dp"
         android:background="@drawable/rounded"
         android:backgroundTint="#FF8737"
         android:fontFamily="@font/fredoka_one"
-        android:text="Login"
+        android:text="@string/authButton"
         android:textAlignment="center" />
+
+    <TextView
+        android:id="@+id/signText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/authButton"
+        android:layout_alignStart="@id/nameApp"
+        android:layout_marginStart="98dp"
+        android:layout_marginTop="12dp"
+        android:text="@string/signText"
+        android:textColor="#FF7D27"
+        android:textStyle="bold|italic"
+        android:textSize="16dp"/>
+
+    <Switch
+        android:id="@+id/flagApp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/authButton"
+        android:layout_alignEnd="@id/nameApp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="56dp"
+        android:text="@string/flagApp"
+        android:textColor="#FF7D27"
+        android:textStyle="bold|italic"
+        android:theme="@style/SelectionSwitch"
+        android:textSize="16dp"/>
+
 </RelativeLayout>

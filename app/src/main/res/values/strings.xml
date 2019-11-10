@@ -6,4 +6,7 @@
     <string name="userApp">Utente App</string>
     <string name="userAppHint">Utente</string>
     <string name="passAppHint">Password</string>
+    <string name="authButton">Login</string>
+    <string name="flagApp">Ricordami</string>
+    <string name="signText">Registrati</string>
 </resources>
