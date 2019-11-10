@@ -17,4 +17,10 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar" />
 
+    <style name="SelectionSwitch" parent="Theme.AppCompat.Light">
+        <item name="colorSwitchThumbNormal">#000000</item>
+        <item name="colorControlActivated">#FF7D27</item>
+
+    </style>
+
 </resources>
