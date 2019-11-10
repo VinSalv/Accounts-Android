@@ -20,9 +20,11 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static android.os.Environment.getExternalStorageDirectory;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     private static final int PERMISSION_REQUEST_CODE = 200;
@@ -34,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
     private Switch flagApp;
     private String path;
     private ManageApp mngApp;
+    private ManageUser mngUsr;
+    private ArrayList<User> listUser = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,10 +66,20 @@ public class MainActivity extends AppCompatActivity {
         flagApp = findViewById(R.id.flagApp);
 
         mngApp = new ManageApp();
+        mngUsr = new ManageUser();
 
         LogApp log = mngApp.deserializationFlag(path);
         if (log.getFlagApp()==true){
+            listUser = mngUsr.deserializationListUser(path);
+            User usr = new User();
+            for (User u: listUser){
+                if(u.getPriority()==true) usr=u;
+            }
+            if (usr.getFinger()==true){
 
+            } else {
+
+            }
         }else{
 
         }
