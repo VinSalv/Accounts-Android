@@ -2,6 +2,8 @@
     <string name="app_name">Accounts</string>
     <string name="action_about">About</string>
     <string name="nameApp">ACCOUNTS</string>
-    <string name="imageApp">immagine App</string>
+    <string name="imageApp">Immagine App</string>
     <string name="userApp">Utente App</string>
+    <string name="userAppHint">Utente</string>
+    <string name="passAppHint">Password</string>
 </resources>
