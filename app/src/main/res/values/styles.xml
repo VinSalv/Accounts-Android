@@ -17,10 +17,15 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar" />
 
-    <style name="SelectionSwitch" parent="@style/Widget.AppCompat.CompoundButton.Switch">
+    <style name="SelectionSwitch" >
         <item name="android:textColorPrimaryDisableOnly">#000000</item>
         <item name="android:colorControlActivated">#FF7D27</item>
-        <item name="android:colorForeground">#FF7D27</item>
+        <item name="android:colorForeground">#000000</item>
+    </style>
+
+    <style name="MyDarkToolbarStyle">
+        <item name="android:colorBackground">@color/colorPrimaryDark</item>
+        <item name="android:textColor">#FFFFFF</item>
     </style>
 
 </resources>

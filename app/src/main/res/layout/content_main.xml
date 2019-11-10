@@ -24,6 +24,7 @@
         android:paddingBottom="10dp"
         android:text="@string/nameApp"
         android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textColor="#00BCD4"
         android:textSize="36sp"
         android:textStyle="bold" />
@@ -60,6 +61,7 @@
         android:hint="@string/userAppHint"
         android:inputType="textPersonName"
         android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         tools:targetApi="o" />
 
     <EditText
@@ -79,6 +81,7 @@
         android:hint="@string/passAppHint"
         android:inputType="textPassword"
         android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         tools:targetApi="o" />
 
     <Button
@@ -94,8 +97,12 @@
         android:background="@drawable/rounded"
         android:backgroundTint="#FF8737"
         android:fontFamily="@font/fredoka_one"
+        android:includeFontPadding="false"
         android:text="@string/authButton"
-        android:textAlignment="center" />
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textColor="#C8000000"
+        android:textStyle="normal" />
 
     <TextView
         android:id="@+id/signText"
@@ -106,9 +113,10 @@
         android:layout_marginStart="98dp"
         android:layout_marginTop="12dp"
         android:text="@string/signText"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
         android:textColor="#FF7D27"
-        android:textStyle="bold|italic"
-        android:textSize="16dp"/>
+        android:textSize="16sp"
+        android:textStyle="bold|italic" />
 
     <Switch
         android:id="@+id/flagApp"
@@ -120,8 +128,8 @@
         android:layout_marginEnd="56dp"
         android:text="@string/flagApp"
         android:textColor="#FF7D27"
+        android:textSize="16sp"
         android:textStyle="bold|italic"
-        android:theme="@style/SelectionSwitch"
-        android:textSize="16dp"/>
+        android:theme="@style/SelectionSwitch" />
 
 </RelativeLayout>
