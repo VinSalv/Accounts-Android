@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        lay = findViewById(R.id.RelLayMain);
+        lay = findViewById(R.id.relLayMain);
         path = getExternalStorageDirectory().getAbsolutePath();
 
         if (!checkPermission()) {
@@ -286,21 +286,21 @@ public class MainActivity extends AppCompatActivity {
         key = (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
         finger = (FingerprintManager) getSystemService(FINGERPRINT_SERVICE);
         if (!finger.isHardwareDetected()) {
-            Snackbar.make(findViewById(R.id.RelLayMain), "Lettore impronta digitale assente.", Snackbar.LENGTH_LONG).show();
+            Snackbar.make(findViewById(R.id.relLayMain), "Lettore impronta digitale assente.", Snackbar.LENGTH_LONG).show();
             return false;
         }
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.USE_FINGERPRINT) != PackageManager.PERMISSION_GRANTED) {
-            Snackbar.make(findViewById(R.id.RelLayMain), "Lettura impronta non autorizzata", Snackbar.LENGTH_LONG).show();
+            Snackbar.make(findViewById(R.id.relLayMain), "Lettura impronta non autorizzata", Snackbar.LENGTH_LONG).show();
             return false;
         }
         if (key.isKeyguardSecure() == false) {
-            Snackbar.make(findViewById(R.id.RelLayMain), "Lock screen security non abilitato", Snackbar.LENGTH_LONG).show();
+            Snackbar.make(findViewById(R.id.relLayMain), "Lock screen security non abilitato", Snackbar.LENGTH_LONG).show();
             return false;
         }
 
         if (finger.hasEnrolledFingerprints() == false) {
-            Snackbar.make(findViewById(R.id.RelLayMain), "Nessuna impronta registrata sul dispositivo", Snackbar.LENGTH_LONG).show();
+            Snackbar.make(findViewById(R.id.relLayMain), "Nessuna impronta registrata sul dispositivo", Snackbar.LENGTH_LONG).show();
             return false;
         }
         return true;
@@ -310,14 +310,14 @@ public class MainActivity extends AppCompatActivity {
         try {
             keyStore = KeyStore.getInstance("AndroidKeyStore");
         } catch (Exception e) {
-            Snackbar.make(findViewById(R.id.RelLayMain), e.getMessage(), Snackbar.LENGTH_LONG).show();
+            Snackbar.make(findViewById(R.id.relLayMain), e.getMessage(), Snackbar.LENGTH_LONG).show();
             return false;
         }
 
         try {
             keyGenerator = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, "AndroidKeyStore");
         } catch (Exception e) {
-            Snackbar.make(findViewById(R.id.RelLayMain), e.getMessage(), Snackbar.LENGTH_LONG).show();
+            Snackbar.make(findViewById(R.id.relLayMain), e.getMessage(), Snackbar.LENGTH_LONG).show();
 
             return false;
         }
@@ -334,7 +334,7 @@ public class MainActivity extends AppCompatActivity {
             keyGenerator.generateKey();
             return true;
         } catch (Exception e) {
-            Snackbar.make(findViewById(R.id.RelLayMain), e.getMessage(), Snackbar.LENGTH_LONG).show();
+            Snackbar.make(findViewById(R.id.relLayMain), e.getMessage(), Snackbar.LENGTH_LONG).show();
             return false;
         }
     }
@@ -345,7 +345,7 @@ public class MainActivity extends AppCompatActivity {
                     + "/" + KeyProperties.BLOCK_MODE_CBC
                     + "/" + KeyProperties.ENCRYPTION_PADDING_PKCS7);
         } catch (Exception e) {
-            Snackbar.make(findViewById(R.id.RelLayMain), e.getMessage(), Snackbar.LENGTH_LONG).show();
+            Snackbar.make(findViewById(R.id.relLayMain), e.getMessage(), Snackbar.LENGTH_LONG).show();
             return false;
         }
 
@@ -354,7 +354,7 @@ public class MainActivity extends AppCompatActivity {
             SecretKey secretKey = (SecretKey) keyStore.getKey(KEY_NAME, null);
             cipher.init(Cipher.ENCRYPT_MODE, secretKey);
         } catch (Exception e) {
-            Snackbar.make(findViewById(R.id.RelLayMain), e.getMessage(), Snackbar.LENGTH_LONG).show();
+            Snackbar.make(findViewById(R.id.relLayMain), e.getMessage(), Snackbar.LENGTH_LONG).show();
             return false;
         }
         return true;
