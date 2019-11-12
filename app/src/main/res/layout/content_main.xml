@@ -47,7 +47,7 @@
 
     <EditText
         android:id="@+id/userApp"
-        android:layout_width="140dp"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_below="@id/imageApp"
         android:layout_centerHorizontal="true"
@@ -81,7 +81,7 @@
 
     <EditText
         android:id="@+id/passApp"
-        android:layout_width="140dp"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_below="@id/userApp"
         android:layout_centerHorizontal="true"
@@ -115,7 +115,7 @@
 
     <Button
         android:id="@+id/authButton"
-        android:layout_width="100dp"
+        android:layout_width="140dp"
         android:layout_height="wrap_content"
         android:layout_below="@id/passApp"
         android:layout_centerHorizontal="true"
@@ -126,12 +126,11 @@
         android:background="@drawable/rounded"
         android:backgroundTint="#FF8737"
         android:fontFamily="@font/fredoka_one"
-        android:includeFontPadding="false"
         android:text="@string/authButton"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:textColor="#C8000000"
-        android:textStyle="normal" />
+        android:textStyle="normal"/>
 
     <TextView
         android:id="@+id/signText"
@@ -139,7 +138,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/authButton"
         android:layout_alignStart="@id/nameApp"
-        android:layout_marginStart="98dp"
+        android:layout_marginStart="80dp"
         android:layout_marginTop="12dp"
         android:text="@string/signText"
         android:textAppearance="@style/TextAppearance.AppCompat.Body2"

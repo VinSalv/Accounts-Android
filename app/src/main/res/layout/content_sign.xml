@@ -41,7 +41,9 @@
         android:layout_marginBottom="5dp"
         android:ems="10"
         android:text="@string/usernameText"
-        android:textColor="#FF7D27" />
+        android:textColor="#FF7D27"
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
     <EditText
         android:id="@+id/usernameEdit"
@@ -70,7 +72,9 @@
         android:layout_marginEnd="15dp"
         android:layout_marginBottom="5dp"
         android:text="@string/passwordText"
-        android:textColor="#FF7D27" />
+        android:textColor="#FF7D27"
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
     <EditText
         android:id="@+id/passwordEdit"
@@ -99,7 +103,9 @@
         android:layout_marginEnd="15dp"
         android:layout_marginBottom="5dp"
         android:text="@string/passwordText2"
-        android:textColor="#FF7D27" />
+        android:textColor="#FF7D27"
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
     <EditText
         android:id="@+id/passwordEdit2"
@@ -123,11 +129,34 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/passwordEdit2"
-        android:layout_margin="15dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="15dp"
         android:text="@string/flagFinger"
         android:textColor="#FF7D27"
         android:textSize="16sp"
-        android:textStyle="normal"
+        android:textStyle="normal|bold"
         android:theme="@style/SelectionSwitch" />
+
+    <Button
+        android:id="@+id/signButton"
+        android:layout_width="140dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/flagFinger"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="15dp"
+        android:background="@drawable/rounded"
+        android:backgroundTint="#FF8737"
+        android:fontFamily="@font/fredoka_one"
+        android:includeFontPadding="false"
+        android:text="@string/signButton"
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textColor="#C8000000"
+        android:textStyle="normal"/>
 
 </RelativeLayout>

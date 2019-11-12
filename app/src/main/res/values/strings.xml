@@ -24,5 +24,5 @@
     <string name="passwordText2">Reinserisci la tua Password</string>
     <string name="passwordAppHint2">Reinserisci password</string>
     <string name="flagFinger">Questo account necessita di autenticazione con impronta? (Sarà possibile cambiare il settaggio in qualsiasi momento)</string>
-
+    <string name="signButton">Sign In</string>
 </resources>
