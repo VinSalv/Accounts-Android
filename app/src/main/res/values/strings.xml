@@ -25,4 +25,7 @@
     <string name="passwordAppHint2">Reinserisci password</string>
     <string name="flagFinger">Questo account necessita di autenticazione con impronta? (Sarà possibile cambiare il settaggio in qualsiasi momento)</string>
     <string name="signButton">Sign In</string>
+    <string name="errorUsername">Errore immisione utente</string>
+    <string name="errorPassword">Errore immisione password</string>
+    <string name="errorPassword2">Errore reimmisione password</string>
 </resources>
