@@ -38,6 +38,14 @@ public class User implements Serializable {
         return this.priority;
     }
 
+    public void setPriority(boolean bool){
+        this.priority=bool;
+    }
+
+    public void setFinger(boolean bool){
+        this.finger=bool;
+    }
+
     @Override
     public boolean equals(Object object) {
         boolean bool = false;

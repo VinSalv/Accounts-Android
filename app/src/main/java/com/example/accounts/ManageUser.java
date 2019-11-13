@@ -21,9 +21,9 @@ public class ManageUser implements Serializable {
     public boolean login(User u, ArrayList<User> listUser) {
         for (User usr : listUser) {
             if (usr.getUser().equals(u.getUser()) && usr.getPassword().equals(u.getPassword()))
-                return false;
+                return true;
         }
-        return true;
+        return false;
     }
 
     public void serializationListUser(ArrayList<User> list, String path) {

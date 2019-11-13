@@ -74,6 +74,13 @@ public class MainActivity extends AppCompatActivity {
 
         lay = findViewById(R.id.relLayMain);
         path = getExternalStorageDirectory().getAbsolutePath();
+        userApp = findViewById(R.id.userApp);
+        userError = findViewById(R.id.userError);
+        passApp = findViewById(R.id.passApp);
+        passError = findViewById(R.id.passError);
+        login = findViewById(R.id.authButton);
+        sign = findViewById(R.id.signText);
+        flagApp = findViewById(R.id.flagApp);
 
         if (!checkPermission()) {
             openActivity();
@@ -85,13 +92,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        userApp = findViewById(R.id.userApp);
-        userError = findViewById(R.id.userError);
-        passApp = findViewById(R.id.passApp);
-        passError = findViewById(R.id.passError);
-        login = findViewById(R.id.authButton);
-        sign = findViewById(R.id.signText);
-        flagApp = findViewById(R.id.flagApp);
 
         mngApp = new ManageApp();
         LogApp log = mngApp.deserializationFlag(path);
@@ -116,12 +116,11 @@ public class MainActivity extends AppCompatActivity {
                         finger.authenticate(cryptoObject, cancellationSignal, 0, new AuthenticationHandler(this), null);
                     }
                 }
-                listUser = mngUsr.deserializationListUser(path);
-                Intent intent = new Intent(MainActivity.this, ViewActivity.class);
-                intent.putExtra("path", path);
-                intent.putExtra("owner", usr.getUser());
-                startActivity(intent);
             }
+            Intent intent = new Intent(MainActivity.this, ViewActivity.class);
+            intent.putExtra("path", path);
+            intent.putExtra("owner", usr.getUser());
+            startActivity(intent);
         }
 
         login.setOnClickListener(new View.OnClickListener() {
@@ -129,16 +128,10 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 userError.setVisibility(View.INVISIBLE);
                 passError.setVisibility(View.INVISIBLE);
-
-                if (!fieldCheck(new User(userApp.getText().toString(), passApp.getText().toString(), false, false)))
-                    return;
-
-                if (!mngUsr.login(new User(userApp.getText().toString(), passApp.getText().toString(), false, false), listUser)) {
-                    listUser = mngUsr.deserializationListUser(path);
-                    User usr = new User();
-                    for (User u : listUser) {
-                        if (u.getPriority() == true) usr = u;
-                    }
+                User usr = new User(userApp.getText().toString(), passApp.getText().toString(), false, false);
+                if (!fieldCheck(usr)) return;
+                if (mngUsr.login(usr, listUser)) {
+                    for (User u : listUser) if (u.getUser().equals(usr.getUser())) usr = u;
                     if (usr.getFinger() == true) {
                         if (checkLockScreen()) {
                             generateKey();
@@ -151,6 +144,22 @@ public class MainActivity extends AppCompatActivity {
                             }
                         }
                     }
+                    if (flagApp.isChecked()) {
+                        for (User u : listUser) {
+                            if(u.getPriority()&&(!u.getUser().equals(usr.getUser()))){
+                                User us=u;
+                                us.setPriority(false);
+                                listUser.remove(u);
+                                listUser.add(us);
+                            }
+                            if (u.getUser().equals(usr.getUser())) {
+                                usr.setPriority(true);
+                                listUser.remove(u);
+                                listUser.add(usr);
+                            }
+                        }
+                    }
+                    mngUsr.serializationListUser(listUser, path);
                     LogApp log = new LogApp(flagApp.isChecked());
                     mngApp.serializationFlag(log, path);
                     Intent intent = new Intent(MainActivity.this, ViewActivity.class);

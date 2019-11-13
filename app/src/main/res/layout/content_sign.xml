@@ -13,28 +13,9 @@
     tools:showIn="@layout/activity_sign">
 
     <TextView
-        android:id="@+id/signInTitle"
-        android:layout_width="400dp"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginEnd="15dp"
-        android:layout_marginBottom="6dp"
-        android:fontFamily="@font/fredoka_one"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
-        android:text="@string/signInTitle"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textColor="#00BCD4"
-        android:textSize="36sp"
-        android:textStyle="bold" />
-
-    <TextView
         android:id="@+id/usernameText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/signInTitle"
         android:layout_marginStart="15dp"
         android:layout_marginTop="5dp"
         android:layout_marginEnd="15dp"
@@ -61,6 +42,16 @@
         android:inputType="textPersonName"
         android:textAlignment="center"
         tools:targetApi="o" />
+
+    <ImageView
+        android:id="@+id/errorUsername"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/usernameText"
+        android:layout_toEndOf="@id/usernameEdit"
+        android:contentDescription="@string/errorUsername"
+        android:visibility="invisible"
+        app:srcCompat="@drawable/warning" />
 
     <TextView
         android:id="@+id/passwordText"
@@ -93,6 +84,16 @@
         android:textAlignment="center"
         tools:targetApi="o" />
 
+    <ImageView
+        android:id="@+id/errorPassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/passwordText"
+        android:layout_toEndOf="@id/passwordEdit"
+        android:contentDescription="@string/errorPassword"
+        android:visibility="invisible"
+        app:srcCompat="@drawable/warning" />
+
     <TextView
         android:id="@+id/passwordText2"
         android:layout_width="wrap_content"
@@ -123,6 +124,16 @@
         android:inputType="textPassword"
         android:textAlignment="center"
         tools:targetApi="o" />
+
+    <ImageView
+        android:id="@+id/errorPassword2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/passwordText2"
+        android:layout_toEndOf="@id/passwordEdit2"
+        android:contentDescription="@string/errorPassword2"
+        android:visibility="invisible"
+        app:srcCompat="@drawable/warning" />
 
     <Switch
         android:id="@+id/flagFinger"
@@ -158,35 +169,5 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:textColor="#C8000000"
         android:textStyle="normal"/>
-
-    <ImageView
-        android:id="@+id/errorUsername"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/usernameText"
-        android:layout_toEndOf="@id/usernameEdit"
-        android:visibility="invisible"
-        app:srcCompat="@drawable/warning"
-        android:contentDescription="@string/errorUsername" />
-
-    <ImageView
-        android:id="@+id/errorPassword"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/passwordText"
-        android:layout_toEndOf="@id/passwordEdit"
-        android:visibility="invisible"
-        app:srcCompat="@drawable/warning"
-        android:contentDescription="@string/errorPassword" />
-
-    <ImageView
-        android:id="@+id/errorPassword2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/passwordText2"
-        android:layout_toEndOf="@id/passwordEdit2"
-        android:visibility="invisible"
-        app:srcCompat="@drawable/warning"
-        android:contentDescription="@string/errorPassword2" />
 
 </RelativeLayout>

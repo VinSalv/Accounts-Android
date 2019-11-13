@@ -43,7 +43,6 @@ public class SignActivity extends AppCompatActivity {
 
         lay = findViewById(R.id.relLaySign);
         path = getIntent().getExtras().getString("path");
-
         userEdit = findViewById(R.id.usernameEdit);
         userError = findViewById(R.id.errorUsername);
         passEdit = findViewById(R.id.passwordEdit);
@@ -53,6 +52,9 @@ public class SignActivity extends AppCompatActivity {
         flagFinger = findViewById(R.id.flagFinger);
         sign = findViewById(R.id.signButton);
 
+        mngUsr = new ManageUser();
+        listUser = mngUsr.deserializationListUser(path);
+
         sign.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -60,18 +62,24 @@ public class SignActivity extends AppCompatActivity {
                 passError.setVisibility(View.INVISIBLE);
                 passError2.setVisibility(View.INVISIBLE);
 
-                User u = new User(userEdit.getText().toString(), passEdit.getText().toString(), false, flagFinger.isChecked());
-                mngUsr = new ManageUser();
+                User usr = new User(userEdit.getText().toString(), passEdit.getText().toString(), false, flagFinger.isChecked());
 
-                listUser = mngUsr.deserializationListUser(path);
-
-                if (!fieldCheck(u)) return;
+                if (!fieldCheck(usr)) return;
                 if (!passEdit.getText().toString().equals(passEdit2.getText().toString())) {
                     passError2.setVisibility(View.VISIBLE);
+                    Snackbar.make(view, "Le password non corrispondono", Snackbar.LENGTH_LONG).show();
                     return;
                 }
-                if (!mngUsr.search(u, listUser)) {
-                    listUser.add(u);
+                if (!mngUsr.search(usr, listUser)) {
+                    listUser.add(usr);
+                    for (User u: listUser){
+                        if(u.getPriority()){
+                            User us=u;
+                            us.setPriority(false);
+                            listUser.remove(u);
+                            listUser.add(us);
+                        }
+                    }
                     mngUsr.serializationListUser(listUser, path);
                     Intent intent = new Intent(SignActivity.this, MainActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
