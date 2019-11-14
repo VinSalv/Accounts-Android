@@ -16,12 +16,12 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
+            android:elevation="4dp"
             app:popupTheme="@style/MyDarkToolbarStyle"
             app:subtitle="Registrazione dell'utente"
             app:subtitleTextColor="#FF7D27"
             app:title="Accounts"
-            app:titleTextColor="#FF7D27"
-            android:elevation="4dp"/>
+            app:titleTextColor="#FF7D27" />
 
     </com.google.android.material.appbar.AppBarLayout>
 

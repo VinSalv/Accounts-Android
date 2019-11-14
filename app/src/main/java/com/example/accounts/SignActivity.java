@@ -1,8 +1,5 @@
 package com.example.accounts;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -13,7 +10,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
-import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.material.snackbar.Snackbar;
 
@@ -72,9 +71,9 @@ public class SignActivity extends AppCompatActivity {
                 }
                 if (!mngUsr.search(usr, listUser)) {
                     listUser.add(usr);
-                    for (User u: listUser){
-                        if(u.getPriority()){
-                            User us=u;
+                    for (User u : listUser) {
+                        if (u.getPriority()) {
+                            User us = u;
                             us.setPriority(false);
                             listUser.remove(u);
                             listUser.add(us);

@@ -6,12 +6,10 @@ import android.app.KeyguardManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.hardware.fingerprint.FingerprintManager;
+import android.hardware.biometrics.BiometricPrompt;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CancellationSignal;
-import android.security.keystore.KeyGenParameterSpec;
-import android.security.keystore.KeyProperties;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,8 +19,10 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -31,12 +31,7 @@ import androidx.core.content.ContextCompat;
 
 import com.google.android.material.snackbar.Snackbar;
 
-import java.security.KeyStore;
 import java.util.ArrayList;
-
-import javax.crypto.Cipher;
-import javax.crypto.KeyGenerator;
-import javax.crypto.SecretKey;
 
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
@@ -44,13 +39,6 @@ import static android.os.Environment.getExternalStorageDirectory;
 
 public class MainActivity extends AppCompatActivity {
     private static final int PERMISSION_REQUEST_CODE = 200;
-    private KeyguardManager key;
-    private FingerprintManager finger;
-    private KeyStore keyStore;
-    private KeyGenerator keyGenerator;
-    private String KEY_NAME = "somekeyname";
-    private Cipher cipher;
-    private FingerprintManager.CryptoObject cryptoObject;
 
     private RelativeLayout lay;
     private EditText userApp;
@@ -64,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
     private ManageApp mngApp;
     private ManageUser mngUsr;
     private ArrayList<User> listUser = new ArrayList<>();
+    private CancellationSignal cancellationSignal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,16 +95,10 @@ public class MainActivity extends AppCompatActivity {
                 if (u.getPriority() == true) usr = u;
             }
             if (usr.getFinger() == true) {
-                if (checkLockScreen()) {
-                    generateKey();
-                    if (initCipher()) {
-                        cryptoObject = new FingerprintManager.CryptoObject(cipher);
-                    }
-                    CancellationSignal cancellationSignal = new CancellationSignal();
-                    if (finger != null && cryptoObject != null) {
-                        finger.authenticate(cryptoObject, cancellationSignal, 0, new AuthenticationHandler(this), null);
-                    }
+                if (!checkBiometricSupport()) {
+                    return;
                 }
+                ;
             }
             Intent intent = new Intent(MainActivity.this, ViewActivity.class);
             intent.putExtra("path", path);
@@ -124,6 +107,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         login.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.P)
             @Override
             public void onClick(View view) {
                 userError.setVisibility(View.INVISIBLE);
@@ -133,39 +117,12 @@ public class MainActivity extends AppCompatActivity {
                 if (mngUsr.login(usr, listUser)) {
                     for (User u : listUser) if (u.getUser().equals(usr.getUser())) usr = u;
                     if (usr.getFinger() == true) {
-                        if (checkLockScreen()) {
-                            generateKey();
-                            if (initCipher()) {
-                                cryptoObject = new FingerprintManager.CryptoObject(cipher);
-                            }
-                            CancellationSignal cancellationSignal = new CancellationSignal();
-                            if (finger != null && cryptoObject != null) {
-                                finger.authenticate(cryptoObject, cancellationSignal, 0, new AuthenticationHandler(MainActivity.this), null);
-                            }
+                        if (!checkBiometricSupport()) {
+                            return;
                         }
+                        authenticateUser(lay);
                     }
-                    if (flagApp.isChecked()) {
-                        for (User u : listUser) {
-                            if(u.getPriority()&&(!u.getUser().equals(usr.getUser()))){
-                                User us=u;
-                                us.setPriority(false);
-                                listUser.remove(u);
-                                listUser.add(us);
-                            }
-                            if (u.getUser().equals(usr.getUser())) {
-                                usr.setPriority(true);
-                                listUser.remove(u);
-                                listUser.add(usr);
-                            }
-                        }
-                    }
-                    mngUsr.serializationListUser(listUser, path);
-                    LogApp log = new LogApp(flagApp.isChecked());
-                    mngApp.serializationFlag(log, path);
-                    Intent intent = new Intent(MainActivity.this, ViewActivity.class);
-                    intent.putExtra("path", path);
-                    intent.putExtra("owner", usr.getUser());
-                    startActivity(intent);
+
                 } else {
                     userError.setVisibility(View.VISIBLE);
                     passError.setVisibility(View.VISIBLE);
@@ -290,83 +247,114 @@ public class MainActivity extends AppCompatActivity {
         //add your further process after giving permission or to download images from remote server.
     }
 
-    private boolean checkLockScreen() {
-
-        key = (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
-        finger = (FingerprintManager) getSystemService(FINGERPRINT_SERVICE);
-        if (!finger.isHardwareDetected()) {
-            Snackbar.make(findViewById(R.id.relLayMain), "Lettore impronta digitale assente.", Snackbar.LENGTH_LONG).show();
-            return false;
-        }
-
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.USE_FINGERPRINT) != PackageManager.PERMISSION_GRANTED) {
-            Snackbar.make(findViewById(R.id.relLayMain), "Lettura impronta non autorizzata", Snackbar.LENGTH_LONG).show();
-            return false;
-        }
-        if (key.isKeyguardSecure() == false) {
-            Snackbar.make(findViewById(R.id.relLayMain), "Lock screen security non abilitato", Snackbar.LENGTH_LONG).show();
-            return false;
-        }
-
-        if (finger.hasEnrolledFingerprints() == false) {
-            Snackbar.make(findViewById(R.id.relLayMain), "Nessuna impronta registrata sul dispositivo", Snackbar.LENGTH_LONG).show();
-            return false;
-        }
-        return true;
+    private void notifyUser(String message) {
+        Toast.makeText(this,
+                message,
+                Toast.LENGTH_LONG).show();
     }
 
-    private boolean generateKey() {
-        try {
-            keyStore = KeyStore.getInstance("AndroidKeyStore");
-        } catch (Exception e) {
-            Snackbar.make(findViewById(R.id.relLayMain), e.getMessage(), Snackbar.LENGTH_LONG).show();
+    private Boolean checkBiometricSupport() {
+        KeyguardManager keyguardManager =
+                (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
+        PackageManager packageManager = this.getPackageManager();
+        if (!keyguardManager.isKeyguardSecure()) {
+            notifyUser("Lock screen security not enabled in Settings");
             return false;
         }
-
-        try {
-            keyGenerator = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, "AndroidKeyStore");
-        } catch (Exception e) {
-            Snackbar.make(findViewById(R.id.relLayMain), e.getMessage(), Snackbar.LENGTH_LONG).show();
-
+        if (ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.USE_BIOMETRIC) != PackageManager.PERMISSION_GRANTED) {
+            notifyUser("Fingerprint authentication permission not enabled");
             return false;
         }
-
-        try {
-            keyStore.load(null);
-            keyGenerator.init(
-                    new KeyGenParameterSpec.Builder(KEY_NAME,
-                            KeyProperties.PURPOSE_ENCRYPT | KeyProperties.PURPOSE_DECRYPT)
-                            .setBlockModes(KeyProperties.BLOCK_MODE_CBC)
-                            .setUserAuthenticationRequired(true)
-                            .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_PKCS7)
-                            .build());
-            keyGenerator.generateKey();
+        if (packageManager.hasSystemFeature(PackageManager.FEATURE_FINGERPRINT)) {
             return true;
-        } catch (Exception e) {
-            Snackbar.make(findViewById(R.id.relLayMain), e.getMessage(), Snackbar.LENGTH_LONG).show();
-            return false;
-        }
-    }
-
-    private boolean initCipher() {
-        try {
-            cipher = Cipher.getInstance(KeyProperties.KEY_ALGORITHM_AES
-                    + "/" + KeyProperties.BLOCK_MODE_CBC
-                    + "/" + KeyProperties.ENCRYPTION_PADDING_PKCS7);
-        } catch (Exception e) {
-            Snackbar.make(findViewById(R.id.relLayMain), e.getMessage(), Snackbar.LENGTH_LONG).show();
-            return false;
-        }
-
-        try {
-            keyStore.load(null);
-            SecretKey secretKey = (SecretKey) keyStore.getKey(KEY_NAME, null);
-            cipher.init(Cipher.ENCRYPT_MODE, secretKey);
-        } catch (Exception e) {
-            Snackbar.make(findViewById(R.id.relLayMain), e.getMessage(), Snackbar.LENGTH_LONG).show();
-            return false;
         }
         return true;
     }
+
+    @RequiresApi(api = Build.VERSION_CODES.P)
+    private BiometricPrompt.AuthenticationCallback getAuthenticationCallback() {
+
+        return new BiometricPrompt.AuthenticationCallback() {
+            @Override
+            public void onAuthenticationError(int errorCode, CharSequence errString) {
+                notifyUser("Autenticazione errore: " + errString);
+                super.onAuthenticationError(errorCode, errString);
+                Intent intent = new Intent(MainActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
+
+            @Override
+            public void onAuthenticationHelp(int helpCode, CharSequence helpString) {
+                super.onAuthenticationHelp(helpCode, helpString);
+            }
+
+            @Override
+            public void onAuthenticationFailed() {
+                super.onAuthenticationFailed();
+            }
+
+            @Override
+            public void onAuthenticationSucceeded(BiometricPrompt.AuthenticationResult result) {
+                notifyUser("Autenticazione effettuata");
+                super.onAuthenticationSucceeded(result);
+                if (flagApp.isChecked()) {
+                    for (User u : listUser) {
+                        if (u.getPriority() && (!u.getUser().equals(userApp.getText().toString()))) {
+                            User us = u;
+                            us.setPriority(false);
+                            listUser.remove(u);
+                            listUser.add(us);
+                        }
+                        if (u.getUser().equals(userApp.getText().toString())) {
+                            User usr = new User(userApp.getText().toString(), passApp.getText().toString(), true, true);
+                            listUser.remove(u);
+                            listUser.add(usr);
+                        }
+                    }
+                }
+                mngUsr.serializationListUser(listUser, path);
+                LogApp log = new LogApp(flagApp.isChecked());
+                mngApp.serializationFlag(log, path);
+                Intent intent = new Intent(MainActivity.this, ViewActivity.class);
+                intent.putExtra("path", path);
+                intent.putExtra("owner", userApp.getText().toString());
+                startActivity(intent);
+            }
+        };
+    }
+
+    private CancellationSignal getCancellationSignal() {
+        cancellationSignal = new CancellationSignal();
+        cancellationSignal.setOnCancelListener(new CancellationSignal.OnCancelListener() {
+            @Override
+            public void onCancel() {
+                notifyUser("Cancelled via signal");
+            }
+        });
+        return cancellationSignal;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.P)
+    public void authenticateUser(View view) {
+        BiometricPrompt biometricPrompt = new BiometricPrompt.Builder(this)
+                .setTitle("Lettura impronta digitale")
+                .setSubtitle("Autenticazione richiesta per continuare")
+                .setDescription("Account con autenticazione biometrica per proteggere i dati.")
+                .setNegativeButton("Annulla", this.getMainExecutor(),
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                notifyUser("Autenticazione annullata");
+                                Intent intent = new Intent(MainActivity.this, MainActivity.class);
+                                startActivity(intent);
+                                finish();
+                            }
+                        })
+                .build();
+        biometricPrompt.authenticate(getCancellationSignal(), getMainExecutor(), getAuthenticationCallback());
+    }
+
 }
 

@@ -27,14 +27,14 @@ public class AuthenticationHandler extends FingerprintManager.AuthenticationCall
     @Override
     public void onAuthenticationSucceeded(FingerprintManager.AuthenticationResult result) {
         super.onAuthenticationSucceeded(result);
-        Toast.makeText(mainActivity, "Auth Succeeded", Toast.LENGTH_SHORT).show();
+        Toast.makeText(mainActivity, "Autenticato con successo", Toast.LENGTH_SHORT).show();
 
     }
 
     @Override
     public void onAuthenticationFailed() {
         super.onAuthenticationFailed();
-        Toast.makeText(mainActivity, "Auth Failed", Toast.LENGTH_SHORT).show();
+        Toast.makeText(mainActivity, "Autenticazione fallita", Toast.LENGTH_SHORT).show();
 
     }
 }

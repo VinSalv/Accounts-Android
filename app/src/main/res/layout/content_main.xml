@@ -130,7 +130,7 @@
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:textColor="#C8000000"
-        android:textStyle="normal"/>
+        android:textStyle="normal" />
 
     <TextView
         android:id="@+id/signText"
