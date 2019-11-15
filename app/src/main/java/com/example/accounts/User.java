@@ -34,16 +34,17 @@ public class User implements Serializable {
         return this.priority;
     }
 
-    public void setPriority(boolean bool) {
-        this.priority = bool;
-    }
-
     public boolean getFinger() {
-        return this.priority;
+        return this.finger;
     }
 
-    public void setFinger(boolean bool) {
-        this.finger = bool;
+
+    public void setPriority(boolean priority) {
+        this.priority = priority;
+    }
+
+    public void setFinger(boolean finger) {
+        this.finger = finger;
     }
 
     @Override

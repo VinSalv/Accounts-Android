@@ -29,8 +29,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import com.google.android.material.snackbar.Snackbar;
-
 import java.util.ArrayList;
 
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
@@ -53,7 +51,9 @@ public class MainActivity extends AppCompatActivity {
     private ManageUser mngUsr;
     private ArrayList<User> listUser = new ArrayList<>();
     private CancellationSignal cancellationSignal;
+    private LogApp log;
 
+    @RequiresApi(api = Build.VERSION_CODES.P)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,27 +83,33 @@ public class MainActivity extends AppCompatActivity {
 
 
         mngApp = new ManageApp();
-        LogApp log = mngApp.deserializationFlag(path);
+        log = mngApp.deserializationFlag(path);
 
         mngUsr = new ManageUser();
         listUser = mngUsr.deserializationListUser(path);
 
-        if (log.getFlagApp() == true) {
-            flagApp.setChecked(true);
+        if (log.getFlagApp()) {
             User usr = new User();
             for (User u : listUser) {
-                if (u.getPriority() == true) usr = u;
+                if (u.getPriority()) usr = new User(u.getUser(),u.getPassword(),u.getPriority(),u.getFinger());
             }
-            if (usr.getFinger() == true) {
+            if (usr.getFinger()) {
                 if (!checkBiometricSupport()) {
                     return;
                 }
-                ;
+                authenticateUser(lay);
+            } else {
+//                Intent intent = new Intent(MainActivity.this, ViewActivity.class);
+//                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                intent.putExtra("path", path);
+//                intent.putExtra("owner", usr.getUser());
+//                startActivity(intent);
+//                finish();
+                authenticateUser(lay);
+
             }
-            Intent intent = new Intent(MainActivity.this, ViewActivity.class);
-            intent.putExtra("path", path);
-            intent.putExtra("owner", usr.getUser());
-            startActivity(intent);
         }
 
         login.setOnClickListener(new View.OnClickListener() {
@@ -115,18 +121,31 @@ public class MainActivity extends AppCompatActivity {
                 User usr = new User(userApp.getText().toString(), passApp.getText().toString(), false, false);
                 if (!fieldCheck(usr)) return;
                 if (mngUsr.login(usr, listUser)) {
-                    for (User u : listUser) if (u.getUser().equals(usr.getUser())) usr = u;
-                    if (usr.getFinger() == true) {
+                    for (User u : listUser) {
+                        if (u.getUser().equals(userApp.getText().toString())) usr = u;
+                    }
+                    if (usr.getFinger()) {
                         if (!checkBiometricSupport()) {
                             return;
                         }
                         authenticateUser(lay);
+                    } else {
+                        mngUsr.serializationListUser(listUser, path);
+                        log = new LogApp(flagApp.isChecked());
+                        mngApp.serializationFlag(log, path);
+                        Intent intent = new Intent(MainActivity.this, ViewActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.putExtra("path", path);
+                        intent.putExtra("owner", userApp.getText().toString());
+                        startActivity(intent);
+                        finish();
                     }
-
                 } else {
                     userError.setVisibility(View.VISIBLE);
                     passError.setVisibility(View.VISIBLE);
-                    Snackbar.make(view, "Autenticazione errata", Snackbar.LENGTH_LONG).show();
+                    notifyUser("Autenticazione errata");
                 }
             }
         });
@@ -169,15 +188,15 @@ public class MainActivity extends AppCompatActivity {
         if (!isValidWord(usr.getUser()) && !isValidWord(usr.getPassword())) {
             userError.setVisibility(View.VISIBLE);
             passError.setVisibility(View.VISIBLE);
-            Snackbar.make(lay, "Campi Utente e Password non validi !!!", Snackbar.LENGTH_LONG).show();
+            notifyUser("Campi Utente e Password non validi !!!");
             return false;
         } else if (!isValidWord(usr.getUser())) {
             userError.setVisibility(View.VISIBLE);
-            Snackbar.make(lay, "Campo Utente non valido !!!", Snackbar.LENGTH_LONG).show();
+            notifyUser("Campo Utente non valido !!!");
             return false;
         } else if (!isValidWord(usr.getPassword())) {
             passError.setVisibility(View.VISIBLE);
-            Snackbar.make(lay, "Campo Password non valido !!!", Snackbar.LENGTH_LONG).show();
+            notifyUser("Campo Password non valido !!!");
             return false;
         }
         return true;
@@ -258,12 +277,12 @@ public class MainActivity extends AppCompatActivity {
                 (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
         PackageManager packageManager = this.getPackageManager();
         if (!keyguardManager.isKeyguardSecure()) {
-            notifyUser("Lock screen security not enabled in Settings");
+            notifyUser("Lock screen security non abilitato nelle impostazioni");
             return false;
         }
         if (ActivityCompat.checkSelfPermission(this,
                 Manifest.permission.USE_BIOMETRIC) != PackageManager.PERMISSION_GRANTED) {
-            notifyUser("Fingerprint authentication permission not enabled");
+            notifyUser("Permesso impronte digitali non abilitato");
             return false;
         }
         if (packageManager.hasSystemFeature(PackageManager.FEATURE_FINGERPRINT)) {
@@ -281,6 +300,9 @@ public class MainActivity extends AppCompatActivity {
                 notifyUser("Autenticazione errore: " + errString);
                 super.onAuthenticationError(errorCode, errString);
                 Intent intent = new Intent(MainActivity.this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
                 finish();
             }
@@ -300,27 +322,46 @@ public class MainActivity extends AppCompatActivity {
                 notifyUser("Autenticazione effettuata");
                 super.onAuthenticationSucceeded(result);
                 if (flagApp.isChecked()) {
+                    ArrayList<User> listUserApp = new ArrayList<>();
+                    User us;
                     for (User u : listUser) {
-                        if (u.getPriority() && (!u.getUser().equals(userApp.getText().toString()))) {
-                            User us = u;
-                            us.setPriority(false);
-                            listUser.remove(u);
-                            listUser.add(us);
-                        }
-                        if (u.getUser().equals(userApp.getText().toString())) {
-                            User usr = new User(userApp.getText().toString(), passApp.getText().toString(), true, true);
-                            listUser.remove(u);
-                            listUser.add(usr);
+                        if (!u.getUser().equals(userApp.getText().toString())) {
+                            us = new User(u.getUser(), u.getPassword(), false, u.getFinger());
+                            listUserApp.add(us);
+                        }else{
+                            us = new User(u.getUser(), u.getPassword(), true, u.getFinger());
+                            listUserApp.add(us);
                         }
                     }
+                    mngUsr.serializationListUser(listUserApp, path);
+                    LogApp log = new LogApp(flagApp.isChecked());
+                    mngApp.serializationFlag(log, path);
+                    Intent intent = new Intent(MainActivity.this, ViewActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.putExtra("path", path);
+                    intent.putExtra("owner", userApp.getText().toString());
+                    startActivity(intent);
+                    finish();
                 }
-                mngUsr.serializationListUser(listUser, path);
+                User us;
+                ArrayList<User> listUserApp = new ArrayList<>();
+                for (User u : listUser) {
+                    us = new User(u.getUser(), u.getPassword(), false, u.getFinger());
+                    listUserApp.add(us);
+                }
+                mngUsr.serializationListUser(listUserApp, path);
                 LogApp log = new LogApp(flagApp.isChecked());
                 mngApp.serializationFlag(log, path);
                 Intent intent = new Intent(MainActivity.this, ViewActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra("path", path);
                 intent.putExtra("owner", userApp.getText().toString());
                 startActivity(intent);
+                finish();
             }
         };
     }
@@ -348,6 +389,9 @@ public class MainActivity extends AppCompatActivity {
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 notifyUser("Autenticazione annullata");
                                 Intent intent = new Intent(MainActivity.this, MainActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(intent);
                                 finish();
                             }

@@ -8,18 +8,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.Switch;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import com.google.android.material.snackbar.Snackbar;
-
 import java.util.ArrayList;
 
 public class SignActivity extends AppCompatActivity {
-    private RelativeLayout lay;
     private EditText userEdit;
     private ImageView userError;
     private EditText passEdit;
@@ -29,9 +26,10 @@ public class SignActivity extends AppCompatActivity {
     private Button sign;
     private Switch flagFinger;
     private String path;
-    private ManageApp mngApp;
     private ManageUser mngUsr;
     private ArrayList<User> listUser = new ArrayList<>();
+    private LogApp log;
+    private ManageApp mngApp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +38,6 @@ public class SignActivity extends AppCompatActivity {
         Toolbar toolbarSign = findViewById(R.id.toolbarSign);
         setSupportActionBar(toolbarSign);
 
-        lay = findViewById(R.id.relLaySign);
         path = getIntent().getExtras().getString("path");
         userEdit = findViewById(R.id.usernameEdit);
         userError = findViewById(R.id.errorUsername);
@@ -54,6 +51,10 @@ public class SignActivity extends AppCompatActivity {
         mngUsr = new ManageUser();
         listUser = mngUsr.deserializationListUser(path);
 
+        mngApp = new ManageApp();
+        log = new LogApp(false);
+        mngApp.serializationFlag(log, path);
+
         sign.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -66,30 +67,30 @@ public class SignActivity extends AppCompatActivity {
                 if (!fieldCheck(usr)) return;
                 if (!passEdit.getText().toString().equals(passEdit2.getText().toString())) {
                     passError2.setVisibility(View.VISIBLE);
-                    Snackbar.make(view, "Le password non corrispondono", Snackbar.LENGTH_LONG).show();
+                    notifyUser("Le password non corrispondono");
                     return;
                 }
                 if (!mngUsr.search(usr, listUser)) {
                     listUser.add(usr);
+                    User us;
+                    ArrayList<User> listUserApp = new ArrayList<>();
                     for (User u : listUser) {
-                        if (u.getPriority()) {
-                            User us = u;
-                            us.setPriority(false);
-                            listUser.remove(u);
-                            listUser.add(us);
-                        }
+                        us = new User(u.getUser(), u.getPassword(), false, u.getFinger());
+                        listUserApp.add(us);
                     }
-                    mngUsr.serializationListUser(listUser, path);
-                    Intent intent = new Intent(SignActivity.this, MainActivity.class);
+
+                    mngUsr.serializationListUser(listUserApp, path);
+                    Intent intent = new Intent(SignActivity.this, ViewActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     intent.putExtra("path", path);
+                    intent.putExtra("owner", usr.getUser());
                     startActivity(intent);
                     finish();
                 } else {
                     userError.setVisibility(View.VISIBLE);
-                    Snackbar.make(view, "User già esistente", Snackbar.LENGTH_LONG).show();
+                    notifyUser("User già esistente");
                 }
             }
         });
@@ -118,15 +119,15 @@ public class SignActivity extends AppCompatActivity {
         if (!isValidWord(usr.getUser()) && !isValidWord(usr.getPassword())) {
             userError.setVisibility(View.VISIBLE);
             passError.setVisibility(View.VISIBLE);
-            Snackbar.make(lay, "Campi Utente e Password non validi !!!", Snackbar.LENGTH_LONG).show();
+            notifyUser("Campi Utente e Password non validi !!!");
             return false;
         } else if (!isValidWord(usr.getUser())) {
             userError.setVisibility(View.VISIBLE);
-            Snackbar.make(lay, "Campo Utente non valido !!!", Snackbar.LENGTH_LONG).show();
+            notifyUser("Campo Utente non valido !!!");
             return false;
         } else if (!isValidWord(usr.getPassword())) {
             passError.setVisibility(View.VISIBLE);
-            Snackbar.make(lay, "Campo Password non valido !!!", Snackbar.LENGTH_LONG).show();
+            notifyUser("Campo Password non valido !!!");
             return false;
         }
         return true;
@@ -136,4 +137,9 @@ public class SignActivity extends AppCompatActivity {
         return ((word.matches("[A-Za-z0-9?!_.-]*")) && (!word.isEmpty()));
     }
 
+    private void notifyUser(String message) {
+        Toast.makeText(this,
+                message,
+                Toast.LENGTH_LONG).show();
+    }
 }
