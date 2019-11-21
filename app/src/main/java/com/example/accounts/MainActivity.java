@@ -10,6 +10,7 @@ import android.hardware.biometrics.BiometricPrompt;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CancellationSignal;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -81,7 +82,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-
         mngApp = new ManageApp();
         log = mngApp.deserializationFlag(path);
 
@@ -89,26 +89,27 @@ public class MainActivity extends AppCompatActivity {
         listUser = mngUsr.deserializationListUser(path);
 
         if (log.getFlagApp()) {
+            flagApp.setChecked(true);
+            userApp.setText(log.getUser());
             User usr = new User();
             for (User u : listUser) {
-                if (u.getPriority()) usr = new User(u.getUser(),u.getPassword(),u.getPriority(),u.getFinger());
+                if (u.getUser().equals(log.getUser())) usr = u;
             }
-            if (usr.getFinger()) {
+
+            if (usr.getFinger() == true) {
                 if (!checkBiometricSupport()) {
                     return;
                 }
                 authenticateUser(lay);
             } else {
-//                Intent intent = new Intent(MainActivity.this, ViewActivity.class);
-//                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                intent.putExtra("path", path);
-//                intent.putExtra("owner", usr.getUser());
-//                startActivity(intent);
-//                finish();
-                authenticateUser(lay);
-
+                Intent intent = new Intent(MainActivity.this, ViewActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra("path", path);
+                intent.putExtra("owner", usr.getUser());
+                startActivity(intent);
+                finish();
             }
         }
 
@@ -118,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 userError.setVisibility(View.INVISIBLE);
                 passError.setVisibility(View.INVISIBLE);
-                User usr = new User(userApp.getText().toString(), passApp.getText().toString(), false, false);
+                User usr = new User(userApp.getText().toString(), passApp.getText().toString(), false);
                 if (!fieldCheck(usr)) return;
                 if (mngUsr.login(usr, listUser)) {
                     for (User u : listUser) {
@@ -130,8 +131,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                         authenticateUser(lay);
                     } else {
-                        mngUsr.serializationListUser(listUser, path);
-                        log = new LogApp(flagApp.isChecked());
+                        log = new LogApp(flagApp.isChecked(), usr.getUser());
                         mngApp.serializationFlag(log, path);
                         Intent intent = new Intent(MainActivity.this, ViewActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -299,12 +299,14 @@ public class MainActivity extends AppCompatActivity {
             public void onAuthenticationError(int errorCode, CharSequence errString) {
                 notifyUser("Autenticazione errore: " + errString);
                 super.onAuthenticationError(errorCode, errString);
+                log = new LogApp();
+                mngApp.serializationFlag(log, path);
                 Intent intent = new Intent(MainActivity.this, MainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                intent.putExtra("path", path);
+                intent.putExtra("owner", userApp.getText().toString());
                 startActivity(intent);
-                finish();
+                passApp.setText("");
             }
 
             @Override
@@ -321,20 +323,20 @@ public class MainActivity extends AppCompatActivity {
             public void onAuthenticationSucceeded(BiometricPrompt.AuthenticationResult result) {
                 notifyUser("Autenticazione effettuata");
                 super.onAuthenticationSucceeded(result);
+
                 if (flagApp.isChecked()) {
-                    ArrayList<User> listUserApp = new ArrayList<>();
-                    User us;
-                    for (User u : listUser) {
-                        if (!u.getUser().equals(userApp.getText().toString())) {
-                            us = new User(u.getUser(), u.getPassword(), false, u.getFinger());
-                            listUserApp.add(us);
-                        }else{
-                            us = new User(u.getUser(), u.getPassword(), true, u.getFinger());
-                            listUserApp.add(us);
-                        }
-                    }
-                    mngUsr.serializationListUser(listUserApp, path);
-                    LogApp log = new LogApp(flagApp.isChecked());
+                    log = new LogApp(flagApp.isChecked(), userApp.getText().toString());
+                    mngApp.serializationFlag(log, path);
+                    Intent intent = new Intent(MainActivity.this, ViewActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.putExtra("path", path);
+                    intent.putExtra("owner", userApp.getText().toString());
+                    startActivity(intent);
+                    finish();
+                }else {
+                    log = new LogApp();
                     mngApp.serializationFlag(log, path);
                     Intent intent = new Intent(MainActivity.this, ViewActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -345,23 +347,6 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(intent);
                     finish();
                 }
-                User us;
-                ArrayList<User> listUserApp = new ArrayList<>();
-                for (User u : listUser) {
-                    us = new User(u.getUser(), u.getPassword(), false, u.getFinger());
-                    listUserApp.add(us);
-                }
-                mngUsr.serializationListUser(listUserApp, path);
-                LogApp log = new LogApp(flagApp.isChecked());
-                mngApp.serializationFlag(log, path);
-                Intent intent = new Intent(MainActivity.this, ViewActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra("path", path);
-                intent.putExtra("owner", userApp.getText().toString());
-                startActivity(intent);
-                finish();
             }
         };
     }
@@ -388,12 +373,14 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 notifyUser("Autenticazione annullata");
+                                log = new LogApp();
+                                mngApp.serializationFlag(log, path);
                                 Intent intent = new Intent(MainActivity.this, MainActivity.class);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                                intent.putExtra("path", path);
+                                intent.putExtra("owner", userApp.getText().toString());
                                 startActivity(intent);
-                                finish();
+                                passApp.setText("");
                             }
                         })
                 .build();

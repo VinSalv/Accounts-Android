@@ -28,8 +28,6 @@ public class SignActivity extends AppCompatActivity {
     private String path;
     private ManageUser mngUsr;
     private ArrayList<User> listUser = new ArrayList<>();
-    private LogApp log;
-    private ManageApp mngApp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,10 +49,6 @@ public class SignActivity extends AppCompatActivity {
         mngUsr = new ManageUser();
         listUser = mngUsr.deserializationListUser(path);
 
-        mngApp = new ManageApp();
-        log = new LogApp(false);
-        mngApp.serializationFlag(log, path);
-
         sign.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -62,7 +56,7 @@ public class SignActivity extends AppCompatActivity {
                 passError.setVisibility(View.INVISIBLE);
                 passError2.setVisibility(View.INVISIBLE);
 
-                User usr = new User(userEdit.getText().toString(), passEdit.getText().toString(), false, flagFinger.isChecked());
+                User usr = new User(userEdit.getText().toString(), passEdit.getText().toString(), flagFinger.isChecked());
 
                 if (!fieldCheck(usr)) return;
                 if (!passEdit.getText().toString().equals(passEdit2.getText().toString())) {
@@ -72,14 +66,7 @@ public class SignActivity extends AppCompatActivity {
                 }
                 if (!mngUsr.search(usr, listUser)) {
                     listUser.add(usr);
-                    User us;
-                    ArrayList<User> listUserApp = new ArrayList<>();
-                    for (User u : listUser) {
-                        us = new User(u.getUser(), u.getPassword(), false, u.getFinger());
-                        listUserApp.add(us);
-                    }
-
-                    mngUsr.serializationListUser(listUserApp, path);
+                    mngUsr.serializationListUser(listUser, path);
                     Intent intent = new Intent(SignActivity.this, ViewActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);

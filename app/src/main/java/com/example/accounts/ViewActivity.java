@@ -32,6 +32,7 @@ public class ViewActivity extends AppCompatActivity {
         mngApp = new ManageApp();
         mngUsr = new ManageUser();
         listUser = mngUsr.deserializationListUser(path);
+        log = mngApp.deserializationFlag(path);
     }
 
     @Override
@@ -50,14 +51,7 @@ public class ViewActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_exit) {
-            User us;
-            ArrayList<User> listUserApp = new ArrayList<>();
-            for (User u : listUser) {
-                us = new User(u.getUser(), u.getPassword(), false, u.getFinger());
-                listUserApp.add(us);
-            }
-            mngUsr.serializationListUser(listUserApp, path);
-            log = new LogApp(false);
+            log = new LogApp(false," ");
             mngApp.serializationFlag(log, path);
             Intent intent = new Intent(ViewActivity.this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -76,11 +70,6 @@ public class ViewActivity extends AppCompatActivity {
     public void onBackPressed() {
         if (doubleBackToExitPressedOnce) {
             super.onBackPressed();
-            Intent intent=new Intent(Intent.ACTION_MAIN);
-            intent.addCategory(Intent.CATEGORY_HOME);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
-            finish();
             System.exit(0);
         }
 
