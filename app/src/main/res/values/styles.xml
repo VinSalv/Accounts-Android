@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.MaterialComponents.Light.DarkActionBar.Bridge">
+    <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -15,22 +15,27 @@
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.MaterialComponents.ActionBar" />
 
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar" />
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar">
+    <item name="overlapAnchor">false</item>
+    <item name="android:dropDownVerticalOffset">-4dp</item>
+    <item name="android:textColor">#FFFFFF</item>
+    </style>
+
+    <style name="MyDarkToolbarStyle">
+        <item name="overlapAnchor">false</item>
+        <item name="android:dropDownVerticalOffset">-4dp</item>
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
 
     <style name="SelectionSwitch">
         <!-- active thumb & track color (30% transparency) -->
         <item name="colorControlActivated">@color/colorPrimaryDark</item>
 
         <!-- inactive thumb color -->
-        <item name="colorSwitchThumbNormal">@color/colorPrimaryDark </item>
+        <item name="colorSwitchThumbNormal">@color/colorPrimaryDark</item>
 
         <!-- inactive track color (30% transparency) -->
-        <item name="android:colorForeground">#00A23D </item>
-    </style>
-
-    <style name="MyDarkToolbarStyle">
-        <item name="android:colorBackground">@color/colorPrimaryDark</item>
-        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:colorForeground">#00A23D</item>
     </style>
 
     <style name="inputField">

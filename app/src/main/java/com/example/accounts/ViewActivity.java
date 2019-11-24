@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -36,8 +37,6 @@ public class ViewActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view);
-        Toolbar toolbarView = findViewById(R.id.toolbarView);
-        setSupportActionBar(toolbarView);
 
         owner = getIntent().getExtras().getString("owner");
         path = getIntent().getExtras().getString("path");
@@ -48,8 +47,6 @@ public class ViewActivity extends AppCompatActivity {
         listAccount = mngAcc.deserializationListAccount(path, owner);
         listUser = mngUsr.deserializationListUser(path);
         log = mngApp.deserializationFlag(path);
-
-        toolbarView.setTitle("Benvenuto " + log.getUser());
 
         viewAcc = findViewById(R.id.viewAccount);
         row = new TableRow(this);
@@ -128,6 +125,5 @@ public class ViewActivity extends AppCompatActivity {
             }
         }, 2000);
     }
-
 
 }
