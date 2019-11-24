@@ -2,8 +2,10 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/signActivityLay"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#000000"
     tools:context=".SignActivity">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -15,16 +17,35 @@
             android:id="@+id/toolbarSign"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:background="#86000000"
             android:elevation="4dp"
             app:popupTheme="@style/MyDarkToolbarStyle"
             app:subtitle="Registrazione dell'utente"
-            app:subtitleTextColor="#FF7D27"
+            app:subtitleTextColor="#CCFFFFFF"
             app:title="Accounts"
-            app:titleTextColor="#FF7D27" />
+            app:titleTextColor="#CCFFFFFF" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <include layout="@layout/content_sign" />
+    <include
+        android:id="@+id/signIncludeActivity"
+        layout="@layout/content_sign" />
+
+    <Button
+        android:id="@+id/signButton"
+        android:layout_width="140dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center"
+        android:layout_marginStart="200dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="15dp"
+        android:background="#00FFFFFF"
+        android:text="@string/signButton"
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="22sp"
+        android:textStyle="normal" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

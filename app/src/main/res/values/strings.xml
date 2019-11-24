@@ -4,7 +4,6 @@
 
     <string name="app_name">Accounts</string>
     <string name="action_about">About</string>
-    <string name="action_exit">Esci</string>
     <string name="title_activity_view">ViewActivity</string>
 
     <string name="nameApp">ACCOUNTS</string>
@@ -26,11 +25,22 @@
     <string name="passwordText2">Reinserisci la tua Password</string>
     <string name="passwordAppHint2">Reinserisci password</string>
     <string name="errorPassword2">Errore reimmisione password</string>
-    <string name="flagFinger">Questo account necessita di autenticazione con impronta? (Sarà possibile cambiare il settaggio in qualsiasi momento)</string>
+    <string name="flagFinger">Autenticazione con impronta? (Sarà possibile cambiare il settaggio in qualsiasi momento)</string>
     <string name="signButton">Sign In</string>
 
     <string name="logoImage">Logo</string>
     <string name="versionText">Version 2.1.0</string>
     <string name="copyrightText">Copyright (c) 2019. All right reserved.</string>
+
+    <string name="action_delete">Elimina</string>
+    <string name="action_sort">Ordina</string>
+    <string name="action_setting">Impostazioni</string>
+    <string name="action_exit">Esci</string>
+    <string name="addAccount">Aggiungi nuovo account</string>
+    <string name="userImage">icona user</string>
+    <string name="passImage">icona password</string>
+    <string name="userSignImage">Icona utente</string>
+    <string name="passSignImage">Icona password</string>
+
 
 </resources>

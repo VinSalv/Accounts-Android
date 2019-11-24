@@ -59,8 +59,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
         lay = findViewById(R.id.relLayMain);
         path = getExternalStorageDirectory().getAbsolutePath();
@@ -69,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
         passApp = findViewById(R.id.passApp);
         passError = findViewById(R.id.passError);
         login = findViewById(R.id.authButton);
-        sign = findViewById(R.id.signText);
+        sign = findViewById(R.id.signButton);
         flagApp = findViewById(R.id.flagApp);
 
         if (!checkPermission()) {
