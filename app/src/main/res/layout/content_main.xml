@@ -3,20 +3,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/relLayMain"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginTop="60dp"
-    android:layout_marginEnd="60dp"
-    android:layout_marginStart="60dp"
+    android:layout_gravity="center_horizontal"
+    android:layout_marginTop="370dp"
     android:background="@drawable/more_rounded"
     android:backgroundTint="#29FFFFFF"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".MainActivity"
-    tools:showIn="@layout/activity_main2"    >
+    tools:showIn="@layout/activity_main">
 
     <EditText
         android:id="@+id/userApp"
-        android:layout_width="200dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginStart="50dp"
@@ -32,7 +30,7 @@
         android:textColorHighlight="#01A0B8"
         android:textColorHint="#81FFFFFF"
         android:textColorLink="@color/colorPrimaryDark"
-        android:textSize="20sp"
+        android:textSize="16sp"
         android:theme="@style/inputField"
         tools:targetApi="o" />
 
@@ -40,10 +38,8 @@
         android:id="@+id/userError"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="3dp"
-        android:layout_marginTop="11dp"
-        android:layout_marginEnd="15dp"
-        android:layout_marginBottom="15dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginEnd="20dp"
         android:layout_toEndOf="@id/userApp"
         android:contentDescription="@string/userError"
         android:visibility="invisible"
@@ -51,7 +47,7 @@
 
     <EditText
         android:id="@+id/passApp"
-        android:layout_width="200dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/userApp"
         android:layout_centerHorizontal="true"
@@ -67,7 +63,7 @@
         android:textColorHighlight="#01A0B8"
         android:textColorHint="#81FFFFFF"
         android:textColorLink="@color/colorPrimaryDark"
-        android:textSize="20sp"
+        android:textSize="16sp"
         android:theme="@style/inputField"
         tools:targetApi="o" />
 
@@ -76,10 +72,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/userApp"
-        android:layout_marginStart="3dp"
-        android:layout_marginTop="11dp"
-        android:layout_marginEnd="15dp"
-        android:layout_marginBottom="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="20dp"
         android:layout_toEndOf="@id/passApp"
         android:contentDescription="@string/passError"
         android:visibility="invisible"
@@ -87,10 +81,11 @@
 
     <Switch
         android:id="@+id/flagApp"
-        android:layout_width="wrap_content"
+        android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:layout_below="@id/passApp"
-        android:layout_marginStart="50dp"
+        android:layout_alignStart="@id/passApp"
+        android:layout_marginStart="11dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="15dp"
         android:layout_marginBottom="10dp"
@@ -102,20 +97,20 @@
 
     <ImageView
         android:id="@+id/userImage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="20dp"
+        android:layout_width="26dp"
+        android:layout_height="26dp"
+        android:layout_marginStart="22dp"
+        android:layout_marginTop="25dp"
         android:contentDescription="@string/userImage"
         app:srcCompat="@drawable/user" />
 
     <ImageView
         android:id="@+id/passImage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="26dp"
+        android:layout_height="26dp"
         android:layout_below="@id/userApp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="2dp"
+        android:layout_marginStart="22dp"
+        android:layout_marginTop="6dp"
         android:contentDescription="@string/passImage"
         app:srcCompat="@drawable/pass" />
 

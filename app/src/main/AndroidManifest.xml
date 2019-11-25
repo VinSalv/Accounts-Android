@@ -17,9 +17,6 @@
             android:name=".SignActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".AboutActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
             android:name=".ViewActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity

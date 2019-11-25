@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="50dp"
         android:layout_marginTop="15dp"
-        android:layout_marginEnd="15dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginBottom="15dp"
         android:autofillHints=""
         android:ems="10"
@@ -29,7 +29,7 @@
         android:textColorHighlight="#01A0B8"
         android:textColorHint="#81FFFFFF"
         android:textColorLink="@color/colorPrimaryDark"
-        android:textSize="20sp"
+        android:textSize="18sp"
         android:theme="@style/inputField"
         tools:targetApi="o" />
 
@@ -37,8 +37,8 @@
         android:id="@+id/errorUsername"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
         android:layout_toEndOf="@id/usernameEdit"
-        android:layout_marginTop="15dp"
         android:contentDescription="@string/errorUsername"
         android:visibility="invisible"
         app:srcCompat="@drawable/warning" />
@@ -49,7 +49,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/usernameEdit"
         android:layout_marginStart="50dp"
-        android:layout_marginEnd="15dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginBottom="15dp"
         android:autofillHints=""
         android:ems="10"
@@ -60,7 +60,7 @@
         android:textColorHighlight="#01A0B8"
         android:textColorHint="#81FFFFFF"
         android:textColorLink="@color/colorPrimaryDark"
-        android:textSize="20sp"
+        android:textSize="18sp"
         android:theme="@style/inputField"
         tools:targetApi="o" />
 
@@ -69,6 +69,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/usernameEdit"
+        android:layout_marginTop="12dp"
         android:layout_toEndOf="@id/passwordEdit"
         android:contentDescription="@string/errorPassword"
         android:visibility="invisible"
@@ -80,7 +81,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/passwordEdit"
         android:layout_marginStart="50dp"
-        android:layout_marginEnd="15dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginBottom="15dp"
         android:autofillHints=""
         android:ems="10"
@@ -91,7 +92,7 @@
         android:textColorHighlight="#00B8D4"
         android:textColorHint="#81FFFFFF"
         android:textColorLink="@color/colorPrimaryDark"
-        android:textSize="20sp"
+        android:textSize="18sp"
         android:theme="@style/inputField"
         tools:targetApi="o" />
 
@@ -100,6 +101,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/passwordEdit"
+        android:layout_marginTop="12dp"
         android:layout_toEndOf="@id/passwordEdit2"
         android:contentDescription="@string/errorPassword2"
         android:visibility="invisible"
@@ -111,9 +113,9 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/passwordEdit2"
         android:layout_marginStart="50dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="30dp"
-        android:layout_marginBottom="15dp"
+        android:layout_marginBottom="20dp"
         android:text="@string/flagFinger"
         android:textColor="#81FFFFFF"
         android:textSize="16sp"
@@ -122,30 +124,30 @@
 
     <ImageView
         android:id="@+id/userSignImage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="7dp"
-        android:layout_marginTop="20dp"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:layout_marginStart="14dp"
+        android:layout_marginTop="28dp"
         android:contentDescription="@string/userSignImage"
         app:srcCompat="@drawable/user" />
 
     <ImageView
         android:id="@+id/passSignImage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
         android:layout_below="@id/usernameEdit"
-        android:layout_marginStart="7dp"
-        android:layout_marginTop="2sp"
+        android:layout_marginStart="14dp"
+        android:layout_marginTop="7sp"
         android:contentDescription="@string/passSignImage"
         app:srcCompat="@drawable/pass" />
 
     <ImageView
         android:id="@+id/passSignImage2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
         android:layout_below="@id/passwordEdit"
-        android:layout_marginStart="7dp"
-        android:layout_marginTop="2sp"
+        android:layout_marginStart="14dp"
+        android:layout_marginTop="7sp"
         android:contentDescription="@string/passSignImage"
         app:srcCompat="@drawable/pass" />
 
