@@ -5,7 +5,6 @@
     android:id="@+id/relLaySign"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="60dp"
     android:background="@drawable/more_rounded"
     android:backgroundTint="#29FFFFFF"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"

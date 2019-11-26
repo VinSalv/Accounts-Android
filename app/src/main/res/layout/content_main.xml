@@ -5,8 +5,6 @@
     android:id="@+id/relLayMain"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_gravity="center_horizontal"
-    android:layout_marginTop="370dp"
     android:background="@drawable/more_rounded"
     android:backgroundTint="#29FFFFFF"
     tools:context=".MainActivity"
