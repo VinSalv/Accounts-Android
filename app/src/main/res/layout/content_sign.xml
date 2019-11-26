@@ -28,14 +28,14 @@
         android:textColorHighlight="#01A0B8"
         android:textColorHint="#81FFFFFF"
         android:textColorLink="@color/colorPrimaryDark"
-        android:textSize="18sp"
+        android:textSize="16sp"
         android:theme="@style/inputField"
         tools:targetApi="o" />
 
     <ImageView
         android:id="@+id/errorUsername"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="26dp"
+        android:layout_height="26dp"
         android:layout_marginTop="28dp"
         android:layout_toEndOf="@id/usernameEdit"
         android:contentDescription="@string/errorUsername"
@@ -59,14 +59,14 @@
         android:textColorHighlight="#01A0B8"
         android:textColorHint="#81FFFFFF"
         android:textColorLink="@color/colorPrimaryDark"
-        android:textSize="18sp"
+        android:textSize="16sp"
         android:theme="@style/inputField"
         tools:targetApi="o" />
 
     <ImageView
         android:id="@+id/errorPassword"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="26dp"
+        android:layout_height="26dp"
         android:layout_below="@id/usernameEdit"
         android:layout_marginTop="12dp"
         android:layout_toEndOf="@id/passwordEdit"
@@ -91,14 +91,14 @@
         android:textColorHighlight="#00B8D4"
         android:textColorHint="#81FFFFFF"
         android:textColorLink="@color/colorPrimaryDark"
-        android:textSize="18sp"
+        android:textSize="16sp"
         android:theme="@style/inputField"
         tools:targetApi="o" />
 
     <ImageView
         android:id="@+id/errorPassword2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="26dp"
+        android:layout_height="26dp"
         android:layout_below="@id/passwordEdit"
         android:layout_marginTop="12dp"
         android:layout_toEndOf="@id/passwordEdit2"
@@ -117,14 +117,14 @@
         android:layout_marginBottom="20dp"
         android:text="@string/flagFinger"
         android:textColor="#81FFFFFF"
-        android:textSize="16sp"
+        android:textSize="14sp"
         android:textStyle="normal|bold"
         android:theme="@style/SelectionSwitch" />
 
     <ImageView
         android:id="@+id/userSignImage"
-        android:layout_width="28dp"
-        android:layout_height="28dp"
+        android:layout_width="26dp"
+        android:layout_height="26dp"
         android:layout_marginStart="14dp"
         android:layout_marginTop="28dp"
         android:contentDescription="@string/userSignImage"
@@ -132,8 +132,8 @@
 
     <ImageView
         android:id="@+id/passSignImage"
-        android:layout_width="28dp"
-        android:layout_height="28dp"
+        android:layout_width="26dp"
+        android:layout_height="26dp"
         android:layout_below="@id/usernameEdit"
         android:layout_marginStart="14dp"
         android:layout_marginTop="7sp"
@@ -142,8 +142,8 @@
 
     <ImageView
         android:id="@+id/passSignImage2"
-        android:layout_width="28dp"
-        android:layout_height="28dp"
+        android:layout_width="26dp"
+        android:layout_height="26dp"
         android:layout_below="@id/passwordEdit"
         android:layout_marginStart="14dp"
         android:layout_marginTop="7sp"
