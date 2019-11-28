@@ -11,5 +11,5 @@
         android:title="Impostazioni" />
     <item
         android:id="@+id/exit"
-        android:title="Exit" />
+        android:title="Esci" />
 </menu>

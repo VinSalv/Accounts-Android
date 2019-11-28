@@ -71,7 +71,7 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         setting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PopupMenu popup = new PopupMenu(ViewActivity.this, v, Gravity.CENTER, 0, R.style.rounded_menu_style);
+                PopupMenu popup = new PopupMenu(ViewActivity.this, v, Gravity.END, 0, R.style.rounded_menu_style);
                 popup.setOnMenuItemClickListener(ViewActivity.this);
                 popup.inflate(R.menu.popup);
                 popup.show();
