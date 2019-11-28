@@ -10,8 +10,6 @@ import android.hardware.biometrics.BiometricPrompt;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CancellationSignal;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -307,7 +305,7 @@ public class MainActivity extends AppCompatActivity {
                     intent.putExtra("owner", userApp.getText().toString());
                     startActivity(intent);
                     finish();
-                }else {
+                } else {
                     log = new LogApp();
                     mngApp.serializationFlag(log, path);
                     Intent intent = new Intent(MainActivity.this, ViewActivity.class);

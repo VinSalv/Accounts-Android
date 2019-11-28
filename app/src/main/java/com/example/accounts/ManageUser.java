@@ -15,7 +15,7 @@ public class ManageUser implements Serializable {
     }
 
     public boolean search(User u, ArrayList<User> listUser) {
-        for (User usr: listUser){
+        for (User usr : listUser) {
             if (usr.getUser().equals(u.getUser())) return true;
         }
         return false;
