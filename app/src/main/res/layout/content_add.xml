@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/relLayAdd"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/rounded_color"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".AddActivity"
+    tools:showIn="@layout/activity_add">
+
+    <EditText
+        android:id="@+id/nameAddEdit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginBottom="15dp"
+        android:autofillHints=""
+        android:ems="10"
+        android:hint="@string/nameAddHint"
+        android:inputType="textPersonName"
+        android:shadowColor="#81FFFFFF"
+        android:textColor="@android:color/white"
+        android:textColorHighlight="#01A0B8"
+        android:textColorHint="#81FFFFFF"
+        android:textColorLink="@color/colorPrimaryDark"
+        android:textSize="16sp"
+        android:theme="@style/inputField"
+        tools:targetApi="o" />
+
+    <ImageView
+        android:id="@+id/errorAddName"
+        android:layout_width="26dp"
+        android:layout_height="26dp"
+        android:layout_alignBottom="@id/nameAddEdit"
+        android:layout_marginStart="3dp"
+        android:layout_marginBottom="5dp"
+        android:layout_toEndOf="@id/nameAddEdit"
+        android:contentDescription="@string/errorAddUser"
+        android:visibility="invisible"
+        app:srcCompat="@drawable/warning" />
+
+    <EditText
+        android:id="@+id/emailAddEdit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/nameAddEdit"
+        android:layout_marginStart="30dp"
+        android:layout_marginBottom="15dp"
+        android:autofillHints=""
+        android:ems="10"
+        android:hint="@string/emailAddHint"
+        android:inputType="textEmailAddress"
+        android:shadowColor="#81FFFFFF"
+        android:textColor="@android:color/white"
+        android:textColorHighlight="#01A0B8"
+        android:textColorHint="#81FFFFFF"
+        android:textColorLink="@color/colorPrimaryDark"
+        android:textSize="16sp"
+        android:theme="@style/inputField"
+        tools:targetApi="o" />
+
+    <ImageView
+        android:id="@+id/errorAddEmail"
+        android:layout_width="26dp"
+        android:layout_height="26dp"
+        android:layout_alignBottom="@id/emailAddEdit"
+        android:layout_marginStart="3dp"
+        android:layout_marginBottom="5dp"
+        android:layout_toEndOf="@id/emailAddEdit"
+        android:contentDescription="@string/errorAddEmail"
+        android:visibility="invisible"
+        app:srcCompat="@drawable/warning" />
+
+    <EditText
+        android:id="@+id/passAddEdit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/nameAddEdit"
+        android:layout_marginStart="30dp"
+        android:layout_marginBottom="15dp"
+        android:autofillHints=""
+        android:ems="10"
+        android:hint="@string/passAddHint"
+        android:inputType="textPassword"
+        android:shadowColor="#81FFFFFF"
+        android:textColor="@android:color/white"
+        android:textColorHighlight="#01A0B8"
+        android:textColorHint="#81FFFFFF"
+        android:textColorLink="@color/colorPrimaryDark"
+        android:textSize="16sp"
+        android:theme="@style/inputField"
+        tools:targetApi="o" />
+
+    <ImageView
+        android:id="@+id/errorAddPassword"
+        android:layout_width="26dp"
+        android:layout_height="26dp"
+        android:layout_alignBottom="@id/passAddEdit"
+        android:layout_marginStart="3dp"
+        android:layout_marginBottom="5dp"
+        android:layout_toEndOf="@id/passAddEdit"
+        android:contentDescription="@string/errorAddPass"
+        android:visibility="invisible"
+        app:srcCompat="@drawable/warning" />
+
+    <ImageView
+        android:id="@+id/userAddImage"
+        android:layout_width="26dp"
+        android:layout_height="26dp"
+        android:layout_alignBottom="@id/nameAddEdit"
+        android:layout_marginBottom="5dp"
+        android:contentDescription="@string/userAddImage"
+        app:srcCompat="@drawable/user" />
+
+    <ImageView
+        android:id="@+id/emailAddImage"
+        android:layout_width="26dp"
+        android:layout_height="26dp"
+        android:layout_alignBottom="@id/passAddEdit"
+        android:layout_marginBottom="8dp"
+        android:contentDescription="@string/emailAddImage"
+        app:srcCompat="@drawable/pass" />
+
+    <ImageView
+        android:id="@+id/passAddImage"
+        android:layout_width="26dp"
+        android:layout_height="26dp"
+        android:layout_alignBottom="@id/passAddEdit"
+        android:layout_marginBottom="8dp"
+        android:contentDescription="@string/passAddImage"
+        app:srcCompat="@drawable/pass" />
+
+</RelativeLayout>
