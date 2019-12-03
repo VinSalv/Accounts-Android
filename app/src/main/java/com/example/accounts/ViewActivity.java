@@ -151,7 +151,6 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 intent.putExtra("path", path);
                 intent.putExtra("owner", log.getUser());
                 startActivity(intent);
-                finish();
             }
         });
     }
