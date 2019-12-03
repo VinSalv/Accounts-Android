@@ -8,7 +8,6 @@
         android:id="@+id/account"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
         android:background="@drawable/rounded_list_element"
         android:textAlignment="viewStart"
         android:textAllCaps="false"

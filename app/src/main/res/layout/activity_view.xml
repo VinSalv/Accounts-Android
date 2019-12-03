@@ -69,7 +69,7 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <include layout="@layout/content_activity_view" />
+    <include layout="@layout/content_view" />
 
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

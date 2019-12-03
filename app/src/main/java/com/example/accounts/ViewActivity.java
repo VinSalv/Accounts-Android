@@ -143,6 +143,17 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         ListView lView = (ListView) findViewById(R.id.listAccountView);
         lView.setAdapter(adapter);
 
+        final FloatingActionButton add = (FloatingActionButton) findViewById(R.id.addFloatingButton);
+        add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ViewActivity.this, AddActivity.class);
+                intent.putExtra("path", path);
+                intent.putExtra("owner", log.getUser());
+                startActivity(intent);
+                finish();
+            }
+        });
     }
 
     @Override

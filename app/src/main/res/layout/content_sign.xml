@@ -31,8 +31,8 @@
 
     <ImageView
         android:id="@+id/errorUsername"
-        android:layout_width="26dp"
-        android:layout_height="26dp"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
         android:layout_alignBottom="@id/usernameEdit"
         android:layout_marginStart="3dp"
         android:layout_marginBottom="5dp"
@@ -63,8 +63,8 @@
 
     <ImageView
         android:id="@+id/errorPassword"
-        android:layout_width="26dp"
-        android:layout_height="26dp"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
         android:layout_alignBottom="@id/passwordEdit"
         android:layout_marginStart="3dp"
         android:layout_marginBottom="5dp"
@@ -95,8 +95,8 @@
 
     <ImageView
         android:id="@+id/errorPassword2"
-        android:layout_width="26dp"
-        android:layout_height="26dp"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
         android:layout_alignBottom="@id/passwordEdit2"
         android:layout_marginStart="3dp"
         android:layout_marginBottom="5dp"
@@ -120,17 +120,18 @@
 
     <ImageView
         android:id="@+id/userSignImage"
-        android:layout_width="26dp"
-        android:layout_height="26dp"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
         android:layout_alignBottom="@id/usernameEdit"
-        android:layout_marginBottom="5dp"
+        android:layout_marginStart="1dp"
+        android:layout_marginBottom="7dp"
         android:contentDescription="@string/userSignImage"
         app:srcCompat="@drawable/user" />
 
     <ImageView
         android:id="@+id/passSignImage"
-        android:layout_width="26dp"
-        android:layout_height="26dp"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
         android:layout_alignBottom="@id/passwordEdit"
         android:layout_marginBottom="8dp"
         android:contentDescription="@string/passSignImage"
@@ -138,8 +139,8 @@
 
     <ImageView
         android:id="@+id/passSignImage2"
-        android:layout_width="26dp"
-        android:layout_height="26dp"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
         android:layout_alignBottom="@id/passwordEdit2"
         android:layout_marginBottom="8dp"
 

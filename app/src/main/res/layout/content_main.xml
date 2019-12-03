@@ -88,21 +88,21 @@
 
     <ImageView
         android:id="@+id/userImage"
-        android:layout_width="26dp"
-        android:layout_height="26dp"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
         android:layout_alignBottom="@id/userApp"
-        android:layout_marginEnd="3dp"
-        android:layout_marginBottom="5dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="7dp"
         android:layout_toStartOf="@id/userApp"
         android:contentDescription="@string/userImage"
         app:srcCompat="@drawable/user" />
 
     <ImageView
         android:id="@+id/passImage"
-        android:layout_width="26dp"
-        android:layout_height="26dp"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
         android:layout_alignBottom="@id/passApp"
-        android:layout_marginEnd="3dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:layout_toStartOf="@id/passApp"
         android:contentDescription="@string/passImage"
