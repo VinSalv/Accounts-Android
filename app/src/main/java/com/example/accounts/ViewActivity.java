@@ -7,8 +7,9 @@ import android.os.Handler;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ListView;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,10 +23,11 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.AbstractCollection;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
-    public static AbstractCollection modelArrayList;
     boolean doubleBackToExitPressedOnce = false;
+    private LinearLayout linear;
     private TextView wellcome;
     private AppBarLayout appBar;
     private String path;
@@ -34,13 +36,12 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     private ArrayList<User> listUser = new ArrayList<>();
     private ManageApp mngApp;
     private LogApp log;
-    private ListView simpleList;
-    private String countryList[] = {"India", "China", "Australia", "Portugle", "America", "NewZealand"};
     private Button settingsButton;
     private Button searchButton;
-    private Button account;
     private ArrayList<Account> listAccount;
     private ManageAccount mngAcc;
+    private List<Button> selectAccount;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,8 +70,6 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
         searchButton = findViewById(R.id.searchButton);
         searchButton.setVisibility(View.INVISIBLE);
-
-        account = findViewById(R.id.account);
 
         appBar = (AppBarLayout) findViewById(R.id.app_bar);
         final CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
@@ -139,10 +138,6 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             }
         });
 
-        MyCustomAdapter adapter = new MyCustomAdapter(listAccount, this);
-        ListView lView = (ListView) findViewById(R.id.listAccountView);
-        lView.setAdapter(adapter);
-
         final FloatingActionButton add = (FloatingActionButton) findViewById(R.id.addFloatingButton);
         add.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -153,7 +148,37 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 startActivity(intent);
             }
         });
+
+        selectAccount = new ArrayList<>();
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        linear = (LinearLayout) findViewById(R.id.listAccount);
+        for (Account a : listAccount) {
+            Button b = new Button(this);
+            b.setText(a.getName());
+            b.setLayoutParams(params);
+            b.setBackground(getDrawable(R.drawable.rounded_list_element));
+            b.setTag(a.getName());
+            b.setTextColor(getResources().getColor(R.color.grey));
+            b.setTextSize(getResources().getDimension(R.dimen.text_list));
+            LinearLayout.LayoutParams margin = (LinearLayout.LayoutParams) b.getLayoutParams();
+            params.setMargins(0, 0, 0, 20);
+            b.setLayoutParams(margin);
+            b.setOnClickListener(btnClicked);
+            b.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_START);
+            selectAccount.add(b);
+            linear.addView(selectAccount.get(selectAccount.size() - 1 ));
+        }
+
     }
+
+    View.OnClickListener btnClicked = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Object tag = v.getTag();
+            Toast.makeText(getApplicationContext(), "clicked button " + tag.toString(), Toast.LENGTH_SHORT).show();
+        }
+    };
+
 
     @Override
     public boolean onMenuItemClick(MenuItem item) {
@@ -202,4 +227,13 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             }
         }, 2000);
     }
+
+    public static void setMargins(View v, int l, int t, int r, int b) {
+        if (v.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
+            ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
+            p.setMargins(l, t, r, b);
+            v.requestLayout();
+        }
+    }
+
 }

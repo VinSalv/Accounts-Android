@@ -67,4 +67,8 @@
         <item name="android:dropDownVerticalOffset">14dp</item>
     </style>
 
+    <style name="listAccount">
+        <item name="android:layout_marginBottom">10dp</item>
+    </style>
+
 </resources>
