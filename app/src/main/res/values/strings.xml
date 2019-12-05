@@ -52,6 +52,7 @@
     <string name="errorAddPass">Errore immisione password</string>
     <string name="addButton">Aggiungi</string>
     <string name="emptyButton">Svuota campi</string>
+    <string name="accountButton">Bottoni della lista</string>
 
 
 </resources>

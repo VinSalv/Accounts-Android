@@ -4,12 +4,15 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.SparseBooleanArray;
+import android.view.ActionMode;
 import android.view.Gravity;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.Button;
-import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,13 +24,11 @@ import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.util.AbstractCollection;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
     boolean doubleBackToExitPressedOnce = false;
-    private LinearLayout linear;
     private TextView wellcome;
     private AppBarLayout appBar;
     private String path;
@@ -40,8 +41,9 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     private Button searchButton;
     private ArrayList<Account> listAccount;
     private ManageAccount mngAcc;
-    private List<Button> selectAccount;
-
+    private ListView list;
+    private ListViewAdapter listviewadapter;
+    private List<Account> accounts = new ArrayList<Account>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -149,35 +151,75 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             }
         });
 
-        selectAccount = new ArrayList<>();
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        linear = (LinearLayout) findViewById(R.id.listAccount);
-        for (Account a : listAccount) {
-            Button b = new Button(this);
-            b.setText(a.getName());
-            b.setLayoutParams(params);
-            b.setBackground(getDrawable(R.drawable.rounded_list_element));
-            b.setTag(a.getName());
-            b.setTextColor(getResources().getColor(R.color.grey));
-            b.setTextSize(getResources().getDimension(R.dimen.text_list));
-            LinearLayout.LayoutParams margin = (LinearLayout.LayoutParams) b.getLayoutParams();
-            params.setMargins(0, 0, 0, 20);
-            b.setLayoutParams(margin);
-            b.setOnClickListener(btnClicked);
-            b.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_START);
-            selectAccount.add(b);
-            linear.addView(selectAccount.get(selectAccount.size() - 1 ));
-        }
 
+
+        // Locate the ListView in listview_main.xml
+        list = (ListView) findViewById(R.id.accountListView);
+
+        // Pass results to ListViewAdapter Class
+        listviewadapter = new ListViewAdapter(this, R.layout.list_account,
+                accounts);
+
+        // Binds the Adapter to the ListView
+        list.setAdapter(listviewadapter);
+        list.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+        // Capture ListView item click
+        list.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
+
+            @Override
+            public void onItemCheckedStateChanged(ActionMode mode,
+                                                  int position, long id, boolean checked) {
+                // Capture total checked items
+                final int checkedCount = list.getCheckedItemCount();
+                // Set the CAB title according to total checked items
+                mode.setTitle(checkedCount + " Selected");
+                // Calls toggleSelection method from ListViewAdapter Class
+                listviewadapter.toggleSelection(position);
+            }
+
+            @Override
+            public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.delete:
+                        // Calls getSelectedIds method from ListViewAdapter Class
+                        SparseBooleanArray selected = listviewadapter
+                                .getSelectedIds();
+                        // Captures all selected ids with a loop
+                        for (int i = (selected.size() - 1); i >= 0; i--) {
+                            if (selected.valueAt(i)) {
+                                Account selecteditem = listviewadapter
+                                        .getItem(selected.keyAt(i));
+                                // Remove selected items following the ids
+                                listviewadapter.remove(selecteditem);
+                            }
+                        }
+                        // Close CAB
+                        mode.finish();
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+
+            @Override
+            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+                mode.getMenuInflater().inflate(R.menu.my_context_menu, menu);
+                return true;
+            }
+
+            @Override
+            public void onDestroyActionMode(ActionMode mode) {
+                // TODO Auto-generated method stub
+                listviewadapter.removeSelection();
+            }
+
+            @Override
+            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+                // TODO Auto-generated method stub
+                return false;
+            }
+        });
     }
-
-    View.OnClickListener btnClicked = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            Object tag = v.getTag();
-            Toast.makeText(getApplicationContext(), "clicked button " + tag.toString(), Toast.LENGTH_SHORT).show();
-        }
-    };
 
 
     @Override
@@ -227,13 +269,4 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             }
         }, 2000);
     }
-
-    public static void setMargins(View v, int l, int t, int r, int b) {
-        if (v.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
-            ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
-            p.setMargins(l, t, r, b);
-            v.requestLayout();
-        }
-    }
-
 }
