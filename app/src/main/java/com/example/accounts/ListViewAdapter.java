@@ -7,16 +7,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.TextView;
 
 import java.util.List;
 
-class ListViewAdapter extends ArrayAdapter<Account> {
-    Context context;
-    LayoutInflater inflater;
-    List<Account> accounts;
+class ListViewAdapter extends ArrayAdapter<String> {
+    private Context context;
+    private LayoutInflater inflater;
+    private List<String> accounts;
     private SparseBooleanArray mSelectedItemsIds;
 
-    public ListViewAdapter(Context context, int resourceId, List<Account> accounts) {
+    public ListViewAdapter(Context context, int resourceId, List<String> accounts) {
         super(context, resourceId, accounts);
         mSelectedItemsIds = new SparseBooleanArray();
         this.context = context;
@@ -25,7 +26,7 @@ class ListViewAdapter extends ArrayAdapter<Account> {
     }
 
     private class ViewHolder {
-        Button account;
+        TextView account;
     }
 
     public View getView(int position, View view, ViewGroup parent) {
@@ -33,24 +34,23 @@ class ListViewAdapter extends ArrayAdapter<Account> {
         if (view == null) {
             holder = new ViewHolder();
             view = inflater.inflate(R.layout.list_account, null);
-            // Locate the TextViews in listview_item.xml
-            holder.account = (Button) view.findViewById(R.id.accountButton);
+            holder.account = (TextView) view.findViewById(R.id.accountButton);
             view.setTag(holder);
         } else {
             holder = (ViewHolder) view.getTag();
         }
         // Capture position and set to the TextViews
-        holder.account.setText(accounts.get(position).getName());
+        holder.account.setText(accounts.get(position));
         return view;
     }
 
     @Override
-    public void remove(Account object) {
+    public void remove(String object) {
         accounts.remove(object);
         notifyDataSetChanged();
     }
 
-    public List<Account> getWorldPopulation() {
+    public List<String> getWorldPopulation() {
         return accounts;
     }
 

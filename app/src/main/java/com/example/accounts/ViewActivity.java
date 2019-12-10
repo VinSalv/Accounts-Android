@@ -1,5 +1,6 @@
 package com.example.accounts;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -30,6 +31,7 @@ import java.util.List;
 public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
     boolean doubleBackToExitPressedOnce = false;
     private TextView wellcome;
+    private TextView wellcome2;
     private AppBarLayout appBar;
     private String path;
     private String owner;
@@ -43,13 +45,14 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     private ManageAccount mngAcc;
     private ListView list;
     private ListViewAdapter listviewadapter;
-    private List<Account> accounts = new ArrayList<Account>();
+    private List<String> accounts = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view);
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("");
         setSupportActionBar(toolbar);
 
         path = getIntent().getExtras().getString("path");
@@ -67,6 +70,10 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         wellcome = findViewById(R.id.wellcome);
         wellcome.setText("Benvenuto " + owner);
 
+        wellcome2 = findViewById(R.id.wellcomeToolbar);
+        wellcome2.setText("Lista di " + owner);
+        wellcome2.setVisibility(View.INVISIBLE);
+
         settingsButton = findViewById(R.id.settingsButton);
         settingsButton.setVisibility(View.INVISIBLE);
 
@@ -82,18 +89,17 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
                 wellcome.setAlpha((1.0f - (float) Math.abs(verticalOffset) / appBarLayout.getTotalScrollRange()));
-                collapsingToolbarLayout.setTitle("Lista Account di " + owner);
-                collapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(R.color.transperent));
-                collapsingToolbarLayout.setCollapsedTitleTextColor(Color.rgb(255, 255, 255));
                 if (scrollRange == -1) {
                     scrollRange = appBarLayout.getTotalScrollRange();
                 }
                 if (scrollRange + verticalOffset == 0) {
-                    isShow = true;
+                    isShow= true;
+                    wellcome2.setVisibility(View.VISIBLE);
                     settingsButton.setVisibility(View.VISIBLE);
                     searchButton.setVisibility(View.VISIBLE);
                 } else if (isShow) {
                     isShow = false;
+                    wellcome2.setVisibility(View.INVISIBLE);
                     settingsButton.setVisibility(View.INVISIBLE);
                     searchButton.setVisibility(View.INVISIBLE);
 
@@ -152,48 +158,40 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         });
 
 
-
-        // Locate the ListView in listview_main.xml
         list = (ListView) findViewById(R.id.accountListView);
-
-        // Pass results to ListViewAdapter Class
-        listviewadapter = new ListViewAdapter(this, R.layout.list_account,
-                accounts);
-
-        // Binds the Adapter to the ListView
+        listviewadapter = new ListViewAdapter(this, R.layout.list_account, accounts);
+        for (Account a : listAccount) {
+            listviewadapter.add(a.getName());
+        }
         list.setAdapter(listviewadapter);
         list.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
-        // Capture ListView item click
         list.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
 
+            @SuppressLint("RestrictedApi")
             @Override
-            public void onItemCheckedStateChanged(ActionMode mode,
-                                                  int position, long id, boolean checked) {
-                // Capture total checked items
+            public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
                 final int checkedCount = list.getCheckedItemCount();
-                // Set the CAB title according to total checked items
-                mode.setTitle(checkedCount + " Selected");
-                // Calls toggleSelection method from ListViewAdapter Class
                 listviewadapter.toggleSelection(position);
+                wellcome.setText(checkedCount + " Selected");
+                wellcome2.setVisibility(View.INVISIBLE);
+                settingsButton.setVisibility(View.INVISIBLE);
+                searchButton.setVisibility(View.INVISIBLE);
+                setting.setVisibility(View.INVISIBLE);
+                search.setVisibility(View.INVISIBLE);
+                add.hide();
             }
 
             @Override
             public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.delete:
-                        // Calls getSelectedIds method from ListViewAdapter Class
-                        SparseBooleanArray selected = listviewadapter
-                                .getSelectedIds();
-                        // Captures all selected ids with a loop
+                        SparseBooleanArray selected = listviewadapter.getSelectedIds();
                         for (int i = (selected.size() - 1); i >= 0; i--) {
                             if (selected.valueAt(i)) {
-                                Account selecteditem = listviewadapter
-                                        .getItem(selected.keyAt(i));
-                                // Remove selected items following the ids
+                                String selecteditem = listviewadapter.getItem(selected.keyAt(i));
                                 listviewadapter.remove(selecteditem);
                             }
                         }
-                        // Close CAB
                         mode.finish();
                         return true;
                     default:
@@ -207,10 +205,18 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 return true;
             }
 
+            @SuppressLint("RestrictedApi")
             @Override
             public void onDestroyActionMode(ActionMode mode) {
                 // TODO Auto-generated method stub
                 listviewadapter.removeSelection();
+                wellcome.setText("Benvenuto" + owner);
+                wellcome2.setVisibility(View.VISIBLE);
+                settingsButton.setVisibility(View.VISIBLE);
+                searchButton.setVisibility(View.VISIBLE);
+                setting.setVisibility(View.VISIBLE);
+                search.setVisibility(View.VISIBLE);
+                add.show();
             }
 
             @Override
