@@ -1,34 +1,30 @@
 package com.example.accounts;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.SparseBooleanArray;
-import android.view.ActionMode;
+import android.util.Log;
 import android.view.Gravity;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AbsListView;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
+    private static final String TAG = "ViewActivity";
     boolean doubleBackToExitPressedOnce = false;
     private TextView wellcome;
     private TextView wellcome2;
@@ -43,9 +39,8 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     private Button searchButton;
     private ArrayList<Account> listAccount;
     private ManageAccount mngAcc;
-    private ListView list;
-    private ListViewAdapter listviewadapter;
-    private List<String> accounts = new ArrayList<String>();
+    private RecyclerView recyclerView;
+    private MyAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,7 +88,7 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                     scrollRange = appBarLayout.getTotalScrollRange();
                 }
                 if (scrollRange + verticalOffset == 0) {
-                    isShow= true;
+                    isShow = true;
                     wellcome2.setVisibility(View.VISIBLE);
                     settingsButton.setVisibility(View.VISIBLE);
                     searchButton.setVisibility(View.VISIBLE);
@@ -102,8 +97,6 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                     wellcome2.setVisibility(View.INVISIBLE);
                     settingsButton.setVisibility(View.INVISIBLE);
                     searchButton.setVisibility(View.INVISIBLE);
-
-
                 }
             }
         });
@@ -157,76 +150,9 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             }
         });
 
+        initRecyclerView();
 
-        list = (ListView) findViewById(R.id.accountListView);
-        listviewadapter = new ListViewAdapter(this, R.layout.list_account, accounts);
-        for (Account a : listAccount) {
-            listviewadapter.add(a.getName());
-        }
-        list.setAdapter(listviewadapter);
-        list.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
-        list.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
-
-            @SuppressLint("RestrictedApi")
-            @Override
-            public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
-                final int checkedCount = list.getCheckedItemCount();
-                listviewadapter.toggleSelection(position);
-                wellcome.setText(checkedCount + " Selected");
-                wellcome2.setVisibility(View.INVISIBLE);
-                settingsButton.setVisibility(View.INVISIBLE);
-                searchButton.setVisibility(View.INVISIBLE);
-                setting.setVisibility(View.INVISIBLE);
-                search.setVisibility(View.INVISIBLE);
-                add.hide();
-            }
-
-            @Override
-            public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.delete:
-                        SparseBooleanArray selected = listviewadapter.getSelectedIds();
-                        for (int i = (selected.size() - 1); i >= 0; i--) {
-                            if (selected.valueAt(i)) {
-                                String selecteditem = listviewadapter.getItem(selected.keyAt(i));
-                                listviewadapter.remove(selecteditem);
-                            }
-                        }
-                        mode.finish();
-                        return true;
-                    default:
-                        return false;
-                }
-            }
-
-            @Override
-            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-                mode.getMenuInflater().inflate(R.menu.my_context_menu, menu);
-                return true;
-            }
-
-            @SuppressLint("RestrictedApi")
-            @Override
-            public void onDestroyActionMode(ActionMode mode) {
-                // TODO Auto-generated method stub
-                listviewadapter.removeSelection();
-                wellcome.setText("Benvenuto" + owner);
-                wellcome2.setVisibility(View.VISIBLE);
-                settingsButton.setVisibility(View.VISIBLE);
-                searchButton.setVisibility(View.VISIBLE);
-                setting.setVisibility(View.VISIBLE);
-                search.setVisibility(View.VISIBLE);
-                add.show();
-            }
-
-            @Override
-            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-                // TODO Auto-generated method stub
-                return false;
-            }
-        });
     }
-
 
     @Override
     public boolean onMenuItemClick(MenuItem item) {
@@ -274,5 +200,15 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 doubleBackToExitPressedOnce = false;
             }
         }, 2000);
+    }
+
+    private void initRecyclerView() {
+        Log.d(TAG, "initReciclerView: init recyclerview.");
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        mAdapter = new MyAdapter(this, listAccount);
+
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setAdapter(mAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 }
