@@ -23,14 +23,12 @@
             app:contentScrim="?attr/colorPrimary"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 style="MyDarkToolbarStyle"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin" />
-
 
             <TextView
                 android:id="@+id/wellcome"
@@ -70,8 +68,8 @@
                 android:layout_marginTop="10dp"
                 android:text="@string/wellcomeToolbar"
                 android:textSize="20sp"
-                tools:text="Lista di "
-                app:layout_collapseMode="pin" />
+                app:layout_collapseMode="pin"
+                tools:text="Lista di " />
 
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>

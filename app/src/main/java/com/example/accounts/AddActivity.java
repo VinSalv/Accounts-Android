@@ -60,7 +60,7 @@ public class AddActivity extends AppCompatActivity {
                 emailError.setVisibility(View.INVISIBLE);
                 passError.setVisibility(View.INVISIBLE);
 
-                Account a = new Account(owner, name.getText().toString(), email.getText().toString(), user.getText().toString(), password.getText().toString());
+                Account a = new Account(owner, name.getText().toString(), email.getText().toString(), user.getText().toString(), password.getText().toString(),false);
 
                 if (a.getName().isEmpty()) {
                     nameError.setVisibility(View.VISIBLE);

@@ -1,63 +1,82 @@
 package com.example.accounts;
 
 import android.content.Context;
-import android.util.Log;
+import android.graphics.Canvas;
+import android.graphics.ColorFilter;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
+import android.widget.FrameLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import static androidx.core.content.ContextCompat.getDrawable;
+
+
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
-    private static final String TAG = "MyAdapter";
     private Context context;
-    private List<Account> mDataset;
+    private List<Account> list;
+    private List<String> selectedIds = new ArrayList<>();
 
-
-    public MyAdapter(Context context, List<Account> mDataset) {
+    public MyAdapter(Context context, List<Account> list) {
         this.context = context;
-        this.mDataset = mDataset;
+        this.list = list;
     }
 
-    public static class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView account;
-        public RelativeLayout relLayList;
+    @Override
+    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        LayoutInflater inflater = LayoutInflater.from(context);
+        View view = inflater.inflate(R.layout.list_account, parent, false);
+        return new MyViewHolder(view);
+    }
 
-        public MyViewHolder(View v) {
-            super(v);
-            account = v.findViewById(R.id.accountElement);
-            relLayList = v.findViewById(R.id.relLayList);
+    @Override
+    public void onBindViewHolder(MyViewHolder holder, int position) {
+        holder.title.setText(list.get(position).getName());
+        String name = list.get(position).getName();
+
+        if (selectedIds.contains(name)) {
+            //if item is selected then,set foreground color of FrameLayout.
+            holder.title.setBackground(getDrawable(context, R.drawable.rounded_list_element2));
+
+
+        } else {
+            //else remove selected item color.
+            holder.title.setBackground(getDrawable(context, R.drawable.rounded_list_element));
         }
     }
 
     @Override
-    public MyAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_account, parent, false);
-        MyViewHolder vh = new MyViewHolder(v);
-        return vh;
-    }
-
-    @Override
-    public void onBindViewHolder(MyViewHolder holder, final int position) {
-        Log.d(TAG, "onBindViewHolder: called.");
-        holder.account.setText(mDataset.get(position).getName());
-        holder.relLayList.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "onClick: clicked on: " + mDataset.get(position).getName());
-                Toast.makeText(context, mDataset.get(position).getName(), Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    @Override
     public int getItemCount() {
-        return mDataset.size();
+        return list.size();
     }
 
+    public Account getItem(int position) {
+        return list.get(position);
+    }
+
+    public void setSelectedIds(List<String> selectedIds) {
+        this.selectedIds = selectedIds;
+        notifyDataSetChanged();
+    }
+
+    class MyViewHolder extends RecyclerView.ViewHolder {
+        TextView title;
+        FrameLayout rootView;
+
+        MyViewHolder(View itemView) {
+            super(itemView);
+            title = itemView.findViewById(R.id.accountElement);
+            rootView = itemView.findViewById(R.id.viewLayout);
+        }
+    }
 }

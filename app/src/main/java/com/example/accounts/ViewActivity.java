@@ -3,8 +3,10 @@ package com.example.accounts;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
+import android.view.ActionMode;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -22,9 +24,10 @@ import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
-    private static final String TAG = "ViewActivity";
+
+public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener, ActionMode.Callback {
     boolean doubleBackToExitPressedOnce = false;
     private TextView wellcome;
     private TextView wellcome2;
@@ -39,8 +42,11 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     private Button searchButton;
     private ArrayList<Account> listAccount;
     private ManageAccount mngAcc;
-    private RecyclerView recyclerView;
-    private MyAdapter mAdapter;
+    private ActionMode actionMode;
+    private boolean isMultiSelect = false;
+    private MyAdapter adapter;
+    private List<String> selectedIds = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +55,6 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
-
         path = getIntent().getExtras().getString("path");
         owner = getIntent().getExtras().getString("owner");
 
@@ -150,8 +155,91 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             }
         });
 
-        initRecyclerView();
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        adapter = new MyAdapter(this, listAccount);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(adapter);
+        recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this, recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                if (isMultiSelect) {
+                    //if multiple selection is enabled then select item on single click else perform normal click on item.
+                    multiSelect(position);
+                }
+            }
 
+            @Override
+            public void onItemLongClick(View view, int position) {
+                if (!isMultiSelect) {
+                    selectedIds = new ArrayList<>();
+                    isMultiSelect = true;
+
+                    if (actionMode == null) {
+                        actionMode = startActionMode(ViewActivity.this); //show ActionMode.
+                    }
+                }
+
+                multiSelect(position);
+            }
+        }));
+    }
+
+    private void multiSelect(int position) {
+        Account data = adapter.getItem(position);
+        if (data != null) {
+            if (actionMode != null) {
+                if (selectedIds.contains(data.getName()))
+                    selectedIds.remove(data.getName());
+                else
+                    selectedIds.add(data.getName());
+
+                if (selectedIds.size() > 0)
+                    actionMode.setTitle(String.valueOf(selectedIds.size())); //show selected item count on action mode.
+                else {
+                    actionMode.setTitle(""); //remove item count from action mode.
+                    actionMode.finish(); //hide action mode.
+                }
+                adapter.setSelectedIds(selectedIds);
+
+            }
+        }
+    }
+
+
+    @Override
+    public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+        MenuInflater inflater = mode.getMenuInflater();
+        inflater.inflate(R.menu.my_context_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+        return false;
+    }
+
+    @Override
+    public boolean onActionItemClicked(ActionMode mode, MenuItem menuItem) {
+        switch (menuItem.getItemId()) {
+            case R.id.delete_id:
+                //just to show selected items.
+                StringBuilder stringBuilder = new StringBuilder();
+                for (Account data : listAccount) {
+                    if (selectedIds.contains(data.getName()))
+                        stringBuilder.append("\n").append(data.getName());
+                }
+                Toast.makeText(this, "Selected items are :" + stringBuilder.toString(), Toast.LENGTH_SHORT).show();
+                return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void onDestroyActionMode(ActionMode mode) {
+        actionMode = null;
+        isMultiSelect = false;
+        selectedIds = new ArrayList<>();
+        adapter.setSelectedIds(new ArrayList<String>());
     }
 
     @Override
@@ -191,7 +279,7 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             System.exit(0);
         }
         this.doubleBackToExitPressedOnce = true;
-        Toast.makeText(this, "Per favore clicca di nuovo BACK per uscire", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Clicca di nuovo BACK per uscire", Toast.LENGTH_SHORT).show();
 
         new Handler().postDelayed(new Runnable() {
 
@@ -200,15 +288,5 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 doubleBackToExitPressedOnce = false;
             }
         }, 2000);
-    }
-
-    private void initRecyclerView() {
-        Log.d(TAG, "initReciclerView: init recyclerview.");
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        mAdapter = new MyAdapter(this, listAccount);
-
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setAdapter(mAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 }

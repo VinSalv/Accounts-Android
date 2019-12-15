@@ -8,12 +8,42 @@ public class Account implements Serializable {
     private String email;
     private String user;
     private String password;
+    private boolean isChecked;
 
-    public Account(String owner, String name, String email, String user, String password) {
+    public Account(String owner, String name, String email, String user, String password, boolean isChecked) {
         this.owner = owner;
         this.name = name;
         this.email = email;
         this.user = user;
+        this.password = password;
+        this.isChecked = isChecked;
+    }
+
+    public boolean isSelected() {
+        return isChecked;
+    }
+
+    public void setSelected(boolean selected) {
+        isChecked = selected;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
+    }
+
+    public void setPassword(String password) {
         this.password = password;
     }
 

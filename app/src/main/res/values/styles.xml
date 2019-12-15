@@ -1,7 +1,6 @@
 <resources>
 
     <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
-        <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
@@ -14,11 +13,7 @@
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.MaterialComponents.ActionBar" />
 
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar">
-        <item name="overlapAnchor">false</item>
-        <item name="android:dropDownVerticalOffset">-4dp</item>
-        <item name="android:textColor">#FFFFFF</item>
-    </style>
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar" />
 
     <style name="MyDarkToolbarStyle">
         <item name="overlapAnchor">false</item>
@@ -29,10 +24,8 @@
     <style name="SelectionSwitch">
         <!-- active thumb & track color (30% transparency) -->
         <item name="colorControlActivated">@color/colorPrimaryDark</item>
-
         <!-- inactive thumb color -->
         <item name="colorSwitchThumbNormal">@color/colorPrimaryDark</item>
-
         <!-- inactive track color (30% transparency) -->
         <item name="android:colorForeground">#00A23D</item>
     </style>
@@ -40,18 +33,6 @@
     <style name="inputField">
         <item name="colorControlNormal">#81FFFFFF</item>
         <item name="colorControlActivated">#00A23D</item>
-    </style>
-
-    <style name="AppBarCollapsed" parent="@android:style/TextAppearance.Medium">
-        <item name="android:textSize">32sp</item>
-        <item name="android:textColor">#81FFFFFF</item>
-        <item name="android:textStyle">normal</item>
-    </style>
-
-    <style name="AppBarExpanded" parent="@android:style/TextAppearance.Medium">
-        <item name="android:textSize">16sp</item>
-        <item name="android:textColor">@color/colorPrimary</item>
-        <item name="android:textStyle">normal</item>
     </style>
 
     <style name="rounded_menu_style" parent="@style/Widget.AppCompat.PopupMenu.Overflow">

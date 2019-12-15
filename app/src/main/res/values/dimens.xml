@@ -1,9 +1,4 @@
 <resources>
-    <dimen name="card_margin">15dp</dimen>
-    <dimen name="list_names">16dp</dimen>
-    <dimen name="corner_radius_medium">30dp</dimen>
     <dimen name="app_bar_height">280dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
-    <dimen name="text_margin">16dp</dimen>
-    <dimen name="text_list">6sp</dimen>
 </resources>
