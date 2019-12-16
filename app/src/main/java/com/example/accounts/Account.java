@@ -17,26 +17,6 @@ public class Account implements Serializable {
         this.password = password;
     }
 
-    public void setOwner(String owner) {
-        this.owner = owner;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setUser(String user) {
-        this.user = user;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public Account() {
         this.owner = "";
         this.name = "";
@@ -49,22 +29,41 @@ public class Account implements Serializable {
         return this.owner;
     }
 
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
+
     public String getName() {
         return this.name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getEmail() {
         return this.email;
     }
 
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public String getUser() {
         return this.user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
     }
 
     public String getPassword() {
         return this.password;
     }
 
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
     @Override
     public boolean equals(Object object) {
@@ -76,7 +75,7 @@ public class Account implements Serializable {
     }
 
     public boolean equals(String str) {
-        if (this.getName().compareTo(str)==0) {
+        if (this.getName().compareTo(str) == 0) {
             return true;
         }
         return false;

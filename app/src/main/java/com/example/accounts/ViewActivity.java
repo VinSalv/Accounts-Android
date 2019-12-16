@@ -192,16 +192,14 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                     selectedIds.remove(data.getName());
                 else
                     selectedIds.add(data.getName());
-
-                if (selectedIds.size() > 0)
-                    actionMode.setTitle(String.valueOf(selectedIds.size())); //show selected item count on action mode.
-                else {
-                    actionMode.setTitle(""); //remove item count from action mode.
-                    actionMode.finish(); //hide action mode.
-                }
                 adapter.setSelectedIds(selectedIds);
-
             }
+        }
+        if (selectedIds.size() >= 0)
+            actionMode.setTitle(String.valueOf(selectedIds.size())); //show selected item count on action mode.
+        else {
+            actionMode.setTitle(""); //remove item count from action mode.
+            actionMode.finish(); //hide action mode.
         }
     }
 
@@ -234,7 +232,14 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                     }
                     listAccount.remove(a);
                 }
-                Toast.makeText(this, "Elementi rimossi", Toast.LENGTH_SHORT).show();
+                if (!selectedIds.isEmpty()) {
+                    if (selectedIds.size() == 1) {
+                        Toast.makeText(this, "Un elemento è stato rimosso", Toast.LENGTH_SHORT).show();
+                    } else
+                        Toast.makeText(this, selectedIds.size() + " elementi sono stati rimossi", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, " Nessun elemento è stato rimosso", Toast.LENGTH_SHORT).show();
+                }
                 mngAcc.serializationListAccount(listAccount, path, owner);
                 finish();
                 startActivity(getIntent());
@@ -255,7 +260,14 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     public boolean onMenuItemClick(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.delete:
-                // do your code
+                if (!isMultiSelect) {
+                    selectedIds = new ArrayList<>();
+                    isMultiSelect = true;
+                    if (actionMode == null) {
+                        actionMode = startActionMode(ViewActivity.this); //show ActionMode.
+                    }
+                }
+                multiSelect(-1);
                 return true;
             case R.id.sort:
                 // do your code
