@@ -8,23 +8,13 @@ public class Account implements Serializable {
     private String email;
     private String user;
     private String password;
-    private boolean isChecked;
 
-    public Account(String owner, String name, String email, String user, String password, boolean isChecked) {
+    public Account(String owner, String name, String email, String user, String password) {
         this.owner = owner;
         this.name = name;
         this.email = email;
         this.user = user;
         this.password = password;
-        this.isChecked = isChecked;
-    }
-
-    public boolean isSelected() {
-        return isChecked;
-    }
-
-    public void setSelected(boolean selected) {
-        isChecked = selected;
     }
 
     public void setOwner(String owner) {
@@ -75,12 +65,20 @@ public class Account implements Serializable {
         return this.password;
     }
 
+
     @Override
     public boolean equals(Object object) {
         boolean bool = false;
         if (object != null && object instanceof Account) {
-            bool = (((this.getOwner().equals((((Account) object).getOwner()))) && (this.getName().equals(((Account) object).getName()))));
+            bool = (((this.getName().equals(((Account) object).getName()))));
         }
         return bool;
+    }
+
+    public boolean equals(String str) {
+        if (this.getName().compareTo(str)==0) {
+            return true;
+        }
+        return false;
     }
 }

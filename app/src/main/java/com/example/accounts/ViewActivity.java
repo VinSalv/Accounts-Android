@@ -224,11 +224,20 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             case R.id.delete_id:
                 //just to show selected items.
                 StringBuilder stringBuilder = new StringBuilder();
-                for (Account data : listAccount) {
-                    if (selectedIds.contains(data.getName()))
-                        stringBuilder.append("\n").append(data.getName());
+                for (String data : selectedIds) {
+                    Account a = new Account();
+                    for (Account a2 : listAccount) {
+                        if (a2.getName().equals(data)) {
+                            a = a2;
+                            break;
+                        }
+                    }
+                    listAccount.remove(a);
                 }
-                Toast.makeText(this, "Selected items are :" + stringBuilder.toString(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Elementi rimossi", Toast.LENGTH_SHORT).show();
+                mngAcc.serializationListAccount(listAccount, path, owner);
+                finish();
+                startActivity(getIntent());
                 return true;
         }
         return false;
