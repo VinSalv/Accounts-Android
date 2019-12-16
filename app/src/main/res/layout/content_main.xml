@@ -3,109 +3,152 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/relLayMain"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:background="@drawable/rounded_color"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     tools:context=".MainActivity"
     tools:showIn="@layout/activity_main">
 
-    <EditText
-        android:id="@+id/userApp"
-        android:layout_width="wrap_content"
+    <ScrollView
+        android:id="@+id/scrollMain"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="15dp"
-        android:autofillHints=""
-        android:ems="10"
-        android:hint="@string/userAppHint"
-        android:inputType="text"
-        android:shadowColor="#81FFFFFF"
-        android:textColor="@android:color/white"
-        android:textColorHighlight="#01A0B8"
-        android:textColorHint="#81FFFFFF"
-        android:textColorLink="@color/colorPrimaryDark"
-        android:textSize="16sp"
-        android:theme="@style/inputField"
-        tools:targetApi="o" />
+        android:fillViewport="true">
 
-    <ImageView
-        android:id="@+id/userError"
-        android:layout_width="26dp"
-        android:layout_height="26dp"
-        android:layout_alignBottom="@id/userApp"
-        android:layout_marginStart="3dp"
-        android:layout_marginBottom="5dp"
-        android:layout_toEndOf="@id/userApp"
-        android:contentDescription="@string/userError"
-        android:visibility="invisible"
-        app:srcCompat="@drawable/warning" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-    <EditText
-        android:id="@+id/passApp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/userApp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="15dp"
-        android:autofillHints=""
-        android:ems="10"
-        android:hint="@string/passAppHint"
-        android:inputType="textPassword"
-        android:shadowColor="#81FFFFFF"
-        android:textColor="@android:color/white"
-        android:textColorHighlight="#01A0B8"
-        android:textColorHint="#81FFFFFF"
-        android:textColorLink="@color/colorPrimaryDark"
-        android:textSize="16sp"
-        android:theme="@style/inputField"
-        tools:targetApi="o" />
+            <TextView
+                android:id="@+id/nameApp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="false"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:fontFamily="@font/fredoka_one"
+                android:text="@string/nameApp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textColor="#CCFFFFFF"
+                android:textSize="50sp"
+                android:textStyle="bold" />
 
-    <ImageView
-        android:id="@+id/passError"
-        android:layout_width="26dp"
-        android:layout_height="26dp"
-        android:layout_alignBottom="@id/passApp"
-        android:layout_marginStart="3dp"
-        android:layout_marginBottom="5dp"
-        android:layout_toEndOf="@id/passApp"
-        android:contentDescription="@string/passError"
-        android:visibility="invisible"
-        app:srcCompat="@drawable/warning" />
+            <ImageView
+                android:id="@+id/imageApp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/nameApp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="40dp"
+                android:contentDescription="@string/imageApp"
+                android:src="@drawable/app" />
 
-    <Switch
-        android:id="@+id/flagApp"
-        android:layout_width="120dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/passApp"
-        android:layout_alignStart="@id/passApp"
-        android:layout_marginStart="11dp"
-        android:layout_marginEnd="15dp"
-        android:text="@string/flagApp"
-        android:textColor="#81FFFFFF"
-        android:textSize="14sp"
-        android:textStyle="normal|bold"
-        android:theme="@style/SelectionSwitch" />
+            <RelativeLayout
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/imageApp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="60dp"
+                android:background="@drawable/rounded_color">
 
-    <ImageView
-        android:id="@+id/userImage"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_alignBottom="@id/userApp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="7dp"
-        android:layout_toStartOf="@id/userApp"
-        android:contentDescription="@string/userImage"
-        app:srcCompat="@drawable/user" />
+                <EditText
+                    android:id="@+id/userApp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="15dp"
+                    android:autofillHints=""
+                    android:ems="10"
+                    android:hint="@string/userAppHint"
+                    android:inputType="text"
+                    android:shadowColor="#81FFFFFF"
+                    android:textColor="@android:color/white"
+                    android:textColorHighlight="#01A0B8"
+                    android:textColorHint="#81FFFFFF"
+                    android:textColorLink="@color/colorPrimaryDark"
+                    android:textSize="16sp"
+                    android:theme="@style/inputField"
+                    tools:targetApi="o" />
 
-    <ImageView
-        android:id="@+id/passImage"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_alignBottom="@id/passApp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:layout_toStartOf="@id/passApp"
-        android:contentDescription="@string/passImage"
-        app:srcCompat="@drawable/pass" />
+                <ImageView
+                    android:id="@+id/userError"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
+                    android:layout_alignBottom="@id/userApp"
+                    android:layout_marginStart="3dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_toEndOf="@id/userApp"
+                    android:contentDescription="@string/userError"
+                    android:visibility="invisible"
+                    app:srcCompat="@drawable/warning" />
 
+                <EditText
+                    android:id="@+id/passApp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/userApp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="15dp"
+                    android:autofillHints=""
+                    android:ems="10"
+                    android:hint="@string/passAppHint"
+                    android:inputType="textPassword"
+                    android:shadowColor="#81FFFFFF"
+                    android:textColor="@android:color/white"
+                    android:textColorHighlight="#01A0B8"
+                    android:textColorHint="#81FFFFFF"
+                    android:textColorLink="@color/colorPrimaryDark"
+                    android:textSize="16sp"
+                    android:theme="@style/inputField"
+                    tools:targetApi="o" />
+
+                <ImageView
+                    android:id="@+id/passError"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
+                    android:layout_alignBottom="@id/passApp"
+                    android:layout_marginStart="3dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_toEndOf="@id/passApp"
+                    android:contentDescription="@string/passError"
+                    android:visibility="invisible"
+                    app:srcCompat="@drawable/warning" />
+
+                <Switch
+                    android:id="@+id/flagApp"
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/passApp"
+                    android:layout_alignStart="@id/passApp"
+                    android:layout_marginStart="11dp"
+                    android:layout_marginEnd="15dp"
+                    android:text="@string/flagApp"
+                    android:textColor="#81FFFFFF"
+                    android:textSize="14sp"
+                    android:textStyle="normal|bold"
+                    android:theme="@style/SelectionSwitch" />
+
+                <ImageView
+                    android:id="@+id/userImage"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_alignBottom="@id/userApp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="7dp"
+                    android:layout_toStartOf="@id/userApp"
+                    android:contentDescription="@string/userImage"
+                    app:srcCompat="@drawable/user" />
+
+                <ImageView
+                    android:id="@+id/passImage"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_alignBottom="@id/passApp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_toStartOf="@id/passApp"
+                    android:contentDescription="@string/passImage"
+                    app:srcCompat="@drawable/pass" />
+            </RelativeLayout>
+        </RelativeLayout>
+    </ScrollView>
 </RelativeLayout>

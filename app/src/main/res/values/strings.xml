@@ -55,6 +55,9 @@
     <string name="accountElement">Elemento della lista</string>
     <string name="Delete_id" />
     <string name="wellcomeToolbar">Lista di</string>
+    <string name="title_activity_show_element">ShowElementActivity</string>
+    <string name="tab_text_1">Tab 1</string>
+    <string name="tab_text_2">Tab 2</string>
 
 
 </resources>

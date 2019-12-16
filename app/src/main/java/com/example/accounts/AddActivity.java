@@ -2,14 +2,20 @@ package com.example.accounts;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Patterns;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
@@ -29,6 +35,9 @@ public class AddActivity extends AppCompatActivity {
     private ImageView passError;
     private Button addButton;
     private Button emptyButton;
+    private ArrayList<AccountElement> listElem;
+    private AccountElement elem;
+    private FloatingActionButton addElem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +49,7 @@ public class AddActivity extends AppCompatActivity {
         mngAcc = new ManageAccount();
 
         listAccount = mngAcc.deserializationListAccount(path, owner);
+        listElem = new ArrayList<AccountElement>();
 
         name = findViewById(R.id.nameAddEdit);
         email = findViewById(R.id.emailAddEdit);
@@ -51,6 +61,7 @@ public class AddActivity extends AppCompatActivity {
         passError = findViewById(R.id.errorAddPassword);
         addButton = findViewById(R.id.addButton);
         emptyButton = findViewById(R.id.emptyButton);
+        addElem = findViewById(R.id.addElemFloatingButton);
 
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,17 +71,21 @@ public class AddActivity extends AppCompatActivity {
                 emailError.setVisibility(View.INVISIBLE);
                 passError.setVisibility(View.INVISIBLE);
 
-                Account a = new Account(owner, name.getText().toString(), email.getText().toString(), user.getText().toString(), password.getText().toString());
+                elem = new AccountElement(email.getText().toString(), user.getText().toString(), password.getText().toString());
+                listElem.add(elem);
+                Account a = new Account(owner, name.getText().toString(), listElem);
 
                 if (a.getName().isEmpty()) {
                     nameError.setVisibility(View.VISIBLE);
-                    Toast.makeText(AddActivity.this, "Nome applicativo vuoto !", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddActivity.this, "Il campo nome non può essere vuoto !", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                if (fieldError(a)) {
+                if (fieldError(elem)) {
                     if (!mngAcc.search(a, listAccount)) {
+                        Log.d("QUI", a.getName());
                         listAccount.add(a);
+                        Log.d("QUI", listAccount.get(0).getName());
                         mngAcc.serializationListAccount(listAccount, path, owner);
                         Intent intent = new Intent(AddActivity.this, ViewActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -97,6 +112,20 @@ public class AddActivity extends AppCompatActivity {
                 password.setText("");
             }
         });
+
+        addElem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LinearLayout lin = findViewById(R.id.linLayAdd);
+                LayoutInflater inflater = LayoutInflater.from(AddActivity.this);
+                View view = inflater.inflate(R.layout.more_elem_add, lin, false);
+
+
+                //   text.setTypeface(FontSelector.getBold(getActivity()));
+                lin.addView(view);
+            }
+        });
+
     }
 
 
@@ -110,7 +139,7 @@ public class AddActivity extends AppCompatActivity {
         return Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
-    public boolean fieldError(Account a) {
+    public boolean fieldError(AccountElement a) {
         if (!isValidWord(a.getUser()) && !isValidEmail(a.getEmail()) && !isValidWord(a.getPassword())) {
             userError.setVisibility(View.VISIBLE);
             emailError.setVisibility(View.VISIBLE);

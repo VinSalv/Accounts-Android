@@ -1,28 +1,32 @@
 package com.example.accounts;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Account implements Serializable {
     private String owner;
     private String name;
-    private String email;
-    private String user;
-    private String password;
+    private List<AccountElement> list;
 
-    public Account(String owner, String name, String email, String user, String password) {
+    public Account(String owner, String name, ArrayList<AccountElement> list) {
         this.owner = owner;
         this.name = name;
-        this.email = email;
-        this.user = user;
-        this.password = password;
+        this.list = list;
     }
 
     public Account() {
         this.owner = "";
         this.name = "";
-        this.email = "";
-        this.user = "";
-        this.password = "";
+        this.list = new ArrayList<AccountElement>();
+    }
+
+    public List<AccountElement> getList() {
+        return list;
+    }
+
+    public void setList(List<AccountElement> list) {
+        this.list = list;
     }
 
     public String getOwner() {
@@ -41,29 +45,6 @@ public class Account implements Serializable {
         this.name = name;
     }
 
-    public String getEmail() {
-        return this.email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getUser() {
-        return this.user;
-    }
-
-    public void setUser(String user) {
-        this.user = user;
-    }
-
-    public String getPassword() {
-        return this.password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
 
     @Override
     public boolean equals(Object object) {

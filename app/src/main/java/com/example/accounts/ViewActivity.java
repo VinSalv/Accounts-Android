@@ -163,8 +163,14 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             @Override
             public void onItemClick(View view, int position) {
                 if (isMultiSelect) {
-                    //if multiple selection is enabled then select item on single click else perform normal click on item.
                     multiSelect(position);
+                }else{
+                    Intent intent = new Intent(ViewActivity.this, ShowElementActivity.class);
+                    intent.putExtra("name",adapter.getItem(position));
+                    intent.putExtra("path", path);
+                    intent.putExtra("owner", "");
+                    startActivity(intent);
+
                 }
             }
 
@@ -220,8 +226,6 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     public boolean onActionItemClicked(ActionMode mode, MenuItem menuItem) {
         switch (menuItem.getItemId()) {
             case R.id.delete_id:
-                //just to show selected items.
-                StringBuilder stringBuilder = new StringBuilder();
                 for (String data : selectedIds) {
                     Account a = new Account();
                     for (Account a2 : listAccount) {
