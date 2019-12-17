@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Patterns;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -26,9 +25,9 @@ public class AddActivity extends AppCompatActivity {
     private ManageAccount mngAcc;
     private ArrayList<Account> listAccount;
     private EditText name;
-    private EditText email;
-    private EditText user;
-    private EditText password;
+    private ArrayList<EditText> email;
+    private ArrayList<EditText> user;
+    private ArrayList<EditText> password;
     private ImageView nameError;
     private ImageView emailError;
     private ImageView userError;
@@ -38,6 +37,7 @@ public class AddActivity extends AppCompatActivity {
     private ArrayList<AccountElement> listElem;
     private AccountElement elem;
     private FloatingActionButton addElem;
+    private int i;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,11 +50,17 @@ public class AddActivity extends AppCompatActivity {
 
         listAccount = mngAcc.deserializationListAccount(path, owner);
         listElem = new ArrayList<AccountElement>();
-
+        email = new ArrayList<EditText>();
+        user = new ArrayList<EditText>();
+        password = new ArrayList<EditText>();
+        i=0;
         name = findViewById(R.id.nameAddEdit);
-        email = findViewById(R.id.emailAddEdit);
-        user = findViewById(R.id.userAddEdit);
-        password = findViewById(R.id.passAddEdit);
+        EditText editText = findViewById(R.id.emailAddEdit);
+        email.add(editText);
+        editText = findViewById(R.id.userAddEdit);
+        user.add(editText);
+        editText = findViewById(R.id.passAddEdit);
+        password.add(editText);
         nameError = findViewById(R.id.errorAddName);
         emailError = findViewById(R.id.errorAddEmail);
         userError = findViewById(R.id.errorAddUser);
@@ -71,7 +77,7 @@ public class AddActivity extends AppCompatActivity {
                 emailError.setVisibility(View.INVISIBLE);
                 passError.setVisibility(View.INVISIBLE);
 
-                elem = new AccountElement(email.getText().toString(), user.getText().toString(), password.getText().toString());
+                elem = new AccountElement(email.get(i).getText().toString(), user.get(i).getText().toString(), password.get(i).getText().toString());
                 listElem.add(elem);
                 Account a = new Account(owner, name.getText().toString(), listElem);
 
@@ -107,22 +113,27 @@ public class AddActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 name.setText("");
-                email.setText("");
-                user.setText("");
-                password.setText("");
+
             }
         });
 
         addElem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                i++;
                 LinearLayout lin = findViewById(R.id.linLayAdd);
-                LayoutInflater inflater = LayoutInflater.from(AddActivity.this);
-                View view = inflater.inflate(R.layout.more_elem_add, lin, false);
-
-
-                //   text.setTypeface(FontSelector.getBold(getActivity()));
-                lin.addView(view);
+                RelativeLayout relLay = new RelativeLayout(AddActivity.this);
+                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                        RelativeLayout.LayoutParams.FILL_PARENT,
+                        RelativeLayout.LayoutParams.WRAP_CONTENT);
+                params.setMargins(0, 0, 0, 20);
+                relLay.setLayoutParams(params);
+                relLay.setBackground(getResources().getDrawable(R.drawable.rounded_color));
+                EditText email;
+                email.setId("");
+                EditText user;
+                EditText pass;
+                lin.addView(relLay);
             }
         });
 
