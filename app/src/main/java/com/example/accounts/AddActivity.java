@@ -2,6 +2,7 @@ package com.example.accounts;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
@@ -53,7 +54,7 @@ public class AddActivity extends AppCompatActivity {
         email = new ArrayList<EditText>();
         user = new ArrayList<EditText>();
         password = new ArrayList<EditText>();
-        i=0;
+        i = 0;
         name = findViewById(R.id.nameAddEdit);
         EditText editText = findViewById(R.id.emailAddEdit);
         email.add(editText);
@@ -77,7 +78,7 @@ public class AddActivity extends AppCompatActivity {
                 emailError.setVisibility(View.INVISIBLE);
                 passError.setVisibility(View.INVISIBLE);
 
-                elem = new AccountElement(email.get(i).getText().toString(), user.get(i).getText().toString(), password.get(i).getText().toString());
+                elem = new AccountElement(email.get(0).getText().toString(), user.get(0).getText().toString(), password.get(0).getText().toString());
                 listElem.add(elem);
                 Account a = new Account(owner, name.getText().toString(), listElem);
 
@@ -122,17 +123,86 @@ public class AddActivity extends AppCompatActivity {
             public void onClick(View v) {
                 i++;
                 LinearLayout lin = findViewById(R.id.linLayAdd);
+
                 RelativeLayout relLay = new RelativeLayout(AddActivity.this);
                 RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
-                        RelativeLayout.LayoutParams.FILL_PARENT,
+                        RelativeLayout.LayoutParams.MATCH_PARENT,
                         RelativeLayout.LayoutParams.WRAP_CONTENT);
                 params.setMargins(0, 0, 0, 20);
                 relLay.setLayoutParams(params);
-                relLay.setBackground(getResources().getDrawable(R.drawable.rounded_color));
-                EditText email;
-                email.setId("");
-                EditText user;
-                EditText pass;
+                relLay.setBackground(getDrawable(R.drawable.rounded_color));
+
+                RelativeLayout.LayoutParams paramsEmail = new RelativeLayout.LayoutParams(
+                        RelativeLayout.LayoutParams.WRAP_CONTENT,
+                        RelativeLayout.LayoutParams.WRAP_CONTENT);
+                EditText emailAddEdit = (EditText) getLayoutInflater().inflate(R.layout.add_element, null);
+                emailAddEdit.setTag("email" + i);
+                emailAddEdit.setId(R.id.emailAddEdit);
+                emailAddEdit.setHint(getResources().getString(R.string.emailAddHint));
+                emailAddEdit.setTextSize(16);
+                emailAddEdit.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+                paramsEmail.setMargins(85, 0, 0, 55);
+                emailAddEdit.setLayoutParams(paramsEmail);
+                relLay.addView(emailAddEdit);
+
+                RelativeLayout.LayoutParams paramsEmailImage = new RelativeLayout.LayoutParams(
+                        53,
+                        53);
+                ImageView emailImage = new ImageView (AddActivity.this);
+                emailImage.setImageDrawable(getDrawable(R.drawable.email));
+                paramsEmailImage.addRule(RelativeLayout.ALIGN_BOTTOM, emailAddEdit.getId());
+                paramsEmailImage.setMargins(0, 0, 0, 15);
+                emailImage.setLayoutParams(paramsEmailImage);
+                relLay.addView(emailImage);
+
+                RelativeLayout.LayoutParams paramsUser = new RelativeLayout.LayoutParams(
+                        RelativeLayout.LayoutParams.WRAP_CONTENT,
+                        RelativeLayout.LayoutParams.WRAP_CONTENT);
+                EditText userAddEdit = (EditText) getLayoutInflater().inflate(R.layout.add_element, null);
+                userAddEdit.setTag("user" + i);
+                userAddEdit.setId(R.id.userAddEdit);
+                userAddEdit.setHint(getResources().getString(R.string.userAddHint));
+                userAddEdit.setTextSize(16);
+                userAddEdit.setInputType(InputType.TYPE_TEXT_VARIATION_PERSON_NAME);
+                paramsUser.addRule(RelativeLayout.BELOW, emailAddEdit.getId());
+                paramsUser.setMargins(85, 0, 0, 55);
+                userAddEdit.setLayoutParams(paramsUser);
+                relLay.addView(userAddEdit);
+
+                RelativeLayout.LayoutParams paramsUserImage = new RelativeLayout.LayoutParams(
+                        53,
+                       53);
+                ImageView userImage = new ImageView (AddActivity.this);
+                userImage.setImageDrawable(getDrawable(R.drawable.user));
+                paramsUserImage.addRule(RelativeLayout.ALIGN_BOTTOM, userAddEdit.getId());
+                paramsUserImage.setMargins(0, 0, 0, 15);
+                userImage.setLayoutParams(paramsUserImage);
+                relLay.addView(userImage);
+
+                RelativeLayout.LayoutParams paramsPass = new RelativeLayout.LayoutParams(
+                        RelativeLayout.LayoutParams.WRAP_CONTENT,
+                        RelativeLayout.LayoutParams.WRAP_CONTENT);
+                EditText passAddEdit = (EditText) getLayoutInflater().inflate(R.layout.add_element, null);
+                passAddEdit.setTag("pass" + i);
+                passAddEdit.setId(R.id.passAddEdit);
+                passAddEdit.setHint(getResources().getString(R.string.passAddHint));
+                passAddEdit.setTextSize(16);
+                passAddEdit.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                paramsPass.addRule(RelativeLayout.BELOW, userAddEdit.getId());
+                paramsPass.setMargins(85, 0, 0, 0);
+                passAddEdit.setLayoutParams(paramsPass);
+                relLay.addView(passAddEdit);
+
+                RelativeLayout.LayoutParams paramsPassImage = new RelativeLayout.LayoutParams(
+                        53,
+                       53);
+                ImageView passImage = new ImageView (AddActivity.this);
+                passImage.setImageDrawable(getDrawable(R.drawable.pass));
+                paramsPassImage.addRule(RelativeLayout.ALIGN_BOTTOM, passAddEdit.getId());
+                paramsPassImage.setMargins(0, 0, 0, 15);
+                passImage.setLayoutParams(paramsPassImage);
+                relLay.addView(passImage);
+
                 lin.addView(relLay);
             }
         });

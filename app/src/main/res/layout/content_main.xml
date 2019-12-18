@@ -60,11 +60,6 @@
                     android:ems="10"
                     android:hint="@string/userAppHint"
                     android:inputType="text"
-                    android:shadowColor="#81FFFFFF"
-                    android:textColor="@android:color/white"
-                    android:textColorHighlight="#01A0B8"
-                    android:textColorHint="#81FFFFFF"
-                    android:textColorLink="@color/colorPrimaryDark"
                     android:textSize="16sp"
                     android:theme="@style/inputField"
                     tools:targetApi="o" />
@@ -92,11 +87,6 @@
                     android:ems="10"
                     android:hint="@string/passAppHint"
                     android:inputType="textPassword"
-                    android:shadowColor="#81FFFFFF"
-                    android:textColor="@android:color/white"
-                    android:textColorHighlight="#01A0B8"
-                    android:textColorHint="#81FFFFFF"
-                    android:textColorLink="@color/colorPrimaryDark"
                     android:textSize="16sp"
                     android:theme="@style/inputField"
                     tools:targetApi="o" />
