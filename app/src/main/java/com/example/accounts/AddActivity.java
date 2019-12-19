@@ -146,9 +146,9 @@ public class AddActivity extends AppCompatActivity {
                 relLay.addView(emailAddEdit);
 
                 RelativeLayout.LayoutParams paramsEmailImage = new RelativeLayout.LayoutParams(
-                        53,
-                        53);
-                ImageView emailImage = new ImageView (AddActivity.this);
+                        55,
+                        55);
+                ImageView emailImage = new ImageView(AddActivity.this);
                 emailImage.setImageDrawable(getDrawable(R.drawable.email));
                 paramsEmailImage.addRule(RelativeLayout.ALIGN_BOTTOM, emailAddEdit.getId());
                 paramsEmailImage.setMargins(0, 0, 0, 15);
@@ -170,9 +170,9 @@ public class AddActivity extends AppCompatActivity {
                 relLay.addView(userAddEdit);
 
                 RelativeLayout.LayoutParams paramsUserImage = new RelativeLayout.LayoutParams(
-                        53,
-                       53);
-                ImageView userImage = new ImageView (AddActivity.this);
+                        55,
+                        55);
+                ImageView userImage = new ImageView(AddActivity.this);
                 userImage.setImageDrawable(getDrawable(R.drawable.user));
                 paramsUserImage.addRule(RelativeLayout.ALIGN_BOTTOM, userAddEdit.getId());
                 paramsUserImage.setMargins(0, 0, 0, 15);
@@ -194,9 +194,9 @@ public class AddActivity extends AppCompatActivity {
                 relLay.addView(passAddEdit);
 
                 RelativeLayout.LayoutParams paramsPassImage = new RelativeLayout.LayoutParams(
-                        53,
-                       53);
-                ImageView passImage = new ImageView (AddActivity.this);
+                        55,
+                        55);
+                ImageView passImage = new ImageView(AddActivity.this);
                 passImage.setImageDrawable(getDrawable(R.drawable.pass));
                 paramsPassImage.addRule(RelativeLayout.ALIGN_BOTTOM, passAddEdit.getId());
                 paramsPassImage.setMargins(0, 0, 0, 15);

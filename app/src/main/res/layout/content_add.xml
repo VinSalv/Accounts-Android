@@ -13,6 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fillViewport="true">
+
         <LinearLayout
             android:id="@+id/linLayAdd"
             android:layout_width="match_parent"
@@ -48,8 +49,8 @@
                     android:id="@+id/errorAddName"
                     android:layout_width="26dp"
                     android:layout_height="26dp"
-                    android:layout_marginStart="3dp"
-                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="12dp"
+                    android:baselineAlignBottom="false"
                     android:contentDescription="@string/errorAddUser"
                     android:visibility="invisible"
                     app:srcCompat="@drawable/warning" />
@@ -91,9 +92,10 @@
 
                 <ImageView
                     android:id="@+id/errorAddEmail"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
                     android:layout_alignBottom="@id/emailAddEdit"
+                    android:layout_marginBottom="5dp"
                     android:layout_toEndOf="@id/emailAddEdit"
                     android:contentDescription="@string/errorAddEmail"
                     android:visibility="invisible"
@@ -126,9 +128,10 @@
 
                 <ImageView
                     android:id="@+id/errorAddUser"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
                     android:layout_alignBottom="@id/userAddEdit"
+                    android:layout_marginBottom="5dp"
                     android:layout_toEndOf="@id/userAddEdit"
                     android:contentDescription="@string/errorAddPass"
                     android:visibility="invisible"
@@ -159,9 +162,10 @@
 
                 <ImageView
                     android:id="@+id/errorAddPassword"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
                     android:layout_alignBottom="@id/passAddEdit"
+                    android:layout_marginBottom="5dp"
                     android:layout_toEndOf="@id/passAddEdit"
                     android:contentDescription="@string/errorAddPass"
                     android:visibility="invisible"

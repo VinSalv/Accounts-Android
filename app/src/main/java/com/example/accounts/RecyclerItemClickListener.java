@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListener {
     private OnItemClickListener mListener;
     private GestureDetector mGestureDetector;
+
     public RecyclerItemClickListener(Context context, final RecyclerView recyclerView, OnItemClickListener listener) {
         mListener = listener;
 

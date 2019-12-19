@@ -30,7 +30,7 @@ public class ShowElementActivity extends AppCompatActivity {
         path = getIntent().getExtras().getString("path");
         owner = getIntent().getExtras().getString("owner");
         a = (Account) getIntent().getExtras().get("name");
-        Toast.makeText(this,a.getName(),Toast.LENGTH_LONG).show();
+        Toast.makeText(this, a.getName(), Toast.LENGTH_LONG).show();
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override

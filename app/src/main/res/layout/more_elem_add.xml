@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -23,7 +23,6 @@
 
         <EditText
             android:id="@+id/emailAddEdit"
-            tools:targetApi="o"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
@@ -39,7 +38,8 @@
             android:textColorHint="#81FFFFFF"
             android:textColorLink="@color/colorPrimaryDark"
             android:textSize="16sp"
-            android:theme="@style/inputField" />
+            android:theme="@style/inputField"
+            tools:targetApi="o" />
 
         <ImageView
             android:id="@+id/errorAddEmail"
@@ -61,7 +61,6 @@
 
         <EditText
             android:id="@+id/userAddEdit"
-            tools:targetApi="o"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/emailAddEdit"
@@ -78,7 +77,8 @@
             android:textColorHint="#81FFFFFF"
             android:textColorLink="@color/colorPrimaryDark"
             android:textSize="16sp"
-            android:theme="@style/inputField" />
+            android:theme="@style/inputField"
+            tools:targetApi="o" />
 
         <ImageView
             android:id="@+id/errorAddUser"
@@ -100,7 +100,6 @@
 
         <EditText
             android:id="@+id/passAddEdit"
-            tools:targetApi="o"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/userAddEdit"
@@ -115,7 +114,8 @@
             android:textColorHint="#81FFFFFF"
             android:textColorLink="@color/colorPrimaryDark"
             android:textSize="16sp"
-            android:theme="@style/inputField" />
+            android:theme="@style/inputField"
+            tools:targetApi="o" />
 
         <ImageView
             android:id="@+id/errorAddPassword"
