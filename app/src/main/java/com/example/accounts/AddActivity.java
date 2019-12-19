@@ -2,9 +2,8 @@ package com.example.accounts;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.InputType;
-import android.util.Log;
 import android.util.Patterns;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -38,6 +37,10 @@ public class AddActivity extends AppCompatActivity {
     private ArrayList<AccountElement> listElem;
     private AccountElement elem;
     private FloatingActionButton addElem;
+    private ArrayList<RelativeLayout> layList;
+    private ArrayList<ImageView> emailErrorList;
+    private ArrayList<ImageView> userErrorList;
+    private ArrayList<ImageView> passwordErrorList;
     private int i;
 
     @Override
@@ -51,21 +54,27 @@ public class AddActivity extends AppCompatActivity {
 
         listAccount = mngAcc.deserializationListAccount(path, owner);
         listElem = new ArrayList<AccountElement>();
+        layList = new ArrayList<RelativeLayout>();
         email = new ArrayList<EditText>();
         user = new ArrayList<EditText>();
         password = new ArrayList<EditText>();
+        emailErrorList = new ArrayList<ImageView>();
+        userErrorList = new ArrayList<ImageView>();
+        passwordErrorList = new ArrayList<ImageView>();
         i = 0;
+
+        layList.add((RelativeLayout) findViewById(R.id.subRelLayAdd));
+
         name = findViewById(R.id.nameAddEdit);
-        EditText editText = findViewById(R.id.emailAddEdit);
-        email.add(editText);
-        editText = findViewById(R.id.userAddEdit);
-        user.add(editText);
-        editText = findViewById(R.id.passAddEdit);
-        password.add(editText);
         nameError = findViewById(R.id.errorAddName);
-        emailError = findViewById(R.id.errorAddEmail);
-        userError = findViewById(R.id.errorAddUser);
-        passError = findViewById(R.id.errorAddPassword);
+
+        email.add((EditText) findViewById(R.id.emailAddEdit));
+        emailErrorList.add((ImageView) findViewById(R.id.errorAddEmail));
+        user.add((EditText) findViewById(R.id.userAddEdit));
+        userErrorList.add((ImageView) findViewById(R.id.errorAddUser));
+        password.add((EditText) findViewById(R.id.passAddEdit));
+        passwordErrorList.add((ImageView) findViewById(R.id.errorAddPassword));
+
         addButton = findViewById(R.id.addButton);
         emptyButton = findViewById(R.id.emptyButton);
         addElem = findViewById(R.id.addElemFloatingButton);
@@ -74,12 +83,16 @@ public class AddActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 nameError.setVisibility(View.INVISIBLE);
-                userError.setVisibility(View.INVISIBLE);
-                emailError.setVisibility(View.INVISIBLE);
-                passError.setVisibility(View.INVISIBLE);
+                listElem.clear();
 
-                elem = new AccountElement(email.get(0).getText().toString(), user.get(0).getText().toString(), password.get(0).getText().toString());
-                listElem.add(elem);
+                for (int n = 0; n <= i; n++) {
+                    emailErrorList.get(n).setVisibility(View.INVISIBLE);
+                    userErrorList.get(n).setVisibility(View.INVISIBLE);
+                    passwordErrorList.get(n).setVisibility(View.INVISIBLE);
+                    elem = new AccountElement(email.get(n).getText().toString(), user.get(n).getText().toString(), password.get(n).getText().toString());
+                    listElem.add(elem);
+                }
+
                 Account a = new Account(owner, name.getText().toString(), listElem);
 
                 if (a.getName().isEmpty()) {
@@ -88,26 +101,30 @@ public class AddActivity extends AppCompatActivity {
                     return;
                 }
 
-                if (fieldError(elem)) {
-                    if (!mngAcc.search(a, listAccount)) {
-                        Log.d("QUI", a.getName());
-                        listAccount.add(a);
-                        Log.d("QUI", listAccount.get(0).getName());
-                        mngAcc.serializationListAccount(listAccount, path, owner);
-                        Intent intent = new Intent(AddActivity.this, ViewActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        intent.putExtra("path", path);
-                        intent.putExtra("owner", owner);
-                        startActivity(intent);
-                        finish();
-                    } else {
-                        nameError.setVisibility(View.VISIBLE);
-                        Toast.makeText(AddActivity.this, "Applicativo già registrato !!!", Toast.LENGTH_SHORT).show();
-                    }
+                int n = 0;
+                for (AccountElement elem : listElem) {
+                    if (fieldError(elem, n)) return;
+                    n++;
+                }
+
+                if (!mngAcc.search(a, listAccount)) {
+                    listAccount.add(a);
+                    mngAcc.serializationListAccount(listAccount, path, owner);
+                    Intent intent = new Intent(AddActivity.this, ViewActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.putExtra("path", path);
+                    intent.putExtra("owner", owner);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    nameError.setVisibility(View.VISIBLE);
+                    Toast.makeText(AddActivity.this, "Applicativo già registrato !!!", Toast.LENGTH_SHORT).show();
+                    return;
                 }
             }
+
         });
 
         emptyButton.setOnClickListener(new View.OnClickListener() {
@@ -124,86 +141,19 @@ public class AddActivity extends AppCompatActivity {
                 i++;
                 LinearLayout lin = findViewById(R.id.linLayAdd);
 
-                RelativeLayout relLay = new RelativeLayout(AddActivity.this);
-                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
-                        RelativeLayout.LayoutParams.MATCH_PARENT,
-                        RelativeLayout.LayoutParams.WRAP_CONTENT);
+                LayoutInflater inflater = LayoutInflater.from(AddActivity.this);
+                RelativeLayout relLey = (RelativeLayout) inflater.inflate(R.layout.more_add_lay, null);
+                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                 params.setMargins(0, 0, 0, 20);
-                relLay.setLayoutParams(params);
-                relLay.setBackground(getDrawable(R.drawable.rounded_color));
-
-                RelativeLayout.LayoutParams paramsEmail = new RelativeLayout.LayoutParams(
-                        RelativeLayout.LayoutParams.WRAP_CONTENT,
-                        RelativeLayout.LayoutParams.WRAP_CONTENT);
-                EditText emailAddEdit = (EditText) getLayoutInflater().inflate(R.layout.add_element, null);
-                emailAddEdit.setTag("email" + i);
-                emailAddEdit.setId(R.id.emailAddEdit);
-                emailAddEdit.setHint(getResources().getString(R.string.emailAddHint));
-                emailAddEdit.setTextSize(16);
-                emailAddEdit.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
-                paramsEmail.setMargins(85, 0, 0, 55);
-                emailAddEdit.setLayoutParams(paramsEmail);
-                relLay.addView(emailAddEdit);
-
-                RelativeLayout.LayoutParams paramsEmailImage = new RelativeLayout.LayoutParams(
-                        55,
-                        55);
-                ImageView emailImage = new ImageView(AddActivity.this);
-                emailImage.setImageDrawable(getDrawable(R.drawable.email));
-                paramsEmailImage.addRule(RelativeLayout.ALIGN_BOTTOM, emailAddEdit.getId());
-                paramsEmailImage.setMargins(0, 0, 0, 15);
-                emailImage.setLayoutParams(paramsEmailImage);
-                relLay.addView(emailImage);
-
-                RelativeLayout.LayoutParams paramsUser = new RelativeLayout.LayoutParams(
-                        RelativeLayout.LayoutParams.WRAP_CONTENT,
-                        RelativeLayout.LayoutParams.WRAP_CONTENT);
-                EditText userAddEdit = (EditText) getLayoutInflater().inflate(R.layout.add_element, null);
-                userAddEdit.setTag("user" + i);
-                userAddEdit.setId(R.id.userAddEdit);
-                userAddEdit.setHint(getResources().getString(R.string.userAddHint));
-                userAddEdit.setTextSize(16);
-                userAddEdit.setInputType(InputType.TYPE_TEXT_VARIATION_PERSON_NAME);
-                paramsUser.addRule(RelativeLayout.BELOW, emailAddEdit.getId());
-                paramsUser.setMargins(85, 0, 0, 55);
-                userAddEdit.setLayoutParams(paramsUser);
-                relLay.addView(userAddEdit);
-
-                RelativeLayout.LayoutParams paramsUserImage = new RelativeLayout.LayoutParams(
-                        55,
-                        55);
-                ImageView userImage = new ImageView(AddActivity.this);
-                userImage.setImageDrawable(getDrawable(R.drawable.user));
-                paramsUserImage.addRule(RelativeLayout.ALIGN_BOTTOM, userAddEdit.getId());
-                paramsUserImage.setMargins(0, 0, 0, 15);
-                userImage.setLayoutParams(paramsUserImage);
-                relLay.addView(userImage);
-
-                RelativeLayout.LayoutParams paramsPass = new RelativeLayout.LayoutParams(
-                        RelativeLayout.LayoutParams.WRAP_CONTENT,
-                        RelativeLayout.LayoutParams.WRAP_CONTENT);
-                EditText passAddEdit = (EditText) getLayoutInflater().inflate(R.layout.add_element, null);
-                passAddEdit.setTag("pass" + i);
-                passAddEdit.setId(R.id.passAddEdit);
-                passAddEdit.setHint(getResources().getString(R.string.passAddHint));
-                passAddEdit.setTextSize(16);
-                passAddEdit.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
-                paramsPass.addRule(RelativeLayout.BELOW, userAddEdit.getId());
-                paramsPass.setMargins(85, 0, 0, 0);
-                passAddEdit.setLayoutParams(paramsPass);
-                relLay.addView(passAddEdit);
-
-                RelativeLayout.LayoutParams paramsPassImage = new RelativeLayout.LayoutParams(
-                        55,
-                        55);
-                ImageView passImage = new ImageView(AddActivity.this);
-                passImage.setImageDrawable(getDrawable(R.drawable.pass));
-                paramsPassImage.addRule(RelativeLayout.ALIGN_BOTTOM, passAddEdit.getId());
-                paramsPassImage.setMargins(0, 0, 0, 15);
-                passImage.setLayoutParams(paramsPassImage);
-                relLay.addView(passImage);
-
-                lin.addView(relLay);
+                relLey.setLayoutParams(params);
+                layList.add(relLey);
+                emailErrorList.add((ImageView) relLey.findViewById(R.id.errorAddEmail));
+                userErrorList.add((ImageView) relLey.findViewById(R.id.errorAddUser));
+                passwordErrorList.add((ImageView) relLey.findViewById(R.id.errorAddPassword));
+                email.add((EditText) relLey.findViewById(R.id.emailAddEdit));
+                user.add((EditText) relLey.findViewById(R.id.userAddEdit));
+                password.add((EditText) relLey.findViewById(R.id.passAddEdit));
+                lin.addView(relLey);
             }
         });
 
@@ -220,42 +170,42 @@ public class AddActivity extends AppCompatActivity {
         return Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
-    public boolean fieldError(AccountElement a) {
+    public boolean fieldError(AccountElement a, int n) {
         if (!isValidWord(a.getUser()) && !isValidEmail(a.getEmail()) && !isValidWord(a.getPassword())) {
-            userError.setVisibility(View.VISIBLE);
-            emailError.setVisibility(View.VISIBLE);
-            passError.setVisibility(View.VISIBLE);
+            userErrorList.get(n).setVisibility(View.VISIBLE);
+            emailErrorList.get(n).setVisibility(View.VISIBLE);
+            passwordErrorList.get(n).setVisibility(View.VISIBLE);
             Toast.makeText(AddActivity.this, "Campi Utente, Email e Password non validi !!!", Toast.LENGTH_SHORT).show();
-            return false;
+            return true;
         } else if (!isValidWord(a.getUser()) && !isValidWord(a.getPassword())) {
-            userError.setVisibility(View.VISIBLE);
-            passError.setVisibility(View.VISIBLE);
+            userErrorList.get(n).setVisibility(View.VISIBLE);
+            passwordErrorList.get(n).setVisibility(View.VISIBLE);
             Toast.makeText(AddActivity.this, "Campi Utente e Password non validi !!!", Toast.LENGTH_SHORT).show();
-            return false;
+            return true;
         } else if (!isValidWord(a.getPassword()) && !isValidEmail(a.getEmail())) {
-            passError.setVisibility(View.VISIBLE);
-            emailError.setVisibility(View.VISIBLE);
+            passwordErrorList.get(n).setVisibility(View.VISIBLE);
+            emailErrorList.get(n).setVisibility(View.VISIBLE);
             Toast.makeText(AddActivity.this, "Campi Email e Password non validi !!!", Toast.LENGTH_SHORT).show();
-            return false;
+            return true;
         } else if (!isValidWord(a.getUser()) && !isValidEmail(a.getEmail())) {
-            userError.setVisibility(View.VISIBLE);
-            emailError.setVisibility(View.VISIBLE);
+            userErrorList.get(n).setVisibility(View.VISIBLE);
+            emailErrorList.get(n).setVisibility(View.VISIBLE);
             Toast.makeText(AddActivity.this, "Campi Utente e Email non validi !!!", Toast.LENGTH_SHORT).show();
-            return false;
+            return true;
         } else if (!isValidWord(a.getUser())) {
-            userError.setVisibility(View.VISIBLE);
+            userErrorList.get(n).setVisibility(View.VISIBLE);
             Toast.makeText(AddActivity.this, "Campo Utente non valido !!!", Toast.LENGTH_SHORT).show();
-            return false;
+            return true;
         } else if (!isValidEmail(a.getEmail())) {
-            emailError.setVisibility(View.VISIBLE);
+            emailErrorList.get(n).setVisibility(View.VISIBLE);
             Toast.makeText(AddActivity.this, "Campo Email non valido !!!", Toast.LENGTH_SHORT).show();
-            return false;
+            return true;
         } else if (!isValidWord(a.getPassword())) {
-            passError.setVisibility(View.VISIBLE);
+            passwordErrorList.get(n).setVisibility(View.VISIBLE);
             Toast.makeText(AddActivity.this, "Campo Password non valido !!!", Toast.LENGTH_SHORT).show();
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
 
     public void onBackPressed() {
