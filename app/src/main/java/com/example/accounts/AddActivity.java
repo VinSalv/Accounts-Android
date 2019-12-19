@@ -62,7 +62,7 @@ public class AddActivity extends AppCompatActivity {
         userErrorList = new ArrayList<ImageView>();
         passwordErrorList = new ArrayList<ImageView>();
         i = 0;
-
+        final RelativeLayout rel = (RelativeLayout) findViewById(R.id.subRelLayAdd);
         layList.add((RelativeLayout) findViewById(R.id.subRelLayAdd));
 
         name = findViewById(R.id.nameAddEdit);
@@ -130,8 +130,30 @@ public class AddActivity extends AppCompatActivity {
         emptyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                name.setText("");
-
+                i = 0;
+                listElem.clear();
+                emailErrorList.clear();
+                userErrorList.clear();
+                passwordErrorList.clear();
+                LinearLayout lin = findViewById(R.id.linLayAdd);
+                for (RelativeLayout l : layList) {
+                    if (l != rel) lin.removeView(l);
+                }
+                layList.clear();
+                findViewById(R.id.errorAddEmail).setVisibility(View.INVISIBLE);
+                findViewById(R.id.errorAddUser).setVisibility(View.INVISIBLE);
+                findViewById(R.id.errorAddPassword).setVisibility(View.INVISIBLE);
+                ((EditText) findViewById(R.id.emailAddEdit)).setText("");
+                ((EditText) findViewById(R.id.userAddEdit)).setText("");
+                ((EditText) findViewById(R.id.passAddEdit)).setText("");
+                ((EditText) findViewById(R.id.nameAddEdit)).setText("");
+                layList.add((RelativeLayout) findViewById(R.id.subRelLayAdd));
+                email.add((EditText) findViewById(R.id.emailAddEdit));
+                emailErrorList.add((ImageView) findViewById(R.id.errorAddEmail));
+                user.add((EditText) findViewById(R.id.userAddEdit));
+                userErrorList.add((ImageView) findViewById(R.id.errorAddUser));
+                password.add((EditText) findViewById(R.id.passAddEdit));
+                passwordErrorList.add((ImageView) findViewById(R.id.errorAddPassword));
             }
         });
 
@@ -139,10 +161,9 @@ public class AddActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 i++;
-                LinearLayout lin = findViewById(R.id.linLayAdd);
-
+                final LinearLayout lin = findViewById(R.id.linLayAdd);
                 LayoutInflater inflater = LayoutInflater.from(AddActivity.this);
-                RelativeLayout relLey = (RelativeLayout) inflater.inflate(R.layout.more_add_lay, null);
+                final RelativeLayout relLey = (RelativeLayout) inflater.inflate(R.layout.more_add_lay, null);
                 RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                 params.setMargins(0, 0, 0, 20);
                 relLey.setLayoutParams(params);
@@ -153,7 +174,16 @@ public class AddActivity extends AppCompatActivity {
                 email.add((EditText) relLey.findViewById(R.id.emailAddEdit));
                 user.add((EditText) relLey.findViewById(R.id.userAddEdit));
                 password.add((EditText) relLey.findViewById(R.id.passAddEdit));
+                Button del = relLey.findViewById(R.id.deleteAddLay);
                 lin.addView(relLey);
+                del.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        i--;
+                        layList.remove(relLey);
+                        lin.removeView(relLey);
+                    }
+                });
             }
         });
 
