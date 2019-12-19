@@ -51,7 +51,7 @@
     <string name="passAddHint">Password</string>
     <string name="errorAddPass">Errore immisione password</string>
     <string name="addButton">Aggiungi</string>
-    <string name="emptyButton">Svuota campi</string>
+    <string name="emptyButton">Resetta</string>
     <string name="accountElement">Elemento della lista</string>
     <string name="Delete_id" />
     <string name="wellcomeToolbar">Lista di</string>
