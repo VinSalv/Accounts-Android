@@ -166,9 +166,9 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                     multiSelect(position);
                 } else {
                     Intent intent = new Intent(ViewActivity.this, ShowElementActivity.class);
-                    intent.putExtra("name", adapter.getItem(position));
+                    intent.putExtra("account", adapter.getItem(position));
                     intent.putExtra("path", path);
-                    intent.putExtra("owner", "");
+                    intent.putExtra("owner", owner);
                     startActivity(intent);
 
                 }

@@ -1,43 +1,81 @@
 package com.example.accounts;
 
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
-import com.example.accounts.ui.main.SectionsPagerAdapter;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 
+import java.util.ArrayList;
+
 public class ShowElementActivity extends AppCompatActivity {
+    private Account account;
     private String path;
     private String owner;
-    private Account a;
+    private ManageApp mngApp;
+    private LogApp log;
+    private ManageUser mngUsr;
+    private ArrayList<User> listUser;
+    private ManageAccount mngAcc;
+    private ArrayList<Account> listAccount;
+    private ArrayList<AccountElement> listElem;
+    private TabLayout tabs;
+    private TabAdapter tabAdapter;
+    private ViewPager viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_element);
-        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
-        ViewPager viewPager = findViewById(R.id.view_pager);
-        viewPager.setAdapter(sectionsPagerAdapter);
-        TabLayout tabs = findViewById(R.id.tabs);
-        tabs.setupWithViewPager(viewPager);
-        FloatingActionButton fab = findViewById(R.id.fab);
+        viewPager = findViewById(R.id.view_pager);
+        tabs = findViewById(R.id.tabs);
+        account = (Account) getIntent().getExtras().get("account");
         path = getIntent().getExtras().getString("path");
         owner = getIntent().getExtras().getString("owner");
-        a = (Account) getIntent().getExtras().get("name");
-        Toast.makeText(this, a.getName(), Toast.LENGTH_LONG).show();
 
-        fab.setOnClickListener(new View.OnClickListener() {
+        mngApp = new ManageApp();
+        log = mngApp.deserializationFlag(path);
+
+        mngUsr = new ManageUser();
+        listUser = mngUsr.deserializationListUser(path);
+
+        mngAcc = new ManageAccount();
+        listAccount = mngAcc.deserializationListAccount(path, owner);
+
+
+        int k = 1;
+        for (AccountElement ae : account.getList()) {
+            tabs.addTab(tabs.newTab().setText(account.getName() + "(" + k + ")"));
+            k++;
+        }
+        if (tabs.getTabCount() >= 2) {
+            tabs.setTabMode(TabLayout.MODE_FIXED);
+        } else {
+            tabs.setTabMode(TabLayout.MODE_SCROLLABLE);
+        }
+
+        tabAdapter = new TabAdapter(getSupportFragmentManager(), tabs.getTabCount(), (ArrayList<AccountElement>) account.getList());
+        viewPager.setAdapter(tabAdapter);
+        viewPager.setOffscreenPageLimit(1);
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabs));
+
+        tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
             }
         });
+
     }
 }

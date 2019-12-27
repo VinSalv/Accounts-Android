@@ -59,5 +59,18 @@
     <string name="tab_text_1">Tab 1</string>
     <string name="tab_text_2">Tab 2</string>
 
+    <string name="nameShowImage">Icona nome</string>
+    <string name="nameShowHint">Nome</string>
+    <string name="errorShowName">Errore immisione nome</string>
+    <string name="emailShowImage">Icona e-mail</string>
+    <string name="emailShowHint">E-mail</string>
+    <string name="errorShowEmail">Errore immisione e-mail</string>
+    <string name="userShowImage">Icona utente</string>
+    <string name="userShowHint">Utente</string>
+    <string name="errorShowUser">Errore immisione utente</string>
+    <string name="passShowImage">Icona password</string>
+    <string name="passShowHint">Password</string>
+    <string name="errorShowPass">Errore immisione password</string>
+
 
 </resources>
