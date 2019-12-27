@@ -1,6 +1,7 @@
 package com.example.accounts;
 
-import java.io.File;
+import android.content.Context;
+
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -18,24 +19,25 @@ public class ManageAccount implements Serializable {
         return list.contains(a);
     }
 
-    public void serializationListAccount(ArrayList<Account> list, String path, String owner) {
+    public void serializationListAccount(Context context, ArrayList<Account> list, String owner) {
         try {
-            File file = new File(path + "/Accounts" + owner + ".txt");
-            ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(file));
-            out.writeObject(list);
-            out.close();
+            FileOutputStream fos = context.openFileOutput("Accounts" + owner + ".txt", Context.MODE_PRIVATE);
+            ObjectOutputStream os = new ObjectOutputStream(fos);
+            os.writeObject(list);
+            os.close();
+            fos.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public ArrayList<Account> deserializationListAccount(String path, String owner) {
+    public ArrayList<Account> deserializationListAccount(Context context, String owner) {
         try {
-            File file = new File(path + "/Accounts" + owner + ".txt");
-            FileInputStream door = new FileInputStream(file);
-            ObjectInputStream reader = new ObjectInputStream(door);
-            ArrayList<Account> x;
-            x = (ArrayList<Account>) reader.readObject();
+            FileInputStream fis = context.openFileInput("Accounts" + owner + ".txt");
+            ObjectInputStream is = new ObjectInputStream(fis);
+            ArrayList<Account> x = (ArrayList<Account>) is.readObject();
+            is.close();
+            fis.close();
             return x;
         } catch (IOException e) {
             e.printStackTrace();

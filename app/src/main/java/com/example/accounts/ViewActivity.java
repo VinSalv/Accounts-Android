@@ -32,7 +32,6 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     private TextView wellcome;
     private TextView wellcome2;
     private AppBarLayout appBar;
-    private String path;
     private String owner;
     private ManageUser mngUsr;
     private ArrayList<User> listUser = new ArrayList<>();
@@ -47,7 +46,6 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     private MyAdapter adapter;
     private List<String> selectedIds = new ArrayList<>();
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,17 +53,17 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
-        path = getIntent().getExtras().getString("path");
+
         owner = getIntent().getExtras().getString("owner");
 
         mngApp = new ManageApp();
-        log = mngApp.deserializationFlag(path);
+        log = mngApp.deserializationFlag(this);
 
         mngUsr = new ManageUser();
-        listUser = mngUsr.deserializationListUser(path);
+        listUser = mngUsr.deserializationListUser(this);
 
         mngAcc = new ManageAccount();
-        listAccount = mngAcc.deserializationListAccount(path, owner);
+        listAccount = mngAcc.deserializationListAccount(this, owner);
 
         wellcome = findViewById(R.id.wellcome);
         wellcome.setText("Benvenuto " + owner);
@@ -149,8 +147,7 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ViewActivity.this, AddActivity.class);
-                intent.putExtra("path", path);
-                intent.putExtra("owner", log.getUser());
+                intent.putExtra("owner", owner);
                 startActivity(intent);
             }
         });
@@ -167,10 +164,8 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 } else {
                     Intent intent = new Intent(ViewActivity.this, ShowElementActivity.class);
                     intent.putExtra("account", adapter.getItem(position));
-                    intent.putExtra("path", path);
                     intent.putExtra("owner", owner);
                     startActivity(intent);
-
                 }
             }
 
@@ -179,7 +174,6 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 if (!isMultiSelect) {
                     selectedIds = new ArrayList<>();
                     isMultiSelect = true;
-
                     if (actionMode == null) {
                         actionMode = startActionMode(ViewActivity.this); //show ActionMode.
                     }
@@ -244,7 +238,7 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 } else {
                     Toast.makeText(this, " Nessun elemento è stato rimosso", Toast.LENGTH_SHORT).show();
                 }
-                mngAcc.serializationListAccount(listAccount, path, owner);
+                mngAcc.serializationListAccount(this, listAccount, owner);
                 finish();
                 startActivity(getIntent());
                 return true;
@@ -281,12 +275,11 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 return true;
             case R.id.exit:
                 log = new LogApp();
-                mngApp.serializationFlag(log, path);
+                mngApp.serializationFlag(this, log);
                 Intent intent = new Intent(ViewActivity.this, MainActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra("path", path);
                 intent.putExtra("owner", "");
                 startActivity(intent);
                 finish();

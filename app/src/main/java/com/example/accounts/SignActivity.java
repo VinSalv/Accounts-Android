@@ -25,7 +25,6 @@ public class SignActivity extends AppCompatActivity {
     private ImageView passError2;
     private Button sign;
     private Switch flagFinger;
-    private String path;
     private ManageUser mngUsr;
     private ArrayList<User> listUser = new ArrayList<>();
 
@@ -36,7 +35,6 @@ public class SignActivity extends AppCompatActivity {
         Toolbar toolbarSign = findViewById(R.id.toolbarSign);
         setSupportActionBar(toolbarSign);
 
-        path = getIntent().getExtras().getString("path");
         userEdit = findViewById(R.id.usernameEdit);
         userError = findViewById(R.id.errorUsername);
         passEdit = findViewById(R.id.passwordEdit);
@@ -47,7 +45,7 @@ public class SignActivity extends AppCompatActivity {
         sign = findViewById(R.id.signButton);
 
         mngUsr = new ManageUser();
-        listUser = mngUsr.deserializationListUser(path);
+        listUser = mngUsr.deserializationListUser(this);
 
         sign.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,12 +64,11 @@ public class SignActivity extends AppCompatActivity {
                 }
                 if (!mngUsr.search(usr, listUser)) {
                     listUser.add(usr);
-                    mngUsr.serializationListUser(listUser, path);
+                    mngUsr.serializationListUser(SignActivity.this, listUser);
                     Intent intent = new Intent(SignActivity.this, ViewActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.putExtra("path", path);
                     intent.putExtra("owner", usr.getUser());
                     startActivity(intent);
                     finish();

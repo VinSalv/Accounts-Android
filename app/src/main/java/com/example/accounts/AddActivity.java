@@ -20,7 +20,6 @@ import java.util.ArrayList;
 
 
 public class AddActivity extends AppCompatActivity {
-    private String path;
     private String owner;
     private ManageAccount mngAcc;
     private ArrayList<Account> listAccount;
@@ -47,12 +46,12 @@ public class AddActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add);
-        path = getIntent().getExtras().getString("path");
+
         owner = getIntent().getExtras().getString("owner");
 
         mngAcc = new ManageAccount();
 
-        listAccount = mngAcc.deserializationListAccount(path, owner);
+        listAccount = mngAcc.deserializationListAccount(this, owner);
         listElem = new ArrayList<AccountElement>();
         layList = new ArrayList<RelativeLayout>();
         email = new ArrayList<EditText>();
@@ -109,12 +108,11 @@ public class AddActivity extends AppCompatActivity {
 
                 if (!mngAcc.search(a, listAccount)) {
                     listAccount.add(a);
-                    mngAcc.serializationListAccount(listAccount, path, owner);
+                    mngAcc.serializationListAccount(AddActivity.this, listAccount, owner);
                     Intent intent = new Intent(AddActivity.this, ViewActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.putExtra("path", path);
                     intent.putExtra("owner", owner);
                     startActivity(intent);
                     finish();
@@ -243,7 +241,6 @@ public class AddActivity extends AppCompatActivity {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtra("path", path);
         intent.putExtra("owner", owner);
         startActivity(intent);
         this.finish();

@@ -11,7 +11,6 @@ import java.util.ArrayList;
 
 public class ShowElementActivity extends AppCompatActivity {
     private Account account;
-    private String path;
     private String owner;
     private ManageApp mngApp;
     private LogApp log;
@@ -28,21 +27,20 @@ public class ShowElementActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_element);
+
         viewPager = findViewById(R.id.view_pager);
         tabs = findViewById(R.id.tabs);
         account = (Account) getIntent().getExtras().get("account");
-        path = getIntent().getExtras().getString("path");
         owner = getIntent().getExtras().getString("owner");
 
         mngApp = new ManageApp();
-        log = mngApp.deserializationFlag(path);
+        log = mngApp.deserializationFlag(this);
 
         mngUsr = new ManageUser();
-        listUser = mngUsr.deserializationListUser(path);
+        listUser = mngUsr.deserializationListUser(this);
 
         mngAcc = new ManageAccount();
-        listAccount = mngAcc.deserializationListAccount(path, owner);
-
+        listAccount = mngAcc.deserializationListAccount(this, owner);
 
         int k = 1;
         for (AccountElement ae : account.getList()) {

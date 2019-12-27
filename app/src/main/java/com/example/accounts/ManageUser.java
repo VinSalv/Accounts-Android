@@ -1,6 +1,7 @@
 package com.example.accounts;
 
-import java.io.File;
+import android.content.Context;
+
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -29,24 +30,25 @@ public class ManageUser implements Serializable {
         return false;
     }
 
-    public void serializationListUser(ArrayList<User> list, String path) {
+    public void serializationListUser(Context context, ArrayList<User> list) {
         try {
-            File file = new File(path + "/Users.txt");
-            ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(file));
-            out.writeObject(list);
-            out.close();
+            FileOutputStream fos = context.openFileOutput("Users.txt", Context.MODE_PRIVATE);
+            ObjectOutputStream os = new ObjectOutputStream(fos);
+            os.writeObject(list);
+            os.close();
+            fos.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public ArrayList<User> deserializationListUser(String path) {
+    public ArrayList<User> deserializationListUser(Context context) {
         try {
-            File file = new File(path + "/Users.txt");
-            FileInputStream door = new FileInputStream(file);
-            ObjectInputStream reader = new ObjectInputStream(door);
-            ArrayList<User> x;
-            x = (ArrayList<User>) reader.readObject();
+            FileInputStream fis = context.openFileInput("Users.txt");
+            ObjectInputStream is = new ObjectInputStream(fis);
+            ArrayList<User> x = (ArrayList<User>) is.readObject();
+            is.close();
+            fis.close();
             return x;
         } catch (IOException e) {
             e.printStackTrace();

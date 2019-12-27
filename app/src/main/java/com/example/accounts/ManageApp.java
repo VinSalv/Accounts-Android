@@ -1,6 +1,7 @@
 package com.example.accounts;
 
-import java.io.File;
+import android.content.Context;
+
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -14,24 +15,25 @@ public class ManageApp implements Serializable {
     }
 
 
-    public void serializationFlag(LogApp logApp, String path) {
+    public void serializationFlag(Context context, LogApp logApp) {
         try {
-            File file = new File(path + "/LogApp.txt");
-            ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(file));
-            out.writeObject(logApp);
-            out.close();
+            FileOutputStream fos = context.openFileOutput("LogApp.txt", Context.MODE_PRIVATE);
+            ObjectOutputStream os = new ObjectOutputStream(fos);
+            os.writeObject(logApp);
+            os.close();
+            fos.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public LogApp deserializationFlag(String path) {
+    public LogApp deserializationFlag(Context context) {
         try {
-            File file = new File(path + "/LogApp.txt");
-            FileInputStream door = new FileInputStream(file);
-            ObjectInputStream reader = new ObjectInputStream(door);
-            LogApp logApp;
-            logApp = (LogApp) reader.readObject();
+            FileInputStream fis = context.openFileInput("LogApp.txt");
+            ObjectInputStream is = new ObjectInputStream(fis);
+            LogApp logApp = (LogApp) is.readObject();
+            is.close();
+            fis.close();
             return logApp;
         } catch (IOException e) {
             e.printStackTrace();
