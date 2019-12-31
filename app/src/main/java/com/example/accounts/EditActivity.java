@@ -1,8 +1,8 @@
 package com.example.accounts;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
-
+import java.util.Objects;
 
 public class EditActivity extends AppCompatActivity {
     private String owner;
@@ -29,14 +29,11 @@ public class EditActivity extends AppCompatActivity {
     private ArrayList<EditText> user;
     private ArrayList<EditText> password;
     private ImageView nameError;
-    private ImageView emailError;
-    private ImageView userError;
-    private ImageView passError;
-    private Button addButton;
-    private Button emptyButton;
+    Button addButton;
+    Button emptyButton;
     private ArrayList<AccountElement> listElem;
     private AccountElement elem;
-    private FloatingActionButton addElem;
+    FloatingActionButton addElem;
     private ArrayList<RelativeLayout> layList;
     private ArrayList<ImageView> emailErrorList;
     private ArrayList<ImageView> userErrorList;
@@ -49,20 +46,20 @@ public class EditActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit);
 
-        account = (Account) getIntent().getExtras().get("account");
+        account = (Account) Objects.requireNonNull(getIntent().getExtras()).get("account");
         owner = getIntent().getExtras().getString("owner");
 
         mngAcc = new ManageAccount();
 
         listAccount = mngAcc.deserializationListAccount(this, owner);
-        listElem = new ArrayList<AccountElement>();
-        layList = new ArrayList<RelativeLayout>();
-        email = new ArrayList<EditText>();
-        user = new ArrayList<EditText>();
-        password = new ArrayList<EditText>();
-        emailErrorList = new ArrayList<ImageView>();
-        userErrorList = new ArrayList<ImageView>();
-        passwordErrorList = new ArrayList<ImageView>();
+        listElem = new ArrayList<>();
+        layList = new ArrayList<>();
+        email = new ArrayList<>();
+        user = new ArrayList<>();
+        password = new ArrayList<>();
+        emailErrorList = new ArrayList<>();
+        userErrorList = new ArrayList<>();
+        passwordErrorList = new ArrayList<>();
         i = 0;
         addButton = findViewById(R.id.addButton);
         emptyButton = findViewById(R.id.emptyButton);
@@ -74,7 +71,7 @@ public class EditActivity extends AppCompatActivity {
         for (AccountElement ae : account.getList()) {
             final LinearLayout lin = findViewById(R.id.linLayAdd);
             LayoutInflater inflater = LayoutInflater.from(EditActivity.this);
-            final RelativeLayout relLey = (RelativeLayout) inflater.inflate(R.layout.more_add_lay, null);
+            @SuppressLint("InflateParams") final RelativeLayout relLey = (RelativeLayout) inflater.inflate(R.layout.more_add_lay, null);
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
             params.setMargins(0, 20, 0, 0);
             relLey.setLayoutParams(params);
@@ -148,7 +145,6 @@ public class EditActivity extends AppCompatActivity {
                 } else {
                     nameError.setVisibility(View.VISIBLE);
                     Toast.makeText(EditActivity.this, "Applicativo già registrato !!!", Toast.LENGTH_SHORT).show();
-                    return;
                 }
             }
 
@@ -184,7 +180,7 @@ public class EditActivity extends AppCompatActivity {
         i++;
         final LinearLayout lin = findViewById(R.id.linLayAdd);
         LayoutInflater inflater = LayoutInflater.from(EditActivity.this);
-        final RelativeLayout relLey = (RelativeLayout) inflater.inflate(R.layout.more_add_lay, null);
+        @SuppressLint("InflateParams") final RelativeLayout relLey = (RelativeLayout) inflater.inflate(R.layout.more_add_lay, null);
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         params.setMargins(0, 20, 0, 0);
         relLey.setLayoutParams(params);

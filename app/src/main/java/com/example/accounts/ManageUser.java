@@ -10,19 +10,19 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class ManageUser implements Serializable {
+class ManageUser implements Serializable {
 
-    public ManageUser() {
+    ManageUser() {
     }
 
-    public boolean search(User u, ArrayList<User> listUser) {
+    boolean search(User u, ArrayList<User> listUser) {
         for (User usr : listUser) {
             if (usr.getUser().equals(u.getUser())) return true;
         }
         return false;
     }
 
-    public boolean login(User u, ArrayList<User> listUser) {
+    boolean login(User u, ArrayList<User> listUser) {
         for (User usr : listUser) {
             if (usr.getUser().equals(u.getUser()) && usr.getPassword().equals(u.getPassword()))
                 return true;
@@ -30,7 +30,7 @@ public class ManageUser implements Serializable {
         return false;
     }
 
-    public void serializationListUser(Context context, ArrayList<User> list) {
+    void serializationListUser(Context context, ArrayList<User> list) {
         try {
             FileOutputStream fos = context.openFileOutput("Users.txt", Context.MODE_PRIVATE);
             ObjectOutputStream os = new ObjectOutputStream(fos);
@@ -42,7 +42,7 @@ public class ManageUser implements Serializable {
         }
     }
 
-    public ArrayList<User> deserializationListUser(Context context) {
+    ArrayList<User> deserializationListUser(Context context) {
         try {
             FileInputStream fis = context.openFileInput("Users.txt");
             ObjectInputStream is = new ObjectInputStream(fis);
@@ -50,12 +50,9 @@ public class ManageUser implements Serializable {
             is.close();
             fis.close();
             return x;
-        } catch (IOException e) {
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
-            return new ArrayList<User>();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-            return new ArrayList<User>();
+            return new ArrayList<>();
         }
     }
 }

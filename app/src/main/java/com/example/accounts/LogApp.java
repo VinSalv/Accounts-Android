@@ -6,17 +6,17 @@ public class LogApp implements Serializable {
     private boolean flagApp;
     private String user;
 
-    public LogApp(boolean flagApp, String user) {
+    LogApp(boolean flagApp, String user) {
         this.flagApp = flagApp;
         this.user = user;
     }
 
-    public LogApp() {
+    LogApp() {
         this.flagApp = false;
         this.user = "";
     }
 
-    public boolean getFlagApp() {
+    boolean getFlagApp() {
         return this.flagApp;
     }
 
@@ -27,7 +27,7 @@ public class LogApp implements Serializable {
     @Override
     public boolean equals(Object object) {
         boolean bool = false;
-        if (object != null && object instanceof LogApp) {
+        if (object instanceof LogApp) {
             bool = (this.getUser().equals(((LogApp) object).getUser()));
         }
         return bool;

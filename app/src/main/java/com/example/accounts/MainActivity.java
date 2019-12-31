@@ -39,13 +39,13 @@ public class MainActivity extends AppCompatActivity {
     private ImageView userError;
     private EditText passApp;
     private ImageView passError;
-    private Button login;
-    private TextView sign;
+    Button login;
+    TextView sign;
     private Switch flagApp;
     private ManageApp mngApp;
     private ManageUser mngUsr;
     private ArrayList<User> listUser = new ArrayList<>();
-    private CancellationSignal cancellationSignal;
+    CancellationSignal cancellationSignal;
     private LogApp log;
 
     @RequiresApi(api = Build.VERSION_CODES.P)
@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
                 if (u.getUser().equals(log.getUser())) usr = u;
             }
 
-            if (usr.getFinger() == true) {
+            if (usr.getFinger()) {
                 if (!checkBiometricSupport()) {
                     return;
                 }
@@ -207,8 +207,8 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == PERMISSION_REQUEST_CODE) {
             if (permissions.length > 0 && grantResults.length > 0) {
                 boolean flag = true;
-                for (int i = 0; i < grantResults.length; i++) {
-                    if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
+                for (int grantResult : grantResults) {
+                    if (grantResult != PackageManager.PERMISSION_GRANTED) {
                         flag = false;
                     }
                 }
@@ -239,7 +239,7 @@ public class MainActivity extends AppCompatActivity {
         KeyguardManager keyguardManager =
                 (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
         PackageManager packageManager = this.getPackageManager();
-        if (!keyguardManager.isKeyguardSecure()) {
+        if (keyguardManager != null && !keyguardManager.isKeyguardSecure()) {
             notifyUser("Lock screen security non abilitato nelle impostazioni");
             return false;
         }
@@ -345,6 +345,5 @@ public class MainActivity extends AppCompatActivity {
                 .build();
         biometricPrompt.authenticate(getCancellationSignal(), getMainExecutor(), getAuthenticationCallback());
     }
-
 }
 

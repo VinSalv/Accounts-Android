@@ -1,5 +1,6 @@
 package com.example.accounts;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -20,21 +21,20 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.appbar.AppBarLayout;
-import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.Objects;
 
 public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener, ActionMode.Callback {
     boolean doubleBackToExitPressedOnce = false;
     private TextView wellcome;
     private TextView wellcome2;
-    private AppBarLayout appBar;
+    AppBarLayout appBar;
     private String owner;
-    private ManageUser mngUsr;
-    private ArrayList<User> listUser = new ArrayList<>();
+    ManageUser mngUsr;
+    ArrayList<User> listUser = new ArrayList<>();
     private ManageApp mngApp;
     private LogApp log;
     private Button settingsButton;
@@ -46,15 +46,16 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     private MyAdapter adapter;
     private List<String> selectedIds = new ArrayList<>();
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view);
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        final Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
 
-        owner = getIntent().getExtras().getString("owner");
+        owner = Objects.requireNonNull(getIntent().getExtras()).getString("owner");
 
         mngApp = new ManageApp();
         log = mngApp.deserializationFlag(this);
@@ -78,8 +79,7 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         searchButton = findViewById(R.id.searchButton);
         searchButton.setVisibility(View.INVISIBLE);
 
-        appBar = (AppBarLayout) findViewById(R.id.app_bar);
-        final CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
+        appBar = findViewById(R.id.app_bar);
         appBar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             boolean isShow = false;
             int scrollRange = -1;
@@ -104,7 +104,7 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             }
         });
 
-        final FloatingActionButton setting = (FloatingActionButton) findViewById(R.id.settingsFloatingButton);
+        final FloatingActionButton setting = findViewById(R.id.settingsFloatingButton);
         setting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -125,7 +125,7 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             }
         });
 
-        final FloatingActionButton search = (FloatingActionButton) findViewById(R.id.searchFloatingButton);
+        final FloatingActionButton search = findViewById(R.id.searchFloatingButton);
         search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -142,7 +142,7 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             }
         });
 
-        final FloatingActionButton add = (FloatingActionButton) findViewById(R.id.addFloatingButton);
+        final FloatingActionButton add = findViewById(R.id.addFloatingButton);
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -152,7 +152,7 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             }
         });
 
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        RecyclerView recyclerView = findViewById(R.id.recyclerView);
         adapter = new MyAdapter(this, listAccount);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
@@ -194,14 +194,9 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 adapter.setSelectedIds(selectedIds);
             }
         }
-        if (selectedIds.size() >= 0)
-            actionMode.setTitle(String.valueOf(selectedIds.size())); //show selected item count on action mode.
-        else {
-            actionMode.setTitle(""); //remove item count from action mode.
-            actionMode.finish(); //hide action mode.
-        }
+        selectedIds.size();
+        Objects.requireNonNull(actionMode).setTitle(String.valueOf(selectedIds.size())); //show selected item count on action mode.
     }
-
 
     @Override
     public boolean onCreateActionMode(ActionMode mode, Menu menu) {
@@ -217,30 +212,29 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
     @Override
     public boolean onActionItemClicked(ActionMode mode, MenuItem menuItem) {
-        switch (menuItem.getItemId()) {
-            case R.id.delete_id:
-                for (String data : selectedIds) {
-                    Account a = new Account();
-                    for (Account a2 : listAccount) {
-                        if (a2.getName().equals(data)) {
-                            a = a2;
-                            break;
-                        }
+        if (menuItem.getItemId() == R.id.delete_id) {
+            for (String data : selectedIds) {
+                Account a = new Account();
+                for (Account a2 : listAccount) {
+                    if (a2.getName().equals(data)) {
+                        a = a2;
+                        break;
                     }
-                    listAccount.remove(a);
                 }
-                if (!selectedIds.isEmpty()) {
-                    if (selectedIds.size() == 1) {
-                        Toast.makeText(this, "Un elemento è stato rimosso", Toast.LENGTH_SHORT).show();
-                    } else
-                        Toast.makeText(this, selectedIds.size() + " elementi sono stati rimossi", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(this, " Nessun elemento è stato rimosso", Toast.LENGTH_SHORT).show();
-                }
-                mngAcc.serializationListAccount(this, listAccount, owner);
-                finish();
-                startActivity(getIntent());
-                return true;
+                listAccount.remove(a);
+            }
+            if (!selectedIds.isEmpty()) {
+                if (selectedIds.size() == 1) {
+                    Toast.makeText(this, "Un elemento è stato rimosso", Toast.LENGTH_SHORT).show();
+                } else
+                    Toast.makeText(this, selectedIds.size() + " elementi sono stati rimossi", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, " Nessun elemento è stato rimosso", Toast.LENGTH_SHORT).show();
+            }
+            mngAcc.serializationListAccount(this, listAccount, owner);
+            finish();
+            startActivity(getIntent());
+            return true;
         }
         return false;
     }
@@ -267,10 +261,8 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 multiSelect(-1);
                 return true;
             case R.id.sort:
-                // do your code
                 return true;
             case R.id.setting:
-                // do your code
                 return true;
             case R.id.exit:
                 log = new LogApp();

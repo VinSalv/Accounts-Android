@@ -7,13 +7,13 @@ public class User implements Serializable {
     private String password;
     private boolean finger;
 
-    public User(String user, String password, boolean finger) {
+    User(String user, String password, boolean finger) {
         this.user = user;
         this.password = password;
         this.finger = finger;
     }
 
-    public User() {
+    User() {
         this.user = "";
         this.password = "";
         this.finger = false;
@@ -23,24 +23,19 @@ public class User implements Serializable {
         return this.user;
     }
 
-    public String getPassword() {
+    String getPassword() {
         return this.password;
     }
 
 
-    public boolean getFinger() {
+    boolean getFinger() {
         return this.finger;
-    }
-
-
-    public void setFinger(boolean finger) {
-        this.finger = finger;
     }
 
     @Override
     public boolean equals(Object object) {
         boolean bool = false;
-        if (object != null && object instanceof User) {
+        if (object instanceof User) {
             bool = (this.getUser().equals(((User) object).getUser()));
         }
         return bool;

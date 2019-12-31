@@ -8,18 +8,14 @@ public class AccountElement implements Serializable {
     private String user;
     private String password;
 
-    public AccountElement(String email, String user, String password) {
+    AccountElement(String email, String user, String password) {
         this.email = email;
         this.user = user;
         this.password = password;
     }
 
-    public String getEmail() {
+    String getEmail() {
         return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public String getUser() {
@@ -30,12 +26,8 @@ public class AccountElement implements Serializable {
         this.user = user;
     }
 
-    public String getPassword() {
+    String getPassword() {
         return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     @Override
@@ -47,5 +39,4 @@ public class AccountElement implements Serializable {
                 Objects.equals(user, that.user) &&
                 Objects.equals(password, that.password);
     }
-
 }

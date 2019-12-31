@@ -1,5 +1,6 @@
 package com.example.accounts;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Patterns;
@@ -17,7 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
-
+import java.util.Objects;
 
 public class AddActivity extends AppCompatActivity {
     private String owner;
@@ -28,14 +29,11 @@ public class AddActivity extends AppCompatActivity {
     private ArrayList<EditText> user;
     private ArrayList<EditText> password;
     private ImageView nameError;
-    private ImageView emailError;
-    private ImageView userError;
-    private ImageView passError;
-    private Button addButton;
-    private Button emptyButton;
+    Button addButton;
+    Button emptyButton;
     private ArrayList<AccountElement> listElem;
     private AccountElement elem;
-    private FloatingActionButton addElem;
+    FloatingActionButton addElem;
     private ArrayList<RelativeLayout> layList;
     private ArrayList<ImageView> emailErrorList;
     private ArrayList<ImageView> userErrorList;
@@ -47,21 +45,21 @@ public class AddActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add);
 
-        owner = getIntent().getExtras().getString("owner");
+        owner = Objects.requireNonNull(getIntent().getExtras()).getString("owner");
 
         mngAcc = new ManageAccount();
 
         listAccount = mngAcc.deserializationListAccount(this, owner);
-        listElem = new ArrayList<AccountElement>();
-        layList = new ArrayList<RelativeLayout>();
-        email = new ArrayList<EditText>();
-        user = new ArrayList<EditText>();
-        password = new ArrayList<EditText>();
-        emailErrorList = new ArrayList<ImageView>();
-        userErrorList = new ArrayList<ImageView>();
-        passwordErrorList = new ArrayList<ImageView>();
+        listElem = new ArrayList<>();
+        layList = new ArrayList<>();
+        email = new ArrayList<>();
+        user = new ArrayList<>();
+        password = new ArrayList<>();
+        emailErrorList = new ArrayList<>();
+        userErrorList = new ArrayList<>();
+        passwordErrorList = new ArrayList<>();
         i = 0;
-        final RelativeLayout rel = (RelativeLayout) findViewById(R.id.subRelLayAdd);
+        final RelativeLayout rel = findViewById(R.id.subRelLayAdd);
         layList.add((RelativeLayout) findViewById(R.id.subRelLayAdd));
 
         name = findViewById(R.id.nameAddEdit);
@@ -119,7 +117,6 @@ public class AddActivity extends AppCompatActivity {
                 } else {
                     nameError.setVisibility(View.VISIBLE);
                     Toast.makeText(AddActivity.this, "Applicativo già registrato !!!", Toast.LENGTH_SHORT).show();
-                    return;
                 }
             }
 
@@ -161,7 +158,7 @@ public class AddActivity extends AppCompatActivity {
                 i++;
                 final LinearLayout lin = findViewById(R.id.linLayAdd);
                 LayoutInflater inflater = LayoutInflater.from(AddActivity.this);
-                final RelativeLayout relLey = (RelativeLayout) inflater.inflate(R.layout.more_add_lay, null);
+                @SuppressLint("InflateParams") final RelativeLayout relLey = (RelativeLayout) inflater.inflate(R.layout.more_add_lay, null);
                 RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                 params.setMargins(0, 0, 0, 20);
                 relLey.setLayoutParams(params);
@@ -186,7 +183,6 @@ public class AddActivity extends AppCompatActivity {
         });
 
     }
-
 
     public boolean isValidWord(String word) {
         if (word.isEmpty()) return true;

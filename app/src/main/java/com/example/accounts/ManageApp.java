@@ -9,13 +9,12 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
-public class ManageApp implements Serializable {
+class ManageApp implements Serializable {
 
-    public ManageApp() {
+    ManageApp() {
     }
 
-
-    public void serializationFlag(Context context, LogApp logApp) {
+    void serializationFlag(Context context, LogApp logApp) {
         try {
             FileOutputStream fos = context.openFileOutput("LogApp.txt", Context.MODE_PRIVATE);
             ObjectOutputStream os = new ObjectOutputStream(fos);
@@ -27,7 +26,7 @@ public class ManageApp implements Serializable {
         }
     }
 
-    public LogApp deserializationFlag(Context context) {
+    LogApp deserializationFlag(Context context) {
         try {
             FileInputStream fis = context.openFileInput("LogApp.txt");
             ObjectInputStream is = new ObjectInputStream(fis);
@@ -35,10 +34,7 @@ public class ManageApp implements Serializable {
             is.close();
             fis.close();
             return logApp;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return new LogApp();
-        } catch (ClassNotFoundException e) {
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
             return new LogApp();
         }
