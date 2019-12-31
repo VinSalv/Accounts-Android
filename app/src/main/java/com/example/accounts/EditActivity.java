@@ -112,8 +112,10 @@ public class EditActivity extends AppCompatActivity {
                     emailErrorList.get(n).setVisibility(View.INVISIBLE);
                     userErrorList.get(n).setVisibility(View.INVISIBLE);
                     passwordErrorList.get(n).setVisibility(View.INVISIBLE);
-                    elem = new AccountElement(email.get(n).getText().toString(), user.get(n).getText().toString(), password.get(n).getText().toString());
-                    listElem.add(elem);
+                    if (!(email.get(n).getText().toString().isEmpty() && user.get(n).getText().toString().isEmpty() && password.get(n).getText().toString().isEmpty())) {
+                        elem = new AccountElement(email.get(n).getText().toString(), user.get(n).getText().toString(), password.get(n).getText().toString());
+                        listElem.add(elem);
+                    }
                 }
 
                 Account a = new Account(owner, name.getText().toString(), listElem);

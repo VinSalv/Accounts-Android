@@ -72,6 +72,7 @@
     <string name="passShowHint">Password</string>
     <string name="errorShowPass">Errore immisione password</string>
     <string name="title_activity_edit">EditActivity</string>
+    <string name="none">none</string>
 
 
 </resources>

@@ -5,7 +5,8 @@
     android:layout_margin="5dp"
     android:backgroundTint="@android:color/transparent"
     android:clickable="true"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:focusable="true">
 
     <TextView
         android:id="@+id/accountElement"
