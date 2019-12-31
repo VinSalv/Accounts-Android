@@ -178,7 +178,6 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                         actionMode = startActionMode(ViewActivity.this); //show ActionMode.
                     }
                 }
-
                 multiSelect(position);
             }
         }));
