@@ -6,17 +6,28 @@ public class User implements Serializable {
     private String user;
     private String password;
     private boolean finger;
+    private int sort;
 
-    User(String user, String password, boolean finger) {
+    User(String user, String password, boolean finger,int sort) {
         this.user = user;
         this.password = password;
         this.finger = finger;
+        this.sort = sort;
     }
 
     User() {
         this.user = "";
         this.password = "";
         this.finger = false;
+        this.sort=1;
+    }
+
+    public int getSort() {
+        return sort;
+    }
+
+    public void setSort(int sort) {
+        this.sort = sort;
     }
 
     public String getUser() {
@@ -36,7 +47,7 @@ public class User implements Serializable {
     public boolean equals(Object object) {
         boolean bool = false;
         if (object instanceof User) {
-            bool = (this.getUser().equals(((User) object).getUser()));
+            bool = (this.getUser().toLowerCase().equals(((User) object).getUser().toLowerCase()));
         }
         return bool;
     }

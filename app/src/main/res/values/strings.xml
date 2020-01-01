@@ -76,6 +76,8 @@
     <string name="none">none</string>
 
     <string name="editButton">Salva</string>
+    <string name="dalla_a_alla_z">Dalla A alla Z</string>
+    <string name="dalla_z_alla_a">Dalla Z alla A</string>
 
 
 </resources>

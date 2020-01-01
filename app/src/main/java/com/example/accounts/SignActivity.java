@@ -55,7 +55,7 @@ public class SignActivity extends AppCompatActivity {
                 passError.setVisibility(View.INVISIBLE);
                 passError2.setVisibility(View.INVISIBLE);
 
-                User usr = new User(userEdit.getText().toString(), passEdit.getText().toString(), flagFinger.isChecked());
+                User usr = new User(userEdit.getText().toString(), passEdit.getText().toString(), flagFinger.isChecked(),1);
 
                 if (!fieldCheck(usr)) return;
                 if (!passEdit.getText().toString().equals(passEdit2.getText().toString())) {

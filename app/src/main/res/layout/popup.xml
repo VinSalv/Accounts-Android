@@ -1,0 +1,32 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/rounded_popup"
+    android:orientation="vertical"
+    tools:context=".ViewActivity"
+    tools:showIn="@layout/activity_view">
+
+    <RadioGroup
+        android:id="@+id/radioGroupSorter"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:orientation="vertical">
+
+        <RadioButton
+            android:id="@+id/AtoZ"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/dalla_a_alla_z"
+            android:textSize="20sp" />
+
+        <RadioButton
+            android:id="@+id/ZtoA"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/dalla_z_alla_a"
+            android:textSize="20sp" />
+
+    </RadioGroup>
+</LinearLayout>

@@ -37,12 +37,12 @@ public class Account implements Serializable {
     public boolean equals(Object object) {
         boolean bool = false;
         if (object instanceof Account) {
-            bool = (((this.getName().equals(((Account) object).getName()))));
+            bool = (((this.getName().toLowerCase().equals(((Account) object).getName().toLowerCase()))));
         }
         return bool;
     }
 
     boolean equals(String str) {
-        return this.getName().compareTo(str) == 0;
+        return this.getName().toLowerCase().compareTo(str.toLowerCase()) == 0;
     }
 }

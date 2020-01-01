@@ -2,21 +2,28 @@ package com.example.accounts;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.ActionMode;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu;
+import android.widget.PopupWindow;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,6 +31,8 @@ import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
@@ -45,6 +54,12 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     private boolean isMultiSelect = false;
     private MyAdapter adapter;
     private List<String> selectedIds = new ArrayList<>();
+    private CoordinatorLayout cl;
+    private int sort;
+    private User us;
+    private RadioGroup rg;
+    private RadioButton rb1;
+    private RadioButton rb2;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -57,6 +72,8 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
         owner = Objects.requireNonNull(getIntent().getExtras()).getString("owner");
 
+        cl = findViewById(R.id.viewLayout);
+
         mngApp = new ManageApp();
         log = mngApp.deserializationFlag(this);
 
@@ -64,6 +81,17 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         listUser = mngUsr.deserializationListUser(this);
 
         mngAcc = new ManageAccount();
+        listAccount = mngAcc.deserializationListAccount(this, owner);
+
+        us = new User();
+        for (User u : listUser)
+            if (u.getUser().equals(owner))
+                us = u;
+        if (us.getSort() == 1)
+            mngAcc.serializationListAccount(this, AtoZ(listAccount), owner);
+        else
+            mngAcc.serializationListAccount(this, ZtoA(listAccount), owner);
+
         listAccount = mngAcc.deserializationListAccount(this, owner);
 
         wellcome = findViewById(R.id.wellcome);
@@ -80,6 +108,7 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         searchButton.setVisibility(View.INVISIBLE);
 
         appBar = findViewById(R.id.app_bar);
+
         appBar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             boolean isShow = false;
             int scrollRange = -1;
@@ -261,6 +290,42 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 multiSelect(-1);
                 return true;
             case R.id.sort:
+                LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+                final View popupView = layoutInflater.inflate(R.layout.popup, null);
+                final PopupWindow popupWindow = new PopupWindow(popupView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+                popupWindow.setOutsideTouchable(true);
+                popupWindow.setFocusable(true);
+                popupWindow.setBackgroundDrawable(new BitmapDrawable());
+                View parent = cl.getRootView();
+                popupWindow.showAtLocation(parent, Gravity.CENTER, 0, 0);
+                rg = popupView.findViewById(R.id.radioGroupSorter);
+                rb1 = popupView.findViewById(R.id.AtoZ);
+                rb2 = popupView.findViewById(R.id.ZtoA);
+                if (us.getSort() == 1)
+                    rg.check(rb1.getId());
+                else
+                    rg.check(rb2.getId());
+                rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(RadioGroup group, int checkedId) {
+                        if (checkedId == rb1.getId()) {
+                            listUser.remove(us);
+                            us.setSort(1);
+                            listUser.add(us);
+                            mngUsr.serializationListUser(ViewActivity.this, listUser);
+                            mngAcc.serializationListAccount(ViewActivity.this, AtoZ(listAccount), owner);
+                        } else {
+                            listUser.remove(us);
+                            us.setSort(2);
+                            listUser.add(us);
+                            mngUsr.serializationListUser(ViewActivity.this, listUser);
+                            mngAcc.serializationListAccount(ViewActivity.this, ZtoA(listAccount), owner);
+                        }
+                        popupWindow.dismiss();
+                        finish();
+                        startActivity(getIntent());
+                    }
+                });
                 return true;
             case R.id.setting:
                 return true;
@@ -297,5 +362,25 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 doubleBackToExitPressedOnce = false;
             }
         }, 2000);
+    }
+
+    public ArrayList<Account> AtoZ(ArrayList<Account> list) {
+        Collections.sort(list, new Comparator<Account>() {
+            @Override
+            public int compare(Account lhs, Account rhs) {
+                return lhs.getName().toLowerCase().compareTo(rhs.getName().toLowerCase());
+            }
+        });
+        return list;
+    }
+
+    public ArrayList<Account> ZtoA(ArrayList<Account> list) {
+        Collections.sort(list, new Comparator<Account>() {
+            @Override
+            public int compare(Account lhs, Account rhs) {
+                return rhs.getName().toLowerCase().compareTo(lhs.getName().toLowerCase());
+            }
+        });
+        return list;
     }
 }

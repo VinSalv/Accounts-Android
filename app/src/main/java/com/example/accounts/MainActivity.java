@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 userError.setVisibility(View.INVISIBLE);
                 passError.setVisibility(View.INVISIBLE);
-                User usr = new User(userApp.getText().toString(), passApp.getText().toString(), false);
+                User usr = new User(userApp.getText().toString(), passApp.getText().toString(), false,1);
                 if (!fieldCheck(usr)) return;
                 if (mngUsr.login(usr, listUser)) {
                     for (User u : listUser) {

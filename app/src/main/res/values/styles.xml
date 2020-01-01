@@ -47,4 +47,7 @@
         <item name="android:dropDownVerticalOffset">14dp</item>
     </style>
 
+    <style name="rounded_menu_view" parent="@style/Widget.AppCompat.PopupMenu.Overflow">
+        <item name="android:popupBackground">@drawable/rounded_color</item>
+    </style>
 </resources>
