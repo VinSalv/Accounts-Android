@@ -165,6 +165,9 @@ public class EditActivity extends AppCompatActivity {
                     lin.removeView(l);
                 }
                 layList.clear();
+                email.clear();
+                user.clear();
+                password.clear();
                 moreElem(v);
             }
         });

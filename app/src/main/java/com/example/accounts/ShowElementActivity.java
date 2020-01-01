@@ -2,8 +2,11 @@ package com.example.accounts;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,7 +18,7 @@ import com.google.android.material.tabs.TabLayout;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class ShowElementActivity extends AppCompatActivity {
+public class ShowElementActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
     private Account account;
     private String owner;
     ManageApp mngApp;
@@ -29,7 +32,7 @@ public class ShowElementActivity extends AppCompatActivity {
     private ViewPager viewPager;
     private TextView name;
     private TextView name2;
-    Button edit;
+    private Button optionButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +60,7 @@ public class ShowElementActivity extends AppCompatActivity {
         name2.setText(account.getName());
         name2.setVisibility(View.INVISIBLE);
 
-        edit=findViewById(R.id.editButton);
+        optionButton = findViewById(R.id.optionsButton);
 
         AppBarLayout appBar = findViewById(R.id.app_bar_show);
         appBar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
@@ -77,16 +80,6 @@ public class ShowElementActivity extends AppCompatActivity {
                     isShow = false;
                        name2.setVisibility(View.INVISIBLE);
                 }
-            }
-        });
-
-        edit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ShowElementActivity.this, EditActivity.class);
-                intent.putExtra("account", account);
-                intent.putExtra("owner", owner);
-                startActivity(intent);
             }
         });
 
@@ -122,6 +115,41 @@ public class ShowElementActivity extends AppCompatActivity {
 
             }
         });
+        optionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PopupMenu popup = new PopupMenu(ShowElementActivity.this, v, Gravity.END, 0, R.style.rounded_menu_style_toolbar);
+                popup.setOnMenuItemClickListener(ShowElementActivity.this);
+                popup.inflate(R.menu.option_popup);
+                popup.show();
+            }
+        });
 
     }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        Intent intent;
+        switch (item.getItemId()) {
+            case R.id.edit:
+                intent = new Intent(ShowElementActivity.this, EditActivity.class);
+                intent.putExtra("account", account);
+                intent.putExtra("owner", owner);
+                startActivity(intent);
+                return true;
+            case R.id.delete:
+                listAccount.remove(account);
+                mngAcc.serializationListAccount(ShowElementActivity.this, listAccount, owner);
+                intent = new Intent(ShowElementActivity.this, ViewActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra("owner", owner);
+                startActivity(intent);
+                return true;
+            default:
+                return false;
+        }
+    }
+
 }
