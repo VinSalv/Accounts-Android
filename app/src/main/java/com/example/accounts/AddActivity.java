@@ -18,10 +18,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class AddActivity extends AppCompatActivity {
-    private String owner;
+    private User owner;
     private ManageAccount mngAcc;
     private ArrayList<Account> listAccount;
     private EditText name;
@@ -45,11 +44,11 @@ public class AddActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add);
 
-        owner = Objects.requireNonNull(getIntent().getExtras()).getString("owner");
+        owner = (User) (getIntent().getExtras()).get("owner");
 
         mngAcc = new ManageAccount();
 
-        listAccount = mngAcc.deserializationListAccount(this, owner);
+        listAccount = mngAcc.deserializationListAccount(this, owner.getUser());
         listElem = new ArrayList<>();
         layList = new ArrayList<>();
         email = new ArrayList<>();
@@ -92,7 +91,7 @@ public class AddActivity extends AppCompatActivity {
                     }
                 }
 
-                Account a = new Account(owner, name.getText().toString(), listElem);
+                Account a = new Account(name.getText().toString(), listElem);
 
                 if (a.getName().isEmpty()) {
                     nameError.setVisibility(View.VISIBLE);
@@ -108,7 +107,7 @@ public class AddActivity extends AppCompatActivity {
 
                 if (!mngAcc.search(a, listAccount)) {
                     listAccount.add(a);
-                    mngAcc.serializationListAccount(AddActivity.this, listAccount, owner);
+                    mngAcc.serializationListAccount(AddActivity.this, listAccount, owner.getUser());
                     Intent intent = new Intent(AddActivity.this, ViewActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);

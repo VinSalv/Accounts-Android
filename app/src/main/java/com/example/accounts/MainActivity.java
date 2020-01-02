@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
             userApp.setText(log.getUser());
             User usr = new User();
             for (User u : listUser) {
-                if (u.getUser().equals(log.getUser())) usr = u;
+                if (u.getUser().toLowerCase().equals(log.getUser().toLowerCase())) usr = u;
             }
 
             if (usr.getFinger()) {
@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra("owner", usr.getUser());
+                intent.putExtra("owner", usr);
                 startActivity(intent);
                 finish();
             }
@@ -112,7 +112,8 @@ public class MainActivity extends AppCompatActivity {
                 if (!fieldCheck(usr)) return;
                 if (mngUsr.login(usr, listUser)) {
                     for (User u : listUser) {
-                        if (u.getUser().equals(userApp.getText().toString())) usr = u;
+                        if (u.getUser().toLowerCase().equals(userApp.getText().toString().toLowerCase()))
+                            usr = u;
                     }
                     if (usr.getFinger()) {
                         if (!checkBiometricSupport()) {
@@ -126,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        intent.putExtra("owner", userApp.getText().toString());
+                        intent.putExtra("owner", new User(userApp.getText().toString(), passApp.getText().toString(), flagApp.isChecked(), 1));
                         startActivity(intent);
                         finish();
                     }
@@ -266,7 +267,7 @@ public class MainActivity extends AppCompatActivity {
                 mngApp.serializationFlag(MainActivity.this, log);
                 Intent intent = new Intent(MainActivity.this, MainActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                intent.putExtra("owner", userApp.getText().toString());
+                intent.putExtra("owner", new User(userApp.getText().toString(), passApp.getText().toString(), flagApp.isChecked(), 1));
                 startActivity(intent);
                 passApp.setText("");
             }
@@ -293,7 +294,7 @@ public class MainActivity extends AppCompatActivity {
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.putExtra("owner", userApp.getText().toString());
+                    intent.putExtra("owner", new User(userApp.getText().toString(), passApp.getText().toString(), flagApp.isChecked(), 1));
                     startActivity(intent);
                     finish();
                 } else {
@@ -303,7 +304,7 @@ public class MainActivity extends AppCompatActivity {
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.putExtra("owner", userApp.getText().toString());
+                    intent.putExtra("owner", new User(userApp.getText().toString(), passApp.getText().toString(), flagApp.isChecked(), 1));
                     startActivity(intent);
                     finish();
                 }

@@ -17,14 +17,14 @@ class ManageUser implements Serializable {
 
     boolean search(User u, ArrayList<User> listUser) {
         for (User usr : listUser) {
-            if (usr.getUser().equals(u.getUser())) return true;
+            if (usr.getUser().toLowerCase().equals(u.getUser().toLowerCase())) return true;
         }
         return false;
     }
 
     boolean login(User u, ArrayList<User> listUser) {
         for (User usr : listUser) {
-            if (usr.getUser().equals(u.getUser()) && usr.getPassword().equals(u.getPassword()))
+            if (usr.getUser().toLowerCase().equals(u.getUser().toLowerCase()) && usr.getPassword().equals(u.getPassword()))
                 return true;
         }
         return false;

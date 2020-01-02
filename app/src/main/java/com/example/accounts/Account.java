@@ -5,18 +5,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Account implements Serializable {
-    private String owner;
     private String name;
     private List<AccountElement> list;
 
-    Account(String owner, String name, ArrayList<AccountElement> list) {
-        this.owner = owner;
+    Account(String name, ArrayList<AccountElement> list) {
         this.name = name;
         this.list = list;
     }
 
     Account() {
-        this.owner = "";
         this.name = "";
         this.list = new ArrayList<>();
     }

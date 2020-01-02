@@ -41,7 +41,7 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     private TextView wellcome;
     private TextView wellcome2;
     AppBarLayout appBar;
-    private String owner;
+    private User owner;
     ManageUser mngUsr;
     ArrayList<User> listUser = new ArrayList<>();
     private ManageApp mngApp;
@@ -70,7 +70,7 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
 
-        owner = Objects.requireNonNull(getIntent().getExtras()).getString("owner");
+        owner = (User) (getIntent().getExtras()).get("owner");
 
         cl = findViewById(R.id.viewLayout);
 
@@ -81,24 +81,24 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         listUser = mngUsr.deserializationListUser(this);
 
         mngAcc = new ManageAccount();
-        listAccount = mngAcc.deserializationListAccount(this, owner);
+        listAccount = mngAcc.deserializationListAccount(this, owner.getUser());
 
         us = new User();
         for (User u : listUser)
-            if (u.getUser().equals(owner))
+            if (u.getUser().toLowerCase().equals(owner.getUser().toLowerCase()))
                 us = u;
         if (us.getSort() == 1)
-            mngAcc.serializationListAccount(this, AtoZ(listAccount), owner);
+            mngAcc.serializationListAccount(this, AtoZ(listAccount), owner.getUser());
         else
-            mngAcc.serializationListAccount(this, ZtoA(listAccount), owner);
+            mngAcc.serializationListAccount(this, ZtoA(listAccount), owner.getUser());
 
-        listAccount = mngAcc.deserializationListAccount(this, owner);
+        listAccount = mngAcc.deserializationListAccount(this, owner.getUser());
 
         wellcome = findViewById(R.id.wellcome);
-        wellcome.setText("Benvenuto " + owner);
+        wellcome.setText("Benvenuto " + owner.getUser());
 
         wellcome2 = findViewById(R.id.wellcomeToolbar);
-        wellcome2.setText("Lista di " + owner);
+        wellcome2.setText("Lista di " + owner.getUser());
         wellcome2.setVisibility(View.INVISIBLE);
 
         settingsButton = findViewById(R.id.settingsButton);
@@ -245,7 +245,7 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             for (String data : selectedIds) {
                 Account a = new Account();
                 for (Account a2 : listAccount) {
-                    if (a2.getName().equals(data)) {
+                    if (a2.getName().toLowerCase().equals(data.toLowerCase())) {
                         a = a2;
                         break;
                     }
@@ -260,7 +260,7 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             } else {
                 Toast.makeText(this, " Nessun elemento è stato rimosso", Toast.LENGTH_SHORT).show();
             }
-            mngAcc.serializationListAccount(this, listAccount, owner);
+            mngAcc.serializationListAccount(this, listAccount, owner.getUser());
             finish();
             startActivity(getIntent());
             return true;
@@ -313,13 +313,13 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                             us.setSort(1);
                             listUser.add(us);
                             mngUsr.serializationListUser(ViewActivity.this, listUser);
-                            mngAcc.serializationListAccount(ViewActivity.this, AtoZ(listAccount), owner);
+                            mngAcc.serializationListAccount(ViewActivity.this, AtoZ(listAccount), owner.getUser());
                         } else {
                             listUser.remove(us);
                             us.setSort(2);
                             listUser.add(us);
                             mngUsr.serializationListUser(ViewActivity.this, listUser);
-                            mngAcc.serializationListAccount(ViewActivity.this, ZtoA(listAccount), owner);
+                            mngAcc.serializationListAccount(ViewActivity.this, ZtoA(listAccount), owner.getUser());
                         }
                         popupWindow.dismiss();
                         finish();

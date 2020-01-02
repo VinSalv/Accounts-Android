@@ -78,6 +78,10 @@
     <string name="editButton">Salva</string>
     <string name="dalla_a_alla_z">Dalla A alla Z</string>
     <string name="dalla_z_alla_a">Dalla Z alla A</string>
+    <string name="profilo">Profilo</string>
+    <string name="estrai_pdf">Estrai PDF</string>
+    <string name="trasferisci_account">Trasferisci account</string>
+    <string name="elimina_profilo">Elimina profilo</string>
 
 
 </resources>

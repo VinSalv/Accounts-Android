@@ -20,7 +20,7 @@ import java.util.Objects;
 
 public class ShowElementActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
     private Account account;
-    private String owner;
+    private User owner;
     ManageApp mngApp;
     LogApp log;
     ManageUser mngUsr;
@@ -42,7 +42,7 @@ public class ShowElementActivity extends AppCompatActivity implements PopupMenu.
         viewPager = findViewById(R.id.view_pager);
         tabs = findViewById(R.id.tabs);
         account = (Account) Objects.requireNonNull(getIntent().getExtras()).get("account");
-        owner = getIntent().getExtras().getString("owner");
+        owner = (User) (getIntent().getExtras()).get("owner");
 
         mngApp = new ManageApp();
         log = mngApp.deserializationFlag(this);
@@ -51,7 +51,7 @@ public class ShowElementActivity extends AppCompatActivity implements PopupMenu.
         listUser = mngUsr.deserializationListUser(this);
 
         mngAcc = new ManageAccount();
-        listAccount = mngAcc.deserializationListAccount(this, owner);
+        listAccount = mngAcc.deserializationListAccount(this, owner.getUser());
 
         name = findViewById(R.id.name);
         name.setText(account.getName());
@@ -139,7 +139,7 @@ public class ShowElementActivity extends AppCompatActivity implements PopupMenu.
                 return true;
             case R.id.delete:
                 listAccount.remove(account);
-                mngAcc.serializationListAccount(ShowElementActivity.this, listAccount, owner);
+                mngAcc.serializationListAccount(ShowElementActivity.this, listAccount, owner.getUser());
                 intent = new Intent(ShowElementActivity.this, ViewActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);

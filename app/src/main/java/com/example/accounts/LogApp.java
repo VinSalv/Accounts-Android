@@ -28,7 +28,7 @@ public class LogApp implements Serializable {
     public boolean equals(Object object) {
         boolean bool = false;
         if (object instanceof LogApp) {
-            bool = (this.getUser().equals(((LogApp) object).getUser()));
+            bool = (this.getUser().toLowerCase().equals(((LogApp) object).getUser().toLowerCase()));
         }
         return bool;
     }

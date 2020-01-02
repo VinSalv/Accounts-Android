@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class EditActivity extends AppCompatActivity {
-    private String owner;
+    private User owner;
     private ManageAccount mngAcc;
     private ArrayList<Account> listAccount;
     private EditText name;
@@ -47,11 +47,11 @@ public class EditActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit);
 
         account = (Account) Objects.requireNonNull(getIntent().getExtras()).get("account");
-        owner = getIntent().getExtras().getString("owner");
+        owner = (User) (getIntent().getExtras()).get("owner");
 
         mngAcc = new ManageAccount();
 
-        listAccount = mngAcc.deserializationListAccount(this, owner);
+        listAccount = mngAcc.deserializationListAccount(this, owner.getUser());
         listElem = new ArrayList<>();
         layList = new ArrayList<>();
         email = new ArrayList<>();
@@ -118,8 +118,8 @@ public class EditActivity extends AppCompatActivity {
                     }
                 }
 
-                Account a = new Account(owner, name.getText().toString(), listElem);
-                Account a2 = new Account(owner, account.getName(), (ArrayList<AccountElement>) account.getList());
+                Account a = new Account(name.getText().toString(), listElem);
+                Account a2 = new Account(account.getName(), (ArrayList<AccountElement>) account.getList());
 
                 if (a.getName().isEmpty()) {
                     nameError.setVisibility(View.VISIBLE);
@@ -136,7 +136,7 @@ public class EditActivity extends AppCompatActivity {
                 if (!mngAcc.search(a, listAccount) || a.equals(account.getName())) {
                     listAccount.remove(a2);
                     listAccount.add(a);
-                    mngAcc.serializationListAccount(EditActivity.this, listAccount, owner);
+                    mngAcc.serializationListAccount(EditActivity.this, listAccount, owner.getUser());
                     Intent intent = new Intent(EditActivity.this, ViewActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
