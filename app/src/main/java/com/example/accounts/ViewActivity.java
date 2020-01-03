@@ -278,6 +278,7 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
     @Override
     public boolean onMenuItemClick(MenuItem item) {
+        Intent intent;
         switch (item.getItemId()) {
             case R.id.delete:
                 if (!isMultiSelect) {
@@ -328,11 +329,14 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 });
                 return true;
             case R.id.setting:
+                intent = new Intent(ViewActivity.this, SettingActivity.class);
+                intent.putExtra("owner", owner);
+                startActivity(intent);
                 return true;
             case R.id.exit:
                 log = new LogApp();
                 mngApp.serializationFlag(this, log);
-                Intent intent = new Intent(ViewActivity.this, MainActivity.class);
+                intent = new Intent(ViewActivity.this, MainActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

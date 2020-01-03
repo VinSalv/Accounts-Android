@@ -56,10 +56,10 @@ public class SettingActivity extends AppCompatActivity {
 
         listAccount = mngAcc.deserializationListAccount(this, owner.getUser());
 
-        setting = findViewById(R.id.wellcome);
+        setting = findViewById(R.id.setting);
         setting.setText("Impostazioni");
 
-        setting2 = findViewById(R.id.wellcomeToolbar);
+        setting2 = findViewById(R.id.settingToolbar);
         setting2.setText("Impostazioni");
         setting2.setVisibility(View.INVISIBLE);
 
