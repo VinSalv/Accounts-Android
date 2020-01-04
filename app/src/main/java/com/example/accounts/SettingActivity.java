@@ -2,13 +2,11 @@ package com.example.accounts;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -32,9 +30,9 @@ public class SettingActivity extends AppCompatActivity {
     private User us;
     private Button prof;
     private Button pdf;
-    private Button transfAcc;
+    private Button esportAcc;
+    private Button importAcc;
     private Button delProf;
-
 
 
     @SuppressLint("SetTextI18n")
@@ -66,7 +64,8 @@ public class SettingActivity extends AppCompatActivity {
 
         prof = findViewById(R.id.profile);
         pdf = findViewById(R.id.pdf);
-        transfAcc = findViewById(R.id.transferAccount);
+        esportAcc = findViewById(R.id.esportAccount);
+        importAcc = findViewById(R.id.importAccount);
         delProf = findViewById(R.id.deleteProfile);
 
         setting = findViewById(R.id.setting);
@@ -110,7 +109,13 @@ public class SettingActivity extends AppCompatActivity {
             }
         });
 
-        transfAcc.setOnClickListener(new View.OnClickListener() {
+        esportAcc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+            }
+        });
+
+        importAcc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
             }
@@ -120,8 +125,8 @@ public class SettingActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 listUser.remove(owner);
-                mngUsr.serializationListUser(SettingActivity.this,listUser);
-                mngAcc.removeFileAccount(SettingActivity.this,owner.getUser());
+                mngUsr.serializationListUser(SettingActivity.this, listUser);
+                mngAcc.removeFileAccount(SettingActivity.this, owner.getUser());
                 Intent intent = new Intent(SettingActivity.this, MainActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);

@@ -33,7 +33,7 @@
             android:text="@string/estrai_pdf" />
 
         <Button
-            android:id="@+id/transferAccount"
+            android:id="@+id/esportAccount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
@@ -41,7 +41,7 @@
             android:text="@string/esporta_account" />
 
         <Button
-            android:id="@+id/importaAccount"
+            android:id="@+id/importAccount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
