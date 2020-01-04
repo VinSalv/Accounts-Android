@@ -1,11 +1,13 @@
 package com.example.accounts;
 
 import android.annotation.SuppressLint;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -27,6 +29,11 @@ public class SettingActivity extends AppCompatActivity {
     private ArrayList<Account> listAccount;
     private ManageAccount mngAcc;
     private User us;
+    private Button prof;
+    private Button pdf;
+    private Button transfAcc;
+    private Button delProf;
+
 
 
     @SuppressLint("SetTextI18n")
@@ -56,13 +63,17 @@ public class SettingActivity extends AppCompatActivity {
 
         listAccount = mngAcc.deserializationListAccount(this, owner.getUser());
 
+        prof = findViewById(R.id.profile);
+        pdf = findViewById(R.id.pdf);
+        transfAcc = findViewById(R.id.transferAccount);
+        delProf = findViewById(R.id.deleteProfile);
+
         setting = findViewById(R.id.setting);
         setting.setText("Impostazioni");
 
         setting2 = findViewById(R.id.settingToolbar);
         setting2.setText("Impostazioni");
         setting2.setVisibility(View.INVISIBLE);
-
 
         appBar = findViewById(R.id.app_bar_setting);
 
@@ -86,6 +97,29 @@ public class SettingActivity extends AppCompatActivity {
             }
         });
 
-    }
+        prof.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+            }
+        });
 
+        pdf.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+            }
+        });
+
+        transfAcc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+            }
+        });
+
+        delProf.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+            }
+        });
+
+    }
 }
