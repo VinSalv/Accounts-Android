@@ -1,6 +1,7 @@
 package com.example.accounts;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -118,6 +119,15 @@ public class SettingActivity extends AppCompatActivity {
         delProf.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                listUser.remove(owner);
+                mngUsr.serializationListUser(SettingActivity.this,listUser);
+                mngAcc.removeFileAccount(SettingActivity.this,owner.getUser());
+                Intent intent = new Intent(SettingActivity.this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                finish();
             }
         });
 

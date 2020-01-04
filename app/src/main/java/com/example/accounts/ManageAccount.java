@@ -2,6 +2,7 @@ package com.example.accounts;
 
 import android.content.Context;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -42,6 +43,14 @@ class ManageAccount implements Serializable {
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
             return new ArrayList<>();
+        }
+    }
+
+    public void removeFileAccount(Context context, String owner) {
+        try {
+            context.deleteFile("Accounts" + owner + ".txt");
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

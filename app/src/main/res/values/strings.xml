@@ -80,7 +80,8 @@
     <string name="dalla_z_alla_a">Dalla Z alla A</string>
     <string name="profilo">Profilo</string>
     <string name="estrai_pdf">Estrai PDF</string>
-    <string name="trasferisci_account">Trasferisci account</string>
+    <string name="esporta_account">Esporta account</string>
+    <string name="improta_account">Importa account</string>
     <string name="elimina_profilo">Elimina profilo</string>
     <string name="impostazioni">Impostazioni</string>
 
