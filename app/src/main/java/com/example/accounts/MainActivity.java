@@ -85,7 +85,11 @@ public class MainActivity extends AppCompatActivity {
             for (User u : listUser) {
                 if (u.getUser().toLowerCase().equals(log.getUser().toLowerCase())) usr = u;
             }
-
+            String s = userApp.getText().toString().toLowerCase();
+            String c = s.substring(0, 1).toUpperCase();
+            String c2 = s.substring(1).toLowerCase();
+            s = c.concat(c2);
+            usr.setUser(s);
             if (usr.getFinger()) {
                 if (!checkBiometricSupport()) {
                     return;
@@ -127,7 +131,11 @@ public class MainActivity extends AppCompatActivity {
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        intent.putExtra("owner", new User(userApp.getText().toString(), passApp.getText().toString(), flagApp.isChecked(), 1));
+                        String s = userApp.getText().toString().toLowerCase();
+                        String c = s.substring(0, 1).toUpperCase();
+                        String c2 = s.substring(1).toLowerCase();
+                        s = c.concat(c2);
+                        intent.putExtra("owner", new User(s, passApp.getText().toString(), flagApp.isChecked(), 1));
                         startActivity(intent);
                         finish();
                     }

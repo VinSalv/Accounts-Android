@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/rounded_menu2"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/userEditImage"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_alignBottom="@id/userEditText"
+        android:layout_marginStart="1dp"
+        android:layout_marginBottom="7dp"
+        android:contentDescription="@string/userEditImage"
+        app:srcCompat="@drawable/user" />
+
+    <EditText
+        android:id="@+id/userEditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginBottom="15dp"
+        android:autofillHints=""
+        android:ems="10"
+        android:hint="@string/userEditHint"
+        android:inputType="textPersonName"
+        android:textSize="16sp"
+        android:theme="@style/inputField"
+        tools:targetApi="o" />
+
+    <ImageView
+        android:id="@+id/userEditError"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_alignBottom="@id/userEditText"
+        android:layout_marginStart="3dp"
+        android:layout_marginBottom="5dp"
+        android:layout_toEndOf="@id/userEditText"
+        android:contentDescription="@string/userEditError"
+        android:visibility="invisible"
+        app:srcCompat="@drawable/warning" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/userEditText"
+        android:layout_alignStart="@id/userEditImage"
+        android:layout_alignEnd="@id/userEditError"
+        android:background="#00FFFFFF"
+        android:text="Salva"
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+        android:textColor="@color/colorButtonMenu"
+        android:textSize="22sp"
+        android:textStyle="normal" />
+
+</RelativeLayout>

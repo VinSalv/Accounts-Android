@@ -17,14 +17,14 @@
     <string name="flagApp">Ricordami</string>
 
     <string name="userSignImage">Icona utente</string>
-    <string name="usernameText">Inserisci il tuo Username</string>
+    <string name="usernameText">Inserisci il tuo username</string>
     <string name="usernameAppHint">Username</string>
     <string name="errorUsername">Errore immisione utente</string>
     <string name="passSignImage">Icona password</string>
-    <string name="passwordText">Inserisci la tua Password</string>
+    <string name="passwordText">Inserisci la tua password</string>
     <string name="passwordAppHint">Password</string>
     <string name="errorPassword">Errore immisione password</string>
-    <string name="passwordText2">Reinserisci la tua Password</string>
+    <string name="passwordText2">Reinserisci la tua password</string>
     <string name="passwordAppHint2">Reinserisci password</string>
     <string name="errorPassword2">Errore reimmisione password</string>
     <string name="flagFinger">Autenticazione con impronta? (Sarà possibile cambiare il settaggio in qualsiasi momento)</string>
@@ -84,5 +84,24 @@
     <string name="improta_account">Importa account</string>
     <string name="elimina_profilo">Elimina profilo</string>
     <string name="impostazioni">Impostazioni</string>
+    <string name="title_activity_profile">ProfileActivity</string>
 
+    <string name="flagProfFinger">Autenticazione con impronta?</string>
+    <string name="modifica_nome_utente">Modifica nome utente</string>
+    <string name="modifica_password">Modifica password</string>
+    <string name="autenticazione_con_impronta">Autenticazione con impronta</string>
+
+    <string name="userEditImage">Icona utente</string>
+    <string name="userEditText">Nuovo username</string>
+    <string name="userEditHint">Nuovo username</string>
+    <string name="userEditError">Errore immisione utente</string>
+    <string name="passEditImage">Icona password</string>
+    <string name="passEditText">Nuova password</string>
+    <string name="passEditHint">Nuova Password</string>
+    <string name="passEditError">Errore immisione password</string>
+    <string name="passEditImage2">Icona password</string>
+    <string name="passEditText2">Ripeti password</string>
+    <string name="passEditHint2">Ripeti password</string>
+    <string name="passEditError2">Errore immisione password</string>
+    <string name="cosa_vuoi_fare">Cosa vuoi fare?</string>
 </resources>

@@ -5,7 +5,7 @@
     android:id="@+id/signActivityLay"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#000000"
+    android:background="@color/colorPrimary"
     tools:context=".SignActivity">
 
     <com.google.android.material.appbar.AppBarLayout

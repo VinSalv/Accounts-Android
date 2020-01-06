@@ -26,6 +26,10 @@ public class User implements Serializable {
         return sort;
     }
 
+    public void setUser(String user) {
+        this.user = user;
+    }
+
     public void setSort(int sort) {
         this.sort = sort;
     }

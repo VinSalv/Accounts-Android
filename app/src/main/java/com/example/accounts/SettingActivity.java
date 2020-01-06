@@ -100,6 +100,10 @@ public class SettingActivity extends AppCompatActivity {
         prof.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent intent = new Intent(SettingActivity.this, ProfileActivity.class);
+                intent.putExtra("owner", owner);
+                startActivity(intent);
+                finish();
             }
         });
 

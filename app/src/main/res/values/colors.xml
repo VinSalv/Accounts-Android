@@ -5,4 +5,5 @@
     <color name="colorAccent">#81FFFFFF</color>
     <color name="colorActionMode">#009362</color>
     <color name="colorPopupMenu">#333333</color>
+    <color name="colorButtonMenu">#008B36</color>
 </resources>
