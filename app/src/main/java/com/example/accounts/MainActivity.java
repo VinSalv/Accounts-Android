@@ -33,34 +33,21 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 public class MainActivity extends AppCompatActivity {
     private static final int PERMISSION_REQUEST_CODE = 200;
-
     private RelativeLayout lay;
     private EditText userApp;
     private ImageView userError;
     private EditText passApp;
     private ImageView passError;
-    Button login;
-    TextView sign;
     private Switch flagApp;
     private ManageApp mngApp;
-    private ManageUser mngUsr;
-    private ArrayList<User> listUser = new ArrayList<>();
-    CancellationSignal cancellationSignal;
     private LogApp log;
+    private ManageUser mngUsr;
+    private ArrayList<User> listUser;
 
     @RequiresApi(api = Build.VERSION_CODES.P)
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        lay = findViewById(R.id.relLayMain);
-        userApp = findViewById(R.id.userApp);
-        userError = findViewById(R.id.userError);
-        passApp = findViewById(R.id.passApp);
-        passError = findViewById(R.id.passError);
-        login = findViewById(R.id.authButton);
-        sign = findViewById(R.id.signButton);
-        flagApp = findViewById(R.id.flagApp);
 
         if (!checkPermission()) {
             openActivity();
@@ -72,37 +59,33 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        mngApp = new ManageApp();
-        log = mngApp.deserializationFlag(this);
+        lay = findViewById(R.id.relLayMain);
+        userApp = findViewById(R.id.userApp);
+        userError = findViewById(R.id.userError);
+        passApp = findViewById(R.id.passApp);
+        passError = findViewById(R.id.passError);
+        flagApp = findViewById(R.id.flagApp);
+        Button login = findViewById(R.id.authButton);
+        TextView sign = findViewById(R.id.signButton);
 
         mngUsr = new ManageUser();
         listUser = mngUsr.deserializationListUser(this);
 
+        mngApp = new ManageApp();
+        log = mngApp.deserializationFlag(this);
+
         if (log.getFlagApp()) {
             flagApp.setChecked(true);
-            userApp.setText(log.getUser());
-            User usr = new User();
-            for (User u : listUser) {
-                if (u.getUser().toLowerCase().equals(log.getUser().toLowerCase())) usr = u;
-            }
-            String s = userApp.getText().toString().toLowerCase();
-            String c = s.substring(0, 1).toUpperCase();
-            String c2 = s.substring(1).toLowerCase();
-            s = c.concat(c2);
-            usr.setUser(s);
-            if (usr.getFinger()) {
-                if (!checkBiometricSupport()) {
-                    return;
+            User usr = mngUsr.findUser(listUser, log.getUser());
+            if (usr != null) {
+                userApp.setText(usr.getUser());
+                if (usr.getFinger()) {
+                    biometricAuthentication(lay);
+                } else {
+                    goToViewActivity(usr);
                 }
-                authenticateUser(lay);
             } else {
-                Intent intent = new Intent(MainActivity.this, ViewActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra("owner", usr);
-                startActivity(intent);
-                finish();
+                notifyUser("Impossibile restare connesso");
             }
         }
 
@@ -112,61 +95,144 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 userError.setVisibility(View.INVISIBLE);
                 passError.setVisibility(View.INVISIBLE);
-                User usr = new User(userApp.getText().toString(), passApp.getText().toString(), false,1);
-                if (!fieldCheck(usr)) return;
-                if (mngUsr.login(usr, listUser)) {
-                    for (User u : listUser) {
-                        if (u.getUser().toLowerCase().equals(userApp.getText().toString().toLowerCase()))
-                            usr = u;
-                    }
-                    if (usr.getFinger()) {
-                        if (!checkBiometricSupport()) {
-                            return;
+                User usr = mngUsr.findUser(listUser, userApp.getText().toString());
+                if (usr != null) {
+                    if (!fieldCheck(usr)) return;
+                    if (mngUsr.login(usr, listUser)) {
+                        if (usr.getFinger()) {
+                            biometricAuthentication(lay);
+                        } else {
+                            log = new LogApp(flagApp.isChecked(), fixName(userApp.getText().toString()));
+                            mngApp.serializationFlag(MainActivity.this, log);
+                            goToViewActivity(usr);
                         }
-                        authenticateUser(lay);
                     } else {
-                        log = new LogApp(flagApp.isChecked(), usr.getUser());
-                        mngApp.serializationFlag(MainActivity.this, log);
-                        Intent intent = new Intent(MainActivity.this, ViewActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        String s = userApp.getText().toString().toLowerCase();
-                        String c = s.substring(0, 1).toUpperCase();
-                        String c2 = s.substring(1).toLowerCase();
-                        s = c.concat(c2);
-                        intent.putExtra("owner", new User(s, passApp.getText().toString(), flagApp.isChecked(), 1));
-                        startActivity(intent);
-                        finish();
+                        userError.setVisibility(View.VISIBLE);
+                        passError.setVisibility(View.VISIBLE);
+                        notifyUser("Autenticazione errata");
                     }
-                } else {
-                    userError.setVisibility(View.VISIBLE);
-                    passError.setVisibility(View.VISIBLE);
-                    notifyUser("Autenticazione errata");
-                }
+                } else
+                    notifyUser("Impossibile autenticare l'utente");
             }
         });
 
         sign.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, SignActivity.class);
-                startActivity(intent);
+                goToSignActivity();
             }
         });
     }
 
+    public void goToViewActivity(User usr) {
+        Intent intent = new Intent(MainActivity.this, ViewActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra("owner", usr);
+        startActivity(intent);
+        finish();
+    }
+
+    public void goToMainActivity() {
+        Intent intent = new Intent(MainActivity.this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        startActivity(intent);
+    }
+
+    public void goToSignActivity() {
+        Intent intent = new Intent(MainActivity.this, SignActivity.class);
+        startActivity(intent);
+    }
+
+    public String fixName(String name) {
+        name = name.toLowerCase();
+        String name1 = name.substring(0, 1).toUpperCase();
+        String name2 = name.substring(1).toLowerCase();
+        return name1.concat(name2);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.P)
+    private BiometricPrompt.AuthenticationCallback getAuthenticationCallback() {
+        return new BiometricPrompt.AuthenticationCallback() {
+            @Override
+            public void onAuthenticationError(int errorCode, CharSequence errString) {
+                notifyUser("Autenticazione errore: " + errString);
+                super.onAuthenticationError(errorCode, errString);
+                log = new LogApp();
+                mngApp.serializationFlag(MainActivity.this, log);
+                goToMainActivity();
+                passApp.setText("");
+            }
+
+            @Override
+            public void onAuthenticationHelp(int helpCode, CharSequence helpString) {
+                super.onAuthenticationHelp(helpCode, helpString);
+            }
+
+            @Override
+            public void onAuthenticationFailed() {
+                super.onAuthenticationFailed();
+            }
+
+            @Override
+            public void onAuthenticationSucceeded(BiometricPrompt.AuthenticationResult result) {
+                notifyUser("Autenticazione effettuata");
+                super.onAuthenticationSucceeded(result);
+                User usr = new User(userApp.getText().toString(), passApp.getText().toString(), true, 1);
+                if (flagApp.isChecked()) {
+                    log = new LogApp(flagApp.isChecked(), userApp.getText().toString());
+                    mngApp.serializationFlag(MainActivity.this, log);
+                    goToViewActivity(usr);
+                } else {
+                    log = new LogApp();
+                    mngApp.serializationFlag(MainActivity.this, log);
+                    goToViewActivity(usr);
+                }
+            }
+        };
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.P)
+    public void authenticateUser(View view) {
+        BiometricPrompt biometricPrompt = new BiometricPrompt.Builder(this)
+                .setTitle("Lettura impronta digitale")
+                .setSubtitle("Autenticazione richiesta per continuare")
+                .setDescription("Account con autenticazione biometrica per proteggere i dati.")
+                .setNegativeButton("Annulla", this.getMainExecutor(),
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                notifyUser("Autenticazione annullata");
+                                log = new LogApp();
+                                mngApp.serializationFlag(MainActivity.this, log);
+                                goToMainActivity();
+                                passApp.setText("");
+                            }
+                        })
+                .build();
+        biometricPrompt.authenticate(getCancellationSignal(), getMainExecutor(), getAuthenticationCallback());
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.P)
+    public void biometricAuthentication(RelativeLayout lay) {
+        if (!checkBiometricSupport()) {
+            return;
+        }
+        authenticateUser(lay);
+    }
+
     public boolean fieldCheck(User usr) {
-        if (!isValidWord(usr.getUser()) && !isValidWord(usr.getPassword())) {
+        if (isInvalidWord(usr.getUser()) && isInvalidWord(usr.getPassword())) {
             userError.setVisibility(View.VISIBLE);
             passError.setVisibility(View.VISIBLE);
             notifyUser("Campi Utente e Password non validi !!!");
             return false;
-        } else if (!isValidWord(usr.getUser())) {
+        } else if (isInvalidWord(usr.getUser())) {
             userError.setVisibility(View.VISIBLE);
             notifyUser("Campo Utente non valido !!!");
             return false;
-        } else if (!isValidWord(usr.getPassword())) {
+        } else if (isInvalidWord(usr.getPassword())) {
             passError.setVisibility(View.VISIBLE);
             notifyUser("Campo Password non valido !!!");
             return false;
@@ -174,8 +240,14 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    public boolean isValidWord(String word) {
-        return ((word.matches("[A-Za-z0-9?!_.-]*")) && (!word.isEmpty()));
+    public boolean isInvalidWord(String word) {
+        return ((!word.matches("[A-Za-z0-9?!_.-]*")) || (word.isEmpty()));
+    }
+
+    private void notifyUser(String message) {
+        Toast.makeText(this,
+                message,
+                Toast.LENGTH_LONG).show();
     }
 
     private boolean checkPermission() {
@@ -186,7 +258,6 @@ public class MainActivity extends AppCompatActivity {
     private void requestPermissionAndContinue() {
         if (ContextCompat.checkSelfPermission(this, WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
                 && ContextCompat.checkSelfPermission(this, READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-
             if (ActivityCompat.shouldShowRequestPermissionRationale(this, WRITE_EXTERNAL_STORAGE)
                     && ActivityCompat.shouldShowRequestPermissionRationale(this, READ_EXTERNAL_STORAGE)) {
                 AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
@@ -238,12 +309,6 @@ public class MainActivity extends AppCompatActivity {
         //add your further process after giving permission or to download images from remote server.
     }
 
-    private void notifyUser(String message) {
-        Toast.makeText(this,
-                message,
-                Toast.LENGTH_LONG).show();
-    }
-
     private Boolean checkBiometricSupport() {
         KeyguardManager keyguardManager =
                 (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
@@ -263,65 +328,8 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.P)
-    private BiometricPrompt.AuthenticationCallback getAuthenticationCallback() {
-
-        return new BiometricPrompt.AuthenticationCallback() {
-            @Override
-            public void onAuthenticationError(int errorCode, CharSequence errString) {
-                notifyUser("Autenticazione errore: " + errString);
-                super.onAuthenticationError(errorCode, errString);
-                log = new LogApp();
-                mngApp.serializationFlag(MainActivity.this, log);
-                Intent intent = new Intent(MainActivity.this, MainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                intent.putExtra("owner", new User(userApp.getText().toString(), passApp.getText().toString(), flagApp.isChecked(), 1));
-                startActivity(intent);
-                passApp.setText("");
-            }
-
-            @Override
-            public void onAuthenticationHelp(int helpCode, CharSequence helpString) {
-                super.onAuthenticationHelp(helpCode, helpString);
-            }
-
-            @Override
-            public void onAuthenticationFailed() {
-                super.onAuthenticationFailed();
-            }
-
-            @Override
-            public void onAuthenticationSucceeded(BiometricPrompt.AuthenticationResult result) {
-                notifyUser("Autenticazione effettuata");
-                super.onAuthenticationSucceeded(result);
-
-                if (flagApp.isChecked()) {
-                    log = new LogApp(flagApp.isChecked(), userApp.getText().toString());
-                    mngApp.serializationFlag(MainActivity.this, log);
-                    Intent intent = new Intent(MainActivity.this, ViewActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.putExtra("owner", new User(userApp.getText().toString(), passApp.getText().toString(), flagApp.isChecked(), 1));
-                    startActivity(intent);
-                    finish();
-                } else {
-                    log = new LogApp();
-                    mngApp.serializationFlag(MainActivity.this, log);
-                    Intent intent = new Intent(MainActivity.this, ViewActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.putExtra("owner", new User(userApp.getText().toString(), passApp.getText().toString(), flagApp.isChecked(), 1));
-                    startActivity(intent);
-                    finish();
-                }
-            }
-        };
-    }
-
     private CancellationSignal getCancellationSignal() {
-        cancellationSignal = new CancellationSignal();
+        CancellationSignal cancellationSignal = new CancellationSignal();
         cancellationSignal.setOnCancelListener(new CancellationSignal.OnCancelListener() {
             @Override
             public void onCancel() {
@@ -331,28 +339,5 @@ public class MainActivity extends AppCompatActivity {
         return cancellationSignal;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.P)
-    public void authenticateUser(View view) {
-        BiometricPrompt biometricPrompt = new BiometricPrompt.Builder(this)
-                .setTitle("Lettura impronta digitale")
-                .setSubtitle("Autenticazione richiesta per continuare")
-                .setDescription("Account con autenticazione biometrica per proteggere i dati.")
-                .setNegativeButton("Annulla", this.getMainExecutor(),
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                notifyUser("Autenticazione annullata");
-                                log = new LogApp();
-                                mngApp.serializationFlag(MainActivity.this, log);
-                                Intent intent = new Intent(MainActivity.this, MainActivity.class);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                                intent.putExtra("owner", userApp.getText().toString());
-                                startActivity(intent);
-                                passApp.setText("");
-                            }
-                        })
-                .build();
-        biometricPrompt.authenticate(getCancellationSignal(), getMainExecutor(), getAuthenticationCallback());
-    }
 }
 

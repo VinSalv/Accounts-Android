@@ -13,11 +13,6 @@ public class Account implements Serializable {
         this.list = list;
     }
 
-    Account() {
-        this.name = "";
-        this.list = new ArrayList<>();
-    }
-
     List<AccountElement> getList() {
         return list;
     }

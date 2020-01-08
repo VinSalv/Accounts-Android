@@ -40,10 +40,8 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     boolean doubleBackToExitPressedOnce = false;
     private TextView wellcome;
     private TextView wellcome2;
-    AppBarLayout appBar;
-    private User owner;
-    ManageUser mngUsr;
-    ArrayList<User> listUser = new ArrayList<>();
+    private ManageUser mngUsr;
+    private ArrayList<User> listUser = new ArrayList<>();
     private ManageApp mngApp;
     private LogApp log;
     private Button settingsButton;
@@ -53,15 +51,11 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     private ActionMode actionMode;
     private boolean isMultiSelect = false;
     private MyAdapter adapter;
-    private List<String> selectedIds = new ArrayList<>();
+    private List<String> selectedIds;
     private CoordinatorLayout cl;
-    private int sort;
-    private User us;
-    private RadioGroup rg;
+    private User usr;
     private RadioButton rb1;
-    private RadioButton rb2;
 
-    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,146 +64,201 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
 
-        owner = (User) (getIntent().getExtras()).get("owner");
+        User owner = (User) (Objects.requireNonNull(getIntent().getExtras())).get("owner");
 
         cl = findViewById(R.id.viewLayout);
-
         mngApp = new ManageApp();
         log = mngApp.deserializationFlag(this);
-
         mngUsr = new ManageUser();
         listUser = mngUsr.deserializationListUser(this);
 
-        mngAcc = new ManageAccount();
-        listAccount = mngAcc.deserializationListAccount(this, owner.getUser());
+        usr = mngUsr.findUser(listUser, Objects.requireNonNull(owner).getUser());
+        if (usr != null) {
+            mngAcc = new ManageAccount();
+            listAccount = mngAcc.deserializationListAccount(this, usr.getUser());
+            if (usr.getSort() == 1)
+                mngAcc.serializationListAccount(this, AtoZ(listAccount), usr.getUser());
+            else
+                mngAcc.serializationListAccount(this, ZtoA(listAccount), usr.getUser());
 
-        us = new User();
-        for (User u : listUser)
-            if (u.getUser().toLowerCase().equals(owner.getUser().toLowerCase()))
-                us = u;
-        if (us.getSort() == 1)
-            mngAcc.serializationListAccount(this, AtoZ(listAccount), owner.getUser());
-        else
-            mngAcc.serializationListAccount(this, ZtoA(listAccount), owner.getUser());
+            listAccount = mngAcc.deserializationListAccount(this, usr.getUser());
 
-        listAccount = mngAcc.deserializationListAccount(this, owner.getUser());
+            wellcome = findViewById(R.id.wellcome);
+            String benvenuto = getResources().getString(R.string.benvenuto) + " " + usr.getUser();
+            wellcome.setText(benvenuto);
 
-        wellcome = findViewById(R.id.wellcome);
-        wellcome.setText("Benvenuto " + owner.getUser());
+            wellcome2 = findViewById(R.id.wellcomeToolbar);
+            String listaDi = getResources().getString(R.string.lista_di) + " " + usr.getUser();
+            wellcome2.setText(listaDi);
+            wellcome2.setVisibility(View.INVISIBLE);
 
-        wellcome2 = findViewById(R.id.wellcomeToolbar);
-        wellcome2.setText("Lista di " + owner.getUser());
-        wellcome2.setVisibility(View.INVISIBLE);
+            settingsButton = findViewById(R.id.settingsButton);
+            settingsButton.setVisibility(View.INVISIBLE);
 
-        settingsButton = findViewById(R.id.settingsButton);
-        settingsButton.setVisibility(View.INVISIBLE);
+            searchButton = findViewById(R.id.searchButton);
+            searchButton.setVisibility(View.INVISIBLE);
 
-        searchButton = findViewById(R.id.searchButton);
-        searchButton.setVisibility(View.INVISIBLE);
+            AppBarLayout appBar = findViewById(R.id.app_bar);
 
-        appBar = findViewById(R.id.app_bar);
+            appBar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+                boolean isShow = false;
+                int scrollRange = -1;
 
-        appBar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-            boolean isShow = false;
-            int scrollRange = -1;
-
-            @Override
-            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                wellcome.setAlpha((1.0f - (float) Math.abs(verticalOffset) / appBarLayout.getTotalScrollRange()));
-                if (scrollRange == -1) {
-                    scrollRange = appBarLayout.getTotalScrollRange();
-                }
-                if (scrollRange + verticalOffset == 0) {
-                    isShow = true;
-                    wellcome2.setVisibility(View.VISIBLE);
-                    settingsButton.setVisibility(View.VISIBLE);
-                    searchButton.setVisibility(View.VISIBLE);
-                } else if (isShow) {
-                    isShow = false;
-                    wellcome2.setVisibility(View.INVISIBLE);
-                    settingsButton.setVisibility(View.INVISIBLE);
-                    searchButton.setVisibility(View.INVISIBLE);
-                }
-            }
-        });
-
-        final FloatingActionButton setting = findViewById(R.id.settingsFloatingButton);
-        setting.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                PopupMenu popup = new PopupMenu(ViewActivity.this, v, Gravity.END, 0, R.style.rounded_menu_style);
-                popup.setOnMenuItemClickListener(ViewActivity.this);
-                popup.inflate(R.menu.popup);
-                popup.show();
-            }
-        });
-
-        settingsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                PopupMenu popup = new PopupMenu(ViewActivity.this, v, Gravity.END, 0, R.style.rounded_menu_style_toolbar);
-                popup.setOnMenuItemClickListener(ViewActivity.this);
-                popup.inflate(R.menu.popup);
-                popup.show();
-            }
-        });
-
-        final FloatingActionButton search = findViewById(R.id.searchFloatingButton);
-        search.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(ViewActivity.this, "Pulsante: search", Toast.LENGTH_SHORT).show();
-
-            }
-        });
-
-        searchButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(ViewActivity.this, "Pulsante: search", Toast.LENGTH_SHORT).show();
-
-            }
-        });
-
-        final FloatingActionButton add = findViewById(R.id.addFloatingButton);
-        add.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ViewActivity.this, AddActivity.class);
-                intent.putExtra("owner", owner);
-                startActivity(intent);
-            }
-        });
-
-        RecyclerView recyclerView = findViewById(R.id.recyclerView);
-        adapter = new MyAdapter(this, listAccount);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(adapter);
-        recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this, recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                if (isMultiSelect) {
-                    multiSelect(position);
-                } else {
-                    Intent intent = new Intent(ViewActivity.this, ShowElementActivity.class);
-                    intent.putExtra("account", adapter.getItem(position));
-                    intent.putExtra("owner", owner);
-                    startActivity(intent);
-                }
-            }
-
-            @Override
-            public void onItemLongClick(View view, int position) {
-                if (!isMultiSelect) {
-                    selectedIds = new ArrayList<>();
-                    isMultiSelect = true;
-                    if (actionMode == null) {
-                        actionMode = startActionMode(ViewActivity.this); //show ActionMode.
+                @Override
+                public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                    wellcome.setAlpha((1.0f - (float) Math.abs(verticalOffset) / appBarLayout.getTotalScrollRange()));
+                    if (scrollRange == -1) {
+                        scrollRange = appBarLayout.getTotalScrollRange();
+                    }
+                    if (scrollRange + verticalOffset == 0) {
+                        isShow = true;
+                        wellcome2.setVisibility(View.VISIBLE);
+                        settingsButton.setVisibility(View.VISIBLE);
+                        searchButton.setVisibility(View.VISIBLE);
+                    } else if (isShow) {
+                        isShow = false;
+                        wellcome2.setVisibility(View.INVISIBLE);
+                        settingsButton.setVisibility(View.INVISIBLE);
+                        searchButton.setVisibility(View.INVISIBLE);
                     }
                 }
-                multiSelect(position);
+            });
+
+            final FloatingActionButton setting = findViewById(R.id.settingsFloatingButton);
+            setting.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    popupMenu(R.style.rounded_menu_style, R.menu.popup, v);
+                }
+            });
+
+            settingsButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    popupMenu(R.style.rounded_menu_style_toolbar, R.menu.popup, v);
+                }
+            });
+
+            final FloatingActionButton search = findViewById(R.id.searchFloatingButton);
+            search.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+
+            searchButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+
+            final FloatingActionButton add = findViewById(R.id.addFloatingButton);
+            add.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    goToAddActivity(usr);
+                }
+            });
+
+            RecyclerView recyclerView = findViewById(R.id.recyclerView);
+            adapter = new MyAdapter(this, listAccount);
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+            recyclerView.setAdapter(adapter);
+            recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this, recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
+                @Override
+                public void onItemClick(View view, int position) {
+                    if (isMultiSelect) {
+                        multiSelect(position);
+                    } else {
+                        goToShowElementActivity(usr, adapter.getItem(position));
+                    }
+                }
+
+                @Override
+                public void onItemLongClick(View view, int position) {
+                    if (!isMultiSelect) {
+                        selectedIds = new ArrayList<>();
+                        isMultiSelect = true;
+                        if (actionMode == null) {
+                            actionMode = startActionMode(ViewActivity.this);
+                        }
+                    }
+                    multiSelect(position);
+                }
+            }));
+        } else {
+            notifyUser("Utente non rilevato. Impossibile visualizzare la lista degli account.");
+            goToMainActivity();
+        }
+    }
+
+    public void goToMainActivity() {
+        Intent intent = new Intent(ViewActivity.this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish();
+    }
+
+    public void goToAddActivity(User usr) {
+        Intent intent = new Intent(ViewActivity.this, AddActivity.class);
+        intent.putExtra("owner", usr);
+        startActivity(intent);
+
+    }
+
+    public void goToShowElementActivity(User usr, Account acc) {
+        Intent intent = new Intent(ViewActivity.this, ShowElementActivity.class);
+        intent.putExtra("account", acc);
+        intent.putExtra("owner", usr);
+        startActivity(intent);
+    }
+
+    public void goToShowSettingActivity(User usr) {
+        Intent intent = new Intent(ViewActivity.this, SettingActivity.class);
+        intent.putExtra("owner", usr);
+        startActivity(intent);
+    }
+
+    public void refresh() {
+        finish();
+        startActivity(getIntent());
+    }
+
+    private void notifyUser(String message) {
+        Toast.makeText(this,
+                message,
+                Toast.LENGTH_LONG).show();
+    }
+
+    public ArrayList<Account> AtoZ(ArrayList<Account> list) {
+        Collections.sort(list, new Comparator<Account>() {
+            @Override
+            public int compare(Account lhs, Account rhs) {
+                return lhs.getName().toLowerCase().compareTo(rhs.getName().toLowerCase());
             }
-        }));
+        });
+        return list;
+    }
+
+    public ArrayList<Account> ZtoA(ArrayList<Account> list) {
+        Collections.sort(list, new Comparator<Account>() {
+            @Override
+            public int compare(Account lhs, Account rhs) {
+                return rhs.getName().toLowerCase().compareTo(lhs.getName().toLowerCase());
+            }
+        });
+        return list;
+    }
+
+    public void popupMenu(int style, int menu, View v) {
+        PopupMenu popup = new PopupMenu(ViewActivity.this, v, Gravity.END, 0, style);
+        popup.setOnMenuItemClickListener(ViewActivity.this);
+        popup.inflate(menu);
+        popup.show();
     }
 
     private void multiSelect(int position) {
@@ -224,7 +273,7 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             }
         }
         selectedIds.size();
-        Objects.requireNonNull(actionMode).setTitle(String.valueOf(selectedIds.size())); //show selected item count on action mode.
+        Objects.requireNonNull(actionMode).setTitle(String.valueOf(selectedIds.size()));
     }
 
     @Override
@@ -243,26 +292,23 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     public boolean onActionItemClicked(ActionMode mode, MenuItem menuItem) {
         if (menuItem.getItemId() == R.id.delete_id) {
             for (String data : selectedIds) {
-                Account a = new Account();
-                for (Account a2 : listAccount) {
-                    if (a2.getName().toLowerCase().equals(data.toLowerCase())) {
-                        a = a2;
-                        break;
-                    }
-                }
-                listAccount.remove(a);
+                Account a = mngAcc.findAccount(listAccount, data);
+                if (a != null)
+                    listAccount.remove(a);
+                else
+                    notifyUser("Account " + data + " non rimosso. Non è stato rilevato nella lista");
             }
             if (!selectedIds.isEmpty()) {
                 if (selectedIds.size() == 1) {
-                    Toast.makeText(this, "Un elemento è stato rimosso", Toast.LENGTH_SHORT).show();
+                    notifyUser("Un elemento è stato rimosso");
                 } else
-                    Toast.makeText(this, selectedIds.size() + " elementi sono stati rimossi", Toast.LENGTH_SHORT).show();
+                    notifyUser(selectedIds.size() + " elementi sono stati rimossi");
             } else {
-                Toast.makeText(this, " Nessun elemento è stato rimosso", Toast.LENGTH_SHORT).show();
+                notifyUser("Nessun elemento è stato rimosso");
             }
-            mngAcc.serializationListAccount(this, listAccount, owner.getUser());
-            finish();
+            mngAcc.serializationListAccount(this, listAccount, usr.getUser());
             startActivity(getIntent());
+            finish();
             return true;
         }
         return false;
@@ -278,31 +324,31 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
     @Override
     public boolean onMenuItemClick(MenuItem item) {
-        Intent intent;
         switch (item.getItemId()) {
             case R.id.delete:
                 if (!isMultiSelect) {
                     selectedIds = new ArrayList<>();
                     isMultiSelect = true;
                     if (actionMode == null) {
-                        actionMode = startActionMode(ViewActivity.this); //show ActionMode.
+                        actionMode = startActionMode(ViewActivity.this);
                     }
                 }
                 multiSelect(-1);
                 return true;
             case R.id.sort:
                 LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
-                final View popupView = layoutInflater.inflate(R.layout.popup, null);
+                @SuppressLint("InflateParams") final View popupView = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup, null);
                 final PopupWindow popupWindow = new PopupWindow(popupView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
                 popupWindow.setOutsideTouchable(true);
                 popupWindow.setFocusable(true);
+                //noinspection deprecation
                 popupWindow.setBackgroundDrawable(new BitmapDrawable());
                 View parent = cl.getRootView();
                 popupWindow.showAtLocation(parent, Gravity.CENTER, 0, 0);
-                rg = popupView.findViewById(R.id.radioGroupSorter);
+                RadioGroup rg = popupView.findViewById(R.id.radioGroupSorter);
                 rb1 = popupView.findViewById(R.id.AtoZ);
-                rb2 = popupView.findViewById(R.id.ZtoA);
-                if (us.getSort() == 1)
+                RadioButton rb2 = popupView.findViewById(R.id.ZtoA);
+                if (usr.getSort() == 1)
                     rg.check(rb1.getId());
                 else
                     rg.check(rb2.getId());
@@ -310,39 +356,30 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                     @Override
                     public void onCheckedChanged(RadioGroup group, int checkedId) {
                         if (checkedId == rb1.getId()) {
-                            listUser.remove(us);
-                            us.setSort(1);
-                            listUser.add(us);
+                            listUser.remove(usr);
+                            usr.setSort(1);
+                            listUser.add(usr);
                             mngUsr.serializationListUser(ViewActivity.this, listUser);
-                            mngAcc.serializationListAccount(ViewActivity.this, AtoZ(listAccount), owner.getUser());
+                            mngAcc.serializationListAccount(ViewActivity.this, AtoZ(listAccount), usr.getUser());
                         } else {
-                            listUser.remove(us);
-                            us.setSort(2);
-                            listUser.add(us);
+                            listUser.remove(usr);
+                            usr.setSort(2);
+                            listUser.add(usr);
                             mngUsr.serializationListUser(ViewActivity.this, listUser);
-                            mngAcc.serializationListAccount(ViewActivity.this, ZtoA(listAccount), owner.getUser());
+                            mngAcc.serializationListAccount(ViewActivity.this, ZtoA(listAccount), usr.getUser());
                         }
                         popupWindow.dismiss();
-                        finish();
-                        startActivity(getIntent());
+                        refresh();
                     }
                 });
                 return true;
             case R.id.setting:
-                intent = new Intent(ViewActivity.this, SettingActivity.class);
-                intent.putExtra("owner", owner);
-                startActivity(intent);
+                goToShowSettingActivity(usr);
                 return true;
             case R.id.exit:
                 log = new LogApp();
                 mngApp.serializationFlag(this, log);
-                intent = new Intent(ViewActivity.this, MainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra("owner", "");
-                startActivity(intent);
-                finish();
+                goToMainActivity();
                 return true;
             default:
                 return false;
@@ -366,25 +403,5 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 doubleBackToExitPressedOnce = false;
             }
         }, 2000);
-    }
-
-    public ArrayList<Account> AtoZ(ArrayList<Account> list) {
-        Collections.sort(list, new Comparator<Account>() {
-            @Override
-            public int compare(Account lhs, Account rhs) {
-                return lhs.getName().toLowerCase().compareTo(rhs.getName().toLowerCase());
-            }
-        });
-        return list;
-    }
-
-    public ArrayList<Account> ZtoA(ArrayList<Account> list) {
-        Collections.sort(list, new Comparator<Account>() {
-            @Override
-            public int compare(Account lhs, Account rhs) {
-                return rhs.getName().toLowerCase().compareTo(lhs.getName().toLowerCase());
-            }
-        });
-        return list;
     }
 }

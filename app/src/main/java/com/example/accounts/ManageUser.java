@@ -46,7 +46,7 @@ class ManageUser implements Serializable {
         try {
             FileInputStream fis = context.openFileInput("Users.txt");
             ObjectInputStream is = new ObjectInputStream(fis);
-            ArrayList<User> x = (ArrayList<User>) is.readObject();
+            @SuppressWarnings("unchecked") ArrayList<User> x = (ArrayList<User>) is.readObject();
             is.close();
             fis.close();
             return x;
@@ -54,5 +54,11 @@ class ManageUser implements Serializable {
             e.printStackTrace();
             return new ArrayList<>();
         }
+    }
+
+    User findUser(ArrayList<User> list, String user) {
+        for (User u : list)
+            if (u.getUser().toLowerCase().equals(user.toLowerCase())) return u;
+        return null;
     }
 }

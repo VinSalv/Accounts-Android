@@ -12,6 +12,7 @@ public class TabAdapter extends FragmentStatePagerAdapter {
     private ArrayList<AccountElement> listElem;
 
     TabAdapter(FragmentManager fm, int NumOfTabs, ArrayList<AccountElement> listElem) {
+        //noinspection deprecation
         super(fm);
         this.mNumOfTabs = NumOfTabs;
         this.listElem = listElem;

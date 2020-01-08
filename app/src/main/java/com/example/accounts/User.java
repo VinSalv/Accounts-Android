@@ -15,14 +15,7 @@ public class User implements Serializable {
         this.sort = sort;
     }
 
-    User() {
-        this.user = "";
-        this.password = "";
-        this.finger = false;
-        this.sort=1;
-    }
-
-    public int getSort() {
+    int getSort() {
         return sort;
     }
 
@@ -30,7 +23,7 @@ public class User implements Serializable {
         this.user = user;
     }
 
-    public void setSort(int sort) {
+    void setSort(int sort) {
         this.sort = sort;
     }
 
@@ -54,5 +47,9 @@ public class User implements Serializable {
             bool = (this.getUser().toLowerCase().equals(((User) object).getUser().toLowerCase()));
         }
         return bool;
+    }
+
+    void setFinger(boolean finger) {
+        this.finger = finger;
     }
 }

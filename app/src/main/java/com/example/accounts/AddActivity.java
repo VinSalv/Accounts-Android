@@ -18,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class AddActivity extends AppCompatActivity {
     private User owner;
@@ -28,11 +29,8 @@ public class AddActivity extends AppCompatActivity {
     private ArrayList<EditText> user;
     private ArrayList<EditText> password;
     private ImageView nameError;
-    Button addButton;
-    Button emptyButton;
     private ArrayList<AccountElement> listElem;
     private AccountElement elem;
-    FloatingActionButton addElem;
     private ArrayList<RelativeLayout> layList;
     private ArrayList<ImageView> emailErrorList;
     private ArrayList<ImageView> userErrorList;
@@ -44,11 +42,11 @@ public class AddActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add);
 
-        owner = (User) (getIntent().getExtras()).get("owner");
+        owner = (User) (Objects.requireNonNull(getIntent().getExtras())).get("owner");
 
         mngAcc = new ManageAccount();
 
-        listAccount = mngAcc.deserializationListAccount(this, owner.getUser());
+        listAccount = mngAcc.deserializationListAccount(this, Objects.requireNonNull(owner).getUser());
         listElem = new ArrayList<>();
         layList = new ArrayList<>();
         email = new ArrayList<>();
@@ -71,16 +69,15 @@ public class AddActivity extends AppCompatActivity {
         password.add((EditText) findViewById(R.id.passAddEdit));
         passwordErrorList.add((ImageView) findViewById(R.id.errorAddPassword));
 
-        addButton = findViewById(R.id.addButton);
-        emptyButton = findViewById(R.id.emptyButton);
-        addElem = findViewById(R.id.addElemFloatingButton);
+        Button addButton = findViewById(R.id.addButton);
+        Button emptyButton = findViewById(R.id.emptyButton);
+        FloatingActionButton addElem = findViewById(R.id.addElemFloatingButton);
 
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 nameError.setVisibility(View.INVISIBLE);
                 listElem.clear();
-
                 for (int n = 0; n <= i; n++) {
                     emailErrorList.get(n).setVisibility(View.INVISIBLE);
                     userErrorList.get(n).setVisibility(View.INVISIBLE);
@@ -90,34 +87,24 @@ public class AddActivity extends AppCompatActivity {
                         listElem.add(elem);
                     }
                 }
-
-                Account a = new Account(name.getText().toString(), listElem);
-
-                if (a.getName().isEmpty()) {
+                Account acc = new Account(name.getText().toString(), listElem);
+                if (acc.getName().isEmpty()) {
                     nameError.setVisibility(View.VISIBLE);
-                    Toast.makeText(AddActivity.this, "Il campo nome non può essere vuoto !", Toast.LENGTH_SHORT).show();
+                    notifyUser("Il campo nome non può essere vuoto !");
                     return;
                 }
-
                 int n = 0;
                 for (AccountElement elem : listElem) {
                     if (fieldError(elem, n)) return;
                     n++;
                 }
-
-                if (!mngAcc.search(a, listAccount)) {
-                    listAccount.add(a);
+                if (mngAcc.notFind(acc, listAccount)) {
+                    listAccount.add(acc);
                     mngAcc.serializationListAccount(AddActivity.this, listAccount, owner.getUser());
-                    Intent intent = new Intent(AddActivity.this, ViewActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.putExtra("owner", owner);
-                    startActivity(intent);
-                    finish();
+                    goToViewActivity(owner);
                 } else {
                     nameError.setVisibility(View.VISIBLE);
-                    Toast.makeText(AddActivity.this, "Applicativo già registrato !!!", Toast.LENGTH_SHORT).show();
+                    notifyUser("Applicativo già registrato !!!");
                 }
             }
 
@@ -185,47 +172,63 @@ public class AddActivity extends AppCompatActivity {
 
     }
 
-    public boolean isValidWord(String word) {
-        if (word.isEmpty()) return true;
-        return word.matches("[^ ]*");
+    public void goToViewActivity(User usr) {
+        Intent intent = new Intent(AddActivity.this, ViewActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra("owner", usr);
+        startActivity(intent);
+        finish();
     }
 
-    public boolean isValidEmail(String email) {
-        if (email.isEmpty()) return true;
-        return Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    private void notifyUser(String message) {
+        Toast.makeText(this,
+                message,
+                Toast.LENGTH_LONG).show();
+    }
+
+    public boolean isInvalidWord(String word) {
+        if (word.isEmpty()) return false;
+        return !word.matches("[^ ]*");
+    }
+
+    public boolean isInvalidEmail(String email) {
+        if (email.isEmpty()) return false;
+        return !Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
     public boolean fieldError(AccountElement a, int n) {
-        if (!isValidWord(a.getUser()) && !isValidEmail(a.getEmail()) && !isValidWord(a.getPassword())) {
+        if (isInvalidWord(a.getUser()) && isInvalidEmail(a.getEmail()) && isInvalidWord(a.getPassword())) {
             userErrorList.get(n).setVisibility(View.VISIBLE);
             emailErrorList.get(n).setVisibility(View.VISIBLE);
             passwordErrorList.get(n).setVisibility(View.VISIBLE);
             Toast.makeText(AddActivity.this, "Campi Utente, Email e Password non validi !!!", Toast.LENGTH_SHORT).show();
             return true;
-        } else if (!isValidWord(a.getUser()) && !isValidWord(a.getPassword())) {
+        } else if (isInvalidWord(a.getUser()) && isInvalidWord(a.getPassword())) {
             userErrorList.get(n).setVisibility(View.VISIBLE);
             passwordErrorList.get(n).setVisibility(View.VISIBLE);
             Toast.makeText(AddActivity.this, "Campi Utente e Password non validi !!!", Toast.LENGTH_SHORT).show();
             return true;
-        } else if (!isValidWord(a.getPassword()) && !isValidEmail(a.getEmail())) {
+        } else if (isInvalidWord(a.getPassword()) && isInvalidEmail(a.getEmail())) {
             passwordErrorList.get(n).setVisibility(View.VISIBLE);
             emailErrorList.get(n).setVisibility(View.VISIBLE);
             Toast.makeText(AddActivity.this, "Campi Email e Password non validi !!!", Toast.LENGTH_SHORT).show();
             return true;
-        } else if (!isValidWord(a.getUser()) && !isValidEmail(a.getEmail())) {
+        } else if (isInvalidWord(a.getUser()) && isInvalidEmail(a.getEmail())) {
             userErrorList.get(n).setVisibility(View.VISIBLE);
             emailErrorList.get(n).setVisibility(View.VISIBLE);
             Toast.makeText(AddActivity.this, "Campi Utente e Email non validi !!!", Toast.LENGTH_SHORT).show();
             return true;
-        } else if (!isValidWord(a.getUser())) {
+        } else if (isInvalidWord(a.getUser())) {
             userErrorList.get(n).setVisibility(View.VISIBLE);
             Toast.makeText(AddActivity.this, "Campo Utente non valido !!!", Toast.LENGTH_SHORT).show();
             return true;
-        } else if (!isValidEmail(a.getEmail())) {
+        } else if (isInvalidEmail(a.getEmail())) {
             emailErrorList.get(n).setVisibility(View.VISIBLE);
             Toast.makeText(AddActivity.this, "Campo Email non valido !!!", Toast.LENGTH_SHORT).show();
             return true;
-        } else if (!isValidWord(a.getPassword())) {
+        } else if (isInvalidWord(a.getPassword())) {
             passwordErrorList.get(n).setVisibility(View.VISIBLE);
             Toast.makeText(AddActivity.this, "Campo Password non valido !!!", Toast.LENGTH_SHORT).show();
             return true;

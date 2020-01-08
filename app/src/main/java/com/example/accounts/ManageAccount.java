@@ -2,7 +2,6 @@ package com.example.accounts;
 
 import android.content.Context;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -16,8 +15,8 @@ class ManageAccount implements Serializable {
     ManageAccount() {
     }
 
-    boolean search(Account a, ArrayList<Account> list) {
-        return list.contains(a);
+    boolean notFind(Account a, ArrayList<Account> list) {
+        return !list.contains(a);
     }
 
     void serializationListAccount(Context context, ArrayList<Account> list, String owner) {
@@ -36,7 +35,7 @@ class ManageAccount implements Serializable {
         try {
             FileInputStream fis = context.openFileInput("Accounts" + owner + ".txt");
             ObjectInputStream is = new ObjectInputStream(fis);
-            ArrayList<Account> x = (ArrayList<Account>) is.readObject();
+            @SuppressWarnings("unchecked") ArrayList<Account> x = (ArrayList<Account>) is.readObject();
             is.close();
             fis.close();
             return x;
@@ -46,11 +45,18 @@ class ManageAccount implements Serializable {
         }
     }
 
-    public void removeFileAccount(Context context, String owner) {
+    void removeFileAccount(Context context, String owner) {
         try {
             context.deleteFile("Accounts" + owner + ".txt");
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    Account findAccount(ArrayList<Account> list, String name) {
+        for (Account a : list)
+            if (a.getName().toLowerCase().equals(name.toLowerCase()))
+                return a;
+        return null;
     }
 }
