@@ -35,6 +35,10 @@ public class User implements Serializable {
         return this.password;
     }
 
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
 
     boolean getFinger() {
         return this.finger;

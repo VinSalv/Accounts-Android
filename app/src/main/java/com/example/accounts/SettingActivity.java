@@ -134,6 +134,16 @@ public class SettingActivity extends AppCompatActivity {
         finish();
     }
 
+    public void goToViewActivity() {
+        Intent intent = new Intent(SettingActivity.this, ViewActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra("owner", usr);
+        startActivity(intent);
+        finish();
+    }
+
     public void goToProfileActivity(User usr) {
         Intent intent = new Intent(SettingActivity.this, ProfileActivity.class);
         intent.putExtra("owner", usr);
@@ -145,4 +155,9 @@ public class SettingActivity extends AppCompatActivity {
                 message,
                 Toast.LENGTH_LONG).show();
     }
+
+    public void onBackPressed() {
+        goToViewActivity();
+    }
+
 }

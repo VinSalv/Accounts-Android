@@ -95,10 +95,10 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 userError.setVisibility(View.INVISIBLE);
                 passError.setVisibility(View.INVISIBLE);
-                User usr = mngUsr.findUser(listUser, userApp.getText().toString());
-                if (usr != null) {
+                User usr = new User(userApp.getText().toString(), passApp.getText().toString(), false, 0);
                     if (!fieldCheck(usr)) return;
                     if (mngUsr.login(usr, listUser)) {
+                        usr = mngUsr.findUser(listUser, userApp.getText().toString());
                         if (usr.getFinger()) {
                             biometricAuthentication(lay);
                         } else {
@@ -111,8 +111,6 @@ public class MainActivity extends AppCompatActivity {
                         passError.setVisibility(View.VISIBLE);
                         notifyUser("Autenticazione errata");
                     }
-                } else
-                    notifyUser("Impossibile autenticare l'utente");
             }
         });
 

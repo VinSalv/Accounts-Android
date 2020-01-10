@@ -217,7 +217,7 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         startActivity(intent);
     }
 
-    public void goToShowSettingActivity(User usr) {
+    public void goToSettingActivity(User usr) {
         Intent intent = new Intent(ViewActivity.this, SettingActivity.class);
         intent.putExtra("owner", usr);
         startActivity(intent);
@@ -374,7 +374,7 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 });
                 return true;
             case R.id.setting:
-                goToShowSettingActivity(usr);
+                goToSettingActivity(usr);
                 return true;
             case R.id.exit:
                 log = new LogApp();

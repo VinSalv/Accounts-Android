@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@drawable/rounded_popup"
     android:orientation="vertical"
-    tools:context=".ViewActivity"
-    tools:showIn="@layout/activity_view">
+    tools:context=".ViewActivity">
 
     <RadioGroup
         android:id="@+id/radioGroupSorter"
