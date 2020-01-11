@@ -2,6 +2,8 @@ package com.example.accounts;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -11,8 +13,20 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.material.appbar.AppBarLayout;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Objects;
 
 public class SettingActivity extends AppCompatActivity {
@@ -26,6 +40,11 @@ public class SettingActivity extends AppCompatActivity {
     private ArrayList<Account> listAccount;
     private ManageAccount mngAcc;
     private User usr;
+
+    private PdfPCell cell;
+    private String path;
+    private File dir;
+    private File file;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +111,18 @@ public class SettingActivity extends AppCompatActivity {
             pdf.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/PDF_Accounts/";
+                    dir = new File(path);
+                    if (!dir.exists()) {
+                        dir.mkdirs();
+                    }
+                    try {
+                        createPDF(usr, listAccount, path, dir);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (DocumentException e) {
+                        e.printStackTrace();
+                    }
                 }
             });
 
@@ -158,6 +189,80 @@ public class SettingActivity extends AppCompatActivity {
 
     public void onBackPressed() {
         goToViewActivity();
+    }
+
+    public void createPDF(User usr, ArrayList<Account> listAccount, String path, File dir) throws FileNotFoundException, DocumentException {
+        Document doc = new Document();
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyy");
+            file = new File(dir, "Lista account di " + usr.getUser() + sdf.format(Calendar.getInstance().getTime()) + ".pdf");
+            FileOutputStream fOut = new FileOutputStream(file);
+            PdfWriter writer = PdfWriter.getInstance(doc, fOut);
+            doc.open();
+            try {
+                PdfPTable pt = new PdfPTable(4);
+                pt.setWidthPercentage(100);
+                float[] fl = new float[]{25, 25, 25, 25};
+                pt.setWidths(fl);
+                cell = new PdfPCell();
+                Font font = new Font(Font.FontFamily.TIMES_ROMAN, 18, Font.BOLD);
+                Phrase f = new Phrase("Nome");
+                f.setFont(font);
+                cell.addElement(f);
+                pt.addCell(cell);
+                cell = new PdfPCell();
+                f = new Phrase("e-Mail");
+                f.setFont(font);
+                cell.addElement(f);
+                pt.addCell(cell);
+                cell = new PdfPCell();
+                f = new Phrase("Username");
+                f.setFont(font);
+                cell.addElement(f);
+                pt.addCell(cell);
+                cell = new PdfPCell();
+                f = new Phrase("Password");
+                f.setFont(font);
+                cell.addElement(f);
+                pt.addCell(cell);
+                for (Account a : listAccount) {
+                    for (AccountElement ae : a.getList()) {
+                        cell = new PdfPCell();
+                        f = new Phrase(a.getName());
+                        font = new Font(Font.FontFamily.TIMES_ROMAN, 14, Font.BOLD);
+                        f.setFont(font);
+                        cell.addElement(f);
+                        pt.addCell(cell);
+                        cell = new PdfPCell();
+                        f = new Phrase(ae.getEmail());
+                        font = new Font(Font.FontFamily.TIMES_ROMAN, 14, Font.NORMAL);
+                        f.setFont(font);
+                        cell.addElement(f);
+                        pt.addCell(cell);
+                        cell = new PdfPCell();
+                        f = new Phrase(ae.getUser());
+                        font = new Font(Font.FontFamily.TIMES_ROMAN, 14, Font.NORMAL);
+                        f.setFont(font);
+                        cell.addElement(f);
+                        pt.addCell(cell);
+                        cell = new PdfPCell();
+                        f = new Phrase(ae.getPassword());
+                        font = new Font(Font.FontFamily.TIMES_ROMAN, 14, Font.NORMAL);
+                        f.setFont(font);
+                        cell.addElement(f);
+                        pt.addCell(cell);
+                    }
+                }
+                doc.add(pt);
+                notifyUser("PDF creato in " + path + "Lista account di " + usr.getUser() + sdf.format(Calendar.getInstance().getTime()) + ".pdf");
+            } catch (DocumentException de) {
+                Log.e("PDFCreator", "DocumentException:" + de);
+            } finally {
+                doc.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }
