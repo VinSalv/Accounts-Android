@@ -149,7 +149,6 @@ public class SettingActivity extends AppCompatActivity {
                     goToMainActivity();
                 }
             });
-
         } else {
             notifyUser("Utente non rilevato. Impossibile aprire le impostazioni.");
             goToMainActivity();
@@ -204,53 +203,101 @@ public class SettingActivity extends AppCompatActivity {
                 pt.setWidthPercentage(100);
                 float[] fl = new float[]{25, 25, 25, 25};
                 pt.setWidths(fl);
-                cell = new PdfPCell();
                 Font font = new Font(Font.FontFamily.TIMES_ROMAN, 18, Font.BOLD);
-                Phrase f = new Phrase("Nome");
+                Phrase f;
+
+                cell = new PdfPCell();
+                f = new Phrase("Nome");
                 f.setFont(font);
                 cell.addElement(f);
+                cell.setBorder(0);
                 pt.addCell(cell);
+
                 cell = new PdfPCell();
                 f = new Phrase("e-Mail");
                 f.setFont(font);
                 cell.addElement(f);
+                cell.setBorder(0);
                 pt.addCell(cell);
+
                 cell = new PdfPCell();
                 f = new Phrase("Username");
                 f.setFont(font);
                 cell.addElement(f);
+                cell.setBorder(0);
                 pt.addCell(cell);
+
                 cell = new PdfPCell();
                 f = new Phrase("Password");
                 f.setFont(font);
                 cell.addElement(f);
+                cell.setBorder(0);
                 pt.addCell(cell);
+
+                int i = 0;
                 for (Account a : listAccount) {
-                    for (AccountElement ae : a.getList()) {
+                    font = new Font(Font.FontFamily.TIMES_ROMAN, 14, Font.BOLD);
+
+                    cell = new PdfPCell();
+                    f = new Phrase(a.getName());
+                    f.setFont(font);
+                    cell.addElement(f);
+                    pt.addCell(cell);
+
+                    if (a.getList().size() == 0) {
+                        font = new Font(Font.FontFamily.TIMES_ROMAN, 14, Font.NORMAL);
+
                         cell = new PdfPCell();
-                        f = new Phrase(a.getName());
-                        font = new Font(Font.FontFamily.TIMES_ROMAN, 14, Font.BOLD);
+                        f = new Phrase("");
                         f.setFont(font);
                         cell.addElement(f);
                         pt.addCell(cell);
+
+                        cell = new PdfPCell();
+                        f = new Phrase("");
+                        f.setFont(font);
+                        cell.addElement(f);
+                        pt.addCell(cell);
+
+                        cell = new PdfPCell();
+                        f = new Phrase("");
+                        f.setFont(font);
+                        cell.addElement(f);
+                        pt.addCell(cell);
+                    }
+
+                    i = 0;
+                    for (AccountElement ae : a.getList()) {
+                        if (i != 0) {
+                            font = new Font(Font.FontFamily.TIMES_ROMAN, 20, Font.NORMAL);
+
+                            cell = new PdfPCell();
+                            f = new Phrase("\"");
+                            f.setFont(font);
+                            cell.addElement(f);
+                            pt.addCell(cell);
+                        }
+                        font = new Font(Font.FontFamily.TIMES_ROMAN, 14, Font.NORMAL);
+
                         cell = new PdfPCell();
                         f = new Phrase(ae.getEmail());
-                        font = new Font(Font.FontFamily.TIMES_ROMAN, 14, Font.NORMAL);
                         f.setFont(font);
                         cell.addElement(f);
                         pt.addCell(cell);
+
                         cell = new PdfPCell();
                         f = new Phrase(ae.getUser());
-                        font = new Font(Font.FontFamily.TIMES_ROMAN, 14, Font.NORMAL);
                         f.setFont(font);
                         cell.addElement(f);
                         pt.addCell(cell);
+
                         cell = new PdfPCell();
                         f = new Phrase(ae.getPassword());
-                        font = new Font(Font.FontFamily.TIMES_ROMAN, 14, Font.NORMAL);
                         f.setFont(font);
                         cell.addElement(f);
                         pt.addCell(cell);
+
+                        i++;
                     }
                 }
                 doc.add(pt);
