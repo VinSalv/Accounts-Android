@@ -41,14 +41,6 @@
             android:text="@string/esporta_account" />
 
         <Button
-            android:id="@+id/importAccount"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:background="@drawable/rounded_list_element"
-            android:text="@string/improta_account" />
-
-        <Button
             android:id="@+id/deleteProfile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

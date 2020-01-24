@@ -70,7 +70,6 @@ public class SettingActivity extends AppCompatActivity {
             Button prof = findViewById(R.id.profile);
             Button pdf = findViewById(R.id.pdf);
             Button esportAcc = findViewById(R.id.esportAccount);
-            Button importAcc = findViewById(R.id.importAccount);
             Button delProf = findViewById(R.id.deleteProfile);
 
             setting = findViewById(R.id.setting);
@@ -129,14 +128,10 @@ public class SettingActivity extends AppCompatActivity {
             esportAcc.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    goToExportActivity(usr);
                 }
             });
 
-            importAcc.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                }
-            });
 
             delProf.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -172,6 +167,12 @@ public class SettingActivity extends AppCompatActivity {
         intent.putExtra("owner", usr);
         startActivity(intent);
         finish();
+    }
+
+    public void goToExportActivity(User usr){
+        Intent intent = new Intent(SettingActivity.this, ExportActivity.class);
+        intent.putExtra("owner", usr);
+        startActivity(intent);
     }
 
     public void goToProfileActivity(User usr) {

@@ -106,4 +106,18 @@
     <string name="passEditError2">Errore immisione password</string>
     <string name="cosa_vuoi_fare">Cosa vuoi fare?</string>
     <string name="saveUsrEditButton">Salva</string>
+
+    <string name="userExportImage">Icona utente</string>
+    <string name="userExportText">Username</string>
+    <string name="userExportHint">Username</string>
+    <string name="userExportError">Errore immisione utente</string>
+    <string name="passExportImage">Icona password</string>
+    <string name="passExportText">Password</string>
+    <string name="passExportHint">Password</string>
+    <string name="passExportError">Errore immisione password</string>
+    <string name="copy">Copia e incolla</string>
+    <string name="cut">Taglia e incolla</string>
+    <string name="exportAccountButton">Esporta</string>
+    <string name="exportText">Inserire le credenziali dell\'account su cui si desidera esportare gli account selezionati</string>
+    <string name="name">name</string>
 </resources>

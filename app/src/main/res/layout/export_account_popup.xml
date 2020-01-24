@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/export_account_layout"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/rounded_popup"
+    tools:context=".ProfileActivity">
+
+    <TextView
+        android:id="@+id/exportText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@id/userExportImage"
+        android:layout_alignEnd="@id/userExportError"
+        android:layout_marginBottom="5dp"
+        android:text="@string/exportText"
+        android:textSize="16sp" />
+
+    <ImageView
+        android:id="@+id/userExportImage"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_alignBottom="@id/userExportText"
+        android:layout_marginStart="1dp"
+        android:layout_marginBottom="7dp"
+        android:contentDescription="@string/userExportImage"
+        app:srcCompat="@drawable/user" />
+
+    <EditText
+        android:id="@+id/userExportText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/exportText"
+        android:layout_marginStart="30dp"
+        android:layout_marginBottom="15dp"
+        android:autofillHints=""
+        android:ems="10"
+        android:hint="@string/userExportHint"
+        android:inputType="textPersonName"
+        android:textSize="16sp"
+        android:theme="@style/inputField"
+        tools:targetApi="o" />
+
+    <ImageView
+        android:id="@+id/userExportError"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_alignBottom="@id/userExportText"
+        android:layout_marginStart="3dp"
+        android:layout_marginBottom="5dp"
+        android:layout_toEndOf="@id/userExportText"
+        android:contentDescription="@string/userExportError"
+        android:visibility="visible"
+        app:srcCompat="@drawable/warning" />
+
+    <ImageView
+        android:id="@+id/passExportImage"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_alignBottom="@id/passExportText"
+        android:layout_marginStart="1dp"
+        android:layout_marginBottom="7dp"
+        android:contentDescription="@string/passExportImage"
+        app:srcCompat="@drawable/pass" />
+
+    <EditText
+        android:id="@+id/passExportText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/userExportText"
+        android:layout_marginStart="30dp"
+        android:layout_marginBottom="15dp"
+        android:autofillHints=""
+        android:ems="10"
+        android:hint="@string/passExportHint"
+        android:inputType="textPassword"
+        android:textSize="16sp"
+        android:theme="@style/inputField"
+        tools:targetApi="o" />
+
+    <ImageView
+        android:id="@+id/passExportError"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_alignBottom="@id/passExportText"
+        android:layout_marginStart="3dp"
+        android:layout_marginBottom="5dp"
+        android:layout_toEndOf="@id/passExportText"
+        android:contentDescription="@string/passExportError"
+        android:visibility="visible"
+        app:srcCompat="@drawable/warning" />
+
+    <RadioGroup
+        android:id="@+id/radioGroupOptionExport"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/passExportText"
+        android:layout_marginBottom="15dp"
+        android:orientation="vertical">
+
+        <RadioButton
+            android:id="@+id/copy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/copy"
+            android:textSize="16sp" />
+
+        <RadioButton
+            android:id="@+id/cut"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cut"
+            android:textSize="16sp" />
+
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/saveUsrEditButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/radioGroupOptionExport"
+        android:layout_alignStart="@id/userExportImage"
+        android:layout_alignEnd="@id/userExportError"
+        android:background="#00FFFFFF"
+        android:text="@string/exportAccountButton"
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+        android:textColor="@color/colorButtonMenu"
+        android:textSize="22sp"
+        android:textStyle="normal" />
+
+</RelativeLayout>

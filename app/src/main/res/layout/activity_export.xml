@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    tools:context=".ExportActivity">
+
+    <CheckBox
+        android:id="@+id/checkbox_all"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/all"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/checkbox_all"
+        android:layout_marginBottom="5dp"
+        android:layout_toEndOf="@+id/checkbox_all"
+        android:text="Seleziona tutti"
+        android:textSize="16dp" />
+
+    <ListView
+        android:id="@+id/listAccount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/export"
+        android:layout_below="@id/checkbox_all"
+        android:divider="#00FFCC00"
+        android:dividerHeight="20dp" />
+
+    <Button
+        android:id="@+id/export"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="#00FFFFFF"
+        android:text="Esporta"
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="22sp"
+        android:textStyle="normal" />
+
+</RelativeLayout>
