@@ -1,16 +1,25 @@
 package com.example.accounts;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 import com.google.android.material.appbar.AppBarLayout;
 import com.itextpdf.text.Document;
@@ -22,17 +31,18 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Objects;
 
+@SuppressWarnings("ResultOfMethodCallIgnored")
 public class SettingActivity extends AppCompatActivity {
     AppBarLayout appBar;
     ManageUser mngUsr;
     ArrayList<User> listUser = new ArrayList<>();
+    private CoordinatorLayout cl;
     private TextView setting;
     private TextView setting2;
     private ManageApp mngApp;
@@ -40,11 +50,8 @@ public class SettingActivity extends AppCompatActivity {
     private ArrayList<Account> listAccount;
     private ManageAccount mngAcc;
     private User usr;
-
-    private PdfPCell cell;
     private String path;
     private File dir;
-    private File file;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +60,7 @@ public class SettingActivity extends AppCompatActivity {
         final Toolbar toolbar = findViewById(R.id.toolbarSetting);
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
-
+        cl = findViewById(R.id.coordinatorLaySetting);
         User owner = (User) (Objects.requireNonNull(getIntent().getExtras())).get("owner");
 
         mngApp = new ManageApp();
@@ -102,25 +109,57 @@ public class SettingActivity extends AppCompatActivity {
             prof.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    goToProfileActivity(usr);
+                    LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+                    final View popupView = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_security_password, (ViewGroup) findViewById(R.id.passSecurityPopup));
+                    final PopupWindow popupWindow = new PopupWindow(popupView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+                    popupWindow.setOutsideTouchable(true);
+                    popupWindow.setFocusable(true);
+                    //noinspection deprecation
+                    popupWindow.setBackgroundDrawable(new BitmapDrawable());
+                    View parent = cl.getRootView();
+                    popupWindow.showAtLocation(parent, Gravity.CENTER, 0, 0);
+                    final EditText et = popupView.findViewById(R.id.passSecurityEditText);
+                    Button conf = popupView.findViewById(R.id.accept);
+                    conf.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            if (et.getText().toString().toLowerCase().equals(usr.getPassword())) {
+                                goToProfileActivity(usr);
+                                popupWindow.dismiss();
+                            } else
+                                notifyUser("Password errata! Riprova");
+                        }
+                    });
                 }
             });
 
             pdf.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/PDF_Accounts/";
-                    dir = new File(path);
-                    if (!dir.exists()) {
-                        dir.mkdirs();
-                    }
-                    try {
-                        createPDF(usr, listAccount, path, dir);
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    } catch (DocumentException e) {
-                        e.printStackTrace();
-                    }
+                    LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+                    final View popupView = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_security_password, (ViewGroup) findViewById(R.id.passSecurityPopup));
+                    final PopupWindow popupWindow = new PopupWindow(popupView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+                    popupWindow.setOutsideTouchable(true);
+                    popupWindow.setFocusable(true);
+                    //noinspection deprecation
+                    popupWindow.setBackgroundDrawable(new BitmapDrawable());
+                    View parent = cl.getRootView();
+                    popupWindow.showAtLocation(parent, Gravity.CENTER, 0, 0);
+                    final EditText et = popupView.findViewById(R.id.passSecurityEditText);
+                    Button conf = popupView.findViewById(R.id.accept);
+                    conf.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            if (et.getText().toString().toLowerCase().equals(usr.getPassword())) {
+                                path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/PDF_Accounts/";
+                                dir = new File(path);
+                                if (!dir.exists()) dir.mkdirs();
+                                createPDF(usr, listAccount, path, dir);
+                                popupWindow.dismiss();
+                            } else
+                                notifyUser("Password errata! Riprova");
+                        }
+                    });
                 }
             });
 
@@ -128,12 +167,35 @@ public class SettingActivity extends AppCompatActivity {
             delProf.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    log = new LogApp();
-                    mngApp.serializationFlag(SettingActivity.this, log);
-                    listUser.remove(usr);
-                    mngUsr.serializationListUser(SettingActivity.this, listUser);
-                    mngAcc.removeFileAccount(SettingActivity.this, usr.getUser());
-                    goToMainActivity();
+                    LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+                    final View popupView = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_security_password, (ViewGroup) findViewById(R.id.passSecurityPopup));
+                    final PopupWindow popupWindow = new PopupWindow(popupView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+                    popupWindow.setOutsideTouchable(true);
+                    popupWindow.setFocusable(true);
+                    //noinspection deprecation
+                    popupWindow.setBackgroundDrawable(new BitmapDrawable());
+                    View parent = cl.getRootView();
+                    popupWindow.showAtLocation(parent, Gravity.CENTER, 0, 0);
+                    final EditText et = popupView.findViewById(R.id.passSecurityEditText);
+                    Button conf = popupView.findViewById(R.id.accept);
+                    conf.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            if (et.getText().toString().toLowerCase().equals(usr.getPassword())) {
+
+                                log = new LogApp();
+                                mngApp.serializationFlag(SettingActivity.this, log);
+                                listUser.remove(usr);
+                                mngUsr.serializationListUser(SettingActivity.this, listUser);
+                                mngAcc.removeFileAccount(SettingActivity.this, usr.getUser());
+                                goToMainActivity();
+                                popupWindow.dismiss();
+                            } else
+                                notifyUser("Password errata! Riprova");
+
+                        }
+                    });
+
                 }
             });
         } else {
@@ -161,7 +223,6 @@ public class SettingActivity extends AppCompatActivity {
         finish();
     }
 
-
     public void goToProfileActivity(User usr) {
         Intent intent = new Intent(SettingActivity.this, ProfileActivity.class);
         intent.putExtra("owner", usr);
@@ -178,13 +239,13 @@ public class SettingActivity extends AppCompatActivity {
         goToViewActivity();
     }
 
-    public void createPDF(User usr, ArrayList<Account> listAccount, String path, File dir) throws FileNotFoundException, DocumentException {
+    public void createPDF(User usr, ArrayList<Account> listAccount, String path, File dir) {
         Document doc = new Document();
         try {
-            SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyy");
-            file = new File(dir, "Lista account di " + usr.getUser() + sdf.format(Calendar.getInstance().getTime()) + ".pdf");
+            @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyy");
+            File file = new File(dir, "Lista account di " + usr.getUser() + sdf.format(Calendar.getInstance().getTime()) + ".pdf");
             FileOutputStream fOut = new FileOutputStream(file);
-            PdfWriter writer = PdfWriter.getInstance(doc, fOut);
+            PdfWriter.getInstance(doc, fOut);
             doc.open();
             try {
                 PdfPTable pt = new PdfPTable(4);
@@ -194,7 +255,7 @@ public class SettingActivity extends AppCompatActivity {
                 Font font = new Font(Font.FontFamily.TIMES_ROMAN, 18, Font.BOLD);
                 Phrase f;
 
-                cell = new PdfPCell();
+                PdfPCell cell = new PdfPCell();
                 f = new Phrase("Nome");
                 f.setFont(font);
                 cell.addElement(f);
@@ -222,7 +283,6 @@ public class SettingActivity extends AppCompatActivity {
                 cell.setBorder(0);
                 pt.addCell(cell);
 
-                int i = 0;
                 for (Account a : listAccount) {
                     font = new Font(Font.FontFamily.TIMES_ROMAN, 14, Font.BOLD);
 
@@ -254,7 +314,7 @@ public class SettingActivity extends AppCompatActivity {
                         pt.addCell(cell);
                     }
 
-                    i = 0;
+                    int i = 0;
                     for (AccountElement ae : a.getList()) {
                         if (i != 0) {
                             font = new Font(Font.FontFamily.TIMES_ROMAN, 20, Font.NORMAL);
@@ -299,5 +359,4 @@ public class SettingActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-
 }

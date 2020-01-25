@@ -60,7 +60,7 @@ public class SignActivity extends AppCompatActivity {
                     notifyUser("Le password non corrispondono");
                     return;
                 }
-                if (!mngUsr.search(usr, listUser)) {
+                if (mngUsr.notFindUser(usr, listUser)) {
                     listUser.add(usr);
                     mngUsr.serializationListUser(SignActivity.this, listUser);
                     goToViewActivity(usr);

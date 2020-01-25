@@ -15,6 +15,13 @@ public class User implements Serializable {
         this.sort = sort;
     }
 
+    public User(String user, String password) {
+        this.user = user;
+        this.password = password;
+        finger = false;
+        sort = 0;
+    }
+
     int getSort() {
         return sort;
     }
@@ -35,17 +42,9 @@ public class User implements Serializable {
         return this.password;
     }
 
-    public User(String user, String password) {
-        this.user = user;
-        this.password = password;
-        finger = false;
-        sort = 0;
-    }
-
     public void setPassword(String password) {
         this.password = password;
     }
-
 
     boolean getFinger() {
         return this.finger;

@@ -17,15 +17,11 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Objects;
 
+@SuppressWarnings("SameParameterValue")
 public class SearchActivity extends AppCompatActivity {
-    private ManageUser mngUsr;
-    private ArrayList<User> listUser = new ArrayList<>();
     private ArrayList<Account> listAccount;
-    private ManageAccount mngAcc;
     private User usr;
-    private EditText name;
     private LinearLayout lay;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,12 +29,12 @@ public class SearchActivity extends AppCompatActivity {
         setContentView(R.layout.activity_search);
         User owner = (User) (Objects.requireNonNull(getIntent().getExtras())).get("owner");
         lay = findViewById(R.id.content_search_layout);
-        name = findViewById(R.id.nameSerched);
-        mngUsr = new ManageUser();
-        listUser = mngUsr.deserializationListUser(this);
+        EditText name = findViewById(R.id.nameSerched);
+        ManageUser mngUsr = new ManageUser();
+        ArrayList<User> listUser = mngUsr.deserializationListUser(this);
         usr = mngUsr.findUser(listUser, Objects.requireNonNull(owner).getUser());
         if (usr != null) {
-            mngAcc = new ManageAccount();
+            ManageAccount mngAcc = new ManageAccount();
             listAccount = mngAcc.deserializationListAccount(this, usr.getUser());
             name.addTextChangedListener(new TextWatcher() {
                 @Override

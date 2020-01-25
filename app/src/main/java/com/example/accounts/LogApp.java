@@ -36,5 +36,4 @@ public class LogApp implements Serializable {
         }
         return bool;
     }
-
 }

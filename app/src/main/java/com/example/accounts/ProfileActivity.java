@@ -121,7 +121,7 @@ public class ProfileActivity extends AppCompatActivity {
                         public void onClick(View v) {
                             User usrApp = usr;
                             if (notFieldCheck(username.getText().toString())) return;
-                            if (!mngUsr.search(new User(username.getText().toString(), "", false, 0), listUser)) {
+                            if (mngUsr.notFindUser(new User(username.getText().toString(), "", false, 0), listUser)) {
                                 mngAcc = new ManageAccount();
                                 ArrayList<Account> list = mngAcc.deserializationListAccount(ProfileActivity.this, usrApp.getUser());
                                 mngAcc.removeFileAccount(ProfileActivity.this, usrApp.getUser());
@@ -233,6 +233,4 @@ public class ProfileActivity extends AppCompatActivity {
     public void onBackPressed() {
         goToSettingActivity();
     }
-
-
 }

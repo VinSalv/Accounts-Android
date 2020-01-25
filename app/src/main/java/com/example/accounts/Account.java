@@ -13,16 +13,16 @@ public class Account implements Serializable {
         this.list = list;
     }
 
-    List<AccountElement> getList() {
-        return list;
-    }
-
     public String getName() {
         return this.name;
     }
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    List<AccountElement> getList() {
+        return list;
     }
 
     @Override

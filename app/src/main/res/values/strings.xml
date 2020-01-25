@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="permission_necessary">Permessi necessari</string>
     <string name="storage_permission_is_encessary_to_wrote_event">Permessi per scrivere in memoria</string>
 
@@ -27,7 +27,7 @@
     <string name="passwordText2">Reinserisci la tua password</string>
     <string name="passwordAppHint2">Reinserisci password</string>
     <string name="errorPassword2">Errore reimmisione password</string>
-    <string name="flagFinger">Autenticazione con impronta? (Sarà possibile cambiare il settaggio in qualsiasi momento)</string>
+    <string name="flagFinger" tools:ignore="Typos">Autenticazione con impronta? (Sarà possibile cambiare il settaggio in qualsiasi momento)</string>
     <string name="signButton">Sign In</string>
 
     <string name="title_activity_view">Activity View</string>
@@ -121,4 +121,13 @@
     <string name="exportText">Inserire le credenziali dell\'account su cui si desidera esportare gli account selezionati</string>
     <string name="name">name</string>
     <string name="searchName">Name</string>
+    <string name="no">No</string>
+    <string name="si">Si</string>
+    <string name="sei_sicuro_di_voler">Sei sicuro di voler</string>
+    <string name="inserisci_la_password_del_tuo_account">Inserisci la password del tuo account per continuare</string>
+    <string name="conferma">Conferma</string>
+    <string name="passwordSecurityHint">Password</string>
+    <string name="salva">Salva</string>
+    <string name="modifica">Modifica</string>
+
 </resources>

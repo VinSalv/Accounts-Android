@@ -2,15 +2,20 @@ package com.example.accounts;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.util.Patterns;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class EditActivity extends AppCompatActivity {
+    private RelativeLayout rl;
     private User owner;
     private ManageAccount mngAcc;
     private ArrayList<Account> listAccount;
@@ -43,7 +49,7 @@ public class EditActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit);
-
+        rl = findViewById(R.id.editActivityLay);
         account = (Account) Objects.requireNonNull(getIntent().getExtras()).get("account");
         owner = (User) (getIntent().getExtras()).get("owner");
 
@@ -145,22 +151,49 @@ public class EditActivity extends AppCompatActivity {
             });
 
             emptyButton.setOnClickListener(new View.OnClickListener() {
+                @SuppressLint("SetTextI18n")
                 @Override
                 public void onClick(View v) {
-                    i = 0;
-                    listElem.clear();
-                    emailErrorList.clear();
-                    userErrorList.clear();
-                    passwordErrorList.clear();
-                    LinearLayout lin = findViewById(R.id.linLayAdd);
-                    for (RelativeLayout l : layList) {
-                        lin.removeView(l);
-                    }
-                    layList.clear();
-                    email.clear();
-                    user.clear();
-                    password.clear();
-                    moreElem(v);
+                    LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+                    final View popupView = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_security, (ViewGroup) findViewById(R.id.popupSecurity));
+                    final PopupWindow popupWindow = new PopupWindow(popupView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+                    popupWindow.setOutsideTouchable(true);
+                    popupWindow.setFocusable(true);
+                    //noinspection deprecation
+                    popupWindow.setBackgroundDrawable(new BitmapDrawable());
+                    View parent = rl.getRootView();
+                    popupWindow.showAtLocation(parent, Gravity.CENTER, 0, 0);
+                    TextView et = popupView.findViewById(R.id.securityText);
+                    et.setText(et.getText().toString() + " resettare tutti i campi?");
+                    Button yes = popupView.findViewById(R.id.yes);
+                    Button no = popupView.findViewById(R.id.no);
+                    yes.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            i = 0;
+                            listElem.clear();
+                            emailErrorList.clear();
+                            userErrorList.clear();
+                            passwordErrorList.clear();
+                            LinearLayout lin = findViewById(R.id.linLayAdd);
+                            for (RelativeLayout l : layList) {
+                                lin.removeView(l);
+                            }
+                            layList.clear();
+                            email.clear();
+                            user.clear();
+                            password.clear();
+                            moreElem(v);
+                            popupWindow.dismiss();
+                            notifyUser("Campi resettati");
+                        }
+                    });
+                    no.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            popupWindow.dismiss();
+                        }
+                    });
                 }
             });
 
