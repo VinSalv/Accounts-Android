@@ -129,5 +129,8 @@
     <string name="passwordSecurityHint">Password</string>
     <string name="salva">Salva</string>
     <string name="modifica">Modifica</string>
+    <string name="elimina">Elimina</string>
+    <string name="ordina">Ordina</string>
+    <string name="disconnetti">Disconnetti</string>
 
 </resources>
