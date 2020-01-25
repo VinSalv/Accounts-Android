@@ -32,13 +32,6 @@
             android:background="@drawable/rounded_list_element"
             android:text="@string/estrai_pdf" />
 
-        <Button
-            android:id="@+id/esportAccount"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:background="@drawable/rounded_list_element"
-            android:text="@string/esporta_account" />
 
         <Button
             android:id="@+id/deleteProfile"

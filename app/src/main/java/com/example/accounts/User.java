@@ -35,6 +35,13 @@ public class User implements Serializable {
         return this.password;
     }
 
+    public User(String user, String password) {
+        this.user = user;
+        this.password = password;
+        finger = false;
+        sort = 0;
+    }
+
     public void setPassword(String password) {
         this.password = password;
     }

@@ -143,14 +143,14 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             search.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    goToSearchActivity(usr);
                 }
             });
 
             searchButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    goToSearchActivity(usr);
                 }
             });
 
@@ -219,6 +219,12 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
     public void goToSettingActivity(User usr) {
         Intent intent = new Intent(ViewActivity.this, SettingActivity.class);
+        intent.putExtra("owner", usr);
+        startActivity(intent);
+    }
+
+    public void goToSearchActivity(User usr) {
+        Intent intent = new Intent(ViewActivity.this, SearchActivity.class);
         intent.putExtra("owner", usr);
         startActivity(intent);
     }

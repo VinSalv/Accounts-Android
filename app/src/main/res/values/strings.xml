@@ -120,4 +120,5 @@
     <string name="exportAccountButton">Esporta</string>
     <string name="exportText">Inserire le credenziali dell\'account su cui si desidera esportare gli account selezionati</string>
     <string name="name">name</string>
+    <string name="searchName">Name</string>
 </resources>
