@@ -123,7 +123,7 @@ public class SettingActivity extends AppCompatActivity {
                     conf.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            if (et.getText().toString().toLowerCase().equals(usr.getPassword())) {
+                            if (et.getText().toString().equals(usr.getPassword())) {
                                 goToProfileActivity(usr);
                                 popupWindow.dismiss();
                             } else
@@ -150,7 +150,7 @@ public class SettingActivity extends AppCompatActivity {
                     conf.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            if (et.getText().toString().toLowerCase().equals(usr.getPassword())) {
+                            if (et.getText().toString().equals(usr.getPassword())) {
                                 path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/PDF_Accounts/";
                                 dir = new File(path);
                                 if (!dir.exists()) dir.mkdirs();
@@ -181,8 +181,7 @@ public class SettingActivity extends AppCompatActivity {
                     conf.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            if (et.getText().toString().toLowerCase().equals(usr.getPassword())) {
-
+                            if (et.getText().toString().equals(usr.getPassword())) {
                                 log = new LogApp();
                                 mngApp.serializationFlag(SettingActivity.this, log);
                                 listUser.remove(usr);
