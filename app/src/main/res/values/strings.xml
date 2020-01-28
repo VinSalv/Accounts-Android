@@ -1,21 +1,16 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="permission_necessary">Permessi necessari</string>
     <string name="storage_permission_is_encessary_to_wrote_event">Permessi per scrivere in memoria</string>
-
     <string name="uppercaseAppName">ACCOUNTS</string>
     <string name="lowercaseAppName">Accounts</string>
     <string name="imageApp">Immagine App</string>
-
     <string name="usernameHint">Utente</string>
     <string name="passswordHint">Password</string>
-
     <string name="flagApp">Ricordami</string>
     <string name="authText">Login</string>
     <string name="signText">Registrati</string>
-
-    <string name="flagFinger">Autenticazione con impronta? (Sarà possibile cambiare il settaggio in qualsiasi momento)</string>
+    <string name="flagFinger" tools:ignore="Typos">Autenticazione con impronta? (Sarà possibile cambiare il settaggio in qualsiasi momento)</string>
     <string name="signButton">Sign In</string>
-
     <string name="nameHint">Nome</string>
     <string name="emailImage">Icona email</string>
     <string name="emailHint">E-mail</string>
@@ -27,35 +22,26 @@
     <string name="passHint">Password</string>
     <string name="passText2">Ripeti la tua password</string>
     <string name="passHint2">Ripeti password</string>
-
     <string name="showPassImage">Icona mostra password</string>
-
     <string name="settings">Settings</string>
-
     <string name="action_edit">Modifica</string>
     <string name="action_delete">Elimina</string>
     <string name="action_sort">Ordina</string>
     <string name="action_setting">Impostazioni</string>
     <string name="action_exit">Esci</string>
-
     <string name="addButton">Aggiungi</string>
     <string name="emptyButton">Resetta</string>
     <string name="saveButton">Salva</string>
-
     <string name="increasing">Crescente</string>
     <string name="decreasing">Decrescente</string>
-
     <string name="profile">Profilo</string>
     <string name="pdf">Estrai PDF</string>
     <string name="deleteProfile">Elimina profilo</string>
-
     <string name="editFlagFinger">Autenticazione con impronta?</string>
     <string name="editUsername">Modifica nome utente</string>
     <string name="editPassword">Modifica password</string>
-
     <string name="no">No</string>
     <string name="yes">Si</string>
-
     <string name="textProfile">Cosa vuoi fare?</string>
     <string name="passwordSecurityText">Conferma la tua password</string>
     <string name="Confirmation">Conferma</string>
@@ -63,6 +49,5 @@
     <string name="wellcome">Benvenuto</string>
     <string name="wellcomeMini">Numero account:</string>
     <string name="wellcome2">Lista di</string>
-
-
+    <string name="Sure">Sei sicuro di voler</string>
 </resources>

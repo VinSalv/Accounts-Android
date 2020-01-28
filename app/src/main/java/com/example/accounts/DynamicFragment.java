@@ -45,13 +45,13 @@ public class DynamicFragment extends Fragment {
         if (!password.getText().toString().equals("")) {
             ImageButton showPass = view.findViewById(R.id.showPass);
             showPass.setVisibility(View.VISIBLE);
-            showPass(password, showPass, view);
+            showPass(password, showPass);
         }
         return view;
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    public void showPass(final TextView tv, ImageButton showPass, View v) {
+    public void showPass(final TextView tv, ImageButton showPass) {
         showPass.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()) {

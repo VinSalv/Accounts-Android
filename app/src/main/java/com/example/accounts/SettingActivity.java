@@ -58,6 +58,7 @@ public class SettingActivity extends AppCompatActivity {
     private File dir;
     private ImageButton showPass;
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -10,7 +10,7 @@
         android:id="@+id/securityText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Sei sicuro di voler"
+        android:text="@string/Sure"
         android:textColor="@color/rightText"
         android:textSize="18sp"
         android:textStyle="bold"
