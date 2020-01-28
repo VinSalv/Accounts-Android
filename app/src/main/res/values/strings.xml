@@ -9,7 +9,7 @@
     <string name="flagApp">Ricordami</string>
     <string name="authText">Login</string>
     <string name="signText">Registrati</string>
-    <string name="flagFinger" tools:ignore="Typos">Autenticazione con impronta? (Sarà possibile cambiare il settaggio in qualsiasi momento)</string>
+    <string name="flagFinger" tools:ignore="Typos">Autenticazione biometrica? (Sarà possibile cambiare il settaggio in qualsiasi momento)</string>
     <string name="signButton">Sign In</string>
     <string name="nameHint">Nome</string>
     <string name="emailImage">Icona email</string>
@@ -37,7 +37,7 @@
     <string name="profile">Profilo</string>
     <string name="pdf">Estrai PDF</string>
     <string name="deleteProfile">Elimina profilo</string>
-    <string name="editFlagFinger">Autenticazione con impronta?</string>
+    <string name="editFlagFinger">Autenticazione biometrica?</string>
     <string name="editUsername">Modifica nome utente</string>
     <string name="editPassword">Modifica password</string>
     <string name="no">No</string>
