@@ -3,14 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/contentSearchLayout"
     android:orientation="vertical"
     tools:context=".SearchActivity"
     tools:showIn="@layout/activity_search">
-
-    <LinearLayout
-        android:id="@+id/content_search_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical" />
 
 </LinearLayout>

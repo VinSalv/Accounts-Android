@@ -8,7 +8,7 @@ public class Account implements Serializable {
     private String name;
     private List<AccountElement> list;
 
-    Account(String name, ArrayList<AccountElement> list) {
+    public Account(String name, ArrayList<AccountElement> list) {
         this.name = name;
         this.list = list;
     }

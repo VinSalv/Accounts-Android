@@ -9,111 +9,72 @@
     tools:context=".AddActivity"
     tools:showIn="@layout/activity_add">
 
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fillViewport="true">
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/rounded_color">
+
+        <EditText
+            android:id="@+id/nameAddEdit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autofillHints=""
+            android:ems="10"
+            android:hint="@string/nameHint"
+            android:inputType="textPersonName"
+            android:textSize="15sp"
+            android:theme="@style/inputField"
+            tools:targetApi="o" />
+
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
         <LinearLayout
-            android:id="@+id/linLayAdd"
-            android:layout_width="match_parent"
+            android:id="@+id/linearLayAdd"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <LinearLayout
-                android:id="@+id/nameRelLayAdd"
+            <RelativeLayout
+                android:id="@+id/subRelativeLayAdd"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/rounded_color"
-                android:orientation="horizontal">
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/rounded_color">
 
                 <EditText
-                    android:id="@+id/nameAddEdit"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/emailAddEdit"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="30dp"
+                    android:layout_marginBottom="15dp"
                     android:autofillHints=""
                     android:ems="10"
-                    android:hint="@string/nameAddHint"
-                    android:inputType="textPersonName"
-                    android:shadowColor="#81FFFFFF"
-                    android:textColor="@android:color/white"
-                    android:textColorHighlight="#01A0B8"
-                    android:textColorHint="#81FFFFFF"
-                    android:textColorLink="@color/colorPrimaryDark"
-                    android:textSize="16sp"
+                    android:hint="@string/emailHint"
+                    android:inputType="textEmailAddress"
+                    android:textSize="13sp"
                     android:theme="@style/inputField"
                     tools:targetApi="o" />
-
-                <ImageView
-                    android:id="@+id/errorAddName"
-                    android:layout_width="26dp"
-                    android:layout_height="26dp"
-                    android:layout_marginTop="12dp"
-                    android:baselineAlignBottom="false"
-                    android:contentDescription="@string/errorAddUser"
-                    android:visibility="invisible"
-                    app:srcCompat="@drawable/warning" />
-
-
-            </LinearLayout>
-
-            <RelativeLayout
-                android:id="@+id/subRelLayAdd"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="10dp"
-                android:background="@drawable/rounded_color">
 
                 <ImageView
                     android:id="@+id/emailAddImage"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:layout_alignBottom="@id/emailAddEdit"
-                    android:layout_marginBottom="8dp"
-                    android:contentDescription="@string/emailAddImage"
-                    app:srcCompat="@drawable/email" />
-
-                <EditText
-                    android:id="@+id/emailAddEdit"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
-                    android:layout_marginStart="30dp"
-                    android:layout_marginBottom="15dp"
-                    android:autofillHints=""
-                    android:ems="10"
-                    android:hint="@string/emailAddHint"
-                    android:inputType="textEmailAddress"
-                    android:textSize="16sp"
-                    android:theme="@style/inputField"
-                    tools:targetApi="o" />
-
-                <ImageView
-                    android:id="@+id/errorAddEmail"
-                    android:layout_width="26dp"
-                    android:layout_height="26dp"
-                    android:layout_alignBottom="@id/emailAddEdit"
-                    android:layout_marginBottom="5dp"
-                    android:layout_toEndOf="@id/emailAddEdit"
-                    android:contentDescription="@string/errorAddEmail"
-                    android:visibility="invisible"
-                    app:srcCompat="@drawable/warning" />
-
-                <ImageView
-                    android:id="@+id/userAddImage"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_alignBottom="@id/userAddEdit"
-                    android:layout_marginBottom="8dp"
-                    android:contentDescription="@string/userAddImage"
-                    app:srcCompat="@drawable/user" />
+                    android:layout_alignStart="@+id/emailAddEdit"
+                    android:layout_alignBottom="@+id/emailAddEdit"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginBottom="10dp"
+                    android:contentDescription="@string/emailImage"
+                    android:src="@drawable/email" />
 
                 <EditText
                     android:id="@+id/userAddEdit"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/emailAddEdit"
                     android:layout_alignParentBottom="false"
@@ -121,61 +82,62 @@
                     android:layout_marginBottom="15dp"
                     android:autofillHints=""
                     android:ems="10"
-                    android:hint="@string/userAddHint"
+                    android:hint="@string/userHint"
                     android:inputType="textPersonName"
-                    android:textSize="16sp"
+                    android:textSize="13sp"
                     android:theme="@style/inputField"
                     tools:targetApi="o" />
 
                 <ImageView
-                    android:id="@+id/errorAddUser"
-                    android:layout_width="26dp"
-                    android:layout_height="26dp"
-                    android:layout_alignBottom="@id/userAddEdit"
-                    android:layout_marginBottom="5dp"
-                    android:layout_toEndOf="@id/userAddEdit"
-                    android:contentDescription="@string/errorAddPass"
-                    android:visibility="invisible"
-                    app:srcCompat="@drawable/warning" />
-
-                <ImageView
-                    android:id="@+id/passAddImage"
+                    android:id="@+id/userAddImage"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:layout_alignBottom="@id/passAddEdit"
-                    android:layout_marginBottom="8dp"
-                    android:contentDescription="@string/passAddImage"
-                    app:srcCompat="@drawable/pass" />
+                    android:layout_alignStart="@+id/userAddEdit"
+                    android:layout_alignBottom="@+id/userAddEdit"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginBottom="10dp"
+                    android:contentDescription="@string/userImage"
+                    android:src="@drawable/user" />
 
                 <EditText
                     android:id="@+id/passAddEdit"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/userAddEdit"
                     android:layout_marginStart="30dp"
                     android:autofillHints=""
                     android:ems="10"
-                    android:hint="@string/passAddHint"
+                    android:hint="@string/passHint"
                     android:inputType="textPassword"
-                    android:textSize="16sp"
+                    android:textSize="13sp"
                     android:theme="@style/inputField"
                     tools:targetApi="o" />
 
                 <ImageView
-                    android:id="@+id/errorAddPassword"
-                    android:layout_width="26dp"
-                    android:layout_height="26dp"
-                    android:layout_alignBottom="@id/passAddEdit"
-                    android:layout_marginBottom="5dp"
-                    android:layout_toEndOf="@id/passAddEdit"
-                    android:contentDescription="@string/errorAddPass"
-                    android:visibility="invisible"
-                    app:srcCompat="@drawable/warning" />
+                    android:id="@+id/passAddImage"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_alignStart="@+id/passAddEdit"
+                    android:layout_alignBottom="@+id/passAddEdit"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginBottom="10dp"
+                    android:contentDescription="@string/passImage"
+                    android:src="@drawable/pass" />
 
+                <ImageButton
+                    android:id="@+id/showPassImage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignEnd="@+id/passAddEdit"
+                    android:layout_alignBottom="@+id/passAddEdit"
+                    android:backgroundTint="@color/transparent"
+                    android:contentDescription="@string/showPassImage"
+                    android:src="@android:drawable/ic_menu_view" />
 
             </RelativeLayout>
 
         </LinearLayout>
+
     </ScrollView>
 
 </LinearLayout>

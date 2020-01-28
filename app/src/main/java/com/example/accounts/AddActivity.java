@@ -2,16 +2,20 @@ package com.example.accounts;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.text.InputType;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
@@ -19,192 +23,196 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.Objects;
 
+@SuppressWarnings({"MismatchedQueryAndUpdateOfCollection", "SuspiciousMethodCalls"})
 public class AddActivity extends AppCompatActivity {
     private RelativeLayout rl;
+    private LinearLayout ll;
+    private ArrayList<RelativeLayout> relativeLayoutsList;
     private User owner;
     private ManageAccount mngAcc;
     private ArrayList<Account> listAccount;
+    private AccountElement elem;
+    private ArrayList<AccountElement> accountElementsList;
     private EditText name;
     private ArrayList<EditText> email;
     private ArrayList<EditText> user;
     private ArrayList<EditText> password;
-    private ImageView nameError;
-    private ArrayList<AccountElement> listElem;
-    private AccountElement elem;
-    private ArrayList<RelativeLayout> layList;
-    private ArrayList<ImageView> emailErrorList;
-    private ArrayList<ImageView> userErrorList;
-    private ArrayList<ImageView> passwordErrorList;
+    private ArrayList<ImageButton> showPass;
     private int i;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add);
-
-        rl = findViewById(R.id.addActivityLay);
-
+        Toolbar addToolbar = findViewById(R.id.addToolbar);
         owner = (User) (Objects.requireNonNull(getIntent().getExtras())).get("owner");
-
-        mngAcc = new ManageAccount();
-
-        listAccount = mngAcc.deserializationListAccount(this, Objects.requireNonNull(owner).getUser());
-        listElem = new ArrayList<>();
-        layList = new ArrayList<>();
-        email = new ArrayList<>();
-        user = new ArrayList<>();
-        password = new ArrayList<>();
-        emailErrorList = new ArrayList<>();
-        userErrorList = new ArrayList<>();
-        passwordErrorList = new ArrayList<>();
-        i = 0;
-        final RelativeLayout rel = findViewById(R.id.subRelLayAdd);
-        layList.add((RelativeLayout) findViewById(R.id.subRelLayAdd));
-
-        name = findViewById(R.id.nameAddEdit);
-        nameError = findViewById(R.id.errorAddName);
-
-        email.add((EditText) findViewById(R.id.emailAddEdit));
-        emailErrorList.add((ImageView) findViewById(R.id.errorAddEmail));
-        user.add((EditText) findViewById(R.id.userAddEdit));
-        userErrorList.add((ImageView) findViewById(R.id.errorAddUser));
-        password.add((EditText) findViewById(R.id.passAddEdit));
-        passwordErrorList.add((ImageView) findViewById(R.id.errorAddPassword));
-
-        Button addButton = findViewById(R.id.addButton);
-        Button emptyButton = findViewById(R.id.emptyButton);
-        FloatingActionButton addElem = findViewById(R.id.addElemFloatingButton);
-
-        addButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                nameError.setVisibility(View.INVISIBLE);
-                listElem.clear();
-                for (int n = 0; n <= i; n++) {
-                    emailErrorList.get(n).setVisibility(View.INVISIBLE);
-                    userErrorList.get(n).setVisibility(View.INVISIBLE);
-                    passwordErrorList.get(n).setVisibility(View.INVISIBLE);
-                    if (!(email.get(n).getText().toString().isEmpty() && user.get(n).getText().toString().isEmpty() && password.get(n).getText().toString().isEmpty())) {
-                        elem = new AccountElement(email.get(n).getText().toString(), user.get(n).getText().toString(), password.get(n).getText().toString());
-                        listElem.add(elem);
-                    }
-                }
-                Account acc = new Account(name.getText().toString(), listElem);
-                if (acc.getName().isEmpty()) {
-                    nameError.setVisibility(View.VISIBLE);
-                    notifyUser("Il campo nome non può essere vuoto !");
-                    return;
-                }
-                int n = 0;
-                for (AccountElement elem : listElem) {
-                    if (fieldError(elem, n)) return;
-                    n++;
-                }
-                if (mngAcc.notFind(acc, listAccount)) {
-                    listAccount.add(acc);
-                    mngAcc.serializationListAccount(AddActivity.this, listAccount, owner.getUser());
-                    goToViewActivity(owner);
-                } else {
-                    nameError.setVisibility(View.VISIBLE);
-                    notifyUser("Applicativo già registrato !!!");
-                }
-            }
-
-        });
-
-        emptyButton.setOnClickListener(new View.OnClickListener() {
-            @SuppressLint("SetTextI18n")
-            @Override
-            public void onClick(View v) {
-                LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
-                final View popupView = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_security, (ViewGroup) findViewById(R.id.popupSecurity));
-                final PopupWindow popupWindow = new PopupWindow(popupView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
-                popupWindow.setOutsideTouchable(true);
-                popupWindow.setFocusable(true);
-                //noinspection deprecation
-                popupWindow.setBackgroundDrawable(new BitmapDrawable());
-                View parent = rl.getRootView();
-                popupWindow.showAtLocation(parent, Gravity.CENTER, 0, 0);
-                TextView et = popupView.findViewById(R.id.securityText);
-                et.setText(et.getText().toString() + " resettare tutti i campi?");
-                Button yes = popupView.findViewById(R.id.yes);
-                Button no = popupView.findViewById(R.id.no);
-                yes.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        i = 0;
-                        listElem.clear();
-                        emailErrorList.clear();
-                        userErrorList.clear();
-                        passwordErrorList.clear();
-                        LinearLayout lin = findViewById(R.id.linLayAdd);
-                        for (RelativeLayout l : layList) {
-                            if (l != rel) lin.removeView(l);
+        addToolbar.setSubtitle("Aggiungi account alla lista di " + Objects.requireNonNull(owner).getUser());
+        setSupportActionBar(addToolbar);
+        ll = findViewById(R.id.linearLayAdd);
+        rl = findViewById(R.id.subRelativeLayAdd);
+        ManageUser mngUsr = new ManageUser();
+        ArrayList<User> listUser = mngUsr.deserializationListUser(this);
+        User usr = mngUsr.findUser(listUser, owner.getUser());
+        if (usr != null) {
+            mngAcc = new ManageAccount();
+            listAccount = mngAcc.deserializationListAccount(this, Objects.requireNonNull(owner).getUser());
+            accountElementsList = new ArrayList<>();
+            relativeLayoutsList = new ArrayList<>();
+            email = new ArrayList<>();
+            user = new ArrayList<>();
+            password = new ArrayList<>();
+            showPass = new ArrayList<>();
+            i = 0;
+            relativeLayoutsList.add(rl);
+            name = findViewById(R.id.nameAddEdit);
+            email.add((EditText) findViewById(R.id.emailAddEdit));
+            user.add((EditText) findViewById(R.id.userAddEdit));
+            password.add((EditText) findViewById(R.id.passAddEdit));
+            showPass.add((ImageButton) findViewById(R.id.showPassImage));
+            Button addButton = findViewById(R.id.addButton);
+            Button emptyButton = findViewById(R.id.emptyButton);
+            FloatingActionButton addElem = findViewById(R.id.addElemFloatingButton);
+            addButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    name.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(AddActivity.this, R.color.colorAccent)));
+                    accountElementsList.clear();
+                    for (int n = 0; n <= i; n++) {
+                        email.get(n).setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(AddActivity.this, R.color.colorAccent)));
+                        user.get(n).setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(AddActivity.this, R.color.colorAccent)));
+                        password.get(n).setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(AddActivity.this, R.color.colorAccent)));
+                        if (!(email.get(n).getText().toString().isEmpty() && user.get(n).getText().toString().isEmpty() && password.get(n).getText().toString().isEmpty())) {
+                            elem = new AccountElement(email.get(n).getText().toString(), user.get(n).getText().toString(), password.get(n).getText().toString());
+                            accountElementsList.add(elem);
                         }
-                        layList.clear();
-                        findViewById(R.id.errorAddEmail).setVisibility(View.INVISIBLE);
-                        findViewById(R.id.errorAddUser).setVisibility(View.INVISIBLE);
-                        findViewById(R.id.errorAddPassword).setVisibility(View.INVISIBLE);
-                        ((EditText) findViewById(R.id.emailAddEdit)).setText("");
-                        ((EditText) findViewById(R.id.userAddEdit)).setText("");
-                        ((EditText) findViewById(R.id.passAddEdit)).setText("");
-                        ((EditText) findViewById(R.id.nameAddEdit)).setText("");
-                        layList.add((RelativeLayout) findViewById(R.id.subRelLayAdd));
-                        email.add((EditText) findViewById(R.id.emailAddEdit));
-                        emailErrorList.add((ImageView) findViewById(R.id.errorAddEmail));
-                        user.add((EditText) findViewById(R.id.userAddEdit));
-                        userErrorList.add((ImageView) findViewById(R.id.errorAddUser));
-                        password.add((EditText) findViewById(R.id.passAddEdit));
-                        passwordErrorList.add((ImageView) findViewById(R.id.errorAddPassword));
-                        popupWindow.dismiss();
-                        notifyUser("Campi resettati");
                     }
-                });
-                no.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        popupWindow.dismiss();
+                    Account acc = new Account(name.getText().toString(), accountElementsList);
+                    if (acc.getName().isEmpty()) {
+                        name.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(AddActivity.this, R.color.errorEditText)));
+                        notifyUser("Associare il nome all'account!");
+                        return;
                     }
-                });
-            }
-        });
+                    int n = 0;
+                    for (AccountElement elem : accountElementsList) {
+                        if (fieldError(elem, n)) return;
+                        n++;
+                    }
+                    if (mngAcc.notFind(acc, listAccount)) {
+                        listAccount.add(acc);
+                        mngAcc.serializationListAccount(AddActivity.this, listAccount, owner.getUser());
+                        goToViewActivity(owner);
+                    } else {
+                        name.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(AddActivity.this, R.color.errorEditText)));
+                        notifyUser("Applicativo già registrato!");
+                    }
+                }
 
-        addElem.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                i++;
-                final LinearLayout lin = findViewById(R.id.linLayAdd);
-                LayoutInflater inflater = LayoutInflater.from(AddActivity.this);
-                @SuppressLint("InflateParams") final RelativeLayout relLey = (RelativeLayout) inflater.inflate(R.layout.more_add_lay, null);
-                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                params.setMargins(0, 0, 0, 20);
-                relLey.setLayoutParams(params);
-                layList.add(relLey);
-                emailErrorList.add((ImageView) relLey.findViewById(R.id.errorAddEmail));
-                userErrorList.add((ImageView) relLey.findViewById(R.id.errorAddUser));
-                passwordErrorList.add((ImageView) relLey.findViewById(R.id.errorAddPassword));
-                email.add((EditText) relLey.findViewById(R.id.emailAddEdit));
-                user.add((EditText) relLey.findViewById(R.id.userAddEdit));
-                password.add((EditText) relLey.findViewById(R.id.passAddEdit));
-                Button del = relLey.findViewById(R.id.deleteAddLay);
-                lin.addView(relLey);
-                del.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        i--;
-                        layList.remove(relLey);
-                        lin.removeView(relLey);
-                    }
-                });
-            }
+            });
+            emptyButton.setOnClickListener(new View.OnClickListener() {
+                @SuppressLint("SetTextI18n")
+                @Override
+                public void onClick(View v) {
+                    LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+                    final View popupView = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_security, (ViewGroup) findViewById(R.id.popupSecurity));
+                    final PopupWindow popupWindow = new PopupWindow(popupView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+                    popupWindow.setOutsideTouchable(true);
+                    popupWindow.setFocusable(true);
+                    //noinspection deprecation
+                    popupWindow.setBackgroundDrawable(new BitmapDrawable());
+                    View parent = rl.getRootView();
+                    popupWindow.showAtLocation(parent, Gravity.CENTER, 0, 0);
+                    TextView et = popupView.findViewById(R.id.securityText);
+                    et.setText(et.getText().toString() + " resettare tutti i campi?");
+                    Button yes = popupView.findViewById(R.id.yes);
+                    Button no = popupView.findViewById(R.id.no);
+                    yes.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            i = 0;
+                            accountElementsList.clear();
+                            for (RelativeLayout relativeLayout : relativeLayoutsList) {
+                                if (relativeLayout != rl)
+                                    ll.removeView(relativeLayout);
+                            }
+                            relativeLayoutsList.clear();
+                            ((EditText) findViewById(R.id.nameAddEdit)).setText("");
+                            findViewById(R.id.emailAddEdit).setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(AddActivity.this, R.color.colorAccent)));
+                            ((EditText) findViewById(R.id.emailAddEdit)).setText("");
+                            findViewById(R.id.userAddEdit).setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(AddActivity.this, R.color.colorAccent)));
+                            ((EditText) findViewById(R.id.userAddEdit)).setText("");
+                            findViewById(R.id.passAddEdit).setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(AddActivity.this, R.color.colorAccent)));
+                            ((EditText) findViewById(R.id.passAddEdit)).setText("");
+                            relativeLayoutsList.add(rl);
+                            email.add((EditText) findViewById(R.id.emailAddEdit));
+                            user.add((EditText) findViewById(R.id.userAddEdit));
+                            password.add((EditText) findViewById(R.id.passAddEdit));
+                            showPass.add((ImageButton) findViewById(R.id.showPass));
+                            popupWindow.dismiss();
+                            notifyUser("Campi svuotati");
+                        }
+                    });
+                    no.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            popupWindow.dismiss();
+                        }
+                    });
+                }
+            });
+            addElem.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    LayoutInflater inflater = LayoutInflater.from(AddActivity.this);
+                    @SuppressLint("InflateParams") final RelativeLayout relLey = (RelativeLayout) inflater.inflate(R.layout.more_add_lay, null);
+                    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                    params.setMargins(0, 0, 0, 15);
+                    relLey.setLayoutParams(params);
+                    relativeLayoutsList.add(relLey);
+                    email.add((EditText) relLey.findViewById(R.id.emailAddEdit));
+                    user.add((EditText) relLey.findViewById(R.id.userAddEdit));
+                    password.add((EditText) relLey.findViewById(R.id.passAddEdit));
+                    showPass.add((ImageButton) relLey.findViewById(R.id.showPass));
+                    Button del = relLey.findViewById(R.id.deleteAddLay);
+                    ll.addView(relLey);
+                    del.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            email.remove(relLey.findViewById(R.id.emailAddEdit));
+                            user.remove(relLey.findViewById(R.id.userAddEdit));
+                            password.remove(relLey.findViewById(R.id.passAddEdit));
+                            showPass.remove(relLey.findViewById(R.id.showPass));
+                            relativeLayoutsList.remove(relLey);
+                            ll.removeView(relLey);
+                            i--;
+                        }
+                    });
+                    showPass((EditText) relLey.findViewById(R.id.passAddEdit), (ImageButton) relLey.findViewById(R.id.showPass));
+                    i++;
+                }
 
-        });
+            });
+            showPass((EditText) findViewById(R.id.passAddEdit), (ImageButton) findViewById(R.id.showPassImage));
+        } else {
+            notifyUser("Utente non rilevato. Impossibile aggiungere l'account.");
+            goToMainActivity();
+        }
+    }
+
+    public void goToMainActivity() {
+        Intent intent = new Intent(AddActivity.this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish();
     }
 
     public void goToViewActivity(User usr) {
@@ -234,41 +242,58 @@ public class AddActivity extends AppCompatActivity {
     }
 
     public boolean fieldError(AccountElement a, int n) {
-        if (isInvalidWord(a.getUser()) && isInvalidEmail(a.getEmail()) && isInvalidWord(a.getPassword())) {
-            userErrorList.get(n).setVisibility(View.VISIBLE);
-            emailErrorList.get(n).setVisibility(View.VISIBLE);
-            passwordErrorList.get(n).setVisibility(View.VISIBLE);
+        if (isInvalidEmail(a.getEmail()) && isInvalidWord(a.getUser()) && isInvalidWord(a.getPassword())) {
+            email.get(n).setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(AddActivity.this, R.color.errorEditText)));
+            user.get(n).setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(AddActivity.this, R.color.errorEditText)));
+            password.get(n).setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(AddActivity.this, R.color.errorEditText)));
             Toast.makeText(AddActivity.this, "Campi Utente, Email e Password non validi !!!", Toast.LENGTH_SHORT).show();
             return true;
         } else if (isInvalidWord(a.getUser()) && isInvalidWord(a.getPassword())) {
-            userErrorList.get(n).setVisibility(View.VISIBLE);
-            passwordErrorList.get(n).setVisibility(View.VISIBLE);
+            user.get(n).setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(AddActivity.this, R.color.errorEditText)));
+            password.get(n).setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(AddActivity.this, R.color.errorEditText)));
             Toast.makeText(AddActivity.this, "Campi Utente e Password non validi !!!", Toast.LENGTH_SHORT).show();
             return true;
         } else if (isInvalidWord(a.getPassword()) && isInvalidEmail(a.getEmail())) {
-            passwordErrorList.get(n).setVisibility(View.VISIBLE);
-            emailErrorList.get(n).setVisibility(View.VISIBLE);
+            password.get(n).setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(AddActivity.this, R.color.errorEditText)));
+            email.get(n).setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(AddActivity.this, R.color.errorEditText)));
             Toast.makeText(AddActivity.this, "Campi Email e Password non validi !!!", Toast.LENGTH_SHORT).show();
             return true;
         } else if (isInvalidWord(a.getUser()) && isInvalidEmail(a.getEmail())) {
-            userErrorList.get(n).setVisibility(View.VISIBLE);
-            emailErrorList.get(n).setVisibility(View.VISIBLE);
+            user.get(n).setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(AddActivity.this, R.color.errorEditText)));
+            email.get(n).setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(AddActivity.this, R.color.errorEditText)));
             Toast.makeText(AddActivity.this, "Campi Utente e Email non validi !!!", Toast.LENGTH_SHORT).show();
             return true;
         } else if (isInvalidWord(a.getUser())) {
-            userErrorList.get(n).setVisibility(View.VISIBLE);
+            user.get(n).setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(AddActivity.this, R.color.errorEditText)));
             Toast.makeText(AddActivity.this, "Campo Utente non valido !!!", Toast.LENGTH_SHORT).show();
             return true;
         } else if (isInvalidEmail(a.getEmail())) {
-            emailErrorList.get(n).setVisibility(View.VISIBLE);
+            email.get(n).setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(AddActivity.this, R.color.errorEditText)));
             Toast.makeText(AddActivity.this, "Campo Email non valido !!!", Toast.LENGTH_SHORT).show();
             return true;
         } else if (isInvalidWord(a.getPassword())) {
-            passwordErrorList.get(n).setVisibility(View.VISIBLE);
+            password.get(n).setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(AddActivity.this, R.color.errorEditText)));
             Toast.makeText(AddActivity.this, "Campo Password non valido !!!", Toast.LENGTH_SHORT).show();
             return true;
         }
         return false;
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    public void showPass(final EditText et, ImageButton showPass) {
+        showPass.setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        et.setInputType(InputType.TYPE_NULL);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        et.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                        break;
+                }
+                return true;
+            }
+        });
     }
 
     public void onBackPressed() {

@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimary">
@@ -15,54 +13,33 @@
         android:layout_marginBottom="10dp"
         android:background="@drawable/rounded_color">
 
-        <ImageView
-            android:id="@+id/emailShowImage"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_alignBottom="@id/emailShowEdit"
-            android:layout_marginBottom="8dp"
-            android:contentDescription="@string/emailShowImage"
-            app:srcCompat="@drawable/email" />
-
-        <EditText
+        <TextView
             android:id="@+id/emailShowEdit"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_marginStart="30dp"
             android:layout_marginBottom="15dp"
             android:autofillHints=""
             android:ems="10"
-            android:focusable="false"
-            android:hint="@string/emailShowHint"
-            android:inputType="textEmailAddress"
-            android:textSize="16sp"
-            android:theme="@style/inputField"
+            android:hint="@string/emailHint"
+            android:textIsSelectable="true"
+            android:textSize="18sp"
             tools:targetApi="o" />
 
         <ImageView
-            android:id="@+id/errorShowEmail"
-            android:layout_width="26dp"
-            android:layout_height="26dp"
-            android:layout_alignBottom="@id/emailShowEdit"
-            android:layout_marginBottom="5dp"
-            android:layout_toEndOf="@id/emailShowEdit"
-            android:contentDescription="@string/errorShowEmail"
-            android:visibility="invisible"
-            app:srcCompat="@drawable/warning" />
+            android:id="@+id/emailShowImage"
+            android:layout_width="23dp"
+            android:layout_height="23dp"
+            android:layout_alignStart="@+id/emailShowEdit"
+            android:layout_alignBottom="@+id/emailShowEdit"
+            android:layout_alignParentStart="true"
+            android:contentDescription="@string/emailImage"
+            android:src="@drawable/email" />
 
-        <ImageView
-            android:id="@+id/userShowImage"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_alignBottom="@id/userShowEdit"
-            android:layout_marginBottom="8dp"
-            android:contentDescription="@string/userShowImage"
-            app:srcCompat="@drawable/user" />
-
-        <EditText
+        <TextView
             android:id="@+id/userShowEdit"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/emailShowEdit"
             android:layout_alignParentBottom="false"
@@ -70,59 +47,57 @@
             android:layout_marginBottom="15dp"
             android:autofillHints=""
             android:ems="10"
-            android:focusable="false"
-            android:hint="@string/userShowHint"
-            android:inputType="text"
-            android:textSize="16sp"
-            android:theme="@style/inputField"
+            android:hint="@string/userHint"
+            android:textIsSelectable="true"
+            android:textSize="18sp"
             tools:targetApi="o" />
 
         <ImageView
-            android:id="@+id/errorShowUser"
-            android:layout_width="26dp"
-            android:layout_height="26dp"
-            android:layout_alignBottom="@id/userShowEdit"
-            android:layout_marginBottom="5dp"
-            android:layout_toEndOf="@id/userShowEdit"
-            android:contentDescription="@string/errorShowPass"
-            android:visibility="invisible"
-            app:srcCompat="@drawable/warning" />
-
-        <ImageView
-            android:id="@+id/passShowImage"
+            android:id="@+id/userShowImage"
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:layout_alignBottom="@id/passShowEdit"
-            android:layout_marginBottom="8dp"
-            android:contentDescription="@string/passShowImage"
-            app:srcCompat="@drawable/pass" />
+            android:layout_alignStart="@+id/userShowEdit"
+            android:layout_alignBottom="@+id/userShowEdit"
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="3dp"
+            android:contentDescription="@string/userImage"
+            android:src="@drawable/user" />
 
-        <EditText
+        <TextView
             android:id="@+id/passShowEdit"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/userShowEdit"
             android:layout_marginStart="30dp"
             android:autofillHints=""
             android:ems="10"
-            android:focusable="false"
-            android:hint="@string/passShowHint"
-            android:inputType="textPassword"
-            android:textSize="16sp"
-            android:theme="@style/inputField"
+            android:hint="@string/passHint"
+            android:textColor="#00FFFFFF"
+            android:textIsSelectable="true"
+            android:textSize="18sp"
             tools:targetApi="o" />
 
         <ImageView
-            android:id="@+id/errorShowPassword"
-            android:layout_width="26dp"
-            android:layout_height="26dp"
-            android:layout_alignBottom="@id/passShowEdit"
-            android:layout_marginBottom="5dp"
-            android:layout_toEndOf="@id/passShowEdit"
-            android:contentDescription="@string/errorShowPass"
-            android:visibility="invisible"
-            app:srcCompat="@drawable/warning" />
+            android:id="@+id/passShowImage"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignStart="@+id/passShowEdit"
+            android:layout_alignBottom="@+id/passShowEdit"
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="3dp"
+            android:contentDescription="@string/passImage"
+            android:src="@drawable/pass" />
 
+        <ImageButton
+            android:id="@+id/showPass"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignEnd="@+id/passShowEdit"
+            android:layout_alignBottom="@+id/passShowEdit"
+            android:backgroundTint="@color/transparent"
+            android:contentDescription="@string/showPassImage"
+            android:src="@android:drawable/ic_menu_view"
+            android:visibility="invisible" />
 
     </RelativeLayout>
 

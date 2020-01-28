@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 class ManageUser implements Serializable {
 
-    ManageUser() {
+    public ManageUser() {
     }
 
     boolean notFindUser(User u, ArrayList<User> listUser) {
@@ -42,7 +42,7 @@ class ManageUser implements Serializable {
         }
     }
 
-    ArrayList<User> deserializationListUser(Context context) {
+    public ArrayList<User> deserializationListUser(Context context) {
         try {
             FileInputStream fis = context.openFileInput("Users.txt");
             ObjectInputStream is = new ObjectInputStream(fis);

@@ -3,7 +3,6 @@
     <color name="colorPrimary">#000000</color>
     <color name="colorPrimaryDark">#005F23</color>
     <color name="colorAccent">#81FFFFFF</color>
-    <color name="colorActionMode">#009362</color>
-    <color name="colorPopupMenu">#333333</color>
-    <color name="colorButtonMenu">#008B36</color>
+    <color name="rightText">#FFFFFF</color>
+    <color name="errorEditText">#A00202</color>
 </resources>

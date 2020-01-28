@@ -1,136 +1,65 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <string name="permission_necessary">Permessi necessari</string>
     <string name="storage_permission_is_encessary_to_wrote_event">Permessi per scrivere in memoria</string>
 
-    <string name="app_name">Accounts</string>
-
-    <string name="nameApp">ACCOUNTS</string>
+    <string name="uppercaseAppName">ACCOUNTS</string>
+    <string name="lowercaseAppName">Accounts</string>
     <string name="imageApp">Immagine App</string>
-    <string name="userImage">Icona user</string>
-    <string name="userAppHint">Utente</string>
-    <string name="userError">Immagine di errore immisione utente</string>
-    <string name="passImage">Icona password</string>
-    <string name="passAppHint">Password</string>
-    <string name="passError">Immagine di errore immisione password</string>
-    <string name="authButton">Login</string>
-    <string name="signText">Registrati</string>
-    <string name="flagApp">Ricordami</string>
 
-    <string name="userSignImage">Icona utente</string>
-    <string name="usernameText">Inserisci il tuo username</string>
-    <string name="usernameAppHint">Username</string>
-    <string name="errorUsername">Errore immisione utente</string>
-    <string name="passSignImage">Icona password</string>
-    <string name="passwordText">Inserisci la tua password</string>
-    <string name="passwordAppHint">Password</string>
-    <string name="errorPassword">Errore immisione password</string>
-    <string name="passwordText2">Reinserisci la tua password</string>
-    <string name="passwordAppHint2">Reinserisci password</string>
-    <string name="errorPassword2">Errore reimmisione password</string>
-    <string name="flagFinger" tools:ignore="Typos">Autenticazione con impronta? (Sarà possibile cambiare il settaggio in qualsiasi momento)</string>
+    <string name="usernameHint">Utente</string>
+    <string name="passswordHint">Password</string>
+
+    <string name="flagApp">Ricordami</string>
+    <string name="authText">Login</string>
+    <string name="signText">Registrati</string>
+
+    <string name="flagFinger">Autenticazione con impronta? (Sarà possibile cambiare il settaggio in qualsiasi momento)</string>
     <string name="signButton">Sign In</string>
 
-    <string name="title_activity_view">Activity View</string>
-    <string name="benvenuto">Ciao</string>
-    <string name="lista_di">Lista di</string>
+    <string name="nameHint">Nome</string>
+    <string name="emailImage">Icona email</string>
+    <string name="emailHint">E-mail</string>
+    <string name="userImage">Icona utente</string>
+    <string name="userText">Inserisci il tuo username</string>
+    <string name="userHint">Username</string>
+    <string name="passImage">Icona password</string>
+    <string name="passText">Inserisci la tua password</string>
+    <string name="passHint">Password</string>
+    <string name="passText2">Ripeti la tua password</string>
+    <string name="passHint2">Ripeti password</string>
+
+    <string name="showPassImage">Icona mostra password</string>
+
     <string name="settings">Settings</string>
+
+    <string name="action_edit">Modifica</string>
     <string name="action_delete">Elimina</string>
     <string name="action_sort">Ordina</string>
     <string name="action_setting">Impostazioni</string>
     <string name="action_exit">Esci</string>
 
-    <string name="nameAddImage">Icona nome</string>
-    <string name="nameAddHint">Nome</string>
-    <string name="errorAddName">Errore immisione nome</string>
-    <string name="emailAddImage">Icona e-mail</string>
-    <string name="emailAddHint">E-mail</string>
-    <string name="errorAddEmail">Errore immisione e-mail</string>
-    <string name="userAddImage">Icona utente</string>
-    <string name="userAddHint">Utente</string>
-    <string name="errorAddUser">Errore immisione utente</string>
-    <string name="passAddImage">Icona password</string>
-    <string name="passAddHint">Password</string>
-    <string name="errorAddPass">Errore immisione password</string>
     <string name="addButton">Aggiungi</string>
     <string name="emptyButton">Resetta</string>
-    <string name="accountElement">Elemento della lista</string>
-    <string name="Delete_id" />
-    <string name="wellcomeToolbar">Lista di</string>
-    <string name="title_activity_show_element">ShowElementActivity</string>
-    <string name="tab_text_1">Tab 1</string>
-    <string name="tab_text_2">Tab 2</string>
+    <string name="saveButton">Salva</string>
 
-    <string name="nameShowImage">Icona nome</string>
-    <string name="nameShowHint">Nome</string>
-    <string name="errorShowName">Errore immisione nome</string>
-    <string name="emailShowImage">Icona e-mail</string>
-    <string name="emailShowHint">E-mail</string>
-    <string name="errorShowEmail">Errore immisione e-mail</string>
-    <string name="userShowImage">Icona utente</string>
-    <string name="userShowHint">Utente</string>
-    <string name="errorShowUser">Errore immisione utente</string>
-    <string name="passShowImage">Icona password</string>
-    <string name="passShowHint">Password</string>
-    <string name="errorShowPass">Errore immisione password</string>
-    <string name="title_activity_edit">EditActivity</string>
+    <string name="increasing">Crescente</string>
+    <string name="decreasing">Decrescente</string>
 
-    <string name="none">none</string>
+    <string name="profile">Profilo</string>
+    <string name="pdf">Estrai PDF</string>
+    <string name="deleteProfile">Elimina profilo</string>
 
-    <string name="editButton">Salva</string>
-    <string name="dalla_a_alla_z">Dalla A alla Z</string>
-    <string name="dalla_z_alla_a">Dalla Z alla A</string>
-    <string name="profilo">Profilo</string>
-    <string name="estrai_pdf">Estrai PDF</string>
-    <string name="esporta_account">Esporta account</string>
-    <string name="improta_account">Importa account</string>
-    <string name="elimina_profilo">Elimina profilo</string>
-    <string name="impostazioni">Impostazioni</string>
-    <string name="title_activity_profile">ProfileActivity</string>
+    <string name="editFlagFinger">Autenticazione con impronta?</string>
+    <string name="editUsername">Modifica nome utente</string>
+    <string name="editPassword">Modifica password</string>
 
-    <string name="flagProfFinger">Autenticazione con impronta?</string>
-    <string name="modifica_nome_utente">Modifica nome utente</string>
-    <string name="modifica_password">Modifica password</string>
-    <string name="autenticazione_con_impronta">Autenticazione con impronta</string>
-
-    <string name="userEditImage">Icona utente</string>
-    <string name="userEditText">Nuovo username</string>
-    <string name="userEditHint">Nuovo username</string>
-    <string name="userEditError">Errore immisione utente</string>
-    <string name="passEditImage">Icona password</string>
-    <string name="passEditText">Nuova password</string>
-    <string name="passEditHint">Nuova Password</string>
-    <string name="passEditError">Errore immisione password</string>
-    <string name="passEditImage2">Icona password</string>
-    <string name="passEditText2">Ripeti password</string>
-    <string name="passEditHint2">Ripeti password</string>
-    <string name="passEditError2">Errore immisione password</string>
-    <string name="cosa_vuoi_fare">Cosa vuoi fare?</string>
-    <string name="saveUsrEditButton">Salva</string>
-
-    <string name="userExportImage">Icona utente</string>
-    <string name="userExportText">Username</string>
-    <string name="userExportHint">Username</string>
-    <string name="userExportError">Errore immisione utente</string>
-    <string name="passExportImage">Icona password</string>
-    <string name="passExportText">Password</string>
-    <string name="passExportHint">Password</string>
-    <string name="passExportError">Errore immisione password</string>
-    <string name="copy">Copia e incolla</string>
-    <string name="cut">Taglia e incolla</string>
-    <string name="exportAccountButton">Esporta</string>
-    <string name="exportText">Inserire le credenziali dell\'account su cui si desidera esportare gli account selezionati</string>
-    <string name="name">name</string>
-    <string name="searchName">Name</string>
     <string name="no">No</string>
-    <string name="si">Si</string>
-    <string name="sei_sicuro_di_voler">Sei sicuro di voler</string>
-    <string name="inserisci_la_password_del_tuo_account">Inserisci la password del tuo account per continuare</string>
-    <string name="conferma">Conferma</string>
-    <string name="passwordSecurityHint">Password</string>
-    <string name="salva">Salva</string>
-    <string name="modifica">Modifica</string>
-    <string name="elimina">Elimina</string>
-    <string name="ordina">Ordina</string>
-    <string name="disconnetti">Disconnetti</string>
+    <string name="yes">Si</string>
+
+    <string name="textProfile">Cosa vuoi fare?</string>
+    <string name="passwordSecurityText">Conferma la tua password</string>
+    <string name="Confirmation">Conferma</string>
+    <string name="signTextView">Inserisci i dati per la registrazione</string>
+
 
 </resources>

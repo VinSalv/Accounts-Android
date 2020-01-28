@@ -2,14 +2,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/delete"
-        android:title="@string/elimina" />
+        android:title="@string/action_delete" />
     <item
         android:id="@+id/sort"
-        android:title="@string/ordina" />
+        android:title="@string/action_sort" />
     <item
         android:id="@+id/setting"
-        android:title="@string/impostazioni" />
+        android:title="@string/action_setting" />
     <item
         android:id="@+id/exit"
-        android:title="@string/disconnetti" />
+        android:title="@string/action_exit" />
 </menu>

@@ -1,22 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/relLayMain"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity"
     tools:showIn="@layout/activity_main">
-
-    <ScrollView
-        android:id="@+id/scrollMain"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fillViewport="true">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/nameApp"
@@ -26,9 +14,9 @@
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
                 android:fontFamily="@font/fredoka_one"
-                android:text="@string/nameApp"
+                android:text="@string/uppercaseAppName"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                android:textColor="#CCFFFFFF"
+                android:textColor="@color/rightText"
                 android:textSize="50sp"
                 android:textStyle="bold" />
 
@@ -43,7 +31,7 @@
                 android:src="@drawable/app" />
 
             <RelativeLayout
-                android:layout_width="300dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/imageApp"
                 android:layout_centerHorizontal="true"
@@ -54,54 +42,61 @@
                     android:id="@+id/userApp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginBottom="15dp"
                     android:autofillHints=""
                     android:ems="10"
-                    android:hint="@string/userAppHint"
+                    android:layout_marginStart="30dp"
                     android:inputType="text"
-                    android:textSize="16sp"
                     android:theme="@style/inputField"
+                    android:layout_marginBottom="10dp"
+                    android:hint="@string/usernameHint"
                     tools:targetApi="o" />
 
                 <ImageView
-                    android:id="@+id/userError"
-                    android:layout_width="26dp"
-                    android:layout_height="26dp"
-                    android:layout_alignBottom="@id/userApp"
-                    android:layout_marginStart="3dp"
-                    android:layout_marginBottom="5dp"
-                    android:layout_toEndOf="@id/userApp"
-                    android:contentDescription="@string/userError"
-                    android:visibility="invisible"
-                    app:srcCompat="@drawable/warning" />
+                    android:id="@+id/userAppImage"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_alignStart="@+id/userApp"
+                    android:layout_alignBottom="@+id/userApp"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginBottom="10dp"
+                    android:contentDescription="@string/userImage"
+                    android:src="@drawable/user" />
 
                 <EditText
                     android:id="@+id/passApp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/userApp"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginBottom="15dp"
                     android:autofillHints=""
                     android:ems="10"
-                    android:hint="@string/passAppHint"
+                    android:layout_marginStart="30dp"
                     android:inputType="textPassword"
-                    android:textSize="16sp"
                     android:theme="@style/inputField"
+                    android:layout_marginBottom="10dp"
+                    android:hint="@string/passswordHint"
                     tools:targetApi="o" />
 
+
                 <ImageView
-                    android:id="@+id/passError"
-                    android:layout_width="26dp"
-                    android:layout_height="26dp"
-                    android:layout_alignBottom="@id/passApp"
-                    android:layout_marginStart="3dp"
-                    android:layout_marginBottom="5dp"
-                    android:layout_toEndOf="@id/passApp"
-                    android:contentDescription="@string/passError"
-                    android:visibility="invisible"
-                    app:srcCompat="@drawable/warning" />
+                    android:id="@+id/passAppImage"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_alignStart="@+id/passApp"
+                    android:layout_alignBottom="@+id/passApp"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginBottom="10dp"
+                    android:contentDescription="@string/passImage"
+                    android:src="@drawable/pass" />
+
+                <ImageButton
+                    android:id="@+id/showPass"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignEnd="@+id/passApp"
+                    android:layout_alignBottom="@+id/passApp"
+                    android:backgroundTint="@color/transparent"
+                    android:contentDescription="@string/showPassImage"
+                    android:src="@android:drawable/ic_menu_view" />
 
                 <Switch
                     android:id="@+id/flagApp"
@@ -109,36 +104,14 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/passApp"
                     android:layout_alignStart="@id/passApp"
-                    android:layout_marginStart="11dp"
-                    android:layout_marginEnd="15dp"
+                    android:layout_marginStart="5dp"
                     android:text="@string/flagApp"
+                    android:layout_marginBottom="5dp"
                     android:textColor="#81FFFFFF"
-                    android:textSize="14sp"
+                    android:textSize="13sp"
                     android:textStyle="normal|bold"
                     android:theme="@style/SelectionSwitch" />
 
-                <ImageView
-                    android:id="@+id/userImage"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_alignBottom="@id/userApp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="7dp"
-                    android:layout_toStartOf="@id/userApp"
-                    android:contentDescription="@string/userImage"
-                    app:srcCompat="@drawable/user" />
-
-                <ImageView
-                    android:id="@+id/passImage"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_alignBottom="@id/passApp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:layout_toStartOf="@id/passApp"
-                    android:contentDescription="@string/passImage"
-                    app:srcCompat="@drawable/pass" />
             </RelativeLayout>
-        </RelativeLayout>
-    </ScrollView>
+
 </RelativeLayout>

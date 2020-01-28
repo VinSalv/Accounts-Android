@@ -37,7 +37,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     public void onBindViewHolder(MyViewHolder holder, int position) {
         holder.title.setText(list.get(position).getName());
         String name = list.get(position).getName();
-
         if (selectedIds.contains(name)) {
             holder.title.setBackground(getDrawable(context, R.drawable.rounded_list_element2));
         } else {
@@ -68,7 +67,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         MyViewHolder(View itemView) {
             super(itemView);
             title = itemView.findViewById(R.id.accountElement);
-            rootView = itemView.findViewById(R.id.viewLayout);
+            rootView = itemView.findViewById(R.id.viewActivityLay);
         }
     }
 }

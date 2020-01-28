@@ -1,29 +1,36 @@
 package com.example.accounts;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
+import android.widget.ImageButton;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+
+import com.google.android.material.appbar.AppBarLayout;
 
 import java.util.ArrayList;
 
 public class SignActivity extends AppCompatActivity {
+    private TextView signText;
+    private TextView signTextToolbar;
     private EditText userEdit;
-    private ImageView userError;
     private EditText passEdit;
-    private ImageView passError;
     private EditText passEdit2;
-    private ImageView passError2;
     private Switch flagFinger;
     private ManageUser mngUsr;
     private ArrayList<User> listUser = new ArrayList<>();
@@ -32,31 +39,54 @@ public class SignActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign);
-        Toolbar toolbarSign = findViewById(R.id.toolbarSign);
-        setSupportActionBar(toolbarSign);
-
+        final Toolbar toolbar = findViewById(R.id.toolbarSign);
+        toolbar.setTitle("");
+        setSupportActionBar(toolbar);
         userEdit = findViewById(R.id.usernameEdit);
-        userError = findViewById(R.id.errorUsername);
         passEdit = findViewById(R.id.passwordEdit);
-        passError = findViewById(R.id.errorPassword);
         passEdit2 = findViewById(R.id.passwordEdit2);
-        passError2 = findViewById(R.id.errorPassword2);
         flagFinger = findViewById(R.id.flagFinger);
         Button sign = findViewById(R.id.signButton);
-
+        ImageButton showPass = findViewById(R.id.showPass);
+        ImageButton showPass2 = findViewById(R.id.showPass2);
         mngUsr = new ManageUser();
         listUser = mngUsr.deserializationListUser(this);
+        signText = findViewById(R.id.signText);
+        signTextToolbar = findViewById(R.id.signTextToolbar);
+        signTextToolbar.setVisibility(View.INVISIBLE);
+        AppBarLayout appBar = findViewById(R.id.app_bar_sign);
+        appBar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            boolean isShow = false;
+            int scrollRange = -1;
 
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                signText.setAlpha((1.0f - (float) Math.abs(verticalOffset) / appBarLayout.getTotalScrollRange()));
+                if (scrollRange == -1) {
+                    scrollRange = appBarLayout.getTotalScrollRange();
+                }
+                if (scrollRange + verticalOffset == 0) {
+                    isShow = true;
+                    signTextToolbar.setVisibility(View.VISIBLE);
+                } else if (isShow) {
+                    isShow = false;
+                    signTextToolbar.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
+        showPass(passEdit, showPass);
+        showPass(passEdit2, showPass2);
         sign.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                userError.setVisibility(View.INVISIBLE);
-                passError.setVisibility(View.INVISIBLE);
-                passError2.setVisibility(View.INVISIBLE);
+                userEdit.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(SignActivity.this, R.color.colorAccent)));
+                passEdit.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(SignActivity.this, R.color.colorAccent)));
+                passEdit2.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(SignActivity.this, R.color.colorAccent)));
                 User usr = new User(fixName(userEdit.getText().toString()), passEdit.getText().toString(), flagFinger.isChecked(), 1);
                 if (!fieldCheck(usr)) return;
                 if (!passEdit.getText().toString().equals(passEdit2.getText().toString())) {
-                    passError2.setVisibility(View.VISIBLE);
+                    passEdit.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(SignActivity.this, R.color.errorEditText)));
+                    passEdit2.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(SignActivity.this, R.color.errorEditText)));
                     notifyUser("Le password non corrispondono");
                     return;
                 }
@@ -65,7 +95,7 @@ public class SignActivity extends AppCompatActivity {
                     mngUsr.serializationListUser(SignActivity.this, listUser);
                     goToViewActivity(usr);
                 } else {
-                    userError.setVisibility(View.VISIBLE);
+                    userEdit.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(SignActivity.this, R.color.errorEditText)));
                     notifyUser("User già esistente");
                 }
             }
@@ -84,24 +114,27 @@ public class SignActivity extends AppCompatActivity {
     }
 
     public String fixName(String name) {
-        name = name.toLowerCase();
-        String name1 = name.substring(0, 1).toUpperCase();
-        String name2 = name.substring(1).toLowerCase();
-        return name1.concat(name2);
+        if (name.isEmpty()) return name;
+        else {
+            name = name.toLowerCase();
+            String name1 = name.substring(0, 1).toUpperCase();
+            String name2 = name.substring(1).toLowerCase();
+            return name1.concat(name2);
+        }
     }
 
     public boolean fieldCheck(User usr) {
         if (isInvalidWord(usr.getUser()) && isInvalidWord(usr.getPassword())) {
-            userError.setVisibility(View.VISIBLE);
-            passError.setVisibility(View.VISIBLE);
+            userEdit.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(SignActivity.this, R.color.errorEditText)));
+            passEdit.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(SignActivity.this, R.color.errorEditText)));
             notifyUser("Campi Utente e Password non validi !!!");
             return false;
         } else if (isInvalidWord(usr.getUser())) {
-            userError.setVisibility(View.VISIBLE);
+            userEdit.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(SignActivity.this, R.color.errorEditText)));
             notifyUser("Campo Utente non valido !!!");
             return false;
         } else if (isInvalidWord(usr.getPassword())) {
-            passError.setVisibility(View.VISIBLE);
+            passEdit.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(SignActivity.this, R.color.errorEditText)));
             notifyUser("Campo Password non valido !!!");
             return false;
         }
@@ -128,5 +161,21 @@ public class SignActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @SuppressLint("ClickableViewAccessibility")
+    public void showPass(final EditText et, ImageButton showPass) {
+        showPass.setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View v, MotionEvent event) {
 
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        et.setInputType(InputType.TYPE_NULL);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        et.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                        break;
+                }
+                return true;
+            }
+        });
+    }
 }

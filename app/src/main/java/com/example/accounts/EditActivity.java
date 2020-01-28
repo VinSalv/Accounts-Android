@@ -2,16 +2,19 @@ package com.example.accounts;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Patterns;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
@@ -19,137 +22,131 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.Objects;
 
+@SuppressWarnings({"MismatchedQueryAndUpdateOfCollection", "SuspiciousMethodCalls"})
 public class EditActivity extends AppCompatActivity {
     private RelativeLayout rl;
+    private LinearLayout ll;
+    private ArrayList<RelativeLayout> relativeLayoutsList;
     private User owner;
     private ManageAccount mngAcc;
+    private Account account;
     private ArrayList<Account> listAccount;
+    private User usr;
+    private AccountElement elem;
+    private ArrayList<AccountElement> accountElementsList;
     private EditText name;
     private ArrayList<EditText> email;
     private ArrayList<EditText> user;
     private ArrayList<EditText> password;
-    private ImageView nameError;
-    private ArrayList<AccountElement> listElem;
-    private AccountElement elem;
-    private ArrayList<RelativeLayout> layList;
-    private ArrayList<ImageView> emailErrorList;
-    private ArrayList<ImageView> userErrorList;
-    private ArrayList<ImageView> passwordErrorList;
+    private ArrayList<ImageButton> showPass;
     private int i;
-    private Account account;
-    private User usr;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit);
+        Toolbar toolbarEdit = findViewById(R.id.editToolbar);
+        owner = (User) (Objects.requireNonNull(getIntent().getExtras())).get("owner");
+        toolbarEdit.setSubtitle("Modifica account dalla lista di " + Objects.requireNonNull(owner).getUser());
+        setSupportActionBar(toolbarEdit);
         rl = findViewById(R.id.editActivityLay);
+        ll=findViewById(R.id.linearLayEdit);
+        ConstraintLayout constraintLayoutButtons = findViewById(R.id.constraintLayoutButtons);
         account = (Account) Objects.requireNonNull(getIntent().getExtras()).get("account");
-        owner = (User) (getIntent().getExtras()).get("owner");
-
         ManageUser mngUsr = new ManageUser();
         ArrayList<User> listUser = mngUsr.deserializationListUser(this);
         usr = mngUsr.findUser(listUser, owner.getUser());
-
         if (usr != null) {
             mngAcc = new ManageAccount();
             listAccount = mngAcc.deserializationListAccount(this, usr.getUser());
-
-            listElem = new ArrayList<>();
-            layList = new ArrayList<>();
+            accountElementsList = new ArrayList<>();
+            relativeLayoutsList = new ArrayList<>();
             email = new ArrayList<>();
             user = new ArrayList<>();
             password = new ArrayList<>();
-            emailErrorList = new ArrayList<>();
-            userErrorList = new ArrayList<>();
-            passwordErrorList = new ArrayList<>();
+            showPass = new ArrayList<>();
             i = 0;
-
-            Button addButton = findViewById(R.id.addButton);
-            Button emptyButton = findViewById(R.id.emptyButton);
+            Button addButton = constraintLayoutButtons.findViewById(R.id.saveButton);
+            Button emptyButton = constraintLayoutButtons.findViewById(R.id.emptyButton);
             FloatingActionButton addElem = findViewById(R.id.addElemFloatingButton);
-            name = findViewById(R.id.nameAddEdit);
+            name = findViewById(R.id.nameEditEdit);
             name.setText(account.getName());
-            nameError = findViewById(R.id.errorAddName);
-
-            for (AccountElement ae : account.getList()) {
-                final LinearLayout lin = findViewById(R.id.linLayAdd);
+            for (final AccountElement ae : account.getList()) {
                 LayoutInflater inflater = LayoutInflater.from(EditActivity.this);
                 @SuppressLint("InflateParams") final RelativeLayout relLey = (RelativeLayout) inflater.inflate(R.layout.more_add_lay, null);
                 RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                 params.setMargins(0, 20, 0, 0);
                 relLey.setLayoutParams(params);
-                layList.add(relLey);
-                emailErrorList.add((ImageView) relLey.findViewById(R.id.errorAddEmail));
-                userErrorList.add((ImageView) relLey.findViewById(R.id.errorAddUser));
-                passwordErrorList.add((ImageView) relLey.findViewById(R.id.errorAddPassword));
+                relativeLayoutsList.add(relLey);
                 email.add((EditText) relLey.findViewById(R.id.emailAddEdit));
                 email.get(i).setText(ae.getEmail());
                 user.add((EditText) relLey.findViewById(R.id.userAddEdit));
                 user.get(i).setText(ae.getUser());
                 password.add((EditText) relLey.findViewById(R.id.passAddEdit));
                 password.get(i).setText(ae.getPassword());
+                showPass.add((ImageButton) relLey.findViewById((R.id.showPass)));
                 final Button del = relLey.findViewById(R.id.deleteAddLay);
-                del.setTag(i);
-                lin.addView(relLey);
+                ll.addView(relLey);
                 del.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        email.remove(relLey.findViewById(R.id.emailAddEdit));
+                        user.remove(relLey.findViewById(R.id.userAddEdit));
+                        password.remove(relLey.findViewById(R.id.passAddEdit));
+                        showPass.remove(relLey.findViewById(R.id.showPass));
+                        relativeLayoutsList.remove(relLey);
+                        ll.removeView(relLey);
                         i--;
-                        layList.remove(relLey);
-                        lin.removeView(relLey);
-                        email.remove(email.get(Integer.parseInt(del.getTag().toString())));
-                        user.remove(user.get(Integer.parseInt(del.getTag().toString())));
-                        password.remove(password.get(Integer.parseInt(del.getTag().toString())));
                     }
                 });
+                showPass((EditText) relLey.findViewById(R.id.passAddEdit), (ImageButton) relLey.findViewById((R.id.showPass)));
                 i++;
             }
-
             addButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    nameError.setVisibility(View.INVISIBLE);
-                    listElem.clear();
+                    name.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(EditActivity.this, R.color.colorAccent)));
+                    accountElementsList.clear();
                     for (int n = 0; n < i; n++) {
-                        emailErrorList.get(n).setVisibility(View.INVISIBLE);
-                        userErrorList.get(n).setVisibility(View.INVISIBLE);
-                        passwordErrorList.get(n).setVisibility(View.INVISIBLE);
+                        email.get(n).setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(EditActivity.this, R.color.colorAccent)));
+                        user.get(n).setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(EditActivity.this, R.color.colorAccent)));
+                        password.get(n).setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(EditActivity.this, R.color.colorAccent)));
                         if (!(email.get(n).getText().toString().isEmpty() && user.get(n).getText().toString().isEmpty() && password.get(n).getText().toString().isEmpty())) {
                             elem = new AccountElement(email.get(n).getText().toString(), user.get(n).getText().toString(), password.get(n).getText().toString());
-                            listElem.add(elem);
+                            accountElementsList.add(elem);
                         }
                     }
-                    Account a = new Account(name.getText().toString(), listElem);
-                    Account a2 = new Account(account.getName(), (ArrayList<AccountElement>) account.getList());
+                    Account a = new Account(name.getText().toString(), accountElementsList);
                     if (a.getName().isEmpty()) {
-                        nameError.setVisibility(View.VISIBLE);
+                        name.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(EditActivity.this, R.color.errorEditText)));
                         notifyUser("Il campo nome non può essere vuoto !");
                         return;
                     }
                     int n = 0;
-                    for (AccountElement elem : listElem) {
+                    for (AccountElement elem : accountElementsList) {
                         if (fieldError(elem, n)) return;
                         n++;
                     }
                     if (mngAcc.notFind(a, listAccount) || a.equals(account.getName())) {
-                        listAccount.remove(a2);
+                        listAccount.remove(account);
                         listAccount.add(a);
                         mngAcc.serializationListAccount(EditActivity.this, listAccount, owner.getUser());
                         goToViewActivity(usr);
                     } else {
-                        nameError.setVisibility(View.VISIBLE);
+                        name.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(EditActivity.this, R.color.errorEditText)));
                         notifyUser("Applicativo già registrato !!!");
                     }
                 }
             });
-
             emptyButton.setOnClickListener(new View.OnClickListener() {
                 @SuppressLint("SetTextI18n")
                 @Override
@@ -171,18 +168,15 @@ public class EditActivity extends AppCompatActivity {
                         @Override
                         public void onClick(View v) {
                             i = 0;
-                            listElem.clear();
-                            emailErrorList.clear();
-                            userErrorList.clear();
-                            passwordErrorList.clear();
-                            LinearLayout lin = findViewById(R.id.linLayAdd);
-                            for (RelativeLayout l : layList) {
-                                lin.removeView(l);
+                            accountElementsList.clear();
+                            for (RelativeLayout l : relativeLayoutsList) {
+                                ll.removeView(l);
                             }
-                            layList.clear();
+                            relativeLayoutsList.clear();
                             email.clear();
                             user.clear();
                             password.clear();
+                            showPass.clear();
                             moreElem(v);
                             popupWindow.dismiss();
                             notifyUser("Campi resettati");
@@ -196,7 +190,6 @@ public class EditActivity extends AppCompatActivity {
                     });
                 }
             });
-
             addElem.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -230,36 +223,36 @@ public class EditActivity extends AppCompatActivity {
 
     public boolean fieldError(AccountElement a, int n) {
         if (isInvalidWord(a.getUser()) && isInvalidEmail(a.getEmail()) && isInvalidWord(a.getPassword())) {
-            userErrorList.get(n).setVisibility(View.VISIBLE);
-            emailErrorList.get(n).setVisibility(View.VISIBLE);
-            passwordErrorList.get(n).setVisibility(View.VISIBLE);
+            user.get(n).setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(EditActivity.this, R.color.errorEditText)));
+            email.get(n).setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(EditActivity.this, R.color.errorEditText)));
+            password.get(n).setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(EditActivity.this, R.color.errorEditText)));
             Toast.makeText(EditActivity.this, "Campi Utente, Email e Password non validi !!!", Toast.LENGTH_SHORT).show();
             return true;
         } else if (isInvalidWord(a.getUser()) && isInvalidWord(a.getPassword())) {
-            userErrorList.get(n).setVisibility(View.VISIBLE);
-            passwordErrorList.get(n).setVisibility(View.VISIBLE);
+            user.get(n).setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(EditActivity.this, R.color.errorEditText)));
+            password.get(n).setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(EditActivity.this, R.color.errorEditText)));
             Toast.makeText(EditActivity.this, "Campi Utente e Password non validi !!!", Toast.LENGTH_SHORT).show();
             return true;
         } else if (isInvalidWord(a.getPassword()) && isInvalidEmail(a.getEmail())) {
-            passwordErrorList.get(n).setVisibility(View.VISIBLE);
-            emailErrorList.get(n).setVisibility(View.VISIBLE);
+            password.get(n).setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(EditActivity.this, R.color.errorEditText)));
+            email.get(n).setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(EditActivity.this, R.color.errorEditText)));
             Toast.makeText(EditActivity.this, "Campi Email e Password non validi !!!", Toast.LENGTH_SHORT).show();
             return true;
         } else if (isInvalidWord(a.getUser()) && isInvalidEmail(a.getEmail())) {
-            userErrorList.get(n).setVisibility(View.VISIBLE);
-            emailErrorList.get(n).setVisibility(View.VISIBLE);
+            user.get(n).setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(EditActivity.this, R.color.errorEditText)));
+            email.get(n).setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(EditActivity.this, R.color.errorEditText)));
             Toast.makeText(EditActivity.this, "Campi Utente e Email non validi !!!", Toast.LENGTH_SHORT).show();
             return true;
         } else if (isInvalidWord(a.getUser())) {
-            userErrorList.get(n).setVisibility(View.VISIBLE);
+            user.get(n).setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(EditActivity.this, R.color.errorEditText)));
             Toast.makeText(EditActivity.this, "Campo Utente non valido !!!", Toast.LENGTH_SHORT).show();
             return true;
         } else if (isInvalidEmail(a.getEmail())) {
-            emailErrorList.get(n).setVisibility(View.VISIBLE);
+            email.get(n).setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(EditActivity.this, R.color.errorEditText)));
             Toast.makeText(EditActivity.this, "Campo Email non valido !!!", Toast.LENGTH_SHORT).show();
             return true;
         } else if (isInvalidWord(a.getPassword())) {
-            passwordErrorList.get(n).setVisibility(View.VISIBLE);
+            password.get(n).setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(EditActivity.this, R.color.errorEditText)));
             Toast.makeText(EditActivity.this, "Campo Password non valido !!!", Toast.LENGTH_SHORT).show();
             return true;
         }
@@ -283,28 +276,48 @@ public class EditActivity extends AppCompatActivity {
     }
 
     public void moreElem(View v) {
-        i++;
-        final LinearLayout lin = findViewById(R.id.linLayAdd);
         LayoutInflater inflater = LayoutInflater.from(EditActivity.this);
         @SuppressLint("InflateParams") final RelativeLayout relLey = (RelativeLayout) inflater.inflate(R.layout.more_add_lay, null);
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         params.setMargins(0, 20, 0, 0);
         relLey.setLayoutParams(params);
-        layList.add(relLey);
-        emailErrorList.add((ImageView) relLey.findViewById(R.id.errorAddEmail));
-        userErrorList.add((ImageView) relLey.findViewById(R.id.errorAddUser));
-        passwordErrorList.add((ImageView) relLey.findViewById(R.id.errorAddPassword));
+        relativeLayoutsList.add(relLey);
         email.add((EditText) relLey.findViewById(R.id.emailAddEdit));
         user.add((EditText) relLey.findViewById(R.id.userAddEdit));
         password.add((EditText) relLey.findViewById(R.id.passAddEdit));
+        showPass.add((ImageButton) relLey.findViewById(R.id.showPass));
         Button del = relLey.findViewById(R.id.deleteAddLay);
-        lin.addView(relLey);
+        ll.addView(relLey);
         del.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                email.remove(relLey.findViewById(R.id.emailAddEdit));
+                user.remove(relLey.findViewById(R.id.userAddEdit));
+                password.remove(relLey.findViewById(R.id.passAddEdit));
+                showPass.remove(relLey.findViewById(R.id.showPass));
+                relativeLayoutsList.remove(relLey);
+                ll.removeView(relLey);
                 i--;
-                layList.remove(relLey);
-                lin.removeView(relLey);
+            }
+        });
+        showPass((EditText) relLey.findViewById(R.id.passAddEdit), (ImageButton) relLey.findViewById((R.id.showPass)));
+        i++;
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    public void showPass(final EditText et, ImageButton showPass) {
+        showPass.setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View v, MotionEvent event) {
+
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        et.setInputType(InputType.TYPE_NULL);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        et.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                        break;
+                }
+                return true;
             }
         });
     }

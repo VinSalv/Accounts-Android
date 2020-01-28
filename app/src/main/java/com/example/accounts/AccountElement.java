@@ -26,7 +26,7 @@ public class AccountElement implements Serializable {
         this.user = user;
     }
 
-    String getPassword() {
+    public String getPassword() {
         return password;
     }
 

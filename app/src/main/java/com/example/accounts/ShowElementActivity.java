@@ -1,16 +1,23 @@
 package com.example.accounts;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.appbar.AppBarLayout;
@@ -20,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class ShowElementActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
+    private CoordinatorLayout cl;
     private Account account;
     private User owner;
     private ManageAccount mngAcc;
@@ -34,13 +42,11 @@ public class ShowElementActivity extends AppCompatActivity implements PopupMenu.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_element);
-
+        cl = findViewById(R.id.coordinatorLayShow);
         viewPager = findViewById(R.id.view_pager);
         TabLayout tabs = findViewById(R.id.tabs);
-
         owner = (User) (Objects.requireNonNull(getIntent().getExtras())).get("owner");
         account = (Account) Objects.requireNonNull(getIntent().getExtras()).get("account");
-
         ManageUser mngUsr = new ManageUser();
         ArrayList<User> listUsr = mngUsr.deserializationListUser(this);
         usr = mngUsr.findUser(listUsr, owner.getUser());
@@ -51,18 +57,14 @@ public class ShowElementActivity extends AppCompatActivity implements PopupMenu.
             if (acc != null) {
                 name = findViewById(R.id.name);
                 name.setText(account.getName());
-
                 name2 = findViewById(R.id.nameToolbar);
                 name2.setText(account.getName());
                 name2.setVisibility(View.INVISIBLE);
-
                 Button optionButton = findViewById(R.id.optionsButton);
-
                 AppBarLayout appBar = findViewById(R.id.app_bar_show);
                 appBar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
                     boolean isShow = false;
                     int scrollRange = -1;
-
                     @Override
                     public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
                         name.setAlpha((1.0f - (float) Math.abs(verticalOffset) / appBarLayout.getTotalScrollRange()));
@@ -78,7 +80,6 @@ public class ShowElementActivity extends AppCompatActivity implements PopupMenu.
                         }
                     }
                 });
-
                 int k = 1;
                 for (AccountElement ignored : acc.getList()) {
                     tabs.addTab(tabs.newTab().setText(acc.getName() + "(" + k + ")"));
@@ -93,21 +94,16 @@ public class ShowElementActivity extends AppCompatActivity implements PopupMenu.
                 viewPager.setAdapter(tabAdapter);
                 viewPager.setOffscreenPageLimit(1);
                 viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabs));
-
                 tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
                     @Override
                     public void onTabSelected(TabLayout.Tab tab) {
                         viewPager.setCurrentItem(tab.getPosition());
                     }
-
                     @Override
                     public void onTabUnselected(TabLayout.Tab tab) {
-
                     }
-
                     @Override
                     public void onTabReselected(TabLayout.Tab tab) {
-
                     }
                 });
 
@@ -127,6 +123,7 @@ public class ShowElementActivity extends AppCompatActivity implements PopupMenu.
         }
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public boolean onMenuItemClick(MenuItem item) {
         switch (item.getItemId()) {
@@ -134,9 +131,36 @@ public class ShowElementActivity extends AppCompatActivity implements PopupMenu.
                 goToEditActivity(usr, acc);
                 return true;
             case R.id.delete:
-                listAccount.remove(account);
-                mngAcc.serializationListAccount(ShowElementActivity.this, listAccount, owner.getUser());
-                goToViewActivity(usr);
+                LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+                final View popupView = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_security, (ViewGroup) findViewById(R.id.popupSecurity));
+                final PopupWindow popupWindow = new PopupWindow(popupView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+                popupWindow.setOutsideTouchable(true);
+                popupWindow.setFocusable(true);
+                //noinspection deprecation
+                popupWindow.setBackgroundDrawable(new BitmapDrawable());
+                View parent = cl.getRootView();
+                popupWindow.showAtLocation(parent, Gravity.CENTER, 0, 0);
+                TextView et = popupView.findViewById(R.id.securityText);
+                et.setText("Sei sicuro di voler eliminare " + account.getName() + " dai tuoi account?");
+                Button yes = popupView.findViewById(R.id.yes);
+                Button no = popupView.findViewById(R.id.no);
+                yes.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        listAccount.remove(account);
+                        mngAcc.serializationListAccount(ShowElementActivity.this, listAccount, owner.getUser());
+                        notifyUser(account.getName() + " è stato rimosso con successo!");
+                        goToViewActivity(usr);
+                        popupWindow.dismiss();
+                    }
+                });
+                no.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        notifyUser(account.getName() + " non è stato rimosso.");
+                        popupWindow.dismiss();
+                    }
+                });
                 return true;
             default:
                 return false;

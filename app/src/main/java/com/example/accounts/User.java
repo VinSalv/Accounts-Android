@@ -8,7 +8,7 @@ public class User implements Serializable {
     private boolean finger;
     private int sort;
 
-    User(String user, String password, boolean finger,int sort) {
+    public User(String user, String password, boolean finger, int sort) {
         this.user = user;
         this.password = password;
         this.finger = finger;
@@ -38,7 +38,7 @@ public class User implements Serializable {
         return this.user;
     }
 
-    String getPassword() {
+    public String getPassword() {
         return this.password;
     }
 

@@ -1,61 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/edit_user_layout"
+    android:id="@+id/editUserLayout"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="@drawable/rounded_popup"
     tools:context=".ProfileActivity">
 
+    <EditText
+        android:id="@+id/userEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:autofillHints=""
+        android:ems="10"
+        android:layout_marginStart="30dp"
+        android:inputType="textPersonName"
+        android:textSize="16sp"
+        android:theme="@style/inputField"
+        android:hint="@string/userHint"
+        tools:targetApi="o" />
+
     <ImageView
         android:id="@+id/userEditImage"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:layout_alignBottom="@id/userEditText"
-        android:layout_marginStart="1dp"
-        android:layout_marginBottom="7dp"
-        android:contentDescription="@string/userEditImage"
-        app:srcCompat="@drawable/user" />
-
-    <EditText
-        android:id="@+id/userEditText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginBottom="15dp"
-        android:autofillHints=""
-        android:ems="10"
-        android:hint="@string/userEditHint"
-        android:inputType="textPersonName"
-        android:textSize="16sp"
-        android:theme="@style/inputField"
-        tools:targetApi="o" />
-
-    <ImageView
-        android:id="@+id/userEditError"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_alignBottom="@id/userEditText"
-        android:layout_marginStart="3dp"
-        android:layout_marginBottom="5dp"
-        android:layout_toEndOf="@id/userEditText"
-        android:contentDescription="@string/userEditError"
-        android:visibility="visible"
-        app:srcCompat="@drawable/warning" />
+        android:layout_alignStart="@+id/userEditText"
+        android:layout_alignBottom="@+id/userEditText"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="10dp"
+        android:contentDescription="@string/userImage"
+        android:src="@drawable/user" />
 
     <Button
         android:id="@+id/saveUsrEditButton"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/userEditText"
-        android:layout_alignStart="@id/userEditImage"
-        android:layout_alignEnd="@id/userEditError"
-        android:background="#00FFFFFF"
-        android:text="@string/saveUsrEditButton"
+        android:background="@color/transparent"
+        android:text="@string/saveButton"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-        android:textColor="@color/colorButtonMenu"
+        android:textColor="@color/colorPrimaryDark"
         android:textSize="22sp"
         android:textStyle="normal" />
 

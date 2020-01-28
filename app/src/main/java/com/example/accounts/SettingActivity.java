@@ -2,16 +2,20 @@ package com.example.accounts;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Environment;
+import android.text.InputType;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -20,6 +24,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.material.appbar.AppBarLayout;
 import com.itextpdf.text.Document;
@@ -39,57 +44,49 @@ import java.util.Objects;
 
 @SuppressWarnings("ResultOfMethodCallIgnored")
 public class SettingActivity extends AppCompatActivity {
-    AppBarLayout appBar;
-    ManageUser mngUsr;
-    ArrayList<User> listUser = new ArrayList<>();
     private CoordinatorLayout cl;
-    private TextView setting;
-    private TextView setting2;
+    private ManageUser mngUsr;
+    private User usr;
+    private ArrayList<User> listUser = new ArrayList<>();
     private ManageApp mngApp;
     private LogApp log;
-    private ArrayList<Account> listAccount;
     private ManageAccount mngAcc;
-    private User usr;
+    private ArrayList<Account> listAccount;
+    private TextView setting;
+    private TextView setting2;
     private String path;
     private File dir;
+    private ImageButton showPass;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
-        final Toolbar toolbar = findViewById(R.id.toolbarSetting);
+        final Toolbar toolbar = findViewById(R.id.settingToolbar);
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
-        cl = findViewById(R.id.coordinatorLaySetting);
+        cl = findViewById(R.id.settingActivityLay);
         User owner = (User) (Objects.requireNonNull(getIntent().getExtras())).get("owner");
-
         mngApp = new ManageApp();
         log = mngApp.deserializationFlag(this);
-
         mngUsr = new ManageUser();
         listUser = mngUsr.deserializationListUser(this);
-
         usr = mngUsr.findUser(listUser, Objects.requireNonNull(owner).getUser());
         if (usr != null) {
             mngAcc = new ManageAccount();
             listAccount = mngAcc.deserializationListAccount(this, usr.getUser());
-
             Button prof = findViewById(R.id.profile);
             Button pdf = findViewById(R.id.pdf);
             Button delProf = findViewById(R.id.deleteProfile);
-
-            setting = findViewById(R.id.setting);
-            setting.setText(getResources().getString(R.string.impostazioni));
-
-            setting2 = findViewById(R.id.settingToolbar);
-            setting2.setText(getResources().getString(R.string.impostazioni));
+            setting = findViewById(R.id.settingText);
+            setting.setText("Impostazioni");
+            setting2 = findViewById(R.id.settingTextToolbar);
+            setting2.setText("Impostazioni");
             setting2.setVisibility(View.INVISIBLE);
-
-            appBar = findViewById(R.id.app_bar_setting);
+            AppBarLayout appBar = findViewById(R.id.settingBarToolbar);
             appBar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
                 boolean isShow = false;
                 int scrollRange = -1;
-
                 @Override
                 public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
                     setting.setAlpha((1.0f - (float) Math.abs(verticalOffset) / appBarLayout.getTotalScrollRange()));
@@ -105,7 +102,6 @@ public class SettingActivity extends AppCompatActivity {
                     }
                 }
             });
-
             prof.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -119,20 +115,24 @@ public class SettingActivity extends AppCompatActivity {
                     View parent = cl.getRootView();
                     popupWindow.showAtLocation(parent, Gravity.CENTER, 0, 0);
                     final EditText et = popupView.findViewById(R.id.passSecurityEditText);
-                    Button conf = popupView.findViewById(R.id.accept);
+                    Button conf = popupView.findViewById(R.id.confirmation);
                     conf.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
+                            et.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(SettingActivity.this, R.color.colorAccent)));
                             if (et.getText().toString().equals(usr.getPassword())) {
                                 goToProfileActivity(usr);
                                 popupWindow.dismiss();
-                            } else
+                            } else {
+                                et.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(SettingActivity.this, R.color.errorEditText)));
                                 notifyUser("Password errata! Riprova");
+                            }
                         }
                     });
+                    showPass = popupView.findViewById(R.id.showPass);
+                    showPass(et, showPass);
                 }
             });
-
             pdf.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -146,24 +146,27 @@ public class SettingActivity extends AppCompatActivity {
                     View parent = cl.getRootView();
                     popupWindow.showAtLocation(parent, Gravity.CENTER, 0, 0);
                     final EditText et = popupView.findViewById(R.id.passSecurityEditText);
-                    Button conf = popupView.findViewById(R.id.accept);
+                    Button conf = popupView.findViewById(R.id.confirmation);
                     conf.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
+                            et.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(SettingActivity.this, R.color.colorAccent)));
                             if (et.getText().toString().equals(usr.getPassword())) {
                                 path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/PDF_Accounts/";
                                 dir = new File(path);
                                 if (!dir.exists()) dir.mkdirs();
                                 createPDF(usr, listAccount, path, dir);
                                 popupWindow.dismiss();
-                            } else
+                            } else {
+                                et.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(SettingActivity.this, R.color.errorEditText)));
                                 notifyUser("Password errata! Riprova");
+                            }
                         }
                     });
+                    showPass = popupView.findViewById(R.id.showPass);
+                    showPass(et, showPass);
                 }
             });
-
-
             delProf.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -177,10 +180,11 @@ public class SettingActivity extends AppCompatActivity {
                     View parent = cl.getRootView();
                     popupWindow.showAtLocation(parent, Gravity.CENTER, 0, 0);
                     final EditText et = popupView.findViewById(R.id.passSecurityEditText);
-                    Button conf = popupView.findViewById(R.id.accept);
+                    Button conf = popupView.findViewById(R.id.confirmation);
                     conf.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
+                            et.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(SettingActivity.this, R.color.colorAccent)));
                             if (et.getText().toString().equals(usr.getPassword())) {
                                 log = new LogApp();
                                 mngApp.serializationFlag(SettingActivity.this, log);
@@ -189,12 +193,14 @@ public class SettingActivity extends AppCompatActivity {
                                 mngAcc.removeFileAccount(SettingActivity.this, usr.getUser());
                                 goToMainActivity();
                                 popupWindow.dismiss();
-                            } else
+                            } else {
+                                et.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(SettingActivity.this, R.color.errorEditText)));
                                 notifyUser("Password errata! Riprova");
-
+                            }
                         }
                     });
-
+                    showPass = popupView.findViewById(R.id.showPass);
+                    showPass(et, showPass);
                 }
             });
         } else {
@@ -253,71 +259,59 @@ public class SettingActivity extends AppCompatActivity {
                 pt.setWidths(fl);
                 Font font = new Font(Font.FontFamily.TIMES_ROMAN, 18, Font.BOLD);
                 Phrase f;
-
                 PdfPCell cell = new PdfPCell();
                 f = new Phrase("Nome");
                 f.setFont(font);
                 cell.addElement(f);
                 cell.setBorder(0);
                 pt.addCell(cell);
-
                 cell = new PdfPCell();
                 f = new Phrase("e-Mail");
                 f.setFont(font);
                 cell.addElement(f);
                 cell.setBorder(0);
                 pt.addCell(cell);
-
                 cell = new PdfPCell();
                 f = new Phrase("Username");
                 f.setFont(font);
                 cell.addElement(f);
                 cell.setBorder(0);
                 pt.addCell(cell);
-
                 cell = new PdfPCell();
                 f = new Phrase("Password");
                 f.setFont(font);
                 cell.addElement(f);
                 cell.setBorder(0);
                 pt.addCell(cell);
-
                 for (Account a : listAccount) {
                     font = new Font(Font.FontFamily.TIMES_ROMAN, 14, Font.BOLD);
-
                     cell = new PdfPCell();
                     f = new Phrase(a.getName());
                     f.setFont(font);
                     cell.addElement(f);
                     pt.addCell(cell);
-
                     if (a.getList().size() == 0) {
                         font = new Font(Font.FontFamily.TIMES_ROMAN, 14, Font.NORMAL);
-
                         cell = new PdfPCell();
                         f = new Phrase("");
                         f.setFont(font);
                         cell.addElement(f);
                         pt.addCell(cell);
-
                         cell = new PdfPCell();
                         f = new Phrase("");
                         f.setFont(font);
                         cell.addElement(f);
                         pt.addCell(cell);
-
                         cell = new PdfPCell();
                         f = new Phrase("");
                         f.setFont(font);
                         cell.addElement(f);
                         pt.addCell(cell);
                     }
-
                     int i = 0;
                     for (AccountElement ae : a.getList()) {
                         if (i != 0) {
                             font = new Font(Font.FontFamily.TIMES_ROMAN, 20, Font.NORMAL);
-
                             cell = new PdfPCell();
                             f = new Phrase("\"");
                             f.setFont(font);
@@ -325,25 +319,21 @@ public class SettingActivity extends AppCompatActivity {
                             pt.addCell(cell);
                         }
                         font = new Font(Font.FontFamily.TIMES_ROMAN, 14, Font.NORMAL);
-
                         cell = new PdfPCell();
                         f = new Phrase(ae.getEmail());
                         f.setFont(font);
                         cell.addElement(f);
                         pt.addCell(cell);
-
                         cell = new PdfPCell();
                         f = new Phrase(ae.getUser());
                         f.setFont(font);
                         cell.addElement(f);
                         pt.addCell(cell);
-
                         cell = new PdfPCell();
                         f = new Phrase(ae.getPassword());
                         f.setFont(font);
                         cell.addElement(f);
                         pt.addCell(cell);
-
                         i++;
                     }
                 }
@@ -357,5 +347,23 @@ public class SettingActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    public void showPass(final EditText et, ImageButton showPass) {
+        showPass.setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View v, MotionEvent event) {
+
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        et.setInputType(InputType.TYPE_NULL);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        et.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                        break;
+                }
+                return true;
+            }
+        });
     }
 }

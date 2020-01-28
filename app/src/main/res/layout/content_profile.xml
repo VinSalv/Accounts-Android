@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/black"
-    android:fillViewport="true"
+    android:background="@color/colorPrimary"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".ProfileActivity"
     tools:showIn="@layout/activity_profile">
@@ -21,7 +20,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="15dp"
             android:background="@drawable/rounded_list_element"
-            android:text="@string/modifica_nome_utente" />
+            android:text="@string/editUsername" />
 
         <Button
             android:id="@+id/editProfPassword"
@@ -29,17 +28,17 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="15dp"
             android:background="@drawable/rounded_list_element"
-            android:text="@string/modifica_password" />
+            android:text="@string/editPassword" />
 
         <Switch
             android:id="@+id/flagProfApp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
-            android:text="@string/autenticazione_con_impronta"
-            android:textColor="@android:color/white"
+            android:text="@string/editFlagFinger"
             android:textSize="20sp"
-            android:textStyle="normal|bold"
             android:theme="@style/SelectionSwitch" />
+
     </LinearLayout>
+
 </androidx.core.widget.NestedScrollView>

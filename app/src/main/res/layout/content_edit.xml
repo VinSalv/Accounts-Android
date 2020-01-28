@@ -15,13 +15,13 @@
         android:fillViewport="true">
 
         <LinearLayout
-            android:id="@+id/linLayAdd"
+            android:id="@+id/linearLayEdit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <LinearLayout
-                android:id="@+id/nameRelLayAdd"
+                android:id="@+id/nameRelLayEdit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -29,37 +29,22 @@
                 android:orientation="horizontal">
 
                 <EditText
-                    android:id="@+id/nameAddEdit"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/nameEditEdit"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="30dp"
                     android:autofillHints=""
                     android:ems="10"
-                    android:hint="@string/nameAddHint"
+                    android:hint="@string/nameHint"
                     android:inputType="textPersonName"
-                    android:shadowColor="#81FFFFFF"
-                    android:textColor="@android:color/white"
-                    android:textColorHighlight="#01A0B8"
-                    android:textColorHint="#81FFFFFF"
-                    android:textColorLink="@color/colorPrimaryDark"
                     android:textSize="16sp"
                     android:theme="@style/inputField"
                     tools:targetApi="o" />
 
-                <ImageView
-                    android:id="@+id/errorAddName"
-                    android:layout_width="26dp"
-                    android:layout_height="26dp"
-                    android:layout_marginTop="12dp"
-                    android:baselineAlignBottom="false"
-                    android:contentDescription="@string/errorAddUser"
-                    android:visibility="invisible"
-                    app:srcCompat="@drawable/warning" />
-
-
             </LinearLayout>
 
         </LinearLayout>
+
     </ScrollView>
 
 </LinearLayout>

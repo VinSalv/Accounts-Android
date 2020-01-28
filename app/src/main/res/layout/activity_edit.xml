@@ -5,82 +5,82 @@
     android:id="@+id/editActivityLay"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#000000"
+    android:background="@color/colorPrimary"
     tools:context=".EditActivity">
 
     <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/barToolbarAdd"
+        android:id="@+id/editBarToolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
 
         <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbarAdd"
+            android:id="@+id/editToolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="#000000"
-            android:elevation="4dp"
-            app:popupTheme="@style/MyDarkToolbarStyle"
-            app:subtitle="Aggiungi account alla lista di "
-            app:subtitleTextColor="#CCFFFFFF"
-            app:title="Accounts"
-            app:titleTextColor="#CCFFFFFF" />
+            app:subtitleTextColor="@color/rightText"
+            app:title="@string/lowercaseAppName"
+            app:titleTextColor="@color/rightText" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
     <include
-        android:id="@+id/editIncludeActivity"
         layout="@layout/content_edit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/addButton"
-        android:layout_below="@id/barToolbarAdd" />
+        android:layout_above="@id/constraintLayoutButtons"
+        android:layout_below="@id/editBarToolbar" />
 
-    <Button
-        android:id="@+id/addButton"
-        android:layout_width="160dp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayoutButtons"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="15dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="5dp"
-        android:background="#00FFFFFF"
-        android:text="@string/editButton"
-        android:textAlignment="center"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-        android:textColor="@color/colorPrimaryDark"
-        android:textSize="22sp"
-        android:textStyle="normal" />
+        android:background="@color/colorPrimary">
 
-    <Button
-        android:id="@+id/emptyButton"
-        android:layout_width="170dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="5dp"
-        android:background="#00FFFFFF"
-        android:text="@string/emptyButton"
-        android:textAlignment="center"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-        android:textColor="@color/colorPrimaryDark"
-        android:textSize="22sp"
-        android:textStyle="normal" />
+        <Button
+            android:id="@+id/saveButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:text="@string/saveButton"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="22sp"
+            android:textStyle="normal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintWidth_percent="0.5"
+            tools:ignore="MissingConstraints" />
+
+        <Button
+            android:id="@+id/emptyButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:text="@string/emptyButton"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="22sp"
+            android:textStyle="normal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintWidth_percent="0.5"
+            tools:ignore="MissingConstraints" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/addElemFloatingButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@id/addButton"
+        android:layout_above="@id/constraintLayoutButtons"
         android:layout_alignParentEnd="true"
-        android:layout_marginEnd="30dp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginEnd="50dp"
+        android:layout_marginBottom="50dp"
         android:clickable="true"
         android:focusable="true"
-        app:backgroundTint="#E1005F23"
+        app:backgroundTint="@color/colorPrimaryDark"
         app:srcCompat="@android:drawable/ic_menu_add" />
 
 </RelativeLayout>

@@ -28,7 +28,7 @@ public class SearchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         User owner = (User) (Objects.requireNonNull(getIntent().getExtras())).get("owner");
-        lay = findViewById(R.id.content_search_layout);
+        lay = findViewById(R.id.contentSearchLayout);
         EditText name = findViewById(R.id.nameSerched);
         ManageUser mngUsr = new ManageUser();
         ArrayList<User> listUser = mngUsr.deserializationListUser(this);
@@ -41,7 +41,7 @@ public class SearchActivity extends AppCompatActivity {
                 public void afterTextChanged(Editable s) {
                     lay.removeAllViews();
                     if (!s.toString().equals("")) {
-                        for (final Account a : AtoZ(listAccount)) {
+                        for (final Account a : increasing(listAccount)) {
                             if (a.getName().toLowerCase().contains(s.toString().toLowerCase())) {
                                 LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                                 lp.setMargins(0, 10, 0, 10);
@@ -60,14 +60,11 @@ public class SearchActivity extends AppCompatActivity {
                         }
                     }
                 }
-
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                 }
-
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
-
                 }
             });
 
@@ -99,7 +96,7 @@ public class SearchActivity extends AppCompatActivity {
                 Toast.LENGTH_LONG).show();
     }
 
-    public ArrayList<Account> AtoZ(ArrayList<Account> list) {
+    public ArrayList<Account> increasing(ArrayList<Account> list) {
         Collections.sort(list, new Comparator<Account>() {
             @Override
             public int compare(Account lhs, Account rhs) {
@@ -108,5 +105,4 @@ public class SearchActivity extends AppCompatActivity {
         });
         return list;
     }
-
 }

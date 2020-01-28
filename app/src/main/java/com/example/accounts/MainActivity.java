@@ -1,19 +1,23 @@
 package com.example.accounts;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.KeyguardManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
 import android.hardware.biometrics.BiometricPrompt;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CancellationSignal;
+import android.text.InputType;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
+import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -35,9 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int PERMISSION_REQUEST_CODE = 200;
     private RelativeLayout lay;
     private EditText userApp;
-    private ImageView userError;
     private EditText passApp;
-    private ImageView passError;
     private Switch flagApp;
     private ManageApp mngApp;
     private LogApp log;
@@ -48,7 +50,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         if (!checkPermission()) {
             openActivity();
         } else {
@@ -58,22 +59,17 @@ public class MainActivity extends AppCompatActivity {
                 openActivity();
             }
         }
-
-        lay = findViewById(R.id.relLayMain);
+        lay = findViewById(R.id.mainActivityLay);
         userApp = findViewById(R.id.userApp);
-        userError = findViewById(R.id.userError);
         passApp = findViewById(R.id.passApp);
-        passError = findViewById(R.id.passError);
         flagApp = findViewById(R.id.flagApp);
         Button login = findViewById(R.id.authButton);
         TextView sign = findViewById(R.id.signButton);
-
+        ImageButton showPass = findViewById(R.id.showPass);
         mngUsr = new ManageUser();
         listUser = mngUsr.deserializationListUser(this);
-
         mngApp = new ManageApp();
         log = mngApp.deserializationFlag(this);
-
         if (log.getFlagApp()) {
             flagApp.setChecked(true);
             User usr = mngUsr.findUser(listUser, log.getUser());
@@ -88,13 +84,14 @@ public class MainActivity extends AppCompatActivity {
                 notifyUser("Impossibile restare connesso");
             }
         }
-
+        showPass(passApp, showPass);
         login.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.P)
             @Override
             public void onClick(View view) {
-                userError.setVisibility(View.INVISIBLE);
-                passError.setVisibility(View.INVISIBLE);
+                userApp.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(MainActivity.this, R.color.colorAccent)));
+                passApp.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(MainActivity.this, R.color.colorAccent)));
+
                 User usr = new User(userApp.getText().toString(), passApp.getText().toString(), false, 0);
                     if (!fieldCheck(usr)) return;
                     if (mngUsr.login(usr, listUser)) {
@@ -107,13 +104,12 @@ public class MainActivity extends AppCompatActivity {
                             goToViewActivity(usr);
                         }
                     } else {
-                        userError.setVisibility(View.VISIBLE);
-                        passError.setVisibility(View.VISIBLE);
+                        userApp.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(MainActivity.this, R.color.errorEditText)));
+                        passApp.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(MainActivity.this, R.color.errorEditText)));
                         notifyUser("Autenticazione errata");
                     }
             }
         });
-
         sign.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -222,16 +218,16 @@ public class MainActivity extends AppCompatActivity {
 
     public boolean fieldCheck(User usr) {
         if (isInvalidWord(usr.getUser()) && isInvalidWord(usr.getPassword())) {
-            userError.setVisibility(View.VISIBLE);
-            passError.setVisibility(View.VISIBLE);
+            userApp.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(MainActivity.this, R.color.errorEditText)));
+            passApp.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(MainActivity.this, R.color.errorEditText)));
             notifyUser("Campi Utente e Password non validi !!!");
             return false;
         } else if (isInvalidWord(usr.getUser())) {
-            userError.setVisibility(View.VISIBLE);
+            userApp.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(MainActivity.this, R.color.errorEditText)));
             notifyUser("Campo Utente non valido !!!");
             return false;
         } else if (isInvalidWord(usr.getPassword())) {
-            passError.setVisibility(View.VISIBLE);
+            passApp.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(MainActivity.this, R.color.errorEditText)));
             notifyUser("Campo Password non valido !!!");
             return false;
         }
@@ -335,6 +331,24 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         return cancellationSignal;
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    public void showPass(final EditText et, ImageButton showPass) {
+        showPass.setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View v, MotionEvent event) {
+
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        et.setInputType(InputType.TYPE_NULL);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        et.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                        break;
+                }
+                return true;
+            }
+        });
     }
 }
 

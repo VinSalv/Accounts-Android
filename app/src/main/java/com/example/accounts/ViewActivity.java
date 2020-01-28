@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
@@ -37,69 +38,64 @@ import java.util.List;
 import java.util.Objects;
 
 public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener, ActionMode.Callback {
-    boolean doubleBackToExitPressedOnce = false;
-    private TextView wellcome;
-    private TextView wellcome2;
+    boolean doubleBackToExitPressedOnce;
     private ManageUser mngUsr;
-    private ArrayList<User> listUser = new ArrayList<>();
+    private CoordinatorLayout cl;
+    private ArrayList<User> listUser;
     private ManageApp mngApp;
     private LogApp log;
     private Button settingsButton;
     private Button searchButton;
     private ArrayList<Account> listAccount;
     private ManageAccount mngAcc;
-    private ActionMode actionMode;
-    private boolean isMultiSelect = false;
-    private MyAdapter adapter;
-    private List<String> selectedIds;
-    private CoordinatorLayout cl;
     private User usr;
+    private TextView wellcome;
+    private TextView wellcome2;
+    private FloatingActionButton setting;
+    private FloatingActionButton search;
+    private FloatingActionButton add;
     private RadioButton rb1;
+    private List<String> selectedIds;
+    private MyAdapter adapter;
+    private ActionMode actionMode;
+    private boolean isMultiSelect;
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view);
-        final Toolbar toolbar = findViewById(R.id.toolbar);
+        final Toolbar toolbar = findViewById(R.id.viewToolbar);
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
-
         User owner = (User) (Objects.requireNonNull(getIntent().getExtras())).get("owner");
-
-        cl = findViewById(R.id.viewLayout);
+        cl = findViewById(R.id.viewActivityLay);
+        listUser = new ArrayList<>();
+        isMultiSelect = false;
+        doubleBackToExitPressedOnce = false;
         mngApp = new ManageApp();
         log = mngApp.deserializationFlag(this);
         mngUsr = new ManageUser();
         listUser = mngUsr.deserializationListUser(this);
-
         usr = mngUsr.findUser(listUser, Objects.requireNonNull(owner).getUser());
         if (usr != null) {
             mngAcc = new ManageAccount();
             listAccount = mngAcc.deserializationListAccount(this, usr.getUser());
             if (usr.getSort() == 1)
-                mngAcc.serializationListAccount(this, AtoZ(listAccount), usr.getUser());
+                mngAcc.serializationListAccount(this, increasing(listAccount), usr.getUser());
             else
-                mngAcc.serializationListAccount(this, ZtoA(listAccount), usr.getUser());
-
+                mngAcc.serializationListAccount(this, decreasing(listAccount), usr.getUser());
             listAccount = mngAcc.deserializationListAccount(this, usr.getUser());
-
-            wellcome = findViewById(R.id.wellcome);
-            String benvenuto = getResources().getString(R.string.benvenuto) + " " + usr.getUser();
-            wellcome.setText(benvenuto);
-
-            wellcome2 = findViewById(R.id.wellcomeToolbar);
-            String listaDi = getResources().getString(R.string.lista_di) + " " + usr.getUser();
-            wellcome2.setText(listaDi);
+            wellcome = findViewById(R.id.wellcomeText);
+            wellcome.setText("Benvenuto " + usr.getUser());
+            wellcome2 = findViewById(R.id.wellcomeTextToolbar);
+            wellcome2.setText("Lista di " + usr.getUser());
             wellcome2.setVisibility(View.INVISIBLE);
-
             settingsButton = findViewById(R.id.settingsButton);
             settingsButton.setVisibility(View.INVISIBLE);
-
             searchButton = findViewById(R.id.searchButton);
             searchButton.setVisibility(View.INVISIBLE);
-
-            AppBarLayout appBar = findViewById(R.id.app_bar);
-
+            AppBarLayout appBar = findViewById(R.id.viewBarToolbar);
             appBar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
                 boolean isShow = false;
                 int scrollRange = -1;
@@ -123,45 +119,39 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                     }
                 }
             });
-
-            final FloatingActionButton setting = findViewById(R.id.settingsFloatingButton);
+            setting = findViewById(R.id.settingsFloatingButton);
             setting.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     popupMenu(R.style.rounded_menu_style, R.menu.popup, v);
                 }
             });
-
             settingsButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     popupMenu(R.style.rounded_menu_style_toolbar, R.menu.popup, v);
                 }
             });
-
-            final FloatingActionButton search = findViewById(R.id.searchFloatingButton);
+            search = findViewById(R.id.searchFloatingButton);
             search.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     goToSearchActivity(usr);
                 }
             });
-
             searchButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     goToSearchActivity(usr);
                 }
             });
-
-            final FloatingActionButton add = findViewById(R.id.addFloatingButton);
+            add = findViewById(R.id.addFloatingButton);
             add.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     goToAddActivity(usr);
                 }
             });
-
             RecyclerView recyclerView = findViewById(R.id.recyclerView);
             adapter = new MyAdapter(this, listAccount);
             recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -234,98 +224,11 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         startActivity(getIntent());
     }
 
-    private void notifyUser(String message) {
-        Toast.makeText(this,
-                message,
-                Toast.LENGTH_LONG).show();
-    }
-
-    public ArrayList<Account> AtoZ(ArrayList<Account> list) {
-        Collections.sort(list, new Comparator<Account>() {
-            @Override
-            public int compare(Account lhs, Account rhs) {
-                return lhs.getName().toLowerCase().compareTo(rhs.getName().toLowerCase());
-            }
-        });
-        return list;
-    }
-
-    public ArrayList<Account> ZtoA(ArrayList<Account> list) {
-        Collections.sort(list, new Comparator<Account>() {
-            @Override
-            public int compare(Account lhs, Account rhs) {
-                return rhs.getName().toLowerCase().compareTo(lhs.getName().toLowerCase());
-            }
-        });
-        return list;
-    }
-
-    public void popupMenu(int style, int menu, View v) {
-        PopupMenu popup = new PopupMenu(ViewActivity.this, v, Gravity.END, 0, style);
-        popup.setOnMenuItemClickListener(ViewActivity.this);
-        popup.inflate(menu);
-        popup.show();
-    }
-
-    private void multiSelect(int position) {
-        Account data = adapter.getItem(position);
-        if (data != null) {
-            if (actionMode != null) {
-                if (selectedIds.contains(data.getName()))
-                    selectedIds.remove(data.getName());
-                else
-                    selectedIds.add(data.getName());
-                adapter.setSelectedIds(selectedIds);
-            }
-        }
-        selectedIds.size();
-        Objects.requireNonNull(actionMode).setTitle(String.valueOf(selectedIds.size()));
-    }
-
     @Override
     public boolean onCreateActionMode(ActionMode mode, Menu menu) {
         MenuInflater inflater = mode.getMenuInflater();
         inflater.inflate(R.menu.my_context_menu, menu);
         return true;
-    }
-
-    @Override
-    public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-        return false;
-    }
-
-    @Override
-    public boolean onActionItemClicked(ActionMode mode, MenuItem menuItem) {
-        if (menuItem.getItemId() == R.id.delete_id) {
-            for (String data : selectedIds) {
-                Account a = mngAcc.findAccount(listAccount, data);
-                if (a != null)
-                    listAccount.remove(a);
-                else
-                    notifyUser("Account " + data + " non rimosso. Non è stato rilevato nella lista");
-            }
-            if (!selectedIds.isEmpty()) {
-                if (selectedIds.size() == 1) {
-                    notifyUser("Un elemento è stato rimosso");
-                } else
-                    notifyUser(selectedIds.size() + " elementi sono stati rimossi");
-            } else {
-                notifyUser("Nessun elemento è stato rimosso");
-            }
-            mngAcc.serializationListAccount(this, listAccount, usr.getUser());
-            startActivity(getIntent());
-            finish();
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    public void onDestroyActionMode(ActionMode mode) {
-        actionMode = null;
-        isMultiSelect = false;
-        selectedIds = new ArrayList<>();
-        adapter.setSelectedIds(new ArrayList<String>());
     }
 
     @Override
@@ -352,8 +255,8 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 View parent = cl.getRootView();
                 popupWindow.showAtLocation(parent, Gravity.CENTER, 0, 0);
                 RadioGroup rg = popupView.findViewById(R.id.radioGroupSorter);
-                rb1 = popupView.findViewById(R.id.AtoZ);
-                RadioButton rb2 = popupView.findViewById(R.id.ZtoA);
+                rb1 = popupView.findViewById(R.id.increasing);
+                RadioButton rb2 = popupView.findViewById(R.id.decreasing);
                 if (usr.getSort() == 1)
                     rg.check(rb1.getId());
                 else
@@ -366,13 +269,13 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                             usr.setSort(1);
                             listUser.add(usr);
                             mngUsr.serializationListUser(ViewActivity.this, listUser);
-                            mngAcc.serializationListAccount(ViewActivity.this, AtoZ(listAccount), usr.getUser());
+                            mngAcc.serializationListAccount(ViewActivity.this, increasing(listAccount), usr.getUser());
                         } else {
                             listUser.remove(usr);
                             usr.setSort(2);
                             listUser.add(usr);
                             mngUsr.serializationListUser(ViewActivity.this, listUser);
-                            mngAcc.serializationListAccount(ViewActivity.this, ZtoA(listAccount), usr.getUser());
+                            mngAcc.serializationListAccount(ViewActivity.this, decreasing(listAccount), usr.getUser());
                         }
                         popupWindow.dismiss();
                         refresh();
@@ -390,6 +293,141 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             default:
                 return false;
         }
+    }
+
+    public void popupMenu(int style, int menu, View v) {
+        PopupMenu popup = new PopupMenu(ViewActivity.this, v, Gravity.END, 0, style);
+        popup.setOnMenuItemClickListener(ViewActivity.this);
+        popup.inflate(menu);
+        popup.show();
+    }
+
+    @SuppressLint("RestrictedApi")
+    private void multiSelect(int position) {
+        settingsButton.setVisibility(View.INVISIBLE);
+        searchButton.setVisibility(View.INVISIBLE);
+        setting.setVisibility(View.INVISIBLE);
+        search.setVisibility(View.INVISIBLE);
+        add.setVisibility(View.INVISIBLE);
+        Account data = adapter.getItem(position);
+        if (data != null) {
+            if (actionMode != null) {
+                if (selectedIds.contains(data.getName()))
+                    selectedIds.remove(data.getName());
+                else
+                    selectedIds.add(data.getName());
+                adapter.setSelectedIds(selectedIds);
+            }
+        }
+        selectedIds.size();
+        Objects.requireNonNull(actionMode).setTitle(String.valueOf(selectedIds.size()));
+    }
+
+    @SuppressLint({"RestrictedApi", "SetTextI18n"})
+    @Override
+    public boolean onActionItemClicked(ActionMode mode, MenuItem menuItem) {
+        if (menuItem.getItemId() == R.id.delete_id) {
+            if (!selectedIds.isEmpty()) {
+                LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+                final View popupView = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_security, (ViewGroup) findViewById(R.id.popupSecurity));
+                final PopupWindow popupWindow = new PopupWindow(popupView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+                popupWindow.setOutsideTouchable(true);
+                popupWindow.setFocusable(true);
+                //noinspection deprecation
+                popupWindow.setBackgroundDrawable(new BitmapDrawable());
+                View parent = cl.getRootView();
+                popupWindow.showAtLocation(parent, Gravity.CENTER, 0, 0);
+                TextView et = popupView.findViewById(R.id.securityText);
+                if (selectedIds.size() == 1)
+                    et.setText("Sei sicuro di voler eliminare " + selectedIds.get(0) + " dalla lista dei tuoi account?");
+                else
+                    et.setText("Sei sicuro di voler eliminare questi " + selectedIds.size() + " account selezionati?");
+                Button yes = popupView.findViewById(R.id.yes);
+                Button no = popupView.findViewById(R.id.no);
+                yes.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        for (String data : selectedIds) {
+                            Account a = mngAcc.findAccount(listAccount, data);
+                            if (a != null)
+                                listAccount.remove(a);
+                            else
+                                notifyUser("Account " + data + " non rimosso. Non è stato rilevato nella lista!");
+                        }
+                        if (selectedIds.size() == 1)
+                            notifyUser(selectedIds.get(0) + " è stato rimosso con successo!");
+                        else
+                            notifyUser(selectedIds.size() + " account sono stati rimossi con successo!");
+                        popupWindow.dismiss();
+                        mngAcc.serializationListAccount(ViewActivity.this, listAccount, usr.getUser());
+                        startActivity(getIntent());
+                        finish();
+                    }
+                });
+                no.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (selectedIds.size() == 1)
+                            notifyUser(selectedIds.get(0) + " non è stato rimosso.");
+                        else
+                            notifyUser("Nessun account è stato rimosso.");
+                        popupWindow.dismiss();
+                    }
+                });
+            } else notifyUser("Nessun account è stato selezionato per la rimozione.");
+            return true;
+        }
+        settingsButton.setVisibility(View.VISIBLE);
+        searchButton.setVisibility(View.VISIBLE);
+        setting.setVisibility(View.VISIBLE);
+        search.setVisibility(View.VISIBLE);
+        add.setVisibility(View.VISIBLE);
+        return false;
+    }
+
+    @SuppressLint("RestrictedApi")
+    @Override
+    public void onDestroyActionMode(ActionMode mode) {
+        actionMode = null;
+        isMultiSelect = false;
+        selectedIds = new ArrayList<>();
+        adapter.setSelectedIds(new ArrayList<String>());
+        settingsButton.setVisibility(View.VISIBLE);
+        searchButton.setVisibility(View.VISIBLE);
+        setting.setVisibility(View.VISIBLE);
+        search.setVisibility(View.VISIBLE);
+        add.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+        return false;
+    }
+
+    private void notifyUser(String message) {
+        Toast.makeText(this,
+                message,
+                Toast.LENGTH_LONG).show();
+    }
+
+    public ArrayList<Account> increasing(ArrayList<Account> list) {
+        Collections.sort(list, new Comparator<Account>() {
+            @Override
+            public int compare(Account lhs, Account rhs) {
+                return lhs.getName().toLowerCase().compareTo(rhs.getName().toLowerCase());
+            }
+        });
+        return list;
+    }
+
+    public ArrayList<Account> decreasing(ArrayList<Account> list) {
+        Collections.sort(list, new Comparator<Account>() {
+            @Override
+            public int compare(Account lhs, Account rhs) {
+                return rhs.getName().toLowerCase().compareTo(lhs.getName().toLowerCase());
+            }
+        });
+        return list;
     }
 
     @Override

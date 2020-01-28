@@ -15,18 +15,19 @@
         tools:ignore="UselessParent">
 
         <RadioButton
-            android:id="@+id/AtoZ"
+            android:id="@+id/increasing"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/dalla_a_alla_z"
+            android:text="@string/increasing"
             android:textSize="20sp" />
 
         <RadioButton
-            android:id="@+id/ZtoA"
+            android:id="@+id/decreasing"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/dalla_z_alla_a"
+            android:text="@string/decreasing"
             android:textSize="20sp" />
 
     </RadioGroup>
+
 </LinearLayout>
