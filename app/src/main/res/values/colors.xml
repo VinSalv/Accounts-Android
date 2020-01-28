@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#000000</color>
-    <color name="colorPrimaryDark">#006323</color>
-    <color name="colorAccent">#636363</color>
+    <color name="colorPrimaryDark">#004416</color>
+    <color name="colorAccent">#424242</color>
     <color name="selection">#919191</color>
     <color name="backgroundElement">#353535</color>
     <color name="rightText">#FFFFFF</color>
     <color name="errorEditText">#B80000</color>
+    <color name="colorAccentDark">#3F3F3F</color>
+    <color name="backgroundElementDark">#292929</color>
 </resources>

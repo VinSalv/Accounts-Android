@@ -10,5 +10,9 @@
     <stroke
         android:width="2dp"
         android:color="@color/colorAccent" />
-    <solid android:color="@color/backgroundElement" />
+    <gradient
+        android:angle="90"
+        android:endColor="@color/colorAccentDark"
+        android:startColor="@color/backgroundElementDark"
+        android:type="linear" />
 </shape>

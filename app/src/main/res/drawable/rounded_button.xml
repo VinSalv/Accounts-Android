@@ -5,15 +5,10 @@
         <shape android:shape="rectangle">
             <gradient
                 android:angle="90"
-                android:endColor="@color/colorAccent"
-                android:startColor="@color/backgroundElement"
+                android:endColor="@color/transparent"
+                android:startColor="@color/transparent"
                 android:type="linear" />
-            <corners android:radius="40dp" />
-            <padding
-                android:bottom="10dp"
-                android:left="10dp"
-                android:right="10dp"
-                android:top="10dp" />
+            <corners android:radius="20dp" />
         </shape>
     </item>
 </ripple>

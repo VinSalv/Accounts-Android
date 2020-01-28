@@ -65,7 +65,7 @@
             android:id="@+id/signButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="#00FFFFFF"
+            android:background="@drawable/rounded"
             android:text="@string/signButton"
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
