@@ -74,8 +74,8 @@
             android:autofillHints=""
             android:ems="10"
             android:hint="@string/passHint"
-            android:textColor="@color/rightText"
             android:textIsSelectable="true"
+            android:textColor="@color/transparent"
             android:textSize="18sp"
             tools:targetApi="o" />
 

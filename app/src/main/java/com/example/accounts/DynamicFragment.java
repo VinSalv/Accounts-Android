@@ -56,7 +56,7 @@ public class DynamicFragment extends Fragment {
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        tv.setTextColor(ContextCompat.getColor(v.getContext(), R.color.colorAccent));
+                        tv.setTextColor(ContextCompat.getColor(v.getContext(), R.color.rightText));
                         break;
                     case MotionEvent.ACTION_UP:
                         tv.setTextColor(ContextCompat.getColor(v.getContext(), R.color.transparent));
