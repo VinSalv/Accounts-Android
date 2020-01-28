@@ -50,4 +50,5 @@
     <string name="wellcomeMini">Numero account:</string>
     <string name="wellcome2">Lista di</string>
     <string name="Sure">Sei sicuro di voler</string>
+    <string name="text_PDF">Scegli l\'ordine dei tuoi account per la generazione del pdf</string>
 </resources>

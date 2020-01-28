@@ -40,6 +40,8 @@ import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Objects;
 
 @SuppressWarnings("ResultOfMethodCallIgnored")
@@ -154,11 +156,38 @@ public class SettingActivity extends AppCompatActivity {
                         public void onClick(View view) {
                             et.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(SettingActivity.this, R.color.colorAccent)));
                             if (et.getText().toString().equals(usr.getPassword())) {
-                                path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/PDF_Accounts/";
-                                dir = new File(path);
-                                if (!dir.exists()) dir.mkdirs();
-                                createPDF(usr, listAccount, path, dir);
                                 popupWindow.dismiss();
+                                LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+                                final View popupView = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_pdf, (ViewGroup) findViewById(R.id.popupPdf));
+                                final PopupWindow popupWindow = new PopupWindow(popupView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+                                popupWindow.setOutsideTouchable(true);
+                                popupWindow.setFocusable(true);
+                                //noinspection deprecation
+                                popupWindow.setBackgroundDrawable(new BitmapDrawable());
+                                View parent = cl.getRootView();
+                                popupWindow.showAtLocation(parent, Gravity.CENTER, 0, 0);
+                                Button increasing = popupView.findViewById(R.id.increasing);
+                                final Button decreasing = popupView.findViewById(R.id.decreasing);
+                                increasing.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/PDF_Accounts/";
+                                        dir = new File(path);
+                                        if (!dir.exists()) dir.mkdirs();
+                                        createPDF(usr, increasing(listAccount), path, dir);
+                                        popupWindow.dismiss();
+                                    }
+                                });
+                                decreasing.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/PDF_Accounts/";
+                                        dir = new File(path);
+                                        if (!dir.exists()) dir.mkdirs();
+                                        createPDF(usr, decreasing(listAccount), path, dir);
+                                        popupWindow.dismiss();
+                                    }
+                                });
                             } else {
                                 et.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(SettingActivity.this, R.color.errorEditText)));
                                 notifyUser("Password errata! Riprova");
@@ -351,6 +380,25 @@ public class SettingActivity extends AppCompatActivity {
         }
     }
 
+    public ArrayList<Account> increasing(ArrayList<Account> list) {
+        Collections.sort(list, new Comparator<Account>() {
+            @Override
+            public int compare(Account lhs, Account rhs) {
+                return lhs.getName().toLowerCase().compareTo(rhs.getName().toLowerCase());
+            }
+        });
+        return list;
+    }
+
+    public ArrayList<Account> decreasing(ArrayList<Account> list) {
+        Collections.sort(list, new Comparator<Account>() {
+            @Override
+            public int compare(Account lhs, Account rhs) {
+                return rhs.getName().toLowerCase().compareTo(lhs.getName().toLowerCase());
+            }
+        });
+        return list;
+    }
     @SuppressLint("ClickableViewAccessibility")
     public void showPass(final EditText et, ImageButton showPass) {
         showPass.setOnTouchListener(new View.OnTouchListener() {
