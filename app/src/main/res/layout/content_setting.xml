@@ -20,7 +20,8 @@
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
             android:background="@drawable/rounded_list_element"
-            android:text="@string/profile" />
+            android:text="@string/profile"
+            android:textColor="@color/rightText" />
 
         <Button
             android:id="@+id/pdf"
@@ -28,7 +29,8 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:background="@drawable/rounded_list_element"
-            android:text="@string/pdf" />
+            android:text="@string/pdf"
+            android:textColor="@color/rightText" />
 
         <Button
             android:id="@+id/deleteProfile"
@@ -36,7 +38,8 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:background="@drawable/rounded_list_element"
-            android:text="@string/deleteProfile" />
+            android:text="@string/deleteProfile"
+            android:textColor="@color/rightText" />
     </LinearLayout>
 
 </androidx.core.widget.NestedScrollView>

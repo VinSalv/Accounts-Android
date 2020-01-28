@@ -24,6 +24,7 @@
             android:ems="10"
             android:hint="@string/nameHint"
             android:inputType="textPersonName"
+            android:textColor="@color/rightText"
             android:textSize="15sp"
             android:theme="@style/inputField"
             tools:targetApi="o" />
@@ -57,6 +58,7 @@
                     android:ems="10"
                     android:hint="@string/emailHint"
                     android:inputType="textEmailAddress"
+                    android:textColor="@color/rightText"
                     android:textSize="13sp"
                     android:theme="@style/inputField"
                     tools:targetApi="o" />
@@ -84,6 +86,7 @@
                     android:ems="10"
                     android:hint="@string/userHint"
                     android:inputType="textPersonName"
+                    android:textColor="@color/rightText"
                     android:textSize="13sp"
                     android:theme="@style/inputField"
                     tools:targetApi="o" />
@@ -109,6 +112,7 @@
                     android:ems="10"
                     android:hint="@string/passHint"
                     android:inputType="textPassword"
+                    android:textColor="@color/rightText"
                     android:textSize="13sp"
                     android:theme="@style/inputField"
                     tools:targetApi="o" />

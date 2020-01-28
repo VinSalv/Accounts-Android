@@ -10,8 +10,11 @@
         android:id="@+id/securityText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp"
+        android:text="Sei sicuro di voler"
+        android:textColor="@color/rightText"
         android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -23,10 +26,9 @@
         android:gravity="bottom"
         android:text="@string/no"
         android:textAlignment="center"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
         android:textColor="@color/colorPrimaryDark"
-        android:textSize="22sp"
-        android:textStyle="normal"
+        android:textSize="20sp"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/securityText"
         app:layout_constraintWidth_percent="0.5" />
@@ -39,10 +41,9 @@
         android:gravity="bottom"
         android:text="@string/yes"
         android:textAlignment="center"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
         android:textColor="@color/colorPrimaryDark"
-        android:textSize="22sp"
-        android:textStyle="normal"
+        android:textSize="20sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/securityText"
         app:layout_constraintWidth_percent="0.5" />

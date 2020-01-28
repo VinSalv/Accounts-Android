@@ -50,6 +50,7 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     private ManageAccount mngAcc;
     private User usr;
     private TextView wellcome;
+    private TextView wellcomeMini;
     private TextView wellcome2;
     private FloatingActionButton setting;
     private FloatingActionButton search;
@@ -88,6 +89,8 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             listAccount = mngAcc.deserializationListAccount(this, usr.getUser());
             wellcome = findViewById(R.id.wellcomeText);
             wellcome.setText("Benvenuto " + usr.getUser());
+            wellcomeMini = findViewById(R.id.wellcomeMiniText);
+            wellcomeMini.setText("Numero account: " + listAccount.size());
             wellcome2 = findViewById(R.id.wellcomeTextToolbar);
             wellcome2.setText("Lista di " + usr.getUser());
             wellcome2.setVisibility(View.INVISIBLE);
@@ -103,6 +106,7 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 @Override
                 public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
                     wellcome.setAlpha((1.0f - (float) Math.abs(verticalOffset) / appBarLayout.getTotalScrollRange()));
+                    wellcomeMini.setAlpha((1.0f - (float) Math.abs(verticalOffset) / appBarLayout.getTotalScrollRange()));
                     if (scrollRange == -1) {
                         scrollRange = appBarLayout.getTotalScrollRange();
                     }

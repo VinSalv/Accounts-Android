@@ -24,8 +24,9 @@
             android:hint="@string/userHint"
             android:inputType="text"
             android:shadowColor="#00D50D0D"
-            android:textSize="16dp"
+            android:textSize="16sp"
             android:theme="@style/inputField"
+            app:titleTextColor="@color/rightText"
             tools:targetApi="o" />
 
         <ImageView
@@ -50,7 +51,8 @@
             android:ems="10"
             android:hint="@string/passHint"
             android:inputType="textPassword"
-            android:textSize="16dp"
+            android:textSize="16sp"
+            app:titleTextColor="@color/rightText"
             tools:targetApi="o" />
 
         <ImageView
@@ -85,7 +87,8 @@
             android:ems="10"
             android:hint="@string/passHint"
             android:inputType="textPassword"
-            android:textSize="16dp"
+            android:textSize="16sp"
+            app:titleTextColor="@color/rightText"
             tools:targetApi="o" />
 
         <ImageView
@@ -117,10 +120,10 @@
             android:paddingLeft="30dp"
             android:paddingRight="30dp"
             android:text="@string/flagFinger"
-            android:textColor="#81FFFFFF"
             android:textSize="13dp"
             android:textStyle="normal|bold"
-            android:theme="@style/SelectionSwitch" />
+            android:theme="@style/SelectionSwitch"
+            app:titleTextColor="@color/rightText" />
     </RelativeLayout>
 
 </androidx.core.widget.NestedScrollView>

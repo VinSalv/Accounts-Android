@@ -60,6 +60,9 @@
     <string name="passwordSecurityText">Conferma la tua password</string>
     <string name="Confirmation">Conferma</string>
     <string name="signTextView">Inserisci i dati per la registrazione</string>
+    <string name="wellcome">Benvenuto</string>
+    <string name="wellcomeMini">Numero account:</string>
+    <string name="wellcome2">Lista di</string>
 
 
 </resources>

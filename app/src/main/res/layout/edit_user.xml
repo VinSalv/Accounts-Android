@@ -16,6 +16,7 @@
         android:ems="10"
         android:hint="@string/userHint"
         android:inputType="textPersonName"
+        android:textColor="@color/rightText"
         android:textSize="16sp"
         android:theme="@style/inputField"
         tools:targetApi="o" />
@@ -39,9 +40,8 @@
         android:background="@color/transparent"
         android:text="@string/saveButton"
         android:textAlignment="center"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
         android:textColor="@color/colorPrimaryDark"
-        android:textSize="22sp"
+        android:textSize="20sp"
         android:textStyle="normal" />
 
 </RelativeLayout>

@@ -161,7 +161,7 @@ public class EditActivity extends AppCompatActivity {
                     View parent = rl.getRootView();
                     popupWindow.showAtLocation(parent, Gravity.CENTER, 0, 0);
                     TextView et = popupView.findViewById(R.id.securityText);
-                    et.setText(et.getText().toString() + " resettare tutti i campi?");
+                    et.setText("Sei sicuro di voler resettare tutti i campi?");
                     Button yes = popupView.findViewById(R.id.yes);
                     Button no = popupView.findViewById(R.id.no);
                     yes.setOnClickListener(new View.OnClickListener() {

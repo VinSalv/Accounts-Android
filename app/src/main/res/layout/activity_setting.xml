@@ -18,7 +18,9 @@
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/settingToolbar"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize" />
+                android:layout_height="?attr/actionBarSize"
+                app:subtitleTextColor="@color/rightText"
+                app:titleTextColor="@color/rightText" />
 
             <TextView
                 android:id="@+id/settingText"
@@ -26,6 +28,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="@string/action_setting"
+                android:textColor="@color/rightText"
                 android:textSize="40sp"
                 app:layout_collapseMode="parallax" />
 
@@ -36,6 +39,7 @@
                 android:layout_marginStart="15dp"
                 android:layout_marginTop="10dp"
                 android:text="@string/action_setting"
+                android:textColor="@color/rightText"
                 android:textSize="20sp"
                 app:layout_collapseMode="pin" />
 

@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinatorLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity"
@@ -8,39 +10,45 @@
 
     <TextView
         android:id="@+id/nameApp"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="false"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
         android:fontFamily="@font/fredoka_one"
         android:text="@string/uppercaseAppName"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textAlignment="center"
         android:textColor="@color/rightText"
         android:textSize="50sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintWidth_percent="0.8"
+        tools:ignore="MissingConstraints" />
 
     <ImageView
         android:id="@+id/imageApp"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_below="@id/nameApp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="40dp"
         android:contentDescription="@string/imageApp"
-        android:src="@drawable/app" />
+        android:src="@drawable/app"
+        app:layout_constraintBottom_toTopOf="@+id/relativeLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/nameApp"
+        app:layout_constraintWidth_percent="0.8" />
 
     <RelativeLayout
-        android:layout_width="wrap_content"
+        android:id="@+id/relativeLayout"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/imageApp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="60dp"
-        android:background="@drawable/rounded_color">
+        android:background="@drawable/rounded_color"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/nameApp"
+        app:layout_constraintWidth_percent="0.75">
 
         <EditText
             android:id="@+id/userApp"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="30dp"
             android:layout_marginBottom="10dp"
@@ -48,6 +56,7 @@
             android:ems="10"
             android:hint="@string/usernameHint"
             android:inputType="text"
+            android:textColor="@color/rightText"
             android:theme="@style/inputField"
             tools:targetApi="o" />
 
@@ -64,7 +73,7 @@
 
         <EditText
             android:id="@+id/passApp"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/userApp"
             android:layout_marginStart="30dp"
@@ -73,6 +82,7 @@
             android:ems="10"
             android:hint="@string/passswordHint"
             android:inputType="textPassword"
+            android:textColor="@color/rightText"
             android:theme="@style/inputField"
             tools:targetApi="o" />
 
@@ -107,11 +117,11 @@
             android:layout_marginStart="5dp"
             android:layout_marginBottom="5dp"
             android:text="@string/flagApp"
-            android:textColor="#81FFFFFF"
+            android:textColor="@color/rightText"
             android:textSize="13sp"
             android:textStyle="normal|bold"
             android:theme="@style/SelectionSwitch" />
 
     </RelativeLayout>
 
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

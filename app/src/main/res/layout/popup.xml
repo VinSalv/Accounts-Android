@@ -19,6 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/increasing"
+            android:textColor="@color/rightText"
             android:textSize="20sp" />
 
         <RadioButton
@@ -26,6 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/decreasing"
+            android:textColor="@color/rightText"
             android:textSize="20sp" />
 
     </RadioGroup>

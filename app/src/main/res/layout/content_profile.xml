@@ -20,7 +20,8 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="15dp"
             android:background="@drawable/rounded_list_element"
-            android:text="@string/editUsername" />
+            android:text="@string/editUsername"
+            android:textColor="@color/rightText" />
 
         <Button
             android:id="@+id/editProfPassword"
@@ -28,7 +29,8 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="15dp"
             android:background="@drawable/rounded_list_element"
-            android:text="@string/editPassword" />
+            android:text="@string/editPassword"
+            android:textColor="@color/rightText" />
 
         <Switch
             android:id="@+id/flagProfApp"
@@ -36,6 +38,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
             android:text="@string/editFlagFinger"
+            android:textColor="@color/rightText"
             android:textSize="20sp"
             android:theme="@style/SelectionSwitch" />
 
