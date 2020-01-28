@@ -59,7 +59,7 @@ public class EditActivity extends AppCompatActivity {
         toolbarEdit.setSubtitle("Modifica account dalla lista di " + Objects.requireNonNull(owner).getUser());
         setSupportActionBar(toolbarEdit);
         rl = findViewById(R.id.editActivityLay);
-        ll=findViewById(R.id.linearLayEdit);
+        ll = findViewById(R.id.linearLayEdit);
         ConstraintLayout constraintLayoutButtons = findViewById(R.id.constraintLayoutButtons);
         account = (Account) Objects.requireNonNull(getIntent().getExtras()).get("account");
         ManageUser mngUsr = new ManageUser();

@@ -49,6 +49,7 @@
                 android:text=""
                 android:textSize="40sp"
                 app:layout_collapseMode="parallax" />
+
             <TextView
                 android:id="@+id/nameToolbar"
                 android:layout_width="wrap_content"
@@ -65,8 +66,6 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <include layout="@layout/content_show" />
-
-
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -20,12 +20,12 @@ public class LogApp implements Serializable {
         return this.flagApp;
     }
 
-    public void setUser(String user) {
-        this.user = user;
-    }
-
     public String getUser() {
         return this.user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
     }
 
     @Override

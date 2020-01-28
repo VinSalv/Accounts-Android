@@ -65,6 +65,7 @@ public class ShowElementActivity extends AppCompatActivity implements PopupMenu.
                 appBar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
                     boolean isShow = false;
                     int scrollRange = -1;
+
                     @Override
                     public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
                         name.setAlpha((1.0f - (float) Math.abs(verticalOffset) / appBarLayout.getTotalScrollRange()));
@@ -99,9 +100,11 @@ public class ShowElementActivity extends AppCompatActivity implements PopupMenu.
                     public void onTabSelected(TabLayout.Tab tab) {
                         viewPager.setCurrentItem(tab.getPosition());
                     }
+
                     @Override
                     public void onTabUnselected(TabLayout.Tab tab) {
                     }
+
                     @Override
                     public void onTabReselected(TabLayout.Tab tab) {
                     }

@@ -26,16 +26,16 @@ public class User implements Serializable {
         return sort;
     }
 
-    public void setUser(String user) {
-        this.user = user;
-    }
-
     void setSort(int sort) {
         this.sort = sort;
     }
 
     public String getUser() {
         return this.user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
     }
 
     public String getPassword() {
@@ -50,6 +50,10 @@ public class User implements Serializable {
         return this.finger;
     }
 
+    void setFinger(boolean finger) {
+        this.finger = finger;
+    }
+
     @Override
     public boolean equals(Object object) {
         boolean bool = false;
@@ -57,9 +61,5 @@ public class User implements Serializable {
             bool = (this.getUser().toLowerCase().equals(((User) object).getUser().toLowerCase()));
         }
         return bool;
-    }
-
-    void setFinger(boolean finger) {
-        this.finger = finger;
     }
 }

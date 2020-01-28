@@ -93,21 +93,21 @@ public class MainActivity extends AppCompatActivity {
                 passApp.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(MainActivity.this, R.color.colorAccent)));
 
                 User usr = new User(userApp.getText().toString(), passApp.getText().toString(), false, 0);
-                    if (!fieldCheck(usr)) return;
-                    if (mngUsr.login(usr, listUser)) {
-                        usr = mngUsr.findUser(listUser, userApp.getText().toString());
-                        if (usr.getFinger()) {
-                            biometricAuthentication(lay);
-                        } else {
-                            log = new LogApp(flagApp.isChecked(), fixName(userApp.getText().toString()));
-                            mngApp.serializationFlag(MainActivity.this, log);
-                            goToViewActivity(usr);
-                        }
+                if (!fieldCheck(usr)) return;
+                if (mngUsr.login(usr, listUser)) {
+                    usr = mngUsr.findUser(listUser, userApp.getText().toString());
+                    if (usr.getFinger()) {
+                        biometricAuthentication(lay);
                     } else {
-                        userApp.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(MainActivity.this, R.color.errorEditText)));
-                        passApp.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(MainActivity.this, R.color.errorEditText)));
-                        notifyUser("Autenticazione errata");
+                        log = new LogApp(flagApp.isChecked(), fixName(userApp.getText().toString()));
+                        mngApp.serializationFlag(MainActivity.this, log);
+                        goToViewActivity(usr);
                     }
+                } else {
+                    userApp.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(MainActivity.this, R.color.errorEditText)));
+                    passApp.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(MainActivity.this, R.color.errorEditText)));
+                    notifyUser("Autenticazione errata");
+                }
             }
         });
         sign.setOnClickListener(new View.OnClickListener() {
