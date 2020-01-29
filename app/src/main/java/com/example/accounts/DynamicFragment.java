@@ -18,12 +18,13 @@ import java.util.Objects;
 
 public class DynamicFragment extends Fragment {
 
-    static DynamicFragment addFrag(String email, String user, String password) {
+    static DynamicFragment addFrag(String email, String user, String password, String description) {
         DynamicFragment fragment = new DynamicFragment();
         Bundle args = new Bundle();
         args.putString("email", email);
         args.putString("user", user);
         args.putString("password", password);
+        args.putString("description", description);
         fragment.setArguments(args);
         return fragment;
     }
@@ -34,14 +35,17 @@ public class DynamicFragment extends Fragment {
         View view;
         view = inflater.inflate(R.layout.fragment_show_element, container, false);
         TextView email;
-        email = view.findViewById(R.id.emailShowEdit);
+        email = view.findViewById(R.id.emailShowText);
         email.setText(Objects.requireNonNull(getArguments()).getString("email", ""));
         TextView user;
-        user = view.findViewById(R.id.userShowEdit);
+        user = view.findViewById(R.id.userShowText);
         user.setText(getArguments().getString("user", ""));
         TextView password;
-        password = view.findViewById(R.id.passShowEdit);
+        password = view.findViewById(R.id.passShowText);
         password.setText(getArguments().getString("password", ""));
+        TextView description;
+        description = view.findViewById(R.id.descriptionShowText);
+        description.setText(getArguments().getString("description", ""));
         if (!password.getText().toString().equals("")) {
             ImageButton showPass = view.findViewById(R.id.showPass);
             showPass.setVisibility(View.VISIBLE);

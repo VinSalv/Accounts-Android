@@ -19,6 +19,8 @@
         android:ems="10"
         android:hint="@string/nameHint"
         android:inputType="textPersonName"
+        android:textColor="@color/rightText"
+        android:textColorHighlight="@color/textSelection"
         tools:targetApi="o" />
 
     <include

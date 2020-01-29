@@ -21,7 +21,7 @@ public class TabAdapter extends FragmentStatePagerAdapter {
     @NonNull
     @Override
     public Fragment getItem(int position) {
-        return DynamicFragment.addFrag(listElem.get(position).getEmail(), listElem.get(position).getUser(), listElem.get(position).getPassword());
+        return DynamicFragment.addFrag(listElem.get(position).getEmail(), listElem.get(position).getUser(), listElem.get(position).getPassword(), listElem.get(position).getDescription());
     }
 
     @Override

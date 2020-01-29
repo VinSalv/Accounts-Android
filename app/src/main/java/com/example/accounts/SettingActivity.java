@@ -399,6 +399,7 @@ public class SettingActivity extends AppCompatActivity {
         });
         return list;
     }
+
     @SuppressLint("ClickableViewAccessibility")
     public void showPass(final EditText et, ImageButton showPass) {
         showPass.setOnTouchListener(new View.OnTouchListener() {

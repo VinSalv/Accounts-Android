@@ -9,4 +9,6 @@
     <color name="errorEditText">#B80000</color>
     <color name="colorAccentDark">#3F3F3F</color>
     <color name="backgroundElementDark">#292929</color>
+    <color name="textSelection">#9000501A</color>
+
 </resources>

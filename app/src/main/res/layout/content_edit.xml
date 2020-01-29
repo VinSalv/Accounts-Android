@@ -39,6 +39,7 @@
                     android:hint="@string/nameHint"
                     android:inputType="textPersonName"
                     android:textColor="@color/rightText"
+                    android:textColorHighlight="@color/textSelection"
                     android:textSize="16sp"
                     android:theme="@style/inputField"
                     tools:targetApi="o" />

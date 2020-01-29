@@ -57,6 +57,7 @@
             android:hint="@string/usernameHint"
             android:inputType="text"
             android:textColor="@color/rightText"
+            android:textColorHighlight="@color/textSelection"
             android:theme="@style/inputField"
             tools:targetApi="o" />
 
@@ -83,6 +84,7 @@
             android:hint="@string/passswordHint"
             android:inputType="textPassword"
             android:textColor="@color/rightText"
+            android:textColorHighlight="@color/textSelection"
             android:theme="@style/inputField"
             tools:targetApi="o" />
 

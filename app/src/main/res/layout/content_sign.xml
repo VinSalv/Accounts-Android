@@ -24,9 +24,10 @@
             android:hint="@string/userHint"
             android:inputType="text"
             android:shadowColor="#00D50D0D"
+            android:textColor="@color/rightText"
+            android:textColorHighlight="@color/textSelection"
             android:textSize="16sp"
             android:theme="@style/inputField"
-            app:titleTextColor="@color/rightText"
             tools:targetApi="o" />
 
         <ImageView
@@ -51,8 +52,9 @@
             android:ems="10"
             android:hint="@string/passHint"
             android:inputType="textPassword"
+            android:textColor="@color/rightText"
+            android:textColorHighlight="@color/textSelection"
             android:textSize="16sp"
-            app:titleTextColor="@color/rightText"
             tools:targetApi="o" />
 
         <ImageView
@@ -87,8 +89,9 @@
             android:ems="10"
             android:hint="@string/passHint"
             android:inputType="textPassword"
+            android:textColor="@color/rightText"
+            android:textColorHighlight="@color/textSelection"
             android:textSize="16sp"
-            app:titleTextColor="@color/rightText"
             tools:targetApi="o" />
 
         <ImageView
@@ -120,7 +123,7 @@
             android:paddingLeft="30dp"
             android:paddingRight="30dp"
             android:text="@string/flagFinger"
-            android:textSize="13dp"
+            android:textSize="13sp"
             android:textStyle="normal|bold"
             android:theme="@style/SelectionSwitch"
             app:titleTextColor="@color/rightText" />

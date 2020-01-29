@@ -47,6 +47,7 @@ public class EditActivity extends AppCompatActivity {
     private ArrayList<EditText> email;
     private ArrayList<EditText> user;
     private ArrayList<EditText> password;
+    private ArrayList<EditText> description;
     private ArrayList<ImageButton> showPass;
     private int i;
 
@@ -73,6 +74,7 @@ public class EditActivity extends AppCompatActivity {
             email = new ArrayList<>();
             user = new ArrayList<>();
             password = new ArrayList<>();
+            description = new ArrayList<>();
             showPass = new ArrayList<>();
             i = 0;
             Button addButton = constraintLayoutButtons.findViewById(R.id.saveButton);
@@ -93,6 +95,8 @@ public class EditActivity extends AppCompatActivity {
                 user.get(i).setText(ae.getUser());
                 password.add((EditText) relLey.findViewById(R.id.passAddEdit));
                 password.get(i).setText(ae.getPassword());
+                description.add((EditText) relLey.findViewById(R.id.descriptionAddEdit));
+                description.get(i).setText(ae.getDescription());
                 showPass.add((ImageButton) relLey.findViewById((R.id.showPass)));
                 final Button del = relLey.findViewById(R.id.deleteAddLay);
                 ll.addView(relLey);
@@ -102,6 +106,7 @@ public class EditActivity extends AppCompatActivity {
                         email.remove(relLey.findViewById(R.id.emailAddEdit));
                         user.remove(relLey.findViewById(R.id.userAddEdit));
                         password.remove(relLey.findViewById(R.id.passAddEdit));
+                        description.remove(relLey.findViewById(R.id.descriptionAddEdit));
                         showPass.remove(relLey.findViewById(R.id.showPass));
                         relativeLayoutsList.remove(relLey);
                         ll.removeView(relLey);
@@ -120,8 +125,8 @@ public class EditActivity extends AppCompatActivity {
                         email.get(n).setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(EditActivity.this, R.color.colorAccent)));
                         user.get(n).setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(EditActivity.this, R.color.colorAccent)));
                         password.get(n).setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(EditActivity.this, R.color.colorAccent)));
-                        if (!(email.get(n).getText().toString().isEmpty() && user.get(n).getText().toString().isEmpty() && password.get(n).getText().toString().isEmpty())) {
-                            elem = new AccountElement(email.get(n).getText().toString(), user.get(n).getText().toString(), password.get(n).getText().toString());
+                        if (!(email.get(n).getText().toString().isEmpty() && user.get(n).getText().toString().isEmpty() && password.get(n).getText().toString().isEmpty() && description.get(n).getText().toString().isEmpty())) {
+                            elem = new AccountElement(email.get(n).getText().toString(), user.get(n).getText().toString(), password.get(n).getText().toString(), description.get(n).getText().toString());
                             accountElementsList.add(elem);
                         }
                     }
@@ -176,6 +181,7 @@ public class EditActivity extends AppCompatActivity {
                             email.clear();
                             user.clear();
                             password.clear();
+                            description.clear();
                             showPass.clear();
                             moreElem(v);
                             popupWindow.dismiss();
@@ -285,6 +291,7 @@ public class EditActivity extends AppCompatActivity {
         email.add((EditText) relLey.findViewById(R.id.emailAddEdit));
         user.add((EditText) relLey.findViewById(R.id.userAddEdit));
         password.add((EditText) relLey.findViewById(R.id.passAddEdit));
+        description.add((EditText) relLey.findViewById(R.id.descriptionAddEdit));
         showPass.add((ImageButton) relLey.findViewById(R.id.showPass));
         Button del = relLey.findViewById(R.id.deleteAddLay);
         ll.addView(relLey);
@@ -294,6 +301,7 @@ public class EditActivity extends AppCompatActivity {
                 email.remove(relLey.findViewById(R.id.emailAddEdit));
                 user.remove(relLey.findViewById(R.id.userAddEdit));
                 password.remove(relLey.findViewById(R.id.passAddEdit));
+                description.remove(relLey.findViewById(R.id.descriptionAddEdit));
                 showPass.remove(relLey.findViewById(R.id.showPass));
                 relativeLayoutsList.remove(relLey);
                 ll.removeView(relLey);
