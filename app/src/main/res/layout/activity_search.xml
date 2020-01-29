@@ -20,6 +20,7 @@
         android:hint="@string/nameHint"
         android:inputType="textPersonName"
         android:textColor="@color/rightText"
+        android:theme="@style/inputField"
         android:textColorHighlight="@color/textSelection"
         tools:targetApi="o" />
 

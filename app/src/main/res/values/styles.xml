@@ -17,8 +17,6 @@
 
     <style name="MyDarkToolbarStyle">
         <item name="overlapAnchor">false</item>
-        <item name="android:dropDownVerticalOffset">-4dp</item>
-        <item name="android:textColor">#FFFFFF</item>
     </style>
 
     <style name="SelectionSwitch">
@@ -27,12 +25,12 @@
         <!-- inactive thumb color -->
         <item name="colorSwitchThumbNormal">@color/colorPrimaryDark</item>
         <!-- inactive track color (30% transparency) -->
-        <item name="android:colorForeground">#00A23D</item>
+        <item name="android:colorForeground">@color/colorPrimaryClear</item>
     </style>
 
     <style name="inputField">
-        <item name="colorControlNormal">#81FFFFFF</item>
-        <item name="colorControlActivated">#00A23D</item>
+        <item name="colorControlNormal">@color/rightEditText</item>
+        <item name="colorControlActivated">@color/colorPrimaryDark</item>
     </style>
 
     <style name="rounded_menu_style" parent="@style/Widget.AppCompat.PopupMenu.Overflow">
