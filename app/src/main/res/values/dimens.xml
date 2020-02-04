@@ -1,7 +1,8 @@
 <resources>
-    <dimen name="app_bar_view">280dp</dimen>
-    <dimen name="app_bar_sign">220dp</dimen>
-    <dimen name="app_bar_profile">220dp</dimen>
+    <dimen name="app_bar_view">260dp</dimen>
+    <dimen name="app_bar_show">200dp</dimen>
+    <dimen name="app_bar_sign">200dp</dimen>
+    <dimen name="app_bar_profile">200dp</dimen>
     <dimen name="app_bar_setting">200dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="activity_horizontal_margin">16dp</dimen>

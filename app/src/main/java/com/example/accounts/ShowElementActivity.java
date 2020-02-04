@@ -33,7 +33,6 @@ import java.util.Objects;
 
 public class ShowElementActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
     private CoordinatorLayout cl;
-    LinearLayout ll;
     private Account account;
     private ManageAccount mngAcc;
     private ArrayList<Account> listAccount;
@@ -51,7 +50,7 @@ public class ShowElementActivity extends AppCompatActivity implements PopupMenu.
         showToolbar.setTitle("");
         setSupportActionBar(showToolbar);
         cl = findViewById(R.id.coordinatorLayShow);
-        ll = findViewById(R.id.linearLayoutShowElements);
+        LinearLayout ll = findViewById(R.id.linearLayoutShowElements);
         User owner = (User) (Objects.requireNonNull(getIntent().getExtras())).get("owner");
         account = (Account) Objects.requireNonNull(getIntent().getExtras()).get("account");
         ManageUser mngUsr = new ManageUser();
@@ -110,6 +109,153 @@ public class ShowElementActivity extends AppCompatActivity implements PopupMenu.
                     final ImageButton show = relLey.findViewById(R.id.showButton);
                     final Boolean[] bool = {true};
                     show.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (bool[0]) {
+                                bool[0] = false;
+                                show.setImageResource(android.R.drawable.arrow_down_float);
+                                if (!ae.getEmail().isEmpty()) {
+                                    ((TextView) relLey.findViewById(R.id.emailShowText)).setText(ae.getEmail());
+                                    (relLey.findViewById(R.id.emailShowText)).animate()
+                                            .alpha(1.0f)
+                                            .setListener(new AnimatorListenerAdapter() {
+                                                @Override
+                                                public void onAnimationStart(Animator animation) {
+                                                    super.onAnimationStart(animation);
+                                                    (relLey.findViewById(R.id.emailShowText)).setVisibility(View.VISIBLE);
+                                                }
+                                            });
+                                    (relLey.findViewById(R.id.emailShowImage)).animate()
+                                            .alpha(1.0f)
+                                            .setListener(new AnimatorListenerAdapter() {
+                                                @Override
+                                                public void onAnimationStart(Animator animation) {
+                                                    super.onAnimationStart(animation);
+                                                    (relLey.findViewById(R.id.emailShowImage)).setVisibility(View.VISIBLE);
+                                                }
+                                            });
+                                }
+                                if (!ae.getUser().isEmpty()) {
+                                    ((TextView) relLey.findViewById(R.id.userShowText)).setText(ae.getUser());
+                                    (relLey.findViewById(R.id.userShowText)).animate()
+                                            .alpha(1.0f)
+                                            .setListener(new AnimatorListenerAdapter() {
+                                                @Override
+                                                public void onAnimationStart(Animator animation) {
+                                                    super.onAnimationStart(animation);
+                                                    (relLey.findViewById(R.id.userShowText)).setVisibility(View.VISIBLE);
+                                                }
+                                            });
+                                    (relLey.findViewById(R.id.userShowImage)).animate()
+                                            .alpha(1.0f)
+                                            .setListener(new AnimatorListenerAdapter() {
+                                                @Override
+                                                public void onAnimationStart(Animator animation) {
+                                                    super.onAnimationStart(animation);
+                                                    (relLey.findViewById(R.id.userShowImage)).setVisibility(View.VISIBLE);
+                                                }
+                                            });
+                                }
+                                if (!ae.getPassword().isEmpty()) {
+                                    ((TextView) relLey.findViewById(R.id.passShowText)).setText(ae.getPassword());
+                                    (relLey.findViewById(R.id.passShowText)).animate()
+                                            .alpha(1.0f)
+                                            .setListener(new AnimatorListenerAdapter() {
+                                                @Override
+                                                public void onAnimationStart(Animator animation) {
+                                                    super.onAnimationStart(animation);
+                                                    (relLey.findViewById(R.id.passShowText)).setVisibility(View.VISIBLE);
+                                                }
+                                            });
+                                    (relLey.findViewById(R.id.showPass)).animate()
+                                            .alpha(1.0f)
+                                            .setListener(new AnimatorListenerAdapter() {
+                                                @Override
+                                                public void onAnimationStart(Animator animation) {
+                                                    super.onAnimationStart(animation);
+                                                    (relLey.findViewById(R.id.showPass)).setVisibility(View.VISIBLE);
+                                                }
+                                            });
+                                    (relLey.findViewById(R.id.passShowImage)).animate()
+                                            .alpha(1.0f)
+                                            .setListener(new AnimatorListenerAdapter() {
+                                                @Override
+                                                public void onAnimationStart(Animator animation) {
+                                                    super.onAnimationStart(animation);
+                                                    (relLey.findViewById(R.id.passShowImage)).setVisibility(View.VISIBLE);
+                                                }
+                                            });
+                                }
+                            } else {
+                                bool[0] = true;
+                                show.setImageResource(android.R.drawable.arrow_up_float);
+                                (relLey.findViewById(R.id.emailShowImage)).animate()
+                                        .alpha(0.0f)
+                                        .setListener(new AnimatorListenerAdapter() {
+                                            @Override
+                                            public void onAnimationStart(Animator animation) {
+                                                super.onAnimationStart(animation);
+                                                (relLey.findViewById(R.id.emailShowImage)).setVisibility(View.GONE);
+                                            }
+                                        });
+                                (relLey.findViewById(R.id.emailShowText)).animate()
+                                        .alpha(0.0f)
+                                        .setListener(new AnimatorListenerAdapter() {
+                                            @Override
+                                            public void onAnimationStart(Animator animation) {
+                                                super.onAnimationStart(animation);
+                                                (relLey.findViewById(R.id.emailShowText)).setVisibility(View.GONE);
+                                            }
+                                        });
+                                (relLey.findViewById(R.id.userShowImage)).animate()
+                                        .alpha(0.0f)
+                                        .setListener(new AnimatorListenerAdapter() {
+                                            @Override
+                                            public void onAnimationStart(Animator animation) {
+                                                super.onAnimationStart(animation);
+                                                (relLey.findViewById(R.id.userShowImage)).setVisibility(View.GONE);
+                                            }
+                                        });
+                                (relLey.findViewById(R.id.userShowText)).animate()
+                                        .alpha(0.0f)
+                                        .setListener(new AnimatorListenerAdapter() {
+                                            @Override
+                                            public void onAnimationStart(Animator animation) {
+                                                super.onAnimationStart(animation);
+                                                (relLey.findViewById(R.id.userShowText)).setVisibility(View.GONE);
+                                            }
+                                        });
+                                (relLey.findViewById(R.id.passShowImage)).animate()
+                                        .alpha(0.0f)
+                                        .setListener(new AnimatorListenerAdapter() {
+                                            @Override
+                                            public void onAnimationStart(Animator animation) {
+                                                super.onAnimationStart(animation);
+                                                (relLey.findViewById(R.id.passShowImage)).setVisibility(View.GONE);
+                                            }
+                                        });
+                                (relLey.findViewById(R.id.passShowText)).animate()
+                                        .alpha(0.0f)
+                                        .setListener(new AnimatorListenerAdapter() {
+                                            @Override
+                                            public void onAnimationStart(Animator animation) {
+                                                super.onAnimationStart(animation);
+                                                (relLey.findViewById(R.id.passShowText)).setVisibility(View.GONE);
+                                            }
+                                        });
+                                (relLey.findViewById(R.id.showPass)).animate()
+                                        .alpha(0.0f)
+                                        .setListener(new AnimatorListenerAdapter() {
+                                            @Override
+                                            public void onAnimationStart(Animator animation) {
+                                                super.onAnimationStart(animation);
+                                                (relLey.findViewById(R.id.showPass)).setVisibility(View.GONE);
+                                            }
+                                        });
+                            }
+                        }
+                    });
+                    (relLey.findViewById(R.id.cardinalityElements)).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             if (bool[0]) {

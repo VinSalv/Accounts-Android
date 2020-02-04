@@ -104,6 +104,7 @@
             android:id="@+id/showPass"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignTop="@id/passApp"
             android:layout_alignEnd="@+id/passApp"
             android:layout_alignBottom="@+id/passApp"
             android:backgroundTint="@color/transparent"

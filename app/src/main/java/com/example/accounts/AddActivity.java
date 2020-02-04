@@ -414,6 +414,145 @@ public class AddActivity extends AppCompatActivity {
                 }
             }
         });
+        (relLey.findViewById(R.id.cardinalityElements)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (bool[0]) {
+                    bool[0] = false;
+                    show.setImageResource(android.R.drawable.arrow_down_float);
+                    (relLey.findViewById(R.id.emailAddEdit)).animate()
+                            .alpha(1.0f)
+                            .setListener(new AnimatorListenerAdapter() {
+                                @Override
+                                public void onAnimationStart(Animator animation) {
+                                    super.onAnimationStart(animation);
+                                    (relLey.findViewById(R.id.emailAddEdit)).setVisibility(View.VISIBLE);
+                                }
+                            });
+                    (relLey.findViewById(R.id.emailAddImage)).animate()
+                            .alpha(1.0f)
+                            .setListener(new AnimatorListenerAdapter() {
+                                @Override
+                                public void onAnimationStart(Animator animation) {
+                                    super.onAnimationStart(animation);
+                                    (relLey.findViewById(R.id.emailAddImage)).setVisibility(View.VISIBLE);
+                                }
+                            });
+                    (relLey.findViewById(R.id.userAddEdit)).animate()
+                            .alpha(1.0f)
+                            .setListener(new AnimatorListenerAdapter() {
+                                @Override
+                                public void onAnimationStart(Animator animation) {
+                                    super.onAnimationStart(animation);
+                                    (relLey.findViewById(R.id.userAddEdit)).setVisibility(View.VISIBLE);
+                                }
+                            });
+                    (relLey.findViewById(R.id.userAddImage)).animate()
+                            .alpha(1.0f)
+                            .setListener(new AnimatorListenerAdapter() {
+                                @Override
+                                public void onAnimationStart(Animator animation) {
+                                    super.onAnimationStart(animation);
+                                    (relLey.findViewById(R.id.userAddImage)).setVisibility(View.VISIBLE);
+                                }
+                            });
+                    (relLey.findViewById(R.id.passAddEdit)).animate()
+                            .alpha(1.0f)
+                            .setListener(new AnimatorListenerAdapter() {
+                                @Override
+                                public void onAnimationStart(Animator animation) {
+                                    super.onAnimationStart(animation);
+                                    (relLey.findViewById(R.id.passAddEdit)).setVisibility(View.VISIBLE);
+                                }
+                            });
+                    (relLey.findViewById(R.id.showPass)).animate()
+                            .alpha(1.0f)
+                            .setListener(new AnimatorListenerAdapter() {
+                                @Override
+                                public void onAnimationStart(Animator animation) {
+                                    super.onAnimationStart(animation);
+                                    (relLey.findViewById(R.id.showPass)).setVisibility(View.VISIBLE);
+                                }
+                            });
+                    (relLey.findViewById(R.id.passAddImage)).animate()
+                            .alpha(1.0f)
+                            .setListener(new AnimatorListenerAdapter() {
+                                @Override
+                                public void onAnimationStart(Animator animation) {
+                                    super.onAnimationStart(animation);
+                                    (relLey.findViewById(R.id.passAddImage)).setVisibility(View.VISIBLE);
+                                }
+                            });
+                } else {
+                    bool[0] = true;
+                    show.setImageResource(android.R.drawable.arrow_up_float);
+                    (relLey.findViewById(R.id.emailAddImage)).animate()
+                            .alpha(0.0f)
+                            .setListener(new AnimatorListenerAdapter() {
+                                @Override
+                                public void onAnimationStart(Animator animation) {
+                                    super.onAnimationStart(animation);
+                                    (relLey.findViewById(R.id.emailAddImage)).setVisibility(View.GONE);
+                                }
+                            });
+                    (relLey.findViewById(R.id.emailAddEdit)).animate()
+                            .alpha(0.0f)
+                            .setListener(new AnimatorListenerAdapter() {
+                                @Override
+                                public void onAnimationStart(Animator animation) {
+                                    super.onAnimationStart(animation);
+                                    (relLey.findViewById(R.id.emailAddEdit)).setVisibility(View.GONE);
+                                }
+                            });
+                    (relLey.findViewById(R.id.userAddImage)).animate()
+                            .alpha(0.0f)
+                            .setListener(new AnimatorListenerAdapter() {
+                                @Override
+                                public void onAnimationStart(Animator animation) {
+                                    super.onAnimationStart(animation);
+                                    (relLey.findViewById(R.id.userAddImage)).setVisibility(View.GONE);
+                                }
+                            });
+                    (relLey.findViewById(R.id.userAddEdit)).animate()
+                            .alpha(0.0f)
+                            .setListener(new AnimatorListenerAdapter() {
+                                @Override
+                                public void onAnimationStart(Animator animation) {
+                                    super.onAnimationStart(animation);
+                                    (relLey.findViewById(R.id.userAddEdit)).setVisibility(View.GONE);
+                                }
+                            });
+                    (relLey.findViewById(R.id.passAddImage)).animate()
+                            .alpha(0.0f)
+                            .setListener(new AnimatorListenerAdapter() {
+                                @Override
+                                public void onAnimationStart(Animator animation) {
+                                    super.onAnimationStart(animation);
+                                    (relLey.findViewById(R.id.passAddImage)).setVisibility(View.GONE);
+                                }
+                            });
+                    (relLey.findViewById(R.id.passAddEdit)).animate()
+                            .alpha(0.0f)
+                            .setListener(new AnimatorListenerAdapter() {
+                                @Override
+                                public void onAnimationStart(Animator animation) {
+                                    super.onAnimationStart(animation);
+                                    (relLey.findViewById(R.id.passAddEdit)).setVisibility(View.GONE);
+                                }
+                            });
+                    (relLey.findViewById(R.id.showPass)).animate()
+                            .alpha(0.0f)
+                            .setListener(new AnimatorListenerAdapter() {
+                                @Override
+                                public void onAnimationStart(Animator animation) {
+                                    super.onAnimationStart(animation);
+                                    (relLey.findViewById(R.id.showPass)).setVisibility(View.GONE);
+                                }
+                            });
+                }
+
+            }
+        });
         ImageButton del = relLey.findViewById(R.id.deleteButton);
         del.setOnClickListener(new View.OnClickListener() {
             @Override

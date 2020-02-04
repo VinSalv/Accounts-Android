@@ -145,6 +145,7 @@
         android:id="@+id/showPass"
         android:layout_width="25dp"
         android:layout_height="25dp"
+        android:layout_alignTop="@id/passShowText"
         android:layout_alignEnd="@+id/passShowText"
         android:layout_alignBottom="@+id/passShowText"
         android:backgroundTint="@color/transparent"

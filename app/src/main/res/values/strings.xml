@@ -50,11 +50,14 @@
     <string name="wellcomeMini">Numero account:</string>
     <string name="wellcome2">Lista di</string>
     <string name="Sure">Sei sicuro di voler</string>
-    <string name="text_PDF">Scegli l\'ordine dei tuoi account per la generazione del pdf</string>
+    <string name="text_PDF">Imposta l\'ordine dei tuoi account</string>
+    <string name="text_PDF2">Imposta l\'orientazione della pagina</string>
     <string name="description">Descrizione</string>
     <string name="name">Name</string>
     <string name="showButton">Bottone a tendina</string>
     <string name="editButton">Modifica elemento</string>
     <string name="deleteButton">Elimina elemento</string>
     <string name="action_select">Seleziona tutto</string>
+    <string name="horizontal">Orizzontale</string>
+    <string name="vertical">Verticale</string>
 </resources>

@@ -24,12 +24,15 @@
 
             <TextView
                 android:id="@+id/settingText"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
                 android:text="@string/action_setting"
+                android:textAlignment="center"
                 android:textColor="@color/rightText"
-                android:textSize="40sp"
+                android:textSize="30sp"
                 app:layout_collapseMode="parallax" />
 
             <TextView

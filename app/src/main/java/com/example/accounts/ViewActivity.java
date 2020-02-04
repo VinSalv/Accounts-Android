@@ -55,7 +55,6 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     private FloatingActionButton setting;
     private FloatingActionButton search;
     private FloatingActionButton add;
-    private RadioButton rb1;
     private List<String> selectedIds;
     private MyAdapter adapter;
     private ActionMode actionMode;
@@ -260,7 +259,7 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 View parent = cl.getRootView();
                 popupWindow.showAtLocation(parent, Gravity.CENTER, 0, 0);
                 RadioGroup rg = popupView.findViewById(R.id.radioGroupSorter);
-                rb1 = popupView.findViewById(R.id.increasing);
+                final RadioButton rb1 = popupView.findViewById(R.id.increasing);
                 RadioButton rb2 = popupView.findViewById(R.id.decreasing);
                 if (usr.getSort() == 1)
                     rg.check(rb1.getId());

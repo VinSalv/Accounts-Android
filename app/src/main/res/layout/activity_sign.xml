@@ -27,10 +27,12 @@
 
             <TextView
                 android:id="@+id/signText"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:fontFamily="sans-serif"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
                 android:text="@string/signTextView"
                 android:textAlignment="center"
                 android:textColor="@color/rightText"

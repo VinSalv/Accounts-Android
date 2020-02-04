@@ -18,6 +18,8 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -159,7 +161,7 @@ public class SettingActivity extends AppCompatActivity {
                             if (et.getText().toString().equals(usr.getPassword())) {
                                 popupWindow.dismiss();
                                 LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
-                                final View popupView = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_pdf, (ViewGroup) findViewById(R.id.popupPdf));
+                                @SuppressLint("InflateParams") final View popupView = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_pdf, null);
                                 final PopupWindow popupWindow = new PopupWindow(popupView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
                                 popupWindow.setOutsideTouchable(true);
                                 popupWindow.setFocusable(true);
@@ -167,28 +169,42 @@ public class SettingActivity extends AppCompatActivity {
                                 popupWindow.setBackgroundDrawable(new BitmapDrawable());
                                 View parent = cl.getRootView();
                                 popupWindow.showAtLocation(parent, Gravity.CENTER, 0, 0);
-                                Button increasing = popupView.findViewById(R.id.increasing);
-                                final Button decreasing = popupView.findViewById(R.id.decreasing);
-                                increasing.setOnClickListener(new View.OnClickListener() {
+                                final RadioGroup rg1 = popupView.findViewById(R.id.sortPDF);
+                                final RadioGroup rg2 = popupView.findViewById(R.id.orientationPDF);
+                                final RadioButton rb1 = popupView.findViewById(R.id.increasing);
+                                final RadioButton rb2 = popupView.findViewById(R.id.horizontal);
+                                rg1.check(rb1.getId());
+                                rg2.check(rb2.getId());
+                                Button conf = popupView.findViewById(R.id.confirmation);
+                                conf.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/PDF_Accounts/";
-                                        dir = new File(path);
-                                        if (!dir.exists()) dir.mkdirs();
-                                        createPDF(usr, increasing(listAccount), path, dir);
-                                        popupWindow.dismiss();
+                                        if (rg1.getCheckedRadioButtonId() == rb1.getId()) {
+                                            path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/PDF_Accounts/";
+                                            dir = new File(path);
+                                            if (!dir.exists()) dir.mkdirs();
+                                            if (rg2.getCheckedRadioButtonId() == rb2.getId()) {
+                                                createPDF(usr, increasing(listAccount), path, dir, true);
+                                            } else {
+                                                createPDF(usr, increasing(listAccount), path, dir, false);
+                                            }
+                                            popupWindow.dismiss();
+
+                                        } else {
+                                            path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/PDF_Accounts/";
+                                            dir = new File(path);
+                                            if (!dir.exists()) dir.mkdirs();
+                                            if (rg2.getCheckedRadioButtonId() == rb2.getId()) {
+                                                createPDF(usr, decreasing(listAccount), path, dir, true);
+                                            } else {
+                                                createPDF(usr, decreasing(listAccount), path, dir, false);
+                                            }
+                                            popupWindow.dismiss();
+
+                                        }
                                     }
                                 });
-                                decreasing.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/PDF_Accounts/";
-                                        dir = new File(path);
-                                        if (!dir.exists()) dir.mkdirs();
-                                        createPDF(usr, decreasing(listAccount), path, dir);
-                                        popupWindow.dismiss();
-                                    }
-                                });
+
                             } else {
                                 et.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(SettingActivity.this, R.color.errorEditText)));
                                 notifyUser("Password errata! Riprova");
@@ -276,11 +292,18 @@ public class SettingActivity extends AppCompatActivity {
         goToViewActivity();
     }
 
-    public void createPDF(User usr, ArrayList<Account> listAccount, String path, File dir) {
-        Document doc = new Document(PageSize.A4.rotate());
+    public void createPDF(User usr, ArrayList<Account> listAccount, String path, File dir, Boolean b) {
+        Document doc;
+        Font font;
+        File file;
+        if (b) doc = new Document(PageSize.A4.rotate());
+        else doc = new Document(PageSize.A4);
         try {
             @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyy");
-            File file = new File(dir, "Lista account di " + usr.getUser() + sdf.format(Calendar.getInstance().getTime()) + ".pdf");
+            if (b)
+                file = new File(dir, "Lista account di " + usr.getUser() + sdf.format(Calendar.getInstance().getTime()) + "Orizzontale.pdf");
+            else
+                file = new File(dir, "Lista account di " + usr.getUser() + sdf.format(Calendar.getInstance().getTime()) + "Verticale.pdf");
             FileOutputStream fOut = new FileOutputStream(file);
             PdfWriter.getInstance(doc, fOut);
             doc.open();
@@ -289,7 +312,8 @@ public class SettingActivity extends AppCompatActivity {
                 pt.setWidthPercentage(100);
                 float[] fl = new float[]{10, 25, 20, 15, 30};
                 pt.setWidths(fl);
-                Font font = new Font(Font.FontFamily.TIMES_ROMAN, 14, Font.BOLD);
+                if (b) font = new Font(Font.FontFamily.TIMES_ROMAN, 14, Font.BOLD);
+                else font = new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.BOLD);
                 Phrase f;
                 PdfPCell cell = new PdfPCell();
                 f = new Phrase("Nome");
@@ -322,14 +346,16 @@ public class SettingActivity extends AppCompatActivity {
                 cell.setBorder(0);
                 pt.addCell(cell);
                 for (Account a : listAccount) {
-                    font = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.NORMAL);
+                    if (b) font = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.NORMAL);
+                    else font = new Font(Font.FontFamily.TIMES_ROMAN, 8, Font.NORMAL);
                     cell = new PdfPCell();
                     f = new Phrase(a.getName());
                     f.setFont(font);
                     cell.addElement(f);
                     pt.addCell(cell);
                     if (a.getList().size() == 0) {
-                        font = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.NORMAL);
+                        if (b) font = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.NORMAL);
+                        else font = new Font(Font.FontFamily.TIMES_ROMAN, 8, Font.NORMAL);
                         cell = new PdfPCell();
                         f = new Phrase("");
                         f.setFont(font);
@@ -360,7 +386,8 @@ public class SettingActivity extends AppCompatActivity {
                             cell.addElement(f);
                             pt.addCell(cell);
                         }
-                        font = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.NORMAL);
+                        if (b) font = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.NORMAL);
+                        else font = new Font(Font.FontFamily.TIMES_ROMAN, 8, Font.NORMAL);
                         cell = new PdfPCell();
                         f = new Phrase(ae.getEmail());
                         f.setFont(font);
