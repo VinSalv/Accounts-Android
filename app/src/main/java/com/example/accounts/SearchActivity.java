@@ -46,8 +46,8 @@ public class SearchActivity extends AppCompatActivity {
                 @Override
                 public void afterTextChanged(Editable s) {
                     lay.removeAllViews();
+                    i = 0;
                     if (!s.toString().equals("")) {
-                        i = 0;
                         for (final Account a : increasing(listAccount)) {
                             if (a.getName().toLowerCase().contains(s.toString().toLowerCase())) {
                                 i++;
@@ -66,8 +66,9 @@ public class SearchActivity extends AppCompatActivity {
                                 });
                             }
                         }
-                        elemFind.setText("Numero account trovati: " + i);
                     }
+                    elemFind.setText("Numero account trovati: " + i);
+
                 }
 
                 @Override

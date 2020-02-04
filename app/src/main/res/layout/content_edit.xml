@@ -38,6 +38,7 @@
                     android:ems="10"
                     android:hint="@string/nameHint"
                     android:inputType="textPersonName"
+                    android:maxLength="10"
                     android:textColor="@color/rightText"
                     android:textColorHighlight="@color/textSelection"
                     android:textSize="14sp"
