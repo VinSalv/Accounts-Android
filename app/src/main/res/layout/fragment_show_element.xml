@@ -1,138 +1,184 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/subRelLayShow"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/colorPrimary">
+    android:layout_height="wrap_content"
+    android:layout_marginTop="20dp"
+    android:layout_marginBottom="10dp"
+    android:animateLayoutChanges="true"
+    android:background="@drawable/rounded_color">
 
-    <RelativeLayout
-        android:id="@+id/subRelLayShow"
+    <TextView
+        android:id="@+id/cardinalityElements"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/showButton"
+        android:layout_alignBottom="@id/showButton"
+        android:layout_alignParentStart="true"
+        android:layout_toStartOf="@id/editButton"
+        android:text="@string/name"
+        android:textSize="14sp"
+        android:textStyle="bold" />
+
+    <ImageButton
+        android:id="@+id/showButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="5dp"
+        android:backgroundTint="@color/transparent"
+        android:contentDescription="@string/showButton"
+        android:src="@android:drawable/arrow_up_float" />
+
+    <ImageButton
+        android:id="@+id/editButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/showButton"
+        android:layout_alignBottom="@id/showButton"
+        android:layout_marginEnd="10dp"
+        android:layout_toStartOf="@id/showButton"
+        android:backgroundTint="@color/transparent"
+        android:contentDescription="@string/editButton"
+        app:srcCompat="@android:drawable/ic_menu_edit" />
+
+    <ImageButton
+        android:id="@+id/deleteButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/cardinalityElements"
+        android:layout_alignBottom="@id/editButton"
+        android:layout_marginEnd="10dp"
+        android:layout_toStartOf="@id/editButton"
+        android:backgroundTint="@color/transparent"
+        android:contentDescription="@string/deleteButton"
+        app:srcCompat="@android:drawable/ic_menu_delete" />
+
+    <TextView
+        android:id="@+id/emailShowText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="10dp"
-        android:background="@drawable/rounded_color">
+        android:layout_below="@id/showButton"
+        android:layout_marginStart="30dp"
+        android:layout_marginBottom="15dp"
+        android:autofillHints=""
+        android:ems="10"
+        android:hint="@string/emailHint"
+        android:textColor="@color/rightText"
+        android:textColorHighlight="@color/textSelection"
+        android:textIsSelectable="true"
+        android:textSize="12sp"
+        tools:targetApi="o" />
 
-        <TextView
-            android:id="@+id/emailShowText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="30dp"
-            android:layout_marginBottom="15dp"
-            android:autofillHints=""
-            android:ems="10"
-            android:hint="@string/emailHint"
-            android:textColor="@color/rightText"
-            android:textColorHighlight="@color/textSelection"
-            android:textIsSelectable="true"
-            android:textSize="16sp"
-            tools:targetApi="o" />
+    <ImageView
+        android:id="@+id/emailShowImage"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_alignStart="@+id/emailShowText"
+        android:layout_alignTop="@id/emailShowText"
+        android:layout_alignBottom="@+id/emailShowText"
+        android:layout_alignParentStart="true"
+        android:contentDescription="@string/emailImage"
+        android:src="@drawable/email" />
 
-        <ImageView
-            android:id="@+id/emailShowImage"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_alignStart="@+id/emailShowText"
-            android:layout_alignBottom="@+id/emailShowText"
-            android:layout_alignParentStart="true"
-            android:contentDescription="@string/emailImage"
-            android:src="@drawable/email" />
+    <TextView
+        android:id="@+id/userShowText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/emailShowText"
+        android:layout_alignParentBottom="false"
+        android:layout_marginStart="30dp"
+        android:layout_marginBottom="15dp"
+        android:autofillHints=""
+        android:ems="10"
+        android:hint="@string/userHint"
+        android:textColor="@color/rightText"
+        android:textColorHighlight="@color/textSelection"
+        android:textIsSelectable="true"
+        android:textSize="12sp"
+        tools:targetApi="o" />
 
-        <TextView
-            android:id="@+id/userShowText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/emailShowText"
-            android:layout_alignParentBottom="false"
-            android:layout_marginStart="30dp"
-            android:layout_marginBottom="15dp"
-            android:autofillHints=""
-            android:ems="10"
-            android:hint="@string/userHint"
-            android:textColor="@color/rightText"
-            android:textColorHighlight="@color/textSelection"
-            android:textIsSelectable="true"
-            android:textSize="16sp"
-            tools:targetApi="o" />
+    <ImageView
+        android:id="@+id/userShowImage"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_alignStart="@+id/userShowText"
+        android:layout_alignTop="@id/userShowText"
+        android:layout_alignBottom="@+id/userShowText"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="3dp"
+        android:contentDescription="@string/userImage"
+        android:src="@drawable/user" />
 
-        <ImageView
-            android:id="@+id/userShowImage"
-            android:layout_width="16dp"
-            android:layout_height="16dp"
-            android:layout_alignStart="@+id/userShowText"
-            android:layout_alignBottom="@+id/userShowText"
-            android:layout_alignParentStart="true"
-            android:layout_marginBottom="3dp"
-            android:contentDescription="@string/userImage"
-            android:src="@drawable/user" />
+    <TextView
+        android:id="@+id/passShowText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/userShowText"
+        android:layout_marginStart="30dp"
+        android:layout_marginBottom="15dp"
+        android:autofillHints=""
+        android:ems="10"
+        android:hint="@string/passHint"
+        android:textColor="@color/transparent"
+        android:textColorHighlight="@color/textSelection"
+        android:textIsSelectable="true"
+        android:textSize="12sp"
+        tools:targetApi="o" />
 
-        <TextView
-            android:id="@+id/passShowText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/userShowText"
-            android:layout_marginStart="30dp"
-            android:layout_marginBottom="15dp"
-            android:autofillHints=""
-            android:ems="10"
-            android:hint="@string/passHint"
-            android:textColor="@color/transparent"
-            android:textColorHighlight="@color/textSelection"
-            android:textIsSelectable="true"
-            android:textSize="16sp"
-            tools:targetApi="o" />
+    <ImageView
+        android:id="@+id/passShowImage"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_alignStart="@+id/passShowText"
+        android:layout_alignTop="@id/passShowText"
+        android:layout_alignBottom="@+id/passShowText"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="3dp"
+        android:contentDescription="@string/passImage"
+        android:src="@drawable/pass" />
 
-        <ImageView
-            android:id="@+id/passShowImage"
-            android:layout_width="16dp"
-            android:layout_height="16dp"
-            android:layout_alignStart="@+id/passShowText"
-            android:layout_alignBottom="@+id/passShowText"
-            android:layout_alignParentStart="true"
-            android:layout_marginBottom="3dp"
-            android:contentDescription="@string/passImage"
-            android:src="@drawable/pass" />
+    <ImageButton
+        android:id="@+id/showPass"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_alignEnd="@+id/passShowText"
+        android:layout_alignBottom="@+id/passShowText"
+        android:backgroundTint="@color/transparent"
+        android:contentDescription="@string/showPassImage"
+        android:src="@android:drawable/ic_menu_view"
+        android:visibility="invisible" />
 
-        <ImageButton
-            android:id="@+id/showPass"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_alignEnd="@+id/passShowText"
-            android:layout_alignBottom="@+id/passShowText"
-            android:backgroundTint="@color/transparent"
-            android:contentDescription="@string/showPassImage"
-            android:src="@android:drawable/ic_menu_view"
-            android:visibility="invisible" />
+    <TextView
+        android:id="@+id/descriptionShowText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/passShowText"
+        android:layout_marginStart="30dp"
+        android:autofillHints=""
+        android:ems="10"
+        android:gravity="start|top"
+        android:hint="@string/description"
+        android:textColor="@color/rightText"
+        android:textColorHighlight="@color/textSelection"
+        android:textIsSelectable="true"
+        android:textSize="12sp"
+        android:theme="@style/inputField"
+        tools:targetApi="o" />
 
-        <TextView
-            android:id="@+id/descriptionShowText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/passShowText"
-            android:layout_marginStart="30dp"
-            android:autofillHints=""
-            android:ems="10"
-            android:gravity="start|top"
-            android:hint="@string/description"
-            android:textColor="@color/rightText"
-            android:textColorHighlight="@color/textSelection"
-            android:textIsSelectable="true"
-            android:textSize="16sp"
-            android:theme="@style/inputField"
-            tools:targetApi="o" />
+    <ImageView
+        android:id="@+id/descriptionShowImage"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_alignStart="@+id/descriptionShowText"
+        android:layout_alignTop="@id/descriptionShowText"
+        android:layout_alignBottom="@+id/descriptionShowText"
+        android:layout_alignParentStart="true"
+        android:contentDescription="@string/description"
+        app:srcCompat="@android:drawable/ic_dialog_info" />
 
-        <ImageView
-            android:id="@+id/descriptionShowImage"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_alignStart="@+id/descriptionShowText"
-            android:layout_alignBottom="@+id/descriptionShowText"
-            android:layout_alignParentStart="true"
-            android:contentDescription="@string/passImage"
-            app:srcCompat="@android:drawable/ic_menu_edit" />
+</RelativeLayout>
 
-    </RelativeLayout>
-
-</LinearLayout>

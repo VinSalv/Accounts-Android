@@ -1,5 +1,6 @@
 package com.example.accounts;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -8,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,6 +24,8 @@ public class SearchActivity extends AppCompatActivity {
     private ArrayList<Account> listAccount;
     private User usr;
     private LinearLayout lay;
+    private TextView elemFind;
+    private int i;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +34,7 @@ public class SearchActivity extends AppCompatActivity {
         User owner = (User) (Objects.requireNonNull(getIntent().getExtras())).get("owner");
         lay = findViewById(R.id.contentSearchLayout);
         EditText name = findViewById(R.id.nameSerched);
+        elemFind = findViewById(R.id.elemFind);
         ManageUser mngUsr = new ManageUser();
         ArrayList<User> listUser = mngUsr.deserializationListUser(this);
         usr = mngUsr.findUser(listUser, Objects.requireNonNull(owner).getUser());
@@ -37,12 +42,15 @@ public class SearchActivity extends AppCompatActivity {
             ManageAccount mngAcc = new ManageAccount();
             listAccount = mngAcc.deserializationListAccount(this, usr.getUser());
             name.addTextChangedListener(new TextWatcher() {
+                @SuppressLint("SetTextI18n")
                 @Override
                 public void afterTextChanged(Editable s) {
                     lay.removeAllViews();
                     if (!s.toString().equals("")) {
+                        i = 0;
                         for (final Account a : increasing(listAccount)) {
                             if (a.getName().toLowerCase().contains(s.toString().toLowerCase())) {
+                                i++;
                                 LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                                 lp.setMargins(0, 10, 0, 10);
                                 Button myButton = new Button(SearchActivity.this);
@@ -58,6 +66,7 @@ public class SearchActivity extends AppCompatActivity {
                                 });
                             }
                         }
+                        elemFind.setText("Numero account trovati: " + i);
                     }
                 }
 

@@ -10,12 +10,14 @@
     tools:showIn="@layout/activity_edit">
 
     <ScrollView
+        android:id="@+id/scrollEdit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fillViewport="true"
         tools:ignore="UselessParent">
 
         <LinearLayout
+            android:layout_marginTop="10dp"
             android:id="@+id/linearLayEdit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -25,7 +27,6 @@
                 android:id="@+id/nameRelLayEdit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
                 android:background="@drawable/rounded_color"
                 android:orientation="horizontal">
 
@@ -33,14 +34,13 @@
                     android:id="@+id/nameEditEdit"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="30dp"
                     android:autofillHints=""
                     android:ems="10"
                     android:hint="@string/nameHint"
                     android:inputType="textPersonName"
                     android:textColor="@color/rightText"
                     android:textColorHighlight="@color/textSelection"
-                    android:textSize="16sp"
+                    android:textSize="14sp"
                     android:theme="@style/inputField"
                     tools:targetApi="o" />
 

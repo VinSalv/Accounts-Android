@@ -1,5 +1,7 @@
 package com.example.accounts;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.res.ColorStateList;
@@ -18,6 +20,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,9 +43,11 @@ public class EditActivity extends AppCompatActivity {
     private ManageAccount mngAcc;
     private Account account;
     private ArrayList<Account> listAccount;
+    private Account acc;
     private User usr;
     private AccountElement elem;
     private ArrayList<AccountElement> accountElementsList;
+    private AccountElement accElem;
     private EditText name;
     private ArrayList<EditText> email;
     private ArrayList<EditText> user;
@@ -50,158 +55,361 @@ public class EditActivity extends AppCompatActivity {
     private ArrayList<EditText> description;
     private ArrayList<ImageButton> showPass;
     private int i;
+    private boolean b;
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit);
         Toolbar toolbarEdit = findViewById(R.id.editToolbar);
         owner = (User) (Objects.requireNonNull(getIntent().getExtras())).get("owner");
-        toolbarEdit.setSubtitle("Modifica account dalla lista di " + Objects.requireNonNull(owner).getUser());
-        setSupportActionBar(toolbarEdit);
         rl = findViewById(R.id.editActivityLay);
         ll = findViewById(R.id.linearLayEdit);
         ConstraintLayout constraintLayoutButtons = findViewById(R.id.constraintLayoutButtons);
         account = (Account) Objects.requireNonNull(getIntent().getExtras()).get("account");
+        accElem = (AccountElement) (getIntent().getExtras()).get("accountElement");
         ManageUser mngUsr = new ManageUser();
         ArrayList<User> listUser = mngUsr.deserializationListUser(this);
         usr = mngUsr.findUser(listUser, owner.getUser());
         if (usr != null) {
+            toolbarEdit.setSubtitle("Modifica account dalla lista di " + Objects.requireNonNull(owner).getUser());
+            setSupportActionBar(toolbarEdit);
             mngAcc = new ManageAccount();
             listAccount = mngAcc.deserializationListAccount(this, usr.getUser());
-            accountElementsList = new ArrayList<>();
-            relativeLayoutsList = new ArrayList<>();
-            email = new ArrayList<>();
-            user = new ArrayList<>();
-            password = new ArrayList<>();
-            description = new ArrayList<>();
-            showPass = new ArrayList<>();
-            i = 0;
-            Button addButton = constraintLayoutButtons.findViewById(R.id.saveButton);
-            Button emptyButton = constraintLayoutButtons.findViewById(R.id.emptyButton);
-            FloatingActionButton addElem = findViewById(R.id.addElemFloatingButton);
-            name = findViewById(R.id.nameEditEdit);
-            name.setText(account.getName());
-            for (final AccountElement ae : account.getList()) {
-                LayoutInflater inflater = LayoutInflater.from(EditActivity.this);
-                @SuppressLint("InflateParams") final RelativeLayout relLey = (RelativeLayout) inflater.inflate(R.layout.more_add_lay, null);
-                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                params.setMargins(0, 20, 0, 0);
-                relLey.setLayoutParams(params);
-                relativeLayoutsList.add(relLey);
-                email.add((EditText) relLey.findViewById(R.id.emailAddEdit));
-                email.get(i).setText(ae.getEmail());
-                user.add((EditText) relLey.findViewById(R.id.userAddEdit));
-                user.get(i).setText(ae.getUser());
-                password.add((EditText) relLey.findViewById(R.id.passAddEdit));
-                password.get(i).setText(ae.getPassword());
-                description.add((EditText) relLey.findViewById(R.id.descriptionAddEdit));
-                description.get(i).setText(ae.getDescription());
-                showPass.add((ImageButton) relLey.findViewById((R.id.showPass)));
-                final Button del = relLey.findViewById(R.id.deleteAddLay);
-                ll.addView(relLey);
-                del.setOnClickListener(new View.OnClickListener() {
+            acc = mngAcc.findAccount(listAccount, account.getName());
+            if (acc != null) {
+                accountElementsList = new ArrayList<>();
+                relativeLayoutsList = new ArrayList<>();
+                name = findViewById(R.id.nameEditEdit);
+                email = new ArrayList<>();
+                user = new ArrayList<>();
+                password = new ArrayList<>();
+                description = new ArrayList<>();
+                showPass = new ArrayList<>();
+                i = 0;
+                if (acc.getList().isEmpty()) moreElem(ll);
+                Button saveButton = constraintLayoutButtons.findViewById(R.id.saveButton);
+                Button emptyButton = constraintLayoutButtons.findViewById(R.id.emptyButton);
+                FloatingActionButton addElem = findViewById(R.id.addElemFloatingButton);
+                name.setText(account.getName());
+                for (final AccountElement ae : acc.getList()) {
+                    LayoutInflater inflater = LayoutInflater.from(EditActivity.this);
+                    @SuppressLint("InflateParams") final RelativeLayout relLey = (RelativeLayout) inflater.inflate(R.layout.more_add_lay, null);
+                    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                    params.setMargins(0, 20, 0, 0);
+                    relLey.setLayoutParams(params);
+                    relativeLayoutsList.add(relLey);
+                    email.add((EditText) relLey.findViewById(R.id.emailAddEdit));
+                    email.get(i).setText(ae.getEmail());
+                    user.add((EditText) relLey.findViewById(R.id.userAddEdit));
+                    user.get(i).setText(ae.getUser());
+                    password.add((EditText) relLey.findViewById(R.id.passAddEdit));
+                    password.get(i).setText(ae.getPassword());
+                    description.add((EditText) relLey.findViewById(R.id.descriptionAddEdit));
+                    description.get(i).setText(ae.getDescription());
+                    showPass.add((ImageButton) relLey.findViewById((R.id.showPass)));
+                    (relLey.findViewById(R.id.emailAddImage)).setVisibility(View.GONE);
+                    (relLey.findViewById(R.id.emailAddEdit)).setVisibility(View.GONE);
+                    (relLey.findViewById(R.id.userAddImage)).setVisibility(View.GONE);
+                    (relLey.findViewById(R.id.userAddEdit)).setVisibility(View.GONE);
+                    (relLey.findViewById(R.id.passAddImage)).setVisibility(View.GONE);
+                    (relLey.findViewById(R.id.passAddEdit)).setVisibility(View.GONE);
+                    (relLey.findViewById(R.id.showPass)).setVisibility(View.GONE);
+                    final ImageButton show = relLey.findViewById(R.id.showButton);
+                    final Boolean[] bool = {true};
+                    show.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (bool[0]) {
+                                bool[0] = false;
+                                show.setImageResource(android.R.drawable.arrow_down_float);
+                                ((EditText) relLey.findViewById(R.id.emailAddEdit)).setText(ae.getEmail());
+                                (relLey.findViewById(R.id.emailAddEdit)).animate()
+                                        .alpha(1.0f)
+                                        .setListener(new AnimatorListenerAdapter() {
+                                            @Override
+                                            public void onAnimationStart(Animator animation) {
+                                                super.onAnimationStart(animation);
+                                                (relLey.findViewById(R.id.emailAddEdit)).setVisibility(View.VISIBLE);
+                                            }
+                                        });
+                                (relLey.findViewById(R.id.emailAddImage)).animate()
+                                        .alpha(1.0f)
+                                        .setListener(new AnimatorListenerAdapter() {
+                                            @Override
+                                            public void onAnimationStart(Animator animation) {
+                                                super.onAnimationStart(animation);
+                                                (relLey.findViewById(R.id.emailAddImage)).setVisibility(View.VISIBLE);
+                                            }
+                                        });
+                                ((EditText) relLey.findViewById(R.id.userAddEdit)).setText(ae.getUser());
+                                (relLey.findViewById(R.id.userAddEdit)).animate()
+                                        .alpha(1.0f)
+                                        .setListener(new AnimatorListenerAdapter() {
+                                            @Override
+                                            public void onAnimationStart(Animator animation) {
+                                                super.onAnimationStart(animation);
+                                                (relLey.findViewById(R.id.userAddEdit)).setVisibility(View.VISIBLE);
+                                            }
+                                        });
+                                (relLey.findViewById(R.id.userAddImage)).animate()
+                                        .alpha(1.0f)
+                                        .setListener(new AnimatorListenerAdapter() {
+                                            @Override
+                                            public void onAnimationStart(Animator animation) {
+                                                super.onAnimationStart(animation);
+                                                (relLey.findViewById(R.id.userAddImage)).setVisibility(View.VISIBLE);
+                                            }
+                                        });
+                                ((EditText) relLey.findViewById(R.id.passAddEdit)).setText(ae.getPassword());
+                                (relLey.findViewById(R.id.passAddEdit)).animate()
+                                        .alpha(1.0f)
+                                        .setListener(new AnimatorListenerAdapter() {
+                                            @Override
+                                            public void onAnimationStart(Animator animation) {
+                                                super.onAnimationStart(animation);
+                                                (relLey.findViewById(R.id.passAddEdit)).setVisibility(View.VISIBLE);
+                                            }
+                                        });
+                                (relLey.findViewById(R.id.showPass)).animate()
+                                        .alpha(1.0f)
+                                        .setListener(new AnimatorListenerAdapter() {
+                                            @Override
+                                            public void onAnimationStart(Animator animation) {
+                                                super.onAnimationStart(animation);
+                                                (relLey.findViewById(R.id.showPass)).setVisibility(View.VISIBLE);
+                                            }
+                                        });
+                                (relLey.findViewById(R.id.passAddImage)).animate()
+                                        .alpha(1.0f)
+                                        .setListener(new AnimatorListenerAdapter() {
+                                            @Override
+                                            public void onAnimationStart(Animator animation) {
+                                                super.onAnimationStart(animation);
+                                                (relLey.findViewById(R.id.passAddImage)).setVisibility(View.VISIBLE);
+                                            }
+                                        });
+                            } else {
+                                bool[0] = true;
+                                show.setImageResource(android.R.drawable.arrow_up_float);
+                                (relLey.findViewById(R.id.emailAddImage)).animate()
+                                        .alpha(0.0f)
+                                        .setListener(new AnimatorListenerAdapter() {
+                                            @Override
+                                            public void onAnimationStart(Animator animation) {
+                                                super.onAnimationStart(animation);
+                                                (relLey.findViewById(R.id.emailAddImage)).setVisibility(View.GONE);
+                                            }
+                                        });
+                                (relLey.findViewById(R.id.emailAddEdit)).animate()
+                                        .alpha(0.0f)
+                                        .setListener(new AnimatorListenerAdapter() {
+                                            @Override
+                                            public void onAnimationStart(Animator animation) {
+                                                super.onAnimationStart(animation);
+                                                (relLey.findViewById(R.id.emailAddEdit)).setVisibility(View.GONE);
+                                            }
+                                        });
+                                (relLey.findViewById(R.id.userAddImage)).animate()
+                                        .alpha(0.0f)
+                                        .setListener(new AnimatorListenerAdapter() {
+                                            @Override
+                                            public void onAnimationStart(Animator animation) {
+                                                super.onAnimationStart(animation);
+                                                (relLey.findViewById(R.id.userAddImage)).setVisibility(View.GONE);
+                                            }
+                                        });
+                                (relLey.findViewById(R.id.userAddEdit)).animate()
+                                        .alpha(0.0f)
+                                        .setListener(new AnimatorListenerAdapter() {
+                                            @Override
+                                            public void onAnimationStart(Animator animation) {
+                                                super.onAnimationStart(animation);
+                                                (relLey.findViewById(R.id.userAddEdit)).setVisibility(View.GONE);
+                                            }
+                                        });
+                                (relLey.findViewById(R.id.passAddImage)).animate()
+                                        .alpha(0.0f)
+                                        .setListener(new AnimatorListenerAdapter() {
+                                            @Override
+                                            public void onAnimationStart(Animator animation) {
+                                                super.onAnimationStart(animation);
+                                                (relLey.findViewById(R.id.passAddImage)).setVisibility(View.GONE);
+                                            }
+                                        });
+                                (relLey.findViewById(R.id.passAddEdit)).animate()
+                                        .alpha(0.0f)
+                                        .setListener(new AnimatorListenerAdapter() {
+                                            @Override
+                                            public void onAnimationStart(Animator animation) {
+                                                super.onAnimationStart(animation);
+                                                (relLey.findViewById(R.id.passAddEdit)).setVisibility(View.GONE);
+                                            }
+                                        });
+                                (relLey.findViewById(R.id.showPass)).animate()
+                                        .alpha(0.0f)
+                                        .setListener(new AnimatorListenerAdapter() {
+                                            @Override
+                                            public void onAnimationStart(Animator animation) {
+                                                super.onAnimationStart(animation);
+                                                (relLey.findViewById(R.id.showPass)).setVisibility(View.GONE);
+                                            }
+                                        });
+                            }
+                        }
+                    });
+                    final ImageButton del = relLey.findViewById(R.id.deleteButton);
+                    ll.addView(relLey);
+                    refreshCardinality();
+                    del.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+                            final View popupView = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_security, (ViewGroup) findViewById(R.id.popupSecurity));
+                            final PopupWindow popupWindow = new PopupWindow(popupView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+                            popupWindow.setOutsideTouchable(true);
+                            popupWindow.setFocusable(true);
+                            //noinspection deprecation
+                            popupWindow.setBackgroundDrawable(new BitmapDrawable());
+                            View parent = rl.getRootView();
+                            popupWindow.showAtLocation(parent, Gravity.CENTER, 0, 0);
+                            TextView et = popupView.findViewById(R.id.securityText);
+                            et.setText("Sei sicuro di voler eliminare " + ((TextView) relLey.findViewById(R.id.cardinalityElements)).getText().toString() + " dai tuoi account?");
+                            Button yes = popupView.findViewById(R.id.yes);
+                            Button no = popupView.findViewById(R.id.no);
+                            yes.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    email.remove(relLey.findViewById(R.id.emailAddEdit));
+                                    user.remove(relLey.findViewById(R.id.userAddEdit));
+                                    password.remove(relLey.findViewById(R.id.passAddEdit));
+                                    description.remove(relLey.findViewById(R.id.descriptionAddEdit));
+                                    showPass.remove(relLey.findViewById(R.id.showPass));
+                                    relativeLayoutsList.remove(relLey);
+                                    ll.removeView(relLey);
+                                    i--;
+                                    notifyUser(((TextView) relLey.findViewById(R.id.cardinalityElements)).getText().toString() + " è stato rimosso con successo!!");
+                                    refreshCardinality();
+                                    popupWindow.dismiss();
+                                }
+                            });
+                            no.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    notifyUser(((TextView) relLey.findViewById(R.id.cardinalityElements)).getText().toString() + " non è stato rimosso.");
+                                    popupWindow.dismiss();
+                                }
+                            });
+                        }
+                    });
+                    showPass((EditText) relLey.findViewById(R.id.passAddEdit), (ImageButton) relLey.findViewById((R.id.showPass)));
+                    i++;
+                }
+                if (accElem != null) {
+                    ScrollView sv = (ScrollView) findViewById(R.id.scrollEdit);
+                    sv.scrollTo(0, sv.getBottom());
+                    for (RelativeLayout rl : relativeLayoutsList) {
+                        if (((EditText) rl.findViewById(R.id.emailAddEdit)).getText().toString().equals(accElem.getEmail()) &&
+                                ((EditText) rl.findViewById(R.id.userAddEdit)).getText().toString().equals(accElem.getUser()) &&
+                                ((EditText) rl.findViewById(R.id.passAddEdit)).getText().toString().equals(accElem.getPassword()) &&
+                                ((EditText) rl.findViewById(R.id.descriptionAddEdit)).getText().toString().equals(accElem.getDescription()))
+                            ((ImageButton) rl.findViewById(R.id.showButton)).performClick();
+                    }
+                }
+                saveButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        email.remove(relLey.findViewById(R.id.emailAddEdit));
-                        user.remove(relLey.findViewById(R.id.userAddEdit));
-                        password.remove(relLey.findViewById(R.id.passAddEdit));
-                        description.remove(relLey.findViewById(R.id.descriptionAddEdit));
-                        showPass.remove(relLey.findViewById(R.id.showPass));
-                        relativeLayoutsList.remove(relLey);
-                        ll.removeView(relLey);
-                        i--;
+                        b = false;
+                        name.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(EditActivity.this, R.color.colorAccent)));
+                        accountElementsList.clear();
+                        for (int n = 0; n < i; n++) {
+                            email.get(n).setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(EditActivity.this, R.color.colorAccent)));
+                            user.get(n).setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(EditActivity.this, R.color.colorAccent)));
+                            password.get(n).setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(EditActivity.this, R.color.colorAccent)));
+                            if (!(email.get(n).getText().toString().isEmpty() && user.get(n).getText().toString().isEmpty() && password.get(n).getText().toString().isEmpty() && description.get(n).getText().toString().isEmpty())) {
+                                elem = new AccountElement(email.get(n).getText().toString(), user.get(n).getText().toString(), password.get(n).getText().toString(), description.get(n).getText().toString());
+                                accountElementsList.add(elem);
+                            } else b = true;
+                        }
+                        Account a = new Account(name.getText().toString(), accountElementsList);
+                        if (a.getName().isEmpty()) {
+                            name.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(EditActivity.this, R.color.errorEditText)));
+                            notifyUser("Il campo nome non può essere vuoto!");
+                            return;
+                        }
+                        int n = 0;
+                        for (AccountElement elem : accountElementsList) {
+                            if (fieldError(elem, n)) return;
+                            n++;
+                        }
+                        if (mngAcc.notFind(a, listAccount) || a.equals(acc.getName())) {
+                            listAccount.remove(acc);
+                            listAccount.add(a);
+                            mngAcc.serializationListAccount(EditActivity.this, listAccount, usr.getUser());
+                            if (b)
+                                notifyUser("Gli elementi senza nessun campo compilato non verranno memorizzati!");
+                            goToViewActivity(usr);
+                        } else {
+                            name.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(EditActivity.this, R.color.errorEditText)));
+                            notifyUser("Applicativo già registrato!!!");
+                        }
                     }
                 });
-                showPass((EditText) relLey.findViewById(R.id.passAddEdit), (ImageButton) relLey.findViewById((R.id.showPass)));
-                i++;
-            }
-            addButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    name.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(EditActivity.this, R.color.colorAccent)));
-                    accountElementsList.clear();
-                    for (int n = 0; n < i; n++) {
-                        email.get(n).setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(EditActivity.this, R.color.colorAccent)));
-                        user.get(n).setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(EditActivity.this, R.color.colorAccent)));
-                        password.get(n).setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(EditActivity.this, R.color.colorAccent)));
-                        if (!(email.get(n).getText().toString().isEmpty() && user.get(n).getText().toString().isEmpty() && password.get(n).getText().toString().isEmpty() && description.get(n).getText().toString().isEmpty())) {
-                            elem = new AccountElement(email.get(n).getText().toString(), user.get(n).getText().toString(), password.get(n).getText().toString(), description.get(n).getText().toString());
-                            accountElementsList.add(elem);
-                        }
-                    }
-                    Account a = new Account(name.getText().toString(), accountElementsList);
-                    if (a.getName().isEmpty()) {
-                        name.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(EditActivity.this, R.color.errorEditText)));
-                        notifyUser("Il campo nome non può essere vuoto !");
-                        return;
-                    }
-                    int n = 0;
-                    for (AccountElement elem : accountElementsList) {
-                        if (fieldError(elem, n)) return;
-                        n++;
-                    }
-                    if (mngAcc.notFind(a, listAccount) || a.equals(account.getName())) {
-                        listAccount.remove(account);
-                        listAccount.add(a);
-                        mngAcc.serializationListAccount(EditActivity.this, listAccount, owner.getUser());
-                        goToViewActivity(usr);
-                    } else {
-                        name.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(EditActivity.this, R.color.errorEditText)));
-                        notifyUser("Applicativo già registrato !!!");
-                    }
-                }
-            });
-            emptyButton.setOnClickListener(new View.OnClickListener() {
-                @SuppressLint("SetTextI18n")
-                @Override
-                public void onClick(View v) {
-                    LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
-                    final View popupView = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_security, (ViewGroup) findViewById(R.id.popupSecurity));
-                    final PopupWindow popupWindow = new PopupWindow(popupView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
-                    popupWindow.setOutsideTouchable(true);
-                    popupWindow.setFocusable(true);
-                    //noinspection deprecation
-                    popupWindow.setBackgroundDrawable(new BitmapDrawable());
-                    View parent = rl.getRootView();
-                    popupWindow.showAtLocation(parent, Gravity.CENTER, 0, 0);
-                    TextView et = popupView.findViewById(R.id.securityText);
-                    et.setText("Sei sicuro di voler resettare tutti i campi?");
-                    Button yes = popupView.findViewById(R.id.yes);
-                    Button no = popupView.findViewById(R.id.no);
-                    yes.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            i = 0;
-                            accountElementsList.clear();
-                            for (RelativeLayout l : relativeLayoutsList) {
-                                ll.removeView(l);
+                emptyButton.setOnClickListener(new View.OnClickListener() {
+                    @SuppressLint("SetTextI18n")
+                    @Override
+                    public void onClick(View v) {
+                        LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+                        final View popupView = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_security, (ViewGroup) findViewById(R.id.popupSecurity));
+                        final PopupWindow popupWindow = new PopupWindow(popupView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+                        popupWindow.setOutsideTouchable(true);
+                        popupWindow.setFocusable(true);
+                        //noinspection deprecation
+                        popupWindow.setBackgroundDrawable(new BitmapDrawable());
+                        View parent = rl.getRootView();
+                        popupWindow.showAtLocation(parent, Gravity.CENTER, 0, 0);
+                        TextView et = popupView.findViewById(R.id.securityText);
+                        et.setText("Sei sicuro di voler resettare tutti i campi?");
+                        Button yes = popupView.findViewById(R.id.yes);
+                        Button no = popupView.findViewById(R.id.no);
+                        yes.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                i = 0;
+                                accountElementsList.clear();
+                                for (RelativeLayout l : relativeLayoutsList) {
+                                    ll.removeView(l);
+                                }
+                                relativeLayoutsList.clear();
+                                email.clear();
+                                user.clear();
+                                password.clear();
+                                description.clear();
+                                showPass.clear();
+                                popupWindow.dismiss();
+                                notifyUser("Campi resettati");
+                                moreElem(v);
                             }
-                            relativeLayoutsList.clear();
-                            email.clear();
-                            user.clear();
-                            password.clear();
-                            description.clear();
-                            showPass.clear();
-                            moreElem(v);
-                            popupWindow.dismiss();
-                            notifyUser("Campi resettati");
-                        }
-                    });
-                    no.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            popupWindow.dismiss();
-                        }
-                    });
-                }
-            });
-            addElem.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    moreElem(v);
-                }
-            });
+                        });
+                        no.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                popupWindow.dismiss();
+                            }
+                        });
+                    }
+                });
+                addElem.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        moreElem(v);
+                    }
+                });
+            } else {
+                notifyUser("Account non rilevato. Impossibile modificare i dati.");
+                goToViewActivity(usr);
+            }
         } else {
             notifyUser("Utente non rilevato. Impossibile modificare l'account.");
             goToMainActivity();
@@ -281,6 +489,7 @@ public class EditActivity extends AppCompatActivity {
                 Toast.LENGTH_LONG).show();
     }
 
+    @SuppressLint("SetTextI18n")
     public void moreElem(View v) {
         LayoutInflater inflater = LayoutInflater.from(EditActivity.this);
         @SuppressLint("InflateParams") final RelativeLayout relLey = (RelativeLayout) inflater.inflate(R.layout.more_add_lay, null);
@@ -288,28 +497,213 @@ public class EditActivity extends AppCompatActivity {
         params.setMargins(0, 20, 0, 0);
         relLey.setLayoutParams(params);
         relativeLayoutsList.add(relLey);
+        refreshCardinality();
         email.add((EditText) relLey.findViewById(R.id.emailAddEdit));
         user.add((EditText) relLey.findViewById(R.id.userAddEdit));
         password.add((EditText) relLey.findViewById(R.id.passAddEdit));
         description.add((EditText) relLey.findViewById(R.id.descriptionAddEdit));
         showPass.add((ImageButton) relLey.findViewById(R.id.showPass));
-        Button del = relLey.findViewById(R.id.deleteAddLay);
+        (relLey.findViewById(R.id.emailAddImage)).setVisibility(View.GONE);
+        (relLey.findViewById(R.id.emailAddEdit)).setVisibility(View.GONE);
+        (relLey.findViewById(R.id.userAddImage)).setVisibility(View.GONE);
+        (relLey.findViewById(R.id.userAddEdit)).setVisibility(View.GONE);
+        (relLey.findViewById(R.id.passAddImage)).setVisibility(View.GONE);
+        (relLey.findViewById(R.id.passAddEdit)).setVisibility(View.GONE);
+        (relLey.findViewById(R.id.showPass)).setVisibility(View.GONE);
         ll.addView(relLey);
+        final ImageButton show = relLey.findViewById(R.id.showButton);
+        final Boolean[] bool = {true};
+        show.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (bool[0]) {
+                    bool[0] = false;
+                    show.setImageResource(android.R.drawable.arrow_down_float);
+                    (relLey.findViewById(R.id.emailAddEdit)).animate()
+                            .alpha(1.0f)
+                            .setListener(new AnimatorListenerAdapter() {
+                                @Override
+                                public void onAnimationStart(Animator animation) {
+                                    super.onAnimationStart(animation);
+                                    (relLey.findViewById(R.id.emailAddEdit)).setVisibility(View.VISIBLE);
+                                }
+                            });
+                    (relLey.findViewById(R.id.emailAddImage)).animate()
+                            .alpha(1.0f)
+                            .setListener(new AnimatorListenerAdapter() {
+                                @Override
+                                public void onAnimationStart(Animator animation) {
+                                    super.onAnimationStart(animation);
+                                    (relLey.findViewById(R.id.emailAddImage)).setVisibility(View.VISIBLE);
+                                }
+                            });
+                    (relLey.findViewById(R.id.userAddEdit)).animate()
+                            .alpha(1.0f)
+                            .setListener(new AnimatorListenerAdapter() {
+                                @Override
+                                public void onAnimationStart(Animator animation) {
+                                    super.onAnimationStart(animation);
+                                    (relLey.findViewById(R.id.userAddEdit)).setVisibility(View.VISIBLE);
+                                }
+                            });
+                    (relLey.findViewById(R.id.userAddImage)).animate()
+                            .alpha(1.0f)
+                            .setListener(new AnimatorListenerAdapter() {
+                                @Override
+                                public void onAnimationStart(Animator animation) {
+                                    super.onAnimationStart(animation);
+                                    (relLey.findViewById(R.id.userAddImage)).setVisibility(View.VISIBLE);
+                                }
+                            });
+                    (relLey.findViewById(R.id.passAddEdit)).animate()
+                            .alpha(1.0f)
+                            .setListener(new AnimatorListenerAdapter() {
+                                @Override
+                                public void onAnimationStart(Animator animation) {
+                                    super.onAnimationStart(animation);
+                                    (relLey.findViewById(R.id.passAddEdit)).setVisibility(View.VISIBLE);
+                                }
+                            });
+                    (relLey.findViewById(R.id.showPass)).animate()
+                            .alpha(1.0f)
+                            .setListener(new AnimatorListenerAdapter() {
+                                @Override
+                                public void onAnimationStart(Animator animation) {
+                                    super.onAnimationStart(animation);
+                                    (relLey.findViewById(R.id.showPass)).setVisibility(View.VISIBLE);
+                                }
+                            });
+                    (relLey.findViewById(R.id.passAddImage)).animate()
+                            .alpha(1.0f)
+                            .setListener(new AnimatorListenerAdapter() {
+                                @Override
+                                public void onAnimationStart(Animator animation) {
+                                    super.onAnimationStart(animation);
+                                    (relLey.findViewById(R.id.passAddImage)).setVisibility(View.VISIBLE);
+                                }
+                            });
+                } else {
+                    bool[0] = true;
+                    show.setImageResource(android.R.drawable.arrow_up_float);
+                    (relLey.findViewById(R.id.emailAddImage)).animate()
+                            .alpha(0.0f)
+                            .setListener(new AnimatorListenerAdapter() {
+                                @Override
+                                public void onAnimationStart(Animator animation) {
+                                    super.onAnimationStart(animation);
+                                    (relLey.findViewById(R.id.emailAddImage)).setVisibility(View.GONE);
+                                }
+                            });
+                    (relLey.findViewById(R.id.emailAddEdit)).animate()
+                            .alpha(0.0f)
+                            .setListener(new AnimatorListenerAdapter() {
+                                @Override
+                                public void onAnimationStart(Animator animation) {
+                                    super.onAnimationStart(animation);
+                                    (relLey.findViewById(R.id.emailAddEdit)).setVisibility(View.GONE);
+                                }
+                            });
+                    (relLey.findViewById(R.id.userAddImage)).animate()
+                            .alpha(0.0f)
+                            .setListener(new AnimatorListenerAdapter() {
+                                @Override
+                                public void onAnimationStart(Animator animation) {
+                                    super.onAnimationStart(animation);
+                                    (relLey.findViewById(R.id.userAddImage)).setVisibility(View.GONE);
+                                }
+                            });
+                    (relLey.findViewById(R.id.userAddEdit)).animate()
+                            .alpha(0.0f)
+                            .setListener(new AnimatorListenerAdapter() {
+                                @Override
+                                public void onAnimationStart(Animator animation) {
+                                    super.onAnimationStart(animation);
+                                    (relLey.findViewById(R.id.userAddEdit)).setVisibility(View.GONE);
+                                }
+                            });
+                    (relLey.findViewById(R.id.passAddImage)).animate()
+                            .alpha(0.0f)
+                            .setListener(new AnimatorListenerAdapter() {
+                                @Override
+                                public void onAnimationStart(Animator animation) {
+                                    super.onAnimationStart(animation);
+                                    (relLey.findViewById(R.id.passAddImage)).setVisibility(View.GONE);
+                                }
+                            });
+                    (relLey.findViewById(R.id.passAddEdit)).animate()
+                            .alpha(0.0f)
+                            .setListener(new AnimatorListenerAdapter() {
+                                @Override
+                                public void onAnimationStart(Animator animation) {
+                                    super.onAnimationStart(animation);
+                                    (relLey.findViewById(R.id.passAddEdit)).setVisibility(View.GONE);
+                                }
+                            });
+                    (relLey.findViewById(R.id.showPass)).animate()
+                            .alpha(0.0f)
+                            .setListener(new AnimatorListenerAdapter() {
+                                @Override
+                                public void onAnimationStart(Animator animation) {
+                                    super.onAnimationStart(animation);
+                                    (relLey.findViewById(R.id.showPass)).setVisibility(View.GONE);
+                                }
+                            });
+                }
+            }
+        });
+        ImageButton del = relLey.findViewById(R.id.deleteButton);
         del.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                email.remove(relLey.findViewById(R.id.emailAddEdit));
-                user.remove(relLey.findViewById(R.id.userAddEdit));
-                password.remove(relLey.findViewById(R.id.passAddEdit));
-                description.remove(relLey.findViewById(R.id.descriptionAddEdit));
-                showPass.remove(relLey.findViewById(R.id.showPass));
-                relativeLayoutsList.remove(relLey);
-                ll.removeView(relLey);
-                i--;
+                LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+                final View popupView = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_security, (ViewGroup) findViewById(R.id.popupSecurity));
+                final PopupWindow popupWindow = new PopupWindow(popupView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+                popupWindow.setOutsideTouchable(true);
+                popupWindow.setFocusable(true);
+                //noinspection deprecation
+                popupWindow.setBackgroundDrawable(new BitmapDrawable());
+                View parent = rl.getRootView();
+                popupWindow.showAtLocation(parent, Gravity.CENTER, 0, 0);
+                TextView et = popupView.findViewById(R.id.securityText);
+                et.setText("Sei sicuro di voler eliminare " + ((TextView) relLey.findViewById(R.id.cardinalityElements)).getText().toString() + " dai tuoi account?");
+                Button yes = popupView.findViewById(R.id.yes);
+                Button no = popupView.findViewById(R.id.no);
+                yes.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        email.remove(relLey.findViewById(R.id.emailAddEdit));
+                        user.remove(relLey.findViewById(R.id.userAddEdit));
+                        password.remove(relLey.findViewById(R.id.passAddEdit));
+                        description.remove(relLey.findViewById(R.id.descriptionAddEdit));
+                        showPass.remove(relLey.findViewById(R.id.showPass));
+                        relativeLayoutsList.remove(relLey);
+                        ll.removeView(relLey);
+                        i--;
+                        notifyUser(((TextView) relLey.findViewById(R.id.cardinalityElements)).getText().toString() + " è stato rimosso con successo!!");
+                        refreshCardinality();
+                        popupWindow.dismiss();
+                    }
+                });
+                no.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        notifyUser(((TextView) relLey.findViewById(R.id.cardinalityElements)).getText().toString() + " non è stato rimosso.");
+                        popupWindow.dismiss();
+                    }
+                });
+
             }
         });
         showPass((EditText) relLey.findViewById(R.id.passAddEdit), (ImageButton) relLey.findViewById((R.id.showPass)));
         i++;
+    }
+
+    public void refreshCardinality() {
+        int c = 0;
+        for (RelativeLayout rl : relativeLayoutsList) {
+            c++;
+            ((TextView) rl.findViewById(R.id.cardinalityElements)).setText(c + "." + acc.getName());
+        }
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -335,7 +729,7 @@ public class EditActivity extends AppCompatActivity {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtra("owner", owner);
+        intent.putExtra("owner", usr);
         startActivity(intent);
         this.finish();
     }

@@ -6,27 +6,53 @@
     android:layout_height="wrap_content"
     android:background="@drawable/rounded_color">
 
-    <Button
-        android:id="@+id/deleteAddLay"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+    <TextView
+        android:id="@+id/cardinalityElements"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/showButton"
+        android:layout_alignBottom="@id/showButton"
+        android:layout_alignParentStart="true"
+        android:layout_toStartOf="@id/deleteButton"
+        android:text="@string/name"
+        android:textSize="14sp"
+        android:textStyle="bold" />
+
+    <ImageButton
+        android:id="@+id/showButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:background="@drawable/delete" />
+        android:backgroundTint="@color/transparent"
+        android:contentDescription="@string/showButton"
+        app:srcCompat="@android:drawable/arrow_down_float" />
+
+    <ImageButton
+        android:id="@+id/deleteButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/showButton"
+        android:layout_alignBottom="@id/showButton"
+        android:layout_marginEnd="10dp"
+        android:layout_toStartOf="@id/showButton"
+        android:backgroundTint="@color/transparent"
+        android:contentDescription="@string/deleteButton"
+        app:srcCompat="@android:drawable/ic_menu_delete" />
+
 
     <EditText
         android:id="@+id/emailAddEdit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
+        android:layout_below="@id/showButton"
         android:layout_marginStart="30dp"
-        android:layout_marginBottom="15dp"
+        android:layout_marginBottom="0dp"
         android:autofillHints=""
         android:ems="10"
         android:hint="@string/emailHint"
         android:inputType="textEmailAddress"
-        android:textColor="@color/rightText"
-        android:textColorHighlight="@color/textSelection"
-        android:textSize="13sp"
+        android:textSize="12sp"
         android:theme="@style/inputField"
         tools:targetApi="o" />
 
@@ -35,9 +61,9 @@
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_alignStart="@+id/emailAddEdit"
-        android:layout_alignBottom="@+id/emailAddEdit"
+        android:layout_alignTop="@id/emailAddEdit"
+        android:layout_alignBottom="@id/emailAddEdit"
         android:layout_alignParentStart="true"
-        android:layout_marginBottom="10dp"
         android:contentDescription="@string/emailImage"
         android:src="@drawable/email" />
 
@@ -48,14 +74,14 @@
         android:layout_below="@id/emailAddEdit"
         android:layout_alignParentBottom="false"
         android:layout_marginStart="30dp"
-        android:layout_marginBottom="15dp"
+        android:layout_marginBottom="0dp"
         android:autofillHints=""
         android:ems="10"
         android:hint="@string/userHint"
         android:inputType="textPersonName"
         android:textColor="@color/rightText"
         android:textColorHighlight="@color/textSelection"
-        android:textSize="13sp"
+        android:textSize="12sp"
         android:theme="@style/inputField"
         tools:targetApi="o" />
 
@@ -64,9 +90,9 @@
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_alignStart="@+id/userAddEdit"
+        android:layout_alignTop="@id/userAddEdit"
         android:layout_alignBottom="@+id/userAddEdit"
         android:layout_alignParentStart="true"
-        android:layout_marginBottom="10dp"
         android:contentDescription="@string/userImage"
         android:src="@drawable/user" />
 
@@ -76,14 +102,14 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/userAddEdit"
         android:layout_marginStart="30dp"
-        android:layout_marginBottom="15dp"
+        android:layout_marginBottom="0dp"
         android:autofillHints=""
         android:ems="10"
         android:hint="@string/passHint"
         android:inputType="textPassword"
         android:textColor="@color/rightText"
         android:textColorHighlight="@color/textSelection"
-        android:textSize="13sp"
+        android:textSize="12sp"
         android:theme="@style/inputField"
         tools:targetApi="o" />
 
@@ -92,9 +118,9 @@
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_alignStart="@+id/passAddEdit"
+        android:layout_alignTop="@id/passAddEdit"
         android:layout_alignBottom="@+id/passAddEdit"
         android:layout_alignParentStart="true"
-        android:layout_marginBottom="10dp"
         android:contentDescription="@string/passImage"
         android:src="@drawable/pass" />
 
@@ -114,14 +140,14 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/passAddEdit"
         android:layout_marginStart="30dp"
+        android:layout_marginBottom="0dp"
         android:autofillHints=""
         android:ems="10"
-        android:gravity="start|top"
         android:hint="@string/description"
         android:inputType="textMultiLine"
         android:textColor="@color/rightText"
         android:textColorHighlight="@color/textSelection"
-        android:textSize="13sp"
+        android:textSize="12sp"
         android:theme="@style/inputField"
         tools:targetApi="o" />
 
@@ -130,10 +156,10 @@
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_alignStart="@+id/descriptionAddEdit"
+        android:layout_alignTop="@id/descriptionAddEdit"
         android:layout_alignBottom="@+id/descriptionAddEdit"
         android:layout_alignParentStart="true"
-        android:layout_marginBottom="10dp"
         android:contentDescription="@string/passImage"
-        app:srcCompat="@android:drawable/ic_menu_edit" />
+        app:srcCompat="@android:drawable/ic_dialog_info" />
 
 </RelativeLayout>

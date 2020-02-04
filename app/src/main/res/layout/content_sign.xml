@@ -18,7 +18,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="30dp"
-            android:layout_marginBottom="15dp"
             android:autofillHints=""
             android:ems="10"
             android:hint="@string/userHint"
@@ -26,7 +25,7 @@
             android:shadowColor="#00D50D0D"
             android:textColor="@color/rightText"
             android:textColorHighlight="@color/textSelection"
-            android:textSize="16sp"
+            android:textSize="14sp"
             android:theme="@style/inputField"
             tools:targetApi="o" />
 
@@ -35,9 +34,9 @@
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_alignStart="@+id/usernameEdit"
-            android:layout_alignBottom="@+id/usernameEdit"
+            android:layout_alignTop="@id/usernameEdit"
+            android:layout_alignBottom="@id/usernameEdit"
             android:layout_alignParentStart="true"
-            android:layout_marginBottom="10dp"
             android:contentDescription="@string/userImage"
             android:src="@drawable/user" />
 
@@ -47,14 +46,14 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/usernameEdit"
             android:layout_marginStart="30dp"
-            android:layout_marginBottom="15dp"
             android:autofillHints=""
             android:ems="10"
             android:hint="@string/passHint"
             android:inputType="textPassword"
             android:textColor="@color/rightText"
             android:textColorHighlight="@color/textSelection"
-            android:textSize="16sp"
+            android:textSize="14sp"
+            android:theme="@style/inputField"
             tools:targetApi="o" />
 
         <ImageView
@@ -62,9 +61,9 @@
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_alignStart="@+id/passwordEdit"
-            android:layout_alignBottom="@+id/passwordEdit"
+            android:layout_alignTop="@id/passwordEdit"
+            android:layout_alignBottom="@id/passwordEdit"
             android:layout_alignParentStart="true"
-            android:layout_marginBottom="10dp"
             android:contentDescription="@string/passImage"
             android:src="@drawable/pass" />
 
@@ -84,14 +83,14 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/passwordEdit"
             android:layout_marginStart="30dp"
-            android:layout_marginBottom="15dp"
             android:autofillHints=""
             android:ems="10"
             android:hint="@string/passHint"
             android:inputType="textPassword"
             android:textColor="@color/rightText"
             android:textColorHighlight="@color/textSelection"
-            android:textSize="16sp"
+            android:textSize="14sp"
+            android:theme="@style/inputField"
             tools:targetApi="o" />
 
         <ImageView
@@ -99,9 +98,9 @@
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_alignStart="@+id/passwordEdit2"
-            android:layout_alignBottom="@+id/passwordEdit2"
+            android:layout_alignTop="@id/passwordEdit2"
+            android:layout_alignBottom="@id/passwordEdit2"
             android:layout_alignParentStart="true"
-            android:layout_marginBottom="10dp"
             android:contentDescription="@string/passImage"
             android:src="@drawable/pass" />
 

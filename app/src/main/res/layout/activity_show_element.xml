@@ -5,29 +5,23 @@
     android:id="@+id/coordinatorLayShow"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
     tools:context=".ShowElementActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar_show"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/app_bar_view"
-        android:fitsSystemWindows="true"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:layout_height="@dimen/app_bar_view">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:id="@+id/toolbar_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:fitsSystemWindows="true"
-            app:contentScrim="?attr/colorPrimary"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbarShow"
+                android:id="@+id/showToolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                app:layout_collapseMode="pin"
                 app:subtitleTextColor="@color/rightText"
                 app:titleTextColor="@color/rightText" />
 

@@ -51,13 +51,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="30dp"
-            android:layout_marginBottom="10dp"
             android:autofillHints=""
             android:ems="10"
             android:hint="@string/usernameHint"
             android:inputType="text"
             android:textColor="@color/rightText"
             android:textColorHighlight="@color/textSelection"
+            android:textSize="16sp"
             android:theme="@style/inputField"
             tools:targetApi="o" />
 
@@ -66,9 +66,9 @@
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_alignStart="@+id/userApp"
+            android:layout_alignTop="@id/userApp"
             android:layout_alignBottom="@+id/userApp"
             android:layout_alignParentStart="true"
-            android:layout_marginBottom="10dp"
             android:contentDescription="@string/userImage"
             android:src="@drawable/user" />
 
@@ -78,13 +78,13 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/userApp"
             android:layout_marginStart="30dp"
-            android:layout_marginBottom="10dp"
             android:autofillHints=""
             android:ems="10"
             android:hint="@string/passswordHint"
             android:inputType="textPassword"
             android:textColor="@color/rightText"
             android:textColorHighlight="@color/textSelection"
+            android:textSize="16sp"
             android:theme="@style/inputField"
             tools:targetApi="o" />
 
@@ -94,9 +94,9 @@
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_alignStart="@+id/passApp"
+            android:layout_alignTop="@id/passApp"
             android:layout_alignBottom="@+id/passApp"
             android:layout_alignParentStart="true"
-            android:layout_marginBottom="10dp"
             android:contentDescription="@string/passImage"
             android:src="@drawable/pass" />
 
@@ -117,7 +117,7 @@
             android:layout_below="@id/passApp"
             android:layout_alignStart="@id/passApp"
             android:layout_marginStart="5dp"
-            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
             android:text="@string/flagApp"
             android:textColor="@color/rightText"
             android:textSize="13sp"

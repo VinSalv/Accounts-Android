@@ -9,170 +9,41 @@
     tools:context=".AddActivity"
     tools:showIn="@layout/activity_add">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:background="@drawable/rounded_color">
-
-        <EditText
-            android:id="@+id/nameAddEdit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:autofillHints=""
-            android:ems="10"
-            android:hint="@string/nameHint"
-            android:inputType="textPersonName"
-            android:textColor="@color/rightText"
-            android:textColorHighlight="@color/textSelection"
-            android:textSize="15sp"
-            android:theme="@style/inputField"
-            tools:targetApi="o" />
-
-    </LinearLayout>
-
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:fillViewport="true"
+        tools:ignore="UselessParent">
 
         <LinearLayout
             android:id="@+id/linearLayAdd"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <RelativeLayout
-                android:id="@+id/subRelativeLayAdd"
+            <LinearLayout
+                android:id="@+id/nameRelLayAdd"
+                android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
                 android:background="@drawable/rounded_color"
-                tools:ignore="UselessParent">
+                android:orientation="horizontal">
 
                 <EditText
-                    android:id="@+id/emailAddEdit"
+                    android:id="@+id/nameAddEdit"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="30dp"
-                    android:layout_marginBottom="15dp"
                     android:autofillHints=""
                     android:ems="10"
-                    android:hint="@string/emailHint"
-                    android:inputType="textEmailAddress"
-                    android:textColor="@color/rightText"
-                    android:textColorHighlight="@color/textSelection"
-                    android:textSize="13sp"
-                    android:theme="@style/inputField"
-                    tools:targetApi="o" />
-
-                <ImageView
-                    android:id="@+id/emailAddImage"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_alignStart="@+id/emailAddEdit"
-                    android:layout_alignBottom="@+id/emailAddEdit"
-                    android:layout_alignParentStart="true"
-                    android:layout_marginBottom="10dp"
-                    android:contentDescription="@string/emailImage"
-                    android:src="@drawable/email" />
-
-                <EditText
-                    android:id="@+id/userAddEdit"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/emailAddEdit"
-                    android:layout_alignParentBottom="false"
-                    android:layout_marginStart="30dp"
-                    android:layout_marginBottom="15dp"
-                    android:autofillHints=""
-                    android:ems="10"
-                    android:hint="@string/userHint"
+                    android:hint="@string/nameHint"
                     android:inputType="textPersonName"
                     android:textColor="@color/rightText"
                     android:textColorHighlight="@color/textSelection"
-                    android:textSize="13sp"
+                    android:textSize="14sp"
                     android:theme="@style/inputField"
                     tools:targetApi="o" />
 
-                <ImageView
-                    android:id="@+id/userAddImage"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_alignStart="@+id/userAddEdit"
-                    android:layout_alignBottom="@+id/userAddEdit"
-                    android:layout_alignParentStart="true"
-                    android:layout_marginBottom="10dp"
-                    android:contentDescription="@string/userImage"
-                    android:src="@drawable/user" />
-
-                <EditText
-                    android:id="@+id/passAddEdit"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/userAddEdit"
-                    android:layout_marginStart="30dp"
-                    android:layout_marginBottom="15dp"
-                    android:autofillHints=""
-                    android:ems="10"
-                    android:hint="@string/passHint"
-                    android:inputType="textPassword"
-                    android:textColor="@color/rightText"
-                    android:textColorHighlight="@color/textSelection"
-                    android:textSize="13sp"
-                    android:theme="@style/inputField"
-                    tools:targetApi="o" />
-
-                <ImageView
-                    android:id="@+id/passAddImage"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_alignStart="@+id/passAddEdit"
-                    android:layout_alignBottom="@+id/passAddEdit"
-                    android:layout_alignParentStart="true"
-                    android:layout_marginBottom="10dp"
-                    android:contentDescription="@string/passImage"
-                    android:src="@drawable/pass" />
-
-                <ImageButton
-                    android:id="@+id/showPassImage"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignEnd="@+id/passAddEdit"
-                    android:layout_alignBottom="@+id/passAddEdit"
-                    android:backgroundTint="@color/transparent"
-                    android:contentDescription="@string/showPassImage"
-                    android:src="@android:drawable/ic_menu_view" />
-
-                <EditText
-                    android:id="@+id/descriptionAddEdit"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/passAddEdit"
-                    android:layout_marginStart="30dp"
-                    android:autofillHints=""
-                    android:ems="10"
-                    android:gravity="start|top"
-                    android:hint="@string/description"
-                    android:inputType="textMultiLine"
-                    android:textColor="@color/rightText"
-                    android:textColorHighlight="@color/textSelection"
-                    android:textSize="13sp"
-                    android:theme="@style/inputField"
-                    tools:targetApi="o" />
-
-                <ImageView
-                    android:id="@+id/descriptionAddImage"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_alignStart="@+id/descriptionAddEdit"
-                    android:layout_alignBottom="@+id/descriptionAddEdit"
-                    android:layout_alignParentStart="true"
-                    android:layout_marginBottom="10dp"
-                    android:contentDescription="@string/passImage"
-                    app:srcCompat="@android:drawable/ic_menu_edit" />
-
-            </RelativeLayout>
+            </LinearLayout>
 
         </LinearLayout>
 

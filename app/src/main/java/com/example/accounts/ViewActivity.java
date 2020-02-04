@@ -229,11 +229,12 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     }
 
     @Override
-    public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+    public boolean onCreateActionMode(ActionMode mode, final Menu menu) {
         MenuInflater inflater = mode.getMenuInflater();
         inflater.inflate(R.menu.my_context_menu, menu);
         return true;
     }
+
 
     @Override
     public boolean onMenuItemClick(MenuItem item) {
@@ -323,8 +324,11 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 adapter.setSelectedIds(selectedIds);
             }
         }
-        selectedIds.size();
-        Objects.requireNonNull(actionMode).setTitle(String.valueOf(selectedIds.size()));
+        if (selectedIds.size() == listAccount.size()) {
+            actionMode.getMenu().getItem(0).setTitle("Deseleziona tutto");
+        } else actionMode.getMenu().getItem(0).setTitle("Seleziona tutto");
+
+        Objects.requireNonNull(actionMode).setTitle("Elem: " + selectedIds.size());
     }
 
     @SuppressLint({"RestrictedApi", "SetTextI18n"})
@@ -379,13 +383,28 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                     }
                 });
             } else notifyUser("Nessun account è stato selezionato per la rimozione.");
+            settingsButton.setVisibility(View.VISIBLE);
+            searchButton.setVisibility(View.VISIBLE);
+            setting.setVisibility(View.VISIBLE);
+            search.setVisibility(View.VISIBLE);
+            add.setVisibility(View.VISIBLE);
             return true;
         }
-        settingsButton.setVisibility(View.VISIBLE);
-        searchButton.setVisibility(View.VISIBLE);
-        setting.setVisibility(View.VISIBLE);
-        search.setVisibility(View.VISIBLE);
-        add.setVisibility(View.VISIBLE);
+        if (menuItem.getItemId() == R.id.select_all) {
+            String s = "Seleziona tutto";
+            if (menuItem.getTitle().toString().toLowerCase().equals(s.toLowerCase())) {
+                menuItem.setTitle("Deseleziona tutto");
+                selectedIds.clear();
+                for (Account a : listAccount) {
+                    selectedIds.add(a.getName());
+                }
+                adapter.setSelectedIds(selectedIds);
+            } else {
+                menuItem.setTitle("Seleziona tutto");
+                selectedIds.clear();
+                adapter.setSelectedIds(selectedIds);
+            }
+        }
         return false;
     }
 

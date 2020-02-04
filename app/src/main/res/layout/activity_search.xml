@@ -23,6 +23,16 @@
         android:textColorHighlight="@color/textSelection"
         tools:targetApi="o" />
 
+    <TextView
+        android:id="@+id/elemFind"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:text="Numero account trovati: 0"
+        android:textAlignment="viewEnd"
+        android:textColor="@color/rightText"
+        android:textSize="16sp" />
+
     <include
         layout="@layout/content_search"
         android:layout_width="match_parent"
