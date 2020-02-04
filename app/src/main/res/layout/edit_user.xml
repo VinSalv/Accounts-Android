@@ -19,7 +19,7 @@
         android:inputType="textPersonName"
         android:textColor="@color/rightText"
         android:textColorHighlight="@color/textSelection"
-        android:textSize="16sp"
+        android:textSize="14sp"
         android:theme="@style/inputField"
         tools:targetApi="o" />
 
@@ -28,9 +28,9 @@
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_alignStart="@+id/userEditText"
+        android:layout_alignTop="@id/userEditText"
         android:layout_alignBottom="@+id/userEditText"
         android:layout_alignParentStart="true"
-        android:layout_marginBottom="10dp"
         android:contentDescription="@string/userImage"
         android:src="@drawable/user" />
 
@@ -43,7 +43,7 @@
         android:text="@string/saveButton"
         android:textAlignment="center"
         android:textColor="@color/colorPrimaryDark"
-        android:textSize="20sp"
+        android:textSize="18sp"
         android:textStyle="normal" />
 
 </RelativeLayout>

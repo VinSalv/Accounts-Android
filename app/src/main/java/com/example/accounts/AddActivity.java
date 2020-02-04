@@ -39,7 +39,6 @@ public class AddActivity extends AppCompatActivity {
     private RelativeLayout rl;
     private LinearLayout ll;
     private ArrayList<RelativeLayout> relativeLayoutsList;
-    private User owner;
     private User usr;
     private ManageAccount mngAcc;
     private ArrayList<Account> listAccount;
@@ -60,12 +59,12 @@ public class AddActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add);
         Toolbar addToolbar = findViewById(R.id.addToolbar);
-        owner = (User) (Objects.requireNonNull(getIntent().getExtras())).get("owner");
+        User owner = (User) (Objects.requireNonNull(getIntent().getExtras())).get("owner");
         rl = findViewById(R.id.addActivityLay);
         ll = findViewById(R.id.linearLayAdd);
         ManageUser mngUsr = new ManageUser();
         ArrayList<User> listUser = mngUsr.deserializationListUser(this);
-        usr = mngUsr.findUser(listUser, owner.getUser());
+        usr = mngUsr.findUser(listUser, Objects.requireNonNull(owner).getUser());
         if (usr != null) {
             addToolbar.setSubtitle("Aggiungi account alla lista di " + usr.getUser());
             setSupportActionBar(addToolbar);
@@ -462,6 +461,7 @@ public class AddActivity extends AppCompatActivity {
         i++;
     }
 
+    @SuppressLint("SetTextI18n")
     public void refreshCardinality() {
         int c = 0;
         for (RelativeLayout rl : relativeLayoutsList) {

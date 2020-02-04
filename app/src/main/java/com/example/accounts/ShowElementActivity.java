@@ -35,14 +35,12 @@ public class ShowElementActivity extends AppCompatActivity implements PopupMenu.
     private CoordinatorLayout cl;
     LinearLayout ll;
     private Account account;
-    private User owner;
     private ManageAccount mngAcc;
     private ArrayList<Account> listAccount;
     private Account acc;
     private TextView name;
     private TextView name2;
     private User usr;
-    private int i;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -54,11 +52,11 @@ public class ShowElementActivity extends AppCompatActivity implements PopupMenu.
         setSupportActionBar(showToolbar);
         cl = findViewById(R.id.coordinatorLayShow);
         ll = findViewById(R.id.linearLayoutShowElements);
-        owner = (User) (Objects.requireNonNull(getIntent().getExtras())).get("owner");
+        User owner = (User) (Objects.requireNonNull(getIntent().getExtras())).get("owner");
         account = (Account) Objects.requireNonNull(getIntent().getExtras()).get("account");
         ManageUser mngUsr = new ManageUser();
         ArrayList<User> listUsr = mngUsr.deserializationListUser(this);
-        usr = mngUsr.findUser(listUsr, owner.getUser());
+        usr = mngUsr.findUser(listUsr, Objects.requireNonNull(owner).getUser());
         if (usr != null) {
             mngAcc = new ManageAccount();
             listAccount = mngAcc.deserializationListAccount(this, usr.getUser());
@@ -90,7 +88,7 @@ public class ShowElementActivity extends AppCompatActivity implements PopupMenu.
                         }
                     }
                 });
-                i = 0;
+                int i = 0;
                 for (final AccountElement ae : acc.getList()) {
                     i++;
                     final String nameText = i + "." + acc.getName();

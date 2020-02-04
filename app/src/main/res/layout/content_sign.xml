@@ -119,6 +119,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/passwordEdit2"
+            android:layout_marginTop="5dp"
             android:paddingLeft="30dp"
             android:paddingRight="30dp"
             android:text="@string/flagFinger"

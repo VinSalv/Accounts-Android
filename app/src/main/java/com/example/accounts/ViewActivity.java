@@ -325,8 +325,8 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             }
         }
         if (selectedIds.size() == listAccount.size()) {
-            actionMode.getMenu().getItem(0).setTitle("Deseleziona tutto");
-        } else actionMode.getMenu().getItem(0).setTitle("Seleziona tutto");
+            Objects.requireNonNull(actionMode).getMenu().getItem(0).setTitle("Deseleziona tutto");
+        } else Objects.requireNonNull(actionMode).getMenu().getItem(0).setTitle("Seleziona tutto");
 
         Objects.requireNonNull(actionMode).setTitle("Elem: " + selectedIds.size());
     }

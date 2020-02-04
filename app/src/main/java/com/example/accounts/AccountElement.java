@@ -28,16 +28,12 @@ public class AccountElement implements Serializable {
         this.user = user;
     }
 
-    public String getPassword() {
+    String getPassword() {
         return password;
     }
 
-    public String getDescription() {
+    String getDescription() {
         return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     @Override

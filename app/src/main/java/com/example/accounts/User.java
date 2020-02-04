@@ -38,11 +38,11 @@ public class User implements Serializable {
         this.user = user;
     }
 
-    public String getPassword() {
+    String getPassword() {
         return this.password;
     }
 
-    public void setPassword(String password) {
+    void setPassword(String password) {
         this.password = password;
     }
 

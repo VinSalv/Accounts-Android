@@ -376,6 +376,7 @@ public class SettingActivity extends AppCompatActivity {
                         f.setFont(font);
                         cell.addElement(f);
                         pt.addCell(cell);
+                        cell = new PdfPCell();
                         f = new Phrase(ae.getDescription());
                         f.setFont(font);
                         cell.addElement(f);

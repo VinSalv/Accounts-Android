@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.InputType;
 import android.util.Patterns;
 import android.view.Gravity;
@@ -39,15 +40,12 @@ public class EditActivity extends AppCompatActivity {
     private RelativeLayout rl;
     private LinearLayout ll;
     private ArrayList<RelativeLayout> relativeLayoutsList;
-    private User owner;
     private ManageAccount mngAcc;
-    private Account account;
     private ArrayList<Account> listAccount;
     private Account acc;
     private User usr;
     private AccountElement elem;
     private ArrayList<AccountElement> accountElementsList;
-    private AccountElement accElem;
     private EditText name;
     private ArrayList<EditText> email;
     private ArrayList<EditText> user;
@@ -56,6 +54,7 @@ public class EditActivity extends AppCompatActivity {
     private ArrayList<ImageButton> showPass;
     private int i;
     private boolean b;
+    private ScrollView sv;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -63,21 +62,21 @@ public class EditActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit);
         Toolbar toolbarEdit = findViewById(R.id.editToolbar);
-        owner = (User) (Objects.requireNonNull(getIntent().getExtras())).get("owner");
+        User owner = (User) (Objects.requireNonNull(getIntent().getExtras())).get("owner");
         rl = findViewById(R.id.editActivityLay);
         ll = findViewById(R.id.linearLayEdit);
         ConstraintLayout constraintLayoutButtons = findViewById(R.id.constraintLayoutButtons);
-        account = (Account) Objects.requireNonNull(getIntent().getExtras()).get("account");
-        accElem = (AccountElement) (getIntent().getExtras()).get("accountElement");
+        Account account = (Account) Objects.requireNonNull(getIntent().getExtras()).get("account");
+        AccountElement accElem = (AccountElement) (getIntent().getExtras()).get("accountElement");
         ManageUser mngUsr = new ManageUser();
         ArrayList<User> listUser = mngUsr.deserializationListUser(this);
-        usr = mngUsr.findUser(listUser, owner.getUser());
+        usr = mngUsr.findUser(listUser, Objects.requireNonNull(owner).getUser());
         if (usr != null) {
             toolbarEdit.setSubtitle("Modifica account dalla lista di " + Objects.requireNonNull(owner).getUser());
             setSupportActionBar(toolbarEdit);
             mngAcc = new ManageAccount();
             listAccount = mngAcc.deserializationListAccount(this, usr.getUser());
-            acc = mngAcc.findAccount(listAccount, account.getName());
+            acc = mngAcc.findAccount(listAccount, Objects.requireNonNull(account).getName());
             if (acc != null) {
                 accountElementsList = new ArrayList<>();
                 relativeLayoutsList = new ArrayList<>();
@@ -307,14 +306,15 @@ public class EditActivity extends AppCompatActivity {
                     i++;
                 }
                 if (accElem != null) {
-                    ScrollView sv = (ScrollView) findViewById(R.id.scrollEdit);
-                    sv.scrollTo(0, sv.getBottom());
                     for (RelativeLayout rl : relativeLayoutsList) {
                         if (((EditText) rl.findViewById(R.id.emailAddEdit)).getText().toString().equals(accElem.getEmail()) &&
                                 ((EditText) rl.findViewById(R.id.userAddEdit)).getText().toString().equals(accElem.getUser()) &&
                                 ((EditText) rl.findViewById(R.id.passAddEdit)).getText().toString().equals(accElem.getPassword()) &&
-                                ((EditText) rl.findViewById(R.id.descriptionAddEdit)).getText().toString().equals(accElem.getDescription()))
-                            ((ImageButton) rl.findViewById(R.id.showButton)).performClick();
+                                ((EditText) rl.findViewById(R.id.descriptionAddEdit)).getText().toString().equals(accElem.getDescription())) {
+                            (rl.findViewById(R.id.showButton)).performClick();
+                            sv = findViewById(R.id.scrollEdit);
+                            focusOnView(rl);
+                        }
                     }
                 }
                 saveButton.setOnClickListener(new View.OnClickListener() {
@@ -433,6 +433,15 @@ public class EditActivity extends AppCompatActivity {
         intent.putExtra("owner", usr);
         startActivity(intent);
         finish();
+    }
+
+    private void focusOnView(final RelativeLayout rel) {
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                sv.scrollTo(0, rel.getBottom());
+            }
+        });
     }
 
     public boolean fieldError(AccountElement a, int n) {
@@ -698,6 +707,7 @@ public class EditActivity extends AppCompatActivity {
         i++;
     }
 
+    @SuppressLint("SetTextI18n")
     public void refreshCardinality() {
         int c = 0;
         for (RelativeLayout rl : relativeLayoutsList) {
@@ -724,13 +734,4 @@ public class EditActivity extends AppCompatActivity {
         });
     }
 
-    public void onBackPressed() {
-        Intent intent = new Intent(EditActivity.this, ViewActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtra("owner", usr);
-        startActivity(intent);
-        this.finish();
-    }
 }
