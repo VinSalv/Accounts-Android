@@ -30,6 +30,7 @@ import com.google.android.material.appbar.AppBarLayout;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Font;
+import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
@@ -276,7 +277,7 @@ public class SettingActivity extends AppCompatActivity {
     }
 
     public void createPDF(User usr, ArrayList<Account> listAccount, String path, File dir) {
-        Document doc = new Document();
+        Document doc = new Document(PageSize.A4.rotate());
         try {
             @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyy");
             File file = new File(dir, "Lista account di " + usr.getUser() + sdf.format(Calendar.getInstance().getTime()) + ".pdf");
@@ -284,11 +285,11 @@ public class SettingActivity extends AppCompatActivity {
             PdfWriter.getInstance(doc, fOut);
             doc.open();
             try {
-                PdfPTable pt = new PdfPTable(4);
+                PdfPTable pt = new PdfPTable(5);
                 pt.setWidthPercentage(100);
-                float[] fl = new float[]{25, 25, 25, 25};
+                float[] fl = new float[]{10, 25, 20, 15, 30};
                 pt.setWidths(fl);
-                Font font = new Font(Font.FontFamily.TIMES_ROMAN, 18, Font.BOLD);
+                Font font = new Font(Font.FontFamily.TIMES_ROMAN, 14, Font.BOLD);
                 Phrase f;
                 PdfPCell cell = new PdfPCell();
                 f = new Phrase("Nome");
@@ -314,15 +315,21 @@ public class SettingActivity extends AppCompatActivity {
                 cell.addElement(f);
                 cell.setBorder(0);
                 pt.addCell(cell);
+                cell = new PdfPCell();
+                f = new Phrase("Descrizione");
+                f.setFont(font);
+                cell.addElement(f);
+                cell.setBorder(0);
+                pt.addCell(cell);
                 for (Account a : listAccount) {
-                    font = new Font(Font.FontFamily.TIMES_ROMAN, 14, Font.BOLD);
+                    font = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.NORMAL);
                     cell = new PdfPCell();
                     f = new Phrase(a.getName());
                     f.setFont(font);
                     cell.addElement(f);
                     pt.addCell(cell);
                     if (a.getList().size() == 0) {
-                        font = new Font(Font.FontFamily.TIMES_ROMAN, 14, Font.NORMAL);
+                        font = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.NORMAL);
                         cell = new PdfPCell();
                         f = new Phrase("");
                         f.setFont(font);
@@ -334,6 +341,10 @@ public class SettingActivity extends AppCompatActivity {
                         cell.addElement(f);
                         pt.addCell(cell);
                         cell = new PdfPCell();
+                        f = new Phrase("");
+                        f.setFont(font);
+                        cell.addElement(f);
+                        pt.addCell(cell);
                         f = new Phrase("");
                         f.setFont(font);
                         cell.addElement(f);
@@ -349,7 +360,7 @@ public class SettingActivity extends AppCompatActivity {
                             cell.addElement(f);
                             pt.addCell(cell);
                         }
-                        font = new Font(Font.FontFamily.TIMES_ROMAN, 14, Font.NORMAL);
+                        font = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.NORMAL);
                         cell = new PdfPCell();
                         f = new Phrase(ae.getEmail());
                         f.setFont(font);
@@ -362,6 +373,10 @@ public class SettingActivity extends AppCompatActivity {
                         pt.addCell(cell);
                         cell = new PdfPCell();
                         f = new Phrase(ae.getPassword());
+                        f.setFont(font);
+                        cell.addElement(f);
+                        pt.addCell(cell);
+                        f = new Phrase(ae.getDescription());
                         f.setFont(font);
                         cell.addElement(f);
                         pt.addCell(cell);
