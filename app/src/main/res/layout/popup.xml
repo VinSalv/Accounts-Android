@@ -25,6 +25,15 @@
         tools:ignore="UselessParent">
 
         <RadioButton
+            android:id="@+id/customized"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:text="@string/customized"
+            android:textColor="@color/rightText"
+            android:textSize="16sp" />
+
+        <RadioButton
             android:id="@+id/increasing"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

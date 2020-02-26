@@ -32,6 +32,7 @@
     <string name="addButton">Aggiungi</string>
     <string name="emptyButton">Resetta</string>
     <string name="saveButton">Salva</string>
+    <string name="customized">Personalizzato</string>
     <string name="increasing">Crescente</string>
     <string name="decreasing">Decrescente</string>
     <string name="profile">Profilo</string>
