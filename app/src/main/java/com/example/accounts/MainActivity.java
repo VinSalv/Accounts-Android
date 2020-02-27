@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
                 if (usr.getFinger()) {
                     biometricAuthentication(lay);
                 } else {
-                    goToViewActivity(usr);
+                    goToCategoryActivity(usr);
                 }
             } else {
                 notifyUser("Impossibile restare connesso");
@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
                     } else {
                         log = new LogApp(flagApp.isChecked(), fixName(userApp.getText().toString()));
                         mngApp.serializationFlag(MainActivity.this, log);
-                        goToViewActivity(usr);
+                        goToCategoryActivity(usr);
                     }
                 } else {
                     userApp.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(MainActivity.this, R.color.errorEditText)));
@@ -118,8 +118,8 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void goToViewActivity(User usr) {
-        Intent intent = new Intent(MainActivity.this, ViewActivity.class);
+    public void goToCategoryActivity(User usr) {
+        Intent intent = new Intent(MainActivity.this, CategoryActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -177,11 +177,11 @@ public class MainActivity extends AppCompatActivity {
                 if (flagApp.isChecked()) {
                     log = new LogApp(flagApp.isChecked(), userApp.getText().toString());
                     mngApp.serializationFlag(MainActivity.this, log);
-                    goToViewActivity(usr);
+                    goToCategoryActivity(usr);
                 } else {
                     log = new LogApp();
                     mngApp.serializationFlag(MainActivity.this, log);
-                    goToViewActivity(usr);
+                    goToCategoryActivity(usr);
                 }
             }
         };

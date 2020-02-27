@@ -93,7 +93,7 @@ public class SignActivity extends AppCompatActivity {
                 if (mngUsr.notFindUser(usr, listUser)) {
                     listUser.add(usr);
                     mngUsr.serializationListUser(SignActivity.this, listUser);
-                    goToViewActivity(usr);
+                    goToCategoryActivity(usr);
                 } else {
                     userEdit.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(SignActivity.this, R.color.errorEditText)));
                     notifyUser("User già esistente");
@@ -103,8 +103,8 @@ public class SignActivity extends AppCompatActivity {
 
     }
 
-    public void goToViewActivity(User usr) {
-        Intent intent = new Intent(SignActivity.this, ViewActivity.class);
+    public void goToCategoryActivity(User usr) {
+        Intent intent = new Intent(SignActivity.this, CategoryActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

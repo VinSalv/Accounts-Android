@@ -15,17 +15,17 @@ import java.util.Objects;
 
 import static androidx.core.content.ContextCompat.getDrawable;
 
-public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyViewHolder> implements ItemMoveCallback.ItemTouchHelperContract {
+public class RecyclerCategoryAdapter extends RecyclerView.Adapter<RecyclerCategoryAdapter.MyViewHolder> implements ItemMoveCategoryCallback.ItemTouchHelperContract {
 
     private ArrayList<String> selectedIds = new ArrayList<>();
-    private ArrayList<Account> data;
+    private ArrayList<Category> data;
     private Context context;
     private ManageUser mngUsr = new ManageUser();
-    private ManageAccount mngAcc = new ManageAccount();
+    private ManageCategory mngCat = new ManageCategory();
     private User usr;
 
 
-    public RecyclerViewAdapter(Context context, ArrayList<Account> data, User usr) {
+    public RecyclerCategoryAdapter(Context context, ArrayList<Category> data, User usr) {
         this.context = context;
         this.data = data;
         this.usr = usr;
@@ -36,14 +36,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.list_account, parent, false);
+        View view = inflater.inflate(R.layout.list_category, parent, false);
         return new MyViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        holder.mTitle.setText(data.get(position).getName());
-        String name = data.get(position).getName();
+        holder.mTitle.setText(data.get(position).getCat());
+        String name = data.get(position).getCat();
         if (selectedIds.contains(name)) {
             holder.mTitle.setBackground(getDrawable(context, R.drawable.rounded_list_element2));
         } else {
@@ -56,7 +56,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         return data.size();
     }
 
-    Account getItem(int position) {
+    Category getItem(int position) {
         if (position == -1) return null;
         else
             return data.get(position);
@@ -78,7 +78,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 Collections.swap(data, i, i - 1);
             }
         }
-        mngAcc.serializationListAccount(context, data, usr.getUser());
+        mngCat.serializationListCategory(context, data, usr.getUser());
         ArrayList<User> listUsr = mngUsr.deserializationListUser(context);
         listUsr.remove(usr);
         usr.setSort(3);
@@ -104,7 +104,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         public MyViewHolder(View itemView) {
             super(itemView);
-            mTitle = itemView.findViewById(R.id.accountElement);
+            mTitle = itemView.findViewById(R.id.categoryElement);
             rootView = itemView.findViewById(R.id.viewActivityLay);
         }
     }

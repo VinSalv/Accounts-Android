@@ -4,11 +4,11 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class ItemMoveCallback extends ItemTouchHelper.Callback {
+public class ItemMoveCategoryCallback extends ItemTouchHelper.Callback {
 
     private final ItemTouchHelperContract mAdapter;
 
-    public ItemMoveCallback(ItemTouchHelperContract adapter) {
+    public ItemMoveCategoryCallback(ItemTouchHelperContract adapter) {
         mAdapter = adapter;
     }
 
@@ -47,9 +47,9 @@ public class ItemMoveCallback extends ItemTouchHelper.Callback {
 
 
         if (actionState != ItemTouchHelper.ACTION_STATE_IDLE) {
-            if (viewHolder instanceof RecyclerViewAdapter.MyViewHolder) {
-                RecyclerViewAdapter.MyViewHolder myViewHolder =
-                        (RecyclerViewAdapter.MyViewHolder) viewHolder;
+            if (viewHolder instanceof RecyclerCategoryAdapter.MyViewHolder) {
+                RecyclerCategoryAdapter.MyViewHolder myViewHolder =
+                        (RecyclerCategoryAdapter.MyViewHolder) viewHolder;
                 mAdapter.onRowSelected(myViewHolder);
             }
 
@@ -63,9 +63,9 @@ public class ItemMoveCallback extends ItemTouchHelper.Callback {
                           RecyclerView.ViewHolder viewHolder) {
         super.clearView(recyclerView, viewHolder);
 
-        if (viewHolder instanceof RecyclerViewAdapter.MyViewHolder) {
-            RecyclerViewAdapter.MyViewHolder myViewHolder =
-                    (RecyclerViewAdapter.MyViewHolder) viewHolder;
+        if (viewHolder instanceof RecyclerCategoryAdapter.MyViewHolder) {
+            RecyclerCategoryAdapter.MyViewHolder myViewHolder =
+                    (RecyclerCategoryAdapter.MyViewHolder) viewHolder;
             mAdapter.onRowClear(myViewHolder);
         }
     }
@@ -74,9 +74,9 @@ public class ItemMoveCallback extends ItemTouchHelper.Callback {
 
         void onRowMoved(int fromPosition, int toPosition);
 
-        void onRowSelected(RecyclerViewAdapter.MyViewHolder myViewHolder);
+        void onRowSelected(RecyclerCategoryAdapter.MyViewHolder myViewHolder);
 
-        void onRowClear(RecyclerViewAdapter.MyViewHolder myViewHolder);
+        void onRowClear(RecyclerCategoryAdapter.MyViewHolder myViewHolder);
     }
 
 }
