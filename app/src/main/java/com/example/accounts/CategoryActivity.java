@@ -82,10 +82,6 @@ public class CategoryActivity extends AppCompatActivity implements PopupMenu.OnM
         usr = mngUsr.findUser(listUser, Objects.requireNonNull(owner).getUser());
         if (usr != null) {
             mngCat = new ManageCategory();
-            listCategory.add(new Category("cat1", null, 1));
-            listCategory.add(new Category("cat2", null, 1));
-            listCategory.add(new Category("cat3", null, 1));
-            mngCat.serializationListCategory(this, listCategory, usr.getUser());
             listCategory = mngCat.deserializationListCategory(this, usr.getUser());
             if (usr.getSort() == 1)
                 mngCat.serializationListCategory(this, increasing(listCategory), usr.getUser());
@@ -368,10 +364,10 @@ public class CategoryActivity extends AppCompatActivity implements PopupMenu.OnM
                     selectedIds = new ArrayList<>();
                     isMultiSelect = true;
                     if (actionMode == null) {
-                        // actionMode = startActionMode(CategoryActivity.this);
+                        actionMode = startActionMode(CategoryActivity.this);
                     }
                 }
-                //multiSelect(-1);
+                multiSelect(-1);
                 return true;
             case R.id.sort:
                 LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);

@@ -34,6 +34,8 @@ public class SignActivity extends AppCompatActivity {
     private Switch flagFinger;
     private ManageUser mngUsr;
     private ArrayList<User> listUser = new ArrayList<>();
+    private ManageCategory mngCat;
+    private ArrayList<Category> listCategory = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +52,7 @@ public class SignActivity extends AppCompatActivity {
         ImageButton showPass = findViewById(R.id.showPass);
         ImageButton showPass2 = findViewById(R.id.showPass2);
         mngUsr = new ManageUser();
+        mngCat = new ManageCategory();
         listUser = mngUsr.deserializationListUser(this);
         signText = findViewById(R.id.signText);
         signTextToolbar = findViewById(R.id.signTextToolbar);
@@ -93,6 +96,10 @@ public class SignActivity extends AppCompatActivity {
                 if (mngUsr.notFindUser(usr, listUser)) {
                     listUser.add(usr);
                     mngUsr.serializationListUser(SignActivity.this, listUser);
+                    listCategory.add(new Category("Siti", null, 1));
+                    listCategory.add(new Category("Social", null, 1));
+                    listCategory.add(new Category("Giochi", null, 1));
+                    mngCat.serializationListCategory(SignActivity.this, listCategory, usr.getUser());
                     goToCategoryActivity(usr);
                 } else {
                     userEdit.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(SignActivity.this, R.color.errorEditText)));
