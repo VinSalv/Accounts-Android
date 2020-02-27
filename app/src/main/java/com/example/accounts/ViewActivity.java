@@ -5,10 +5,14 @@ import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.ActionMode;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
@@ -33,7 +37,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Objects;
 
-public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
+public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener, ActionMode.Callback {
     boolean doubleBackToExitPressedOnce;
     private ManageUser mngUsr;
     private CoordinatorLayout cl;
@@ -48,9 +52,13 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     private TextView wellcome;
     private TextView wellcomeMini;
     private TextView wellcome2;
-    private RecyclerView recyclerView;
     private RecyclerViewAdapter mAdapter;
-    private ArrayList<String> stringArrayList = new ArrayList<>();
+    private boolean isMultiSelect;
+    private ArrayList<String> selectedIds;
+    private ActionMode actionMode;
+    private FloatingActionButton setting;
+    private FloatingActionButton search;
+    private FloatingActionButton add;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -61,8 +69,9 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
         User owner = (User) (Objects.requireNonNull(getIntent().getExtras())).get("owner");
-        recyclerView = findViewById(R.id.recyclerView);
         cl = findViewById(R.id.viewActivityLay);
+        RecyclerView recyclerView = findViewById(R.id.recyclerView);
+        isMultiSelect = false;
         listUser = new ArrayList<>();
         doubleBackToExitPressedOnce = false;
         mngApp = new ManageApp();
@@ -114,7 +123,7 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                     }
                 }
             });
-            FloatingActionButton setting = findViewById(R.id.settingsFloatingButton);
+            setting = findViewById(R.id.settingsFloatingButton);
             setting.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -127,7 +136,7 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                     popupMenu(R.style.rounded_menu_style_toolbar, R.menu.popup, v);
                 }
             });
-            FloatingActionButton search = findViewById(R.id.searchFloatingButton);
+            search = findViewById(R.id.searchFloatingButton);
             search.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -140,7 +149,7 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                     goToSearchActivity(usr);
                 }
             });
-            FloatingActionButton add = findViewById(R.id.addFloatingButton);
+            add = findViewById(R.id.addFloatingButton);
             add.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -154,7 +163,21 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             touchHelper.attachToRecyclerView(recyclerView);
             recyclerView.setLayoutManager(new LinearLayoutManager(this));
             recyclerView.setAdapter(mAdapter);
+            recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this, recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
+                @Override
+                public void onItemClick(View view, int position) {
+                    if (isMultiSelect) {
+                        multiSelect(position);
+                    } else {
+                        goToShowElementActivity(usr, mAdapter.getItem(position));
+                    }
+                }
 
+                @Override
+                public void onItemLongClick(View view, int position) {
+
+                }
+            }));
         } else {
             notifyUser("Utente non rilevato. Impossibile visualizzare la lista degli account.");
             goToMainActivity();
@@ -202,9 +225,146 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     }
 
     @Override
+    public boolean onCreateActionMode(ActionMode mode, final Menu menu) {
+        MenuInflater inflater = mode.getMenuInflater();
+        inflater.inflate(R.menu.my_context_menu, menu);
+        return true;
+    }
+
+    @SuppressLint("RestrictedApi")
+    private void multiSelect(int position) {
+        settingsButton.setVisibility(View.INVISIBLE);
+        searchButton.setVisibility(View.INVISIBLE);
+        setting.setVisibility(View.INVISIBLE);
+        search.setVisibility(View.INVISIBLE);
+        add.setVisibility(View.INVISIBLE);
+        Account data = mAdapter.getItem(position);
+        if (data != null) {
+            if (actionMode != null) {
+                if (selectedIds.contains(data.getName()))
+                    selectedIds.remove(data.getName());
+                else
+                    selectedIds.add(data.getName());
+                mAdapter.setSelectedIds(selectedIds);
+            }
+        }
+        if (selectedIds.size() == listAccount.size()) {
+            Objects.requireNonNull(actionMode).getMenu().getItem(0).setTitle("Deseleziona tutto");
+        } else Objects.requireNonNull(actionMode).getMenu().getItem(0).setTitle("Seleziona tutto");
+
+        Objects.requireNonNull(actionMode).setTitle("Elem: " + selectedIds.size());
+    }
+
+    @SuppressLint({"RestrictedApi", "SetTextI18n"})
+    @Override
+    public boolean onActionItemClicked(ActionMode mode, MenuItem menuItem) {
+        if (menuItem.getItemId() == R.id.delete_id) {
+            if (!selectedIds.isEmpty()) {
+                LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+                final View popupView = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_security, (ViewGroup) findViewById(R.id.popupSecurity));
+                final PopupWindow popupWindow = new PopupWindow(popupView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+                popupWindow.setOutsideTouchable(true);
+                popupWindow.setFocusable(true);
+                //noinspection deprecation
+                popupWindow.setBackgroundDrawable(new BitmapDrawable());
+                View parent = cl.getRootView();
+                popupWindow.showAtLocation(parent, Gravity.CENTER, 0, 0);
+                TextView et = popupView.findViewById(R.id.securityText);
+                if (selectedIds.size() == 1)
+                    et.setText("Sei sicuro di voler eliminare " + selectedIds.get(0) + " dalla lista dei tuoi account?");
+                else
+                    et.setText("Sei sicuro di voler eliminare questi " + selectedIds.size() + " account selezionati?");
+                Button yes = popupView.findViewById(R.id.yes);
+                Button no = popupView.findViewById(R.id.no);
+                yes.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        for (String data : selectedIds) {
+                            Account a = mngAcc.findAccount(listAccount, data);
+                            if (a != null)
+                                listAccount.remove(a);
+                            else
+                                notifyUser("Account " + data + " non rimosso. Non è stato rilevato nella lista!");
+                        }
+                        if (selectedIds.size() == 1)
+                            notifyUser(selectedIds.get(0) + " è stato rimosso con successo!");
+                        else
+                            notifyUser(selectedIds.size() + " account sono stati rimossi con successo!");
+                        popupWindow.dismiss();
+                        mngAcc.serializationListAccount(ViewActivity.this, listAccount, usr.getUser());
+                        startActivity(getIntent());
+                        finish();
+                    }
+                });
+                no.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (selectedIds.size() == 1)
+                            notifyUser(selectedIds.get(0) + " non è stato rimosso.");
+                        else
+                            notifyUser("Nessun account è stato rimosso.");
+                        popupWindow.dismiss();
+                    }
+                });
+            } else notifyUser("Nessun account è stato selezionato per la rimozione.");
+            settingsButton.setVisibility(View.VISIBLE);
+            searchButton.setVisibility(View.VISIBLE);
+            setting.setVisibility(View.VISIBLE);
+            search.setVisibility(View.VISIBLE);
+            add.setVisibility(View.VISIBLE);
+            return true;
+        }
+        if (menuItem.getItemId() == R.id.select_all) {
+            String s = "Seleziona tutto";
+            if (menuItem.getTitle().toString().toLowerCase().equals(s.toLowerCase())) {
+                menuItem.setTitle("Deseleziona tutto");
+                selectedIds.clear();
+                for (Account a : listAccount) {
+                    selectedIds.add(a.getName());
+                }
+                mAdapter.setSelectedIds(selectedIds);
+                Objects.requireNonNull(actionMode).setTitle("Elem: " + selectedIds.size());
+            } else {
+                menuItem.setTitle("Seleziona tutto");
+                selectedIds.clear();
+                mAdapter.setSelectedIds(selectedIds);
+                Objects.requireNonNull(actionMode).setTitle("Elem: " + selectedIds.size());
+            }
+        }
+        return false;
+    }
+
+    @SuppressLint("RestrictedApi")
+    @Override
+    public void onDestroyActionMode(ActionMode mode) {
+        actionMode = null;
+        isMultiSelect = false;
+        selectedIds = new ArrayList<>();
+        mAdapter.setSelectedIds(new ArrayList<String>());
+        settingsButton.setVisibility(View.VISIBLE);
+        searchButton.setVisibility(View.VISIBLE);
+        setting.setVisibility(View.VISIBLE);
+        search.setVisibility(View.VISIBLE);
+        add.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+        return false;
+    }
+
+    @Override
     public boolean onMenuItemClick(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.delete:
+                if (!isMultiSelect) {
+                    selectedIds = new ArrayList<>();
+                    isMultiSelect = true;
+                    if (actionMode == null) {
+                        actionMode = startActionMode(ViewActivity.this);
+                    }
+                }
+                multiSelect(-1);
                 return true;
             case R.id.sort:
                 LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
@@ -242,7 +402,7 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                             listUser.add(usr);
                             mngUsr.serializationListUser(ViewActivity.this, listUser);
                             mngAcc.serializationListAccount(ViewActivity.this, decreasing(listAccount), usr.getUser());
-                        }else{
+                        } else {
                             listUser.remove(usr);
                             usr.setSort(3);
                             listUser.add(usr);
@@ -316,5 +476,10 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 doubleBackToExitPressedOnce = false;
             }
         }, 2000);
+    }
+
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
+
     }
 }

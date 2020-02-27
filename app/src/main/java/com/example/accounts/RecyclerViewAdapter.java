@@ -17,23 +17,13 @@ import static androidx.core.content.ContextCompat.getDrawable;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyViewHolder> implements ItemMoveCallback.ItemTouchHelperContract {
 
+    private ArrayList<String> selectedIds = new ArrayList<>();
     private ArrayList<Account> data;
     private Context context;
     private ManageUser mngUsr = new ManageUser();
     private ManageAccount mngAcc = new ManageAccount();
     private User usr;
 
-
-    public class MyViewHolder extends RecyclerView.ViewHolder {
-        private TextView mTitle;
-        FrameLayout rootView;
-
-        public MyViewHolder(View itemView) {
-            super(itemView);
-            mTitle = itemView.findViewById(R.id.accountElement);
-            rootView = itemView.findViewById(R.id.viewActivityLay);
-        }
-    }
 
     public RecyclerViewAdapter(Context context, ArrayList<Account> data, User usr) {
         this.context = context;
@@ -53,14 +43,29 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         holder.mTitle.setText(data.get(position).getName());
+        String name = data.get(position).getName();
+        if (selectedIds.contains(name)) {
+            holder.mTitle.setBackground(getDrawable(context, R.drawable.rounded_list_element2));
+        } else {
+            holder.mTitle.setBackground(getDrawable(context, R.drawable.rounded_list_element));
+        }
     }
-
 
     @Override
     public int getItemCount() {
         return data.size();
     }
 
+    Account getItem(int position) {
+        if (position == -1) return null;
+        else
+            return data.get(position);
+    }
+
+    void setSelectedIds(ArrayList<String> selectedIds) {
+        this.selectedIds = selectedIds;
+        notifyDataSetChanged();
+    }
 
     @Override
     public void onRowMoved(int fromPosition, int toPosition) {
@@ -74,22 +79,32 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             }
         }
         mngAcc.serializationListAccount(context, data, usr.getUser());
-        ArrayList<User> listUsr =mngUsr.deserializationListUser(context);
+        ArrayList<User> listUsr = mngUsr.deserializationListUser(context);
         listUsr.remove(usr);
         usr.setSort(3);
         listUsr.add(usr);
-        mngUsr.serializationListUser(context,listUsr);
+        mngUsr.serializationListUser(context, listUsr);
         notifyItemMoved(fromPosition, toPosition);
     }
 
     @Override
     public void onRowSelected(MyViewHolder myViewHolder) {
         myViewHolder.mTitle.setBackground(getDrawable(context, R.drawable.rounded_list_element2));
-
     }
 
     @Override
     public void onRowClear(MyViewHolder myViewHolder) {
         myViewHolder.mTitle.setBackground(getDrawable(context, R.drawable.rounded_list_element));
+    }
+
+    public class MyViewHolder extends RecyclerView.ViewHolder {
+        FrameLayout rootView;
+        private TextView mTitle;
+
+        public MyViewHolder(View itemView) {
+            super(itemView);
+            mTitle = itemView.findViewById(R.id.accountElement);
+            rootView = itemView.findViewById(R.id.viewActivityLay);
+        }
     }
 }
