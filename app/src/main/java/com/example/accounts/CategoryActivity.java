@@ -193,10 +193,10 @@ public class CategoryActivity extends AppCompatActivity implements PopupMenu.OnM
             ItemTouchHelper.Callback callback = new ItemMoveCategoryCallback(mAdapter);
             ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
             touchHelper.attachToRecyclerView(recyclerView);
-            GridLayoutManager manager = new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false);
+            GridLayoutManager manager = new GridLayoutManager(this, usr.getColCat(), GridLayoutManager.VERTICAL, false);
             recyclerView.setLayoutManager(manager);
             recyclerView.setAdapter(mAdapter);
-            recyclerView.addItemDecoration(new SpacesItemDecoration(10));
+            recyclerView.addItemDecoration(new SpacesItemDecoration(20, usr.getColCat()));
             recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this, recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position) {
@@ -216,6 +216,11 @@ public class CategoryActivity extends AppCompatActivity implements PopupMenu.OnM
             notifyUser("Utente non rilevato. Impossibile visualizzare la lista degli account.");
             goToMainActivity();
         }
+    }
+
+    public void refresh() {
+        startActivity(getIntent());
+        finish();
     }
 
     public void goToMainActivity() {
@@ -244,11 +249,6 @@ public class CategoryActivity extends AppCompatActivity implements PopupMenu.OnM
         Intent intent = new Intent(CategoryActivity.this, SearchActivity.class);
         intent.putExtra("owner", usr);
         startActivity(intent);
-    }
-
-    public void refresh() {
-        finish();
-        startActivity(getIntent());
     }
 
     @Override

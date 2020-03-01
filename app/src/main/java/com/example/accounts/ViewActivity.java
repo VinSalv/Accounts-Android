@@ -82,103 +82,104 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         if (usr != null) {
             mngCat = new ManageCategory();
             listCat = mngCat.deserializationListCategory(this, usr.getUser());
-            if (cat.getSort() == 1) {
-                if (cat.getListAcc() != null) {
-                    listCat.remove(cat);
-                    cat.setListAcc(increasing(cat.getListAcc()));
-                    listCat.add(cat);
-                    mngCat.serializationListCategory(this, listCat, cat.getCat());
-                }
-            } else if (usr.getSort() == 2) {
-                if (cat.getListAcc() != null) {
-                    listCat.remove(cat);
-                    cat.setListAcc(decreasing(cat.getListAcc()));
-                    listCat.add(cat);
-                    mngCat.serializationListCategory(this, listCat, cat.getCat());
-                }
-            }
-            wellcome = findViewById(R.id.wellcomeText);
-            wellcome.setText(cat.getCat());
-            wellcomeMini = findViewById(R.id.wellcomeMiniText);
-            if (cat.getListAcc() != null)
-                wellcomeMini.setText("Numero account: " + cat.getListAcc().size());
-            else
-                wellcomeMini.setText("Numero account: 0");
-            wellcome2 = findViewById(R.id.wellcomeTextToolbar);
-            wellcome2.setText("Lista della categoria " + cat.getCat());
-            wellcome2.setVisibility(View.INVISIBLE);
-            settingsButton = findViewById(R.id.settingsButton);
-            settingsButton.setVisibility(View.INVISIBLE);
-            searchButton = findViewById(R.id.searchButton);
-            searchButton.setVisibility(View.INVISIBLE);
-            AppBarLayout appBar = findViewById(R.id.viewBarToolbar);
-            appBar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-                boolean isShow = false;
-                int scrollRange = -1;
-
-                @Override
-                public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                    wellcome.setAlpha((1.0f - (float) Math.abs(verticalOffset) / appBarLayout.getTotalScrollRange()));
-                    wellcomeMini.setAlpha((1.0f - (float) Math.abs(verticalOffset) / appBarLayout.getTotalScrollRange()));
-                    if (scrollRange == -1) {
-                        scrollRange = appBarLayout.getTotalScrollRange();
+            cat = mngCat.findAndGetCategory(listCat, Objects.requireNonNull(cat).getCat());
+            if (cat != null) {
+                if (cat.getSort() == 1) {
+                    if (cat.getListAcc() != null) {
+                        listCat.remove(cat);
+                        cat.setListAcc(increasing(cat.getListAcc()));
+                        listCat.add(cat);
+                        mngCat.serializationListCategory(this, listCat, cat.getCat());
                     }
-                    if (scrollRange + verticalOffset == 0) {
-                        isShow = true;
-                        wellcome2.setVisibility(View.VISIBLE);
-                        settingsButton.setVisibility(View.VISIBLE);
-                        searchButton.setVisibility(View.VISIBLE);
-                    } else if (isShow) {
-                        isShow = false;
-                        wellcome2.setVisibility(View.INVISIBLE);
-                        settingsButton.setVisibility(View.INVISIBLE);
-                        searchButton.setVisibility(View.INVISIBLE);
+                } else if (usr.getSort() == 2) {
+                    if (cat.getListAcc() != null) {
+                        listCat.remove(cat);
+                        cat.setListAcc(decreasing(cat.getListAcc()));
+                        listCat.add(cat);
+                        mngCat.serializationListCategory(this, listCat, cat.getCat());
                     }
                 }
-            });
-            setting = findViewById(R.id.settingsFloatingButton);
-            setting.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    popupMenu(R.style.rounded_menu_style, R.menu.popup, v);
-                }
-            });
-            settingsButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    popupMenu(R.style.rounded_menu_style_toolbar, R.menu.popup, v);
-                }
-            });
-            search = findViewById(R.id.searchFloatingButton);
-            search.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    goToSearchActivity(usr);
-                }
-            });
-            searchButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    goToSearchActivity(usr);
-                }
-            });
-            add = findViewById(R.id.addFloatingButton);
-            add.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    goToAddActivity(usr);
-                }
-            });
+                wellcome = findViewById(R.id.wellcomeText);
+                wellcome.setText(cat.getCat());
+                wellcomeMini = findViewById(R.id.wellcomeMiniText);
+                if (cat.getListAcc() != null)
+                    wellcomeMini.setText("Numero account: " + cat.getListAcc().size());
+                else
+                    wellcomeMini.setText("Numero account: 0");
+                wellcome2 = findViewById(R.id.wellcomeTextToolbar);
+                wellcome2.setText("Lista della categoria " + cat.getCat());
+                wellcome2.setVisibility(View.INVISIBLE);
+                settingsButton = findViewById(R.id.settingsButton);
+                settingsButton.setVisibility(View.INVISIBLE);
+                searchButton = findViewById(R.id.searchButton);
+                searchButton.setVisibility(View.INVISIBLE);
+                AppBarLayout appBar = findViewById(R.id.viewBarToolbar);
+                appBar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+                    boolean isShow = false;
+                    int scrollRange = -1;
 
-            if (cat.getListAcc() != null) {
-                mAdapter = new RecyclerViewAdapter(this, cat.getListAcc(), usr, cat);
+                    @Override
+                    public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                        wellcome.setAlpha((1.0f - (float) Math.abs(verticalOffset) / appBarLayout.getTotalScrollRange()));
+                        wellcomeMini.setAlpha((1.0f - (float) Math.abs(verticalOffset) / appBarLayout.getTotalScrollRange()));
+                        if (scrollRange == -1) {
+                            scrollRange = appBarLayout.getTotalScrollRange();
+                        }
+                        if (scrollRange + verticalOffset == 0) {
+                            isShow = true;
+                            wellcome2.setVisibility(View.VISIBLE);
+                            settingsButton.setVisibility(View.VISIBLE);
+                            searchButton.setVisibility(View.VISIBLE);
+                        } else if (isShow) {
+                            isShow = false;
+                            wellcome2.setVisibility(View.INVISIBLE);
+                            settingsButton.setVisibility(View.INVISIBLE);
+                            searchButton.setVisibility(View.INVISIBLE);
+                        }
+                    }
+                });
+                setting = findViewById(R.id.settingsFloatingButton);
+                setting.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        popupMenu(R.style.rounded_menu_style, R.menu.popup, v);
+                    }
+                });
+                settingsButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        popupMenu(R.style.rounded_menu_style_toolbar, R.menu.popup, v);
+                    }
+                });
+                search = findViewById(R.id.searchFloatingButton);
+                search.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        goToSearchActivity(usr);
+                    }
+                });
+                searchButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        goToSearchActivity(usr);
+                    }
+                });
+                add = findViewById(R.id.addFloatingButton);
+                add.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        goToAddActivity(usr);
+                    }
+                });
+
+                mAdapter = new RecyclerViewAdapter(this, usr, cat);
                 ItemTouchHelper.Callback callback = new ItemMoveCallback(mAdapter);
                 ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
                 touchHelper.attachToRecyclerView(recyclerView);
-                GridLayoutManager manager = new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false);
+                GridLayoutManager manager = new GridLayoutManager(this, usr.getColAcc(), GridLayoutManager.VERTICAL, false);
                 recyclerView.setLayoutManager(manager);
                 recyclerView.setAdapter(mAdapter);
-                recyclerView.addItemDecoration(new SpacesItemDecoration(10));
+                recyclerView.addItemDecoration(new SpacesItemDecoration(20, usr.getColAcc()));
                 recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this, recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
@@ -194,6 +195,10 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
                     }
                 }));
+
+            } else {
+                notifyUser("Categoria non rilevata. Impossibile visualizzare la lista degli account.");
+                goToMainActivity();
             }
         } else {
             notifyUser("Utente non rilevato. Impossibile visualizzare la lista degli account.");
@@ -218,6 +223,16 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
     }
 
+    public void goToCategoryActivity() {
+        Intent intent = new Intent(ViewActivity.this, CategoryActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra("owner", usr);
+        startActivity(intent);
+        finish();
+    }
+
     public void goToShowElementActivity(User usr, Account acc) {
         Intent intent = new Intent(ViewActivity.this, ShowElementActivity.class);
         intent.putExtra("account", acc);
@@ -238,8 +253,8 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     }
 
     public void refresh() {
-        finish();
         startActivity(getIntent());
+        finish();
     }
 
     @Override
@@ -289,32 +304,33 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 popupWindow.showAtLocation(parent, Gravity.CENTER, 0, 0);
                 TextView et = popupView.findViewById(R.id.securityText);
                 if (selectedIds.size() == 1)
-                    et.setText("Sei sicuro di voler eliminare " + selectedIds.get(0) + " dalla lista dei tuoi account?");
+                    et.setText("Sei sicuro di voler eliminare " + selectedIds.get(0) + " nella lista " + cat.getCat() + "?");
                 else
-                    et.setText("Sei sicuro di voler eliminare questi " + selectedIds.size() + " account selezionati?");
+                    et.setText("Sei sicuro di voler eliminare questi " + selectedIds.size() + " account selezionati della lista " + cat.getCat() + "?");
                 Button yes = popupView.findViewById(R.id.yes);
                 Button no = popupView.findViewById(R.id.no);
                 final Account acc;
                 yes.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        listCat.remove(cat);
+                        ArrayList<Account> listToRemove = cat.getListAcc();
                         for (String data : selectedIds) {
-                            Account acc = null;
-                            for (Account a : cat.getListAcc())
-                                if (!a.getName().toLowerCase().equals(data.toLowerCase())) {
-                                    acc = a;
-                                } else acc = null;
-                            if (acc == null)
-                                cat.getListAcc().remove(acc);
-                            else
-                                notifyUser("Account " + data + " non rimosso. Non è stato rilevato nella lista!");
+                            for (Account a : cat.getListAcc()) {
+                                if (a.getName().toLowerCase().equals(data.toLowerCase())) {
+                                    listToRemove.remove(a);
+                                    break;
+                                }
+                            }
                         }
+                        cat.setListAcc(listToRemove);
+                        listCat.add(cat);
                         if (selectedIds.size() == 1)
                             notifyUser(selectedIds.get(0) + " è stato rimosso con successo!");
                         else
                             notifyUser(selectedIds.size() + " account sono stati rimossi con successo!");
                         popupWindow.dismiss();
-                        mngCat.serializationListCategory(ViewActivity.this, listCat, cat.getCat());
+                        mngCat.serializationListCategory(ViewActivity.this, listCat, usr.getUser());
                         refresh();
                     }
                 });
@@ -483,7 +499,7 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        finish();
+        goToCategoryActivity();
     }
 
     @Override

@@ -122,7 +122,7 @@ public class AddActivity extends AppCompatActivity {
                         mngCat.serializationListCategory(AddActivity.this, listCategory, usr.getUser());
                         if (b)
                             notifyUser("Gli elementi senza nessun campo compilato non verranno memorizzati!");
-                        goToViewActivity(usr);
+                        goToViewActivity(usr, cat);
                     } else {
                         name.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(AddActivity.this, R.color.errorEditText)));
                         notifyUser("Applicativo già registrato in questa categoria!");
@@ -196,12 +196,13 @@ public class AddActivity extends AppCompatActivity {
         finish();
     }
 
-    public void goToViewActivity(User usr) {
+    public void goToViewActivity(User usr, Category cat) {
         Intent intent = new Intent(AddActivity.this, ViewActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("owner", usr);
+        intent.putExtra("category", cat);
         startActivity(intent);
         finish();
     }

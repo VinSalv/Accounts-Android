@@ -17,7 +17,6 @@ import static androidx.core.content.ContextCompat.getDrawable;
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyViewHolder> implements ItemMoveCallback.ItemTouchHelperContract {
 
     private ArrayList<String> selectedIds = new ArrayList<>();
-    private ArrayList<Category> listCategory = new ArrayList<>();
     private ArrayList<Account> data;
     private Context context;
     private ManageUser mngUsr = new ManageUser();
@@ -25,9 +24,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private ManageCategory mngCat = new ManageCategory();
     private Category cat;
 
-    public RecyclerViewAdapter(Context context, ArrayList<Account> data, User usr, Category cat) {
+    public RecyclerViewAdapter(Context context, User usr, Category cat) {
         this.context = context;
-        this.data = data;
+        this.data = cat.getListAcc();
         this.usr = usr;
         this.cat = cat;
     }
@@ -68,6 +67,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public void onRowMoved(int fromPosition, int toPosition) {
+        ArrayList<Category> listCategory = mngCat.deserializationListCategory(context, usr.getUser());
+        mngCat.removeFileCategory(context, usr.getUser());
+
         if (fromPosition < toPosition) {
             for (int i = fromPosition; i < toPosition; i++) {
                 Collections.swap(data, i, i + 1);
@@ -77,16 +79,23 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 Collections.swap(data, i, i - 1);
             }
         }
-        listCategory = mngCat.deserializationListCategory(context, usr.getUser());
-        listCategory.remove(cat);
-        cat.setListAcc(data);
-        listCategory.add(cat);
-        mngCat.serializationListCategory(context, listCategory, usr.getUser());
+
+        ArrayList<Category> listCategory2 = new ArrayList<>();
+        for (Category c : listCategory) {
+            if (!c.getCat().toLowerCase().equals(cat.getCat().toLowerCase())) {
+                listCategory2.add(c);
+            } else {
+                listCategory2.add(new Category(cat.getCat(), data, 3));
+            }
+        }
+        mngCat.serializationListCategory(context, listCategory2, usr.getUser());
+
         ArrayList<User> listUsr = mngUsr.deserializationListUser(context);
         listUsr.remove(usr);
         usr.setSort(3);
         listUsr.add(usr);
         mngUsr.serializationListUser(context, listUsr);
+
         notifyItemMoved(fromPosition, toPosition);
     }
 

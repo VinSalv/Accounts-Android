@@ -36,6 +36,7 @@
     <string name="increasing">Crescente</string>
     <string name="decreasing">Decrescente</string>
     <string name="profile">Profilo</string>
+    <string name="customize">Personalizzazione</string>
     <string name="pdf">Estrai PDF</string>
     <string name="deleteProfile">Elimina profilo</string>
     <string name="editFlagFinger">Autenticazione biometrica?</string>
@@ -44,6 +45,7 @@
     <string name="no">No</string>
     <string name="yes">Si</string>
     <string name="textProfile">Cosa vuoi fare?</string>
+    <string name="textCostusmize">Cosa vuoi personalizzare?</string>
     <string name="passwordSecurityText">Conferma la tua password</string>
     <string name="Confirmation">Conferma</string>
     <string name="signTextView">Inserisci i dati per la registrazione</string>
@@ -74,4 +76,6 @@
     <string name="categoryText">Come vuoi chiamare la nuova categoria?</string>
     <string name="categoryHint">Categoria</string>
     <string name="categoryImage">Immagine categoria</string>
+    <string name="ColumnCategory">Colonne categorie</string>
+    <string name="ColumnAccount">Colonne account</string>
 </resources>

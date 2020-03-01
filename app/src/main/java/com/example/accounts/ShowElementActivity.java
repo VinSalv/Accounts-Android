@@ -540,6 +540,7 @@ public class ShowElementActivity extends AppCompatActivity implements PopupMenu.
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("owner", usr);
+        intent.putExtra("category", cat);
         startActivity(intent);
         finish();
     }

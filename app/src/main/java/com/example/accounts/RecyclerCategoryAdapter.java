@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Objects;
 
 import static androidx.core.content.ContextCompat.getDrawable;
 
@@ -28,8 +27,6 @@ public class RecyclerCategoryAdapter extends RecyclerView.Adapter<RecyclerCatego
         this.context = context;
         this.data = data;
         this.usr = usr;
-        usr = mngUsr.findUser(mngUsr.deserializationListUser(context), Objects.requireNonNull(usr).getUser());
-        if (usr == null) return;
     }
 
     @Override

@@ -80,6 +80,7 @@ public class SettingActivity extends AppCompatActivity {
         usr = mngUsr.findUser(listUser, Objects.requireNonNull(owner).getUser());
         if (usr != null) {
             Button prof = findViewById(R.id.profile);
+            Button custom = findViewById(R.id.customize);
             Button pdf = findViewById(R.id.pdf);
             Button delProf = findViewById(R.id.deleteProfile);
             setting = findViewById(R.id.settingText);
@@ -138,6 +139,14 @@ public class SettingActivity extends AppCompatActivity {
                     showPass(et, showPass);
                 }
             });
+
+            custom.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    goToCustomizeActivity(usr);
+                }
+            });
+
             pdf.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -213,6 +222,7 @@ public class SettingActivity extends AppCompatActivity {
                     showPass(et, showPass);
                 }
             });
+
             delProf.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -264,8 +274,8 @@ public class SettingActivity extends AppCompatActivity {
         finish();
     }
 
-    public void goToViewActivity() {
-        Intent intent = new Intent(SettingActivity.this, ViewActivity.class);
+    public void goToCategoryActivity() {
+        Intent intent = new Intent(SettingActivity.this, CategoryActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -280,6 +290,12 @@ public class SettingActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void goToCustomizeActivity(User usr) {
+        Intent intent = new Intent(SettingActivity.this, CustomizeActivity.class);
+        intent.putExtra("owner", usr);
+        startActivity(intent);
+    }
+
     private void notifyUser(String message) {
         Toast.makeText(this,
                 message,
@@ -287,7 +303,7 @@ public class SettingActivity extends AppCompatActivity {
     }
 
     public void onBackPressed() {
-        goToViewActivity();
+        goToCategoryActivity();
     }
 
     public void createPDF(User usr, ArrayList<Account> listAccount, String path, File dir, Boolean b) {
