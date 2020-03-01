@@ -47,10 +47,30 @@ public class ManageCategory {
         }
     }
 
-    Category findCategory(ArrayList<Category> list, String sCat) {
+    Boolean findCategory(ArrayList<Category> list, String sCat) {
+        for (Category cat : list)
+            if (cat.getCat().toLowerCase().equals(sCat.toLowerCase()))
+                return true;
+        return false;
+    }
+
+    Category findAndGetCategory(ArrayList<Category> list, String sCat) {
         for (Category cat : list)
             if (cat.getCat().toLowerCase().equals(sCat.toLowerCase()))
                 return cat;
         return null;
     }
+
+    Account findAccount(ArrayList<Account> list, String name) {
+        for (Account a : list)
+            if (a.getName().toLowerCase().equals(name.toLowerCase()))
+                return a;
+        return null;
+    }
+
+
+    boolean notFind(Account a, ArrayList<Account> list) {
+        return !list.contains(a);
+    }
+
 }

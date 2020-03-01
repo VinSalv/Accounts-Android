@@ -8,6 +8,12 @@ public class Category implements Serializable {
     private ArrayList<Account> listAcc;
     private int sort;
 
+    public Category(String cat, int sort) {
+        this.cat = cat;
+        listAcc = new ArrayList<>();
+        this.sort = sort;
+    }
+
     public Category(String cat, ArrayList<Account> listAcc, int sort) {
         this.cat = cat;
         this.listAcc = listAcc;

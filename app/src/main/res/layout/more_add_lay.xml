@@ -16,7 +16,7 @@
         android:layout_alignParentStart="true"
         android:layout_toStartOf="@id/deleteButton"
         android:text="@string/name"
-        android:textSize="14sp"
+        android:textSize="18sp"
         android:textStyle="bold" />
 
     <ImageButton
@@ -53,7 +53,7 @@
         android:ems="10"
         android:hint="@string/emailHint"
         android:inputType="textEmailAddress"
-        android:textSize="12sp"
+        android:textSize="16sp"
         android:theme="@style/inputField"
         tools:targetApi="o" />
 
@@ -82,7 +82,7 @@
         android:inputType="textPersonName"
         android:textColor="@color/rightText"
         android:textColorHighlight="@color/textSelection"
-        android:textSize="12sp"
+        android:textSize="16sp"
         android:theme="@style/inputField"
         tools:targetApi="o" />
 
@@ -110,7 +110,7 @@
         android:inputType="textPassword"
         android:textColor="@color/rightText"
         android:textColorHighlight="@color/textSelection"
-        android:textSize="12sp"
+        android:textSize="16sp"
         android:theme="@style/inputField"
         tools:targetApi="o" />
 
@@ -149,7 +149,7 @@
         android:inputType="textMultiLine"
         android:textColor="@color/rightText"
         android:textColorHighlight="@color/textSelection"
-        android:textSize="12sp"
+        android:textSize="16sp"
         android:theme="@style/inputField"
         tools:targetApi="o" />
 

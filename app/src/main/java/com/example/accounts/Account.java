@@ -1,16 +1,25 @@
 package com.example.accounts;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Account implements Serializable {
     private String name;
+    private String category;
     private List<AccountElement> list;
 
-    public Account(String name, ArrayList<AccountElement> list) {
+    public Account(String name, String category, List<AccountElement> list) {
         this.name = name;
+        this.category = category;
         this.list = list;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public String getName() {
@@ -23,6 +32,10 @@ public class Account implements Serializable {
 
     List<AccountElement> getList() {
         return list;
+    }
+
+    public void setList(List<AccountElement> list) {
+        this.list = list;
     }
 
     @Override

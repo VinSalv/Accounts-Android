@@ -35,7 +35,6 @@ public class ProfileActivity extends AppCompatActivity {
     private CoordinatorLayout cl;
     private ManageUser mngUsr;
     private User usr;
-    private ManageAccount mngAcc;
     private ArrayList<User> listUser;
     private ManageApp mngApp;
     private LogApp log;
@@ -43,6 +42,8 @@ public class ProfileActivity extends AppCompatActivity {
     private TextView profile2;
     private ImageButton showPass;
     private ImageButton showPass2;
+    private ManageCategory mngCat;
+    private ArrayList<Category> listCategory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +64,7 @@ public class ProfileActivity extends AppCompatActivity {
         listUser = mngUsr.deserializationListUser(this);
         usr = mngUsr.findUser(listUser, Objects.requireNonNull(owner).getUser());
         if (usr != null) {
+            mngCat = new ManageCategory();
             if (usr.getFinger()) {
                 flagProfApp.setChecked(true);
             }
@@ -127,12 +129,11 @@ public class ProfileActivity extends AppCompatActivity {
                                 return;
                             }
                             if (mngUsr.notFindUser(new User(username.getText().toString(), "", false, 0), listUser)) {
-                                mngAcc = new ManageAccount();
-                                ArrayList<Account> list = mngAcc.deserializationListAccount(ProfileActivity.this, usrApp.getUser());
-                                mngAcc.removeFileAccount(ProfileActivity.this, usrApp.getUser());
+                                listCategory = mngCat.deserializationListCategory(ProfileActivity.this, usrApp.getUser());
+                                mngCat.removeFileCategory(ProfileActivity.this, usrApp.getUser());
                                 listUser.remove(usrApp);
                                 usr.setUser(fixName(username.getText().toString()));
-                                mngAcc.serializationListAccount(ProfileActivity.this, list, usr.getUser());
+                                mngCat.serializationListCategory(ProfileActivity.this, listCategory, usr.getUser());
                                 listUser.add(usr);
                                 mngUsr.serializationListUser(ProfileActivity.this, listUser);
                                 mngApp = new ManageApp();

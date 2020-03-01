@@ -2,6 +2,7 @@ package com.example.accounts;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.PopupWindow;
@@ -25,6 +27,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
@@ -72,8 +75,6 @@ public class CategoryActivity extends AppCompatActivity implements PopupMenu.OnM
         cl = findViewById(R.id.catActivityLay);
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         isMultiSelect = false;
-        listUser = new ArrayList<>();
-        listCategory = new ArrayList<>();
         doubleBackToExitPressedOnce = false;
         mngApp = new ManageApp();
         log = mngApp.deserializationFlag(this);
@@ -154,7 +155,37 @@ public class CategoryActivity extends AppCompatActivity implements PopupMenu.OnM
             add.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    goToAddActivity(usr);
+                    LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+                    final View popupView = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_category, (ViewGroup) findViewById(R.id.categoryPopup));
+                    final PopupWindow popupWindow = new PopupWindow(popupView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+                    popupWindow.setOutsideTouchable(true);
+                    popupWindow.setFocusable(true);
+                    //noinspection deprecation
+                    popupWindow.setBackgroundDrawable(new BitmapDrawable());
+                    View parent = cl.getRootView();
+                    popupWindow.showAtLocation(parent, Gravity.CENTER, 0, 0);
+                    final EditText et = popupView.findViewById(R.id.categoryEditText);
+                    Button conf = popupView.findViewById(R.id.confirmation);
+                    conf.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            et.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(CategoryActivity.this, R.color.colorAccent)));
+                            if (notFieldCheck(et.getText().toString())) {
+                                et.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(CategoryActivity.this, R.color.errorEditText)));
+                                return;
+                            }
+                            if (!mngCat.findCategory(listCategory, et.getText().toString())) {
+                                listCategory.add(new Category(fixName(et.getText().toString()), 1));
+                                mngCat.serializationListCategory(CategoryActivity.this, listCategory, usr.getUser());
+                                notifyUser("Categoria aggiunta con successo");
+                                refresh();
+                                popupWindow.dismiss();
+                            } else {
+                                et.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(CategoryActivity.this, R.color.errorEditText)));
+                                notifyUser("Categoria gia esistente");
+                            }
+                        }
+                    });
                 }
             });
 
@@ -165,13 +196,14 @@ public class CategoryActivity extends AppCompatActivity implements PopupMenu.OnM
             GridLayoutManager manager = new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false);
             recyclerView.setLayoutManager(manager);
             recyclerView.setAdapter(mAdapter);
+            recyclerView.addItemDecoration(new SpacesItemDecoration(10));
             recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this, recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position) {
                     if (isMultiSelect) {
                         multiSelect(position);
                     } else {
-                        // goToShowElementActivity(usr, mAdapter.getItem(position));
+                        goViewActivity(usr, mAdapter.getItem(position));
                     }
                 }
 
@@ -195,17 +227,10 @@ public class CategoryActivity extends AppCompatActivity implements PopupMenu.OnM
         finish();
     }
 
-    public void goToAddActivity(User usr) {
-        Intent intent = new Intent(CategoryActivity.this, AddActivity.class);
+    public void goViewActivity(User usr, Category cat) {
+        Intent intent = new Intent(CategoryActivity.this, ViewActivity.class);
         intent.putExtra("owner", usr);
-        startActivity(intent);
-
-    }
-
-    public void goToShowElementActivity(User usr, Account acc) {
-        Intent intent = new Intent(CategoryActivity.this, ShowElementActivity.class);
-        intent.putExtra("account", acc);
-        intent.putExtra("owner", usr);
+        intent.putExtra("category", cat);
         startActivity(intent);
     }
 
@@ -252,7 +277,8 @@ public class CategoryActivity extends AppCompatActivity implements PopupMenu.OnM
         }
         if (selectedIds.size() == listCategory.size()) {
             Objects.requireNonNull(actionMode).getMenu().getItem(0).setTitle("Deseleziona tutto");
-        } else Objects.requireNonNull(actionMode).getMenu().getItem(0).setTitle("Seleziona tutto");
+        } else
+            Objects.requireNonNull(actionMode).getMenu().getItem(0).setTitle("Seleziona tutto");
 
         Objects.requireNonNull(actionMode).setTitle("Elem: " + selectedIds.size());
     }
@@ -282,7 +308,7 @@ public class CategoryActivity extends AppCompatActivity implements PopupMenu.OnM
                     @Override
                     public void onClick(View v) {
                         for (String data : selectedIds) {
-                            Category cat = mngCat.findCategory(listCategory, data);
+                            Category cat = mngCat.findAndGetCategory(listCategory, data);
                             if (cat != null)
                                 listCategory.remove(cat);
                             else
@@ -354,7 +380,6 @@ public class CategoryActivity extends AppCompatActivity implements PopupMenu.OnM
     public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
         return false;
     }
-
 
     @Override
     public boolean onMenuItemClick(MenuItem item) {
@@ -440,6 +465,28 @@ public class CategoryActivity extends AppCompatActivity implements PopupMenu.OnM
         Toast.makeText(this,
                 message,
                 Toast.LENGTH_LONG).show();
+    }
+
+    public boolean notFieldCheck(String s) {
+        if (isInvalidWord(s)) {
+            notifyUser("Campo non valido !!!");
+            return true;
+        }
+        return false;
+    }
+
+    public boolean isInvalidWord(String word) {
+        return ((!word.matches("[A-Za-z0-9?!_.-]*")) || (word.isEmpty()));
+    }
+
+    public String fixName(String name) {
+        if (name.isEmpty()) return name;
+        else {
+            name = name.toLowerCase();
+            String name1 = name.substring(0, 1).toUpperCase();
+            String name2 = name.substring(1).toLowerCase();
+            return name1.concat(name2);
+        }
     }
 
     public ArrayList<Category> increasing(ArrayList<Category> list) {

@@ -55,13 +55,13 @@ public class SettingActivity extends AppCompatActivity {
     private ArrayList<User> listUser = new ArrayList<>();
     private ManageApp mngApp;
     private LogApp log;
-    private ManageAccount mngAcc;
     private ArrayList<Account> listAccount;
     private TextView setting;
     private TextView setting2;
     private String path;
     private File dir;
     private ImageButton showPass;
+    private ManageCategory mngCat;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -79,8 +79,6 @@ public class SettingActivity extends AppCompatActivity {
         listUser = mngUsr.deserializationListUser(this);
         usr = mngUsr.findUser(listUser, Objects.requireNonNull(owner).getUser());
         if (usr != null) {
-            mngAcc = new ManageAccount();
-            listAccount = mngAcc.deserializationListAccount(this, usr.getUser());
             Button prof = findViewById(R.id.profile);
             Button pdf = findViewById(R.id.pdf);
             Button delProf = findViewById(R.id.deleteProfile);
@@ -238,7 +236,7 @@ public class SettingActivity extends AppCompatActivity {
                                 mngApp.serializationFlag(SettingActivity.this, log);
                                 listUser.remove(usr);
                                 mngUsr.serializationListUser(SettingActivity.this, listUser);
-                                mngAcc.removeFileAccount(SettingActivity.this, usr.getUser());
+                                mngCat.removeFileCategory(SettingActivity.this, usr.getUser());
                                 goToMainActivity();
                                 popupWindow.dismiss();
                             } else {

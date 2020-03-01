@@ -96,9 +96,9 @@ public class SignActivity extends AppCompatActivity {
                 if (mngUsr.notFindUser(usr, listUser)) {
                     listUser.add(usr);
                     mngUsr.serializationListUser(SignActivity.this, listUser);
-                    listCategory.add(new Category("Siti", null, 1));
-                    listCategory.add(new Category("Social", null, 1));
-                    listCategory.add(new Category("Giochi", null, 1));
+                    listCategory.add(new Category("Siti", 1));
+                    listCategory.add(new Category("Social", 1));
+                    listCategory.add(new Category("Giochi", 1));
                     mngCat.serializationListCategory(SignActivity.this, listCategory, usr.getUser());
                     goToCategoryActivity(usr);
                 } else {

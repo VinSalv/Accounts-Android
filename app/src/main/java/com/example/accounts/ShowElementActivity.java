@@ -34,12 +34,14 @@ import java.util.Objects;
 public class ShowElementActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
     private CoordinatorLayout cl;
     private Account account;
-    private ManageAccount mngAcc;
     private ArrayList<Account> listAccount;
     private Account acc;
     private TextView name;
     private TextView name2;
     private User usr;
+    private ManageCategory mngCat;
+    private Category cat;
+    private ArrayList<Category> listCategory;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -53,13 +55,16 @@ public class ShowElementActivity extends AppCompatActivity implements PopupMenu.
         LinearLayout ll = findViewById(R.id.linearLayoutShowElements);
         User owner = (User) (Objects.requireNonNull(getIntent().getExtras())).get("owner");
         account = (Account) Objects.requireNonNull(getIntent().getExtras()).get("account");
+        Category category = (Category) (Objects.requireNonNull(getIntent().getExtras())).get("category");
         ManageUser mngUsr = new ManageUser();
         ArrayList<User> listUsr = mngUsr.deserializationListUser(this);
         usr = mngUsr.findUser(listUsr, Objects.requireNonNull(owner).getUser());
         if (usr != null) {
-            mngAcc = new ManageAccount();
-            listAccount = mngAcc.deserializationListAccount(this, usr.getUser());
-            acc = mngAcc.findAccount(listAccount, account.getName());
+            mngCat = new ManageCategory();
+            listCategory = mngCat.deserializationListCategory(this, usr.getUser());
+            cat = mngCat.findAndGetCategory(listCategory, Objects.requireNonNull(category).getCat());
+            listAccount = cat.getListAcc();
+            acc = mngCat.findAccount(listAccount, account.getName());
             if (acc != null) {
                 name = findViewById(R.id.name);
                 name.setText(acc.getName());
@@ -432,7 +437,10 @@ public class ShowElementActivity extends AppCompatActivity implements PopupMenu.
                                     acc.getList().remove(ae);
                                     listAccount.remove(account);
                                     listAccount.add(acc);
-                                    mngAcc.serializationListAccount(ShowElementActivity.this, listAccount, usr.getUser());
+                                    listCategory.remove(cat);
+                                    cat.setListAcc(listAccount);
+                                    listCategory.add(cat);
+                                    mngCat.serializationListCategory(ShowElementActivity.this, listCategory, usr.getUser());
                                     notifyUser(nameText + " è stato rimosso con successo!");
                                     refresh();
                                     popupWindow.dismiss();
@@ -490,7 +498,10 @@ public class ShowElementActivity extends AppCompatActivity implements PopupMenu.
                     @Override
                     public void onClick(View v) {
                         listAccount.remove(account);
-                        mngAcc.serializationListAccount(ShowElementActivity.this, listAccount, usr.getUser());
+                        listCategory.remove(cat);
+                        cat.setListAcc(listAccount);
+                        listCategory.add(cat);
+                        mngCat.serializationListCategory(ShowElementActivity.this, listCategory, usr.getUser());
                         notifyUser(account.getName() + " è stato rimosso con successo!");
                         goToViewActivity(usr);
                         popupWindow.dismiss();

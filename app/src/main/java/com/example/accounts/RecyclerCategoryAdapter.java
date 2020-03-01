@@ -24,7 +24,6 @@ public class RecyclerCategoryAdapter extends RecyclerView.Adapter<RecyclerCatego
     private ManageCategory mngCat = new ManageCategory();
     private User usr;
 
-
     public RecyclerCategoryAdapter(Context context, ArrayList<Category> data, User usr) {
         this.context = context;
         this.data = data;
@@ -105,7 +104,7 @@ public class RecyclerCategoryAdapter extends RecyclerView.Adapter<RecyclerCatego
         public MyViewHolder(View itemView) {
             super(itemView);
             mTitle = itemView.findViewById(R.id.categoryElement);
-            rootView = itemView.findViewById(R.id.viewActivityLay);
+            rootView = itemView.findViewById(R.id.catActivityLay);
         }
     }
 }

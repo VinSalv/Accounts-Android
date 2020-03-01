@@ -40,10 +40,9 @@ public class EditActivity extends AppCompatActivity {
     private RelativeLayout rl;
     private LinearLayout ll;
     private ArrayList<RelativeLayout> relativeLayoutsList;
-    private ManageAccount mngAcc;
-    private ArrayList<Account> listAccount;
-    private Account acc;
     private User usr;
+    private Account acc;
+    private ArrayList<Account> listAccount;
     private AccountElement elem;
     private ArrayList<AccountElement> accountElementsList;
     private EditText name;
@@ -55,6 +54,9 @@ public class EditActivity extends AppCompatActivity {
     private int i;
     private boolean b;
     private ScrollView sv;
+    private ManageCategory mngCat;
+    private Category cat;
+    private ArrayList<Category> listCategory;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -63,6 +65,7 @@ public class EditActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit);
         Toolbar toolbarEdit = findViewById(R.id.editToolbar);
         User owner = (User) (Objects.requireNonNull(getIntent().getExtras())).get("owner");
+        Category category = (Category) (Objects.requireNonNull(getIntent().getExtras())).get("category");
         rl = findViewById(R.id.editActivityLay);
         ll = findViewById(R.id.linearLayEdit);
         ConstraintLayout constraintLayoutButtons = findViewById(R.id.constraintLayoutButtons);
@@ -72,11 +75,12 @@ public class EditActivity extends AppCompatActivity {
         ArrayList<User> listUser = mngUsr.deserializationListUser(this);
         usr = mngUsr.findUser(listUser, Objects.requireNonNull(owner).getUser());
         if (usr != null) {
-            toolbarEdit.setSubtitle("Modifica account dalla lista di " + Objects.requireNonNull(owner).getUser());
+            mngCat = new ManageCategory();
+            listCategory = mngCat.deserializationListCategory(this, usr.getUser());
+            cat = mngCat.findAndGetCategory(listCategory, Objects.requireNonNull(category).getCat());
+            toolbarEdit.setSubtitle("Aggiungi account alla categoria " + cat.getCat());
             setSupportActionBar(toolbarEdit);
-            mngAcc = new ManageAccount();
-            listAccount = mngAcc.deserializationListAccount(this, usr.getUser());
-            acc = mngAcc.findAccount(listAccount, Objects.requireNonNull(account).getName());
+            listAccount = cat.getListAcc();
             if (acc != null) {
                 accountElementsList = new ArrayList<>();
                 relativeLayoutsList = new ArrayList<>();
@@ -473,7 +477,7 @@ public class EditActivity extends AppCompatActivity {
                                 accountElementsList.add(elem);
                             } else b = true;
                         }
-                        Account a = new Account(name.getText().toString(), accountElementsList);
+                        Account a = new Account(name.getText().toString(), cat.getCat(), accountElementsList);
                         if (a.getName().isEmpty()) {
                             name.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(EditActivity.this, R.color.errorEditText)));
                             notifyUser("Il campo nome non può essere vuoto!");
@@ -484,10 +488,13 @@ public class EditActivity extends AppCompatActivity {
                             if (fieldError(elem, n)) return;
                             n++;
                         }
-                        if (mngAcc.notFind(a, listAccount) || a.equals(acc.getName())) {
+                        if (mngCat.notFind(acc, listAccount) || a.equals(acc.getName())) {
                             listAccount.remove(acc);
                             listAccount.add(a);
-                            mngAcc.serializationListAccount(EditActivity.this, listAccount, usr.getUser());
+                            listCategory.remove(cat);
+                            cat.setListAcc(listAccount);
+                            listCategory.add(cat);
+                            mngCat.serializationListCategory(EditActivity.this, listCategory, usr.getUser());
                             if (b)
                                 notifyUser("Gli elementi senza nessun campo compilato non verranno memorizzati!");
                             goToViewActivity(usr);

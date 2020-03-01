@@ -39,8 +39,7 @@ public class SearchActivity extends AppCompatActivity {
         ArrayList<User> listUser = mngUsr.deserializationListUser(this);
         usr = mngUsr.findUser(listUser, Objects.requireNonNull(owner).getUser());
         if (usr != null) {
-            ManageAccount mngAcc = new ManageAccount();
-            listAccount = mngAcc.deserializationListAccount(this, usr.getUser());
+            listAccount = null;
             name.addTextChangedListener(new TextWatcher() {
                 @SuppressLint("SetTextI18n")
                 @Override

@@ -40,7 +40,6 @@ public class AddActivity extends AppCompatActivity {
     private LinearLayout ll;
     private ArrayList<RelativeLayout> relativeLayoutsList;
     private User usr;
-    private ManageAccount mngAcc;
     private ArrayList<Account> listAccount;
     private AccountElement elem;
     private ArrayList<AccountElement> accountElementsList;
@@ -52,6 +51,9 @@ public class AddActivity extends AppCompatActivity {
     private ArrayList<ImageButton> showPass;
     private int i;
     private boolean b;
+    private ManageCategory mngCat;
+    private Category cat;
+    private ArrayList<Category> listCategory;
 
     @RequiresApi(api = Build.VERSION_CODES.Q)
     @Override
@@ -60,16 +62,19 @@ public class AddActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add);
         Toolbar addToolbar = findViewById(R.id.addToolbar);
         User owner = (User) (Objects.requireNonNull(getIntent().getExtras())).get("owner");
+        Category category = (Category) (Objects.requireNonNull(getIntent().getExtras())).get("category");
         rl = findViewById(R.id.addActivityLay);
         ll = findViewById(R.id.linearLayAdd);
         ManageUser mngUsr = new ManageUser();
         ArrayList<User> listUser = mngUsr.deserializationListUser(this);
         usr = mngUsr.findUser(listUser, Objects.requireNonNull(owner).getUser());
         if (usr != null) {
-            addToolbar.setSubtitle("Aggiungi account alla lista di " + usr.getUser());
+            mngCat = new ManageCategory();
+            listCategory = mngCat.deserializationListCategory(this, usr.getUser());
+            cat = mngCat.findAndGetCategory(listCategory, Objects.requireNonNull(category).getCat());
+            addToolbar.setSubtitle("Aggiungi account alla categoria " + cat.getCat());
             setSupportActionBar(addToolbar);
-            mngAcc = new ManageAccount();
-            listAccount = mngAcc.deserializationListAccount(this, usr.getUser());
+            listAccount = cat.getListAcc();
             accountElementsList = new ArrayList<>();
             relativeLayoutsList = new ArrayList<>();
             name = findViewById(R.id.nameAddEdit);
@@ -98,7 +103,7 @@ public class AddActivity extends AppCompatActivity {
                             accountElementsList.add(elem);
                         } else b = true;
                     }
-                    Account acc = new Account(name.getText().toString(), accountElementsList);
+                    Account acc = new Account(name.getText().toString(), cat.getCat(), accountElementsList);
                     if (acc.getName().isEmpty()) {
                         name.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(AddActivity.this, R.color.errorEditText)));
                         notifyUser("Associare il nome all'account!");
@@ -109,15 +114,18 @@ public class AddActivity extends AppCompatActivity {
                         if (fieldError(elem, n)) return;
                         n++;
                     }
-                    if (mngAcc.notFind(acc, listAccount)) {
+                    if (mngCat.notFind(acc, listAccount)) {
                         listAccount.add(acc);
-                        mngAcc.serializationListAccount(AddActivity.this, listAccount, usr.getUser());
+                        listCategory.remove(cat);
+                        cat.setListAcc(listAccount);
+                        listCategory.add(cat);
+                        mngCat.serializationListCategory(AddActivity.this, listCategory, usr.getUser());
                         if (b)
                             notifyUser("Gli elementi senza nessun campo compilato non verranno memorizzati!");
                         goToViewActivity(usr);
                     } else {
                         name.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(AddActivity.this, R.color.errorEditText)));
-                        notifyUser("Applicativo già registrato!");
+                        notifyUser("Applicativo già registrato in questa categoria!");
                     }
                 }
 

@@ -11,26 +11,25 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Objects;
 
 import static androidx.core.content.ContextCompat.getDrawable;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyViewHolder> implements ItemMoveCallback.ItemTouchHelperContract {
 
     private ArrayList<String> selectedIds = new ArrayList<>();
+    private ArrayList<Category> listCategory = new ArrayList<>();
     private ArrayList<Account> data;
     private Context context;
     private ManageUser mngUsr = new ManageUser();
-    private ManageAccount mngAcc = new ManageAccount();
     private User usr;
+    private ManageCategory mngCat = new ManageCategory();
+    private Category cat;
 
-
-    public RecyclerViewAdapter(Context context, ArrayList<Account> data, User usr) {
+    public RecyclerViewAdapter(Context context, ArrayList<Account> data, User usr, Category cat) {
         this.context = context;
         this.data = data;
         this.usr = usr;
-        usr = mngUsr.findUser(mngUsr.deserializationListUser(context), Objects.requireNonNull(usr).getUser());
-        if (usr == null) return;
+        this.cat = cat;
     }
 
     @Override
@@ -78,7 +77,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 Collections.swap(data, i, i - 1);
             }
         }
-        mngAcc.serializationListAccount(context, data, usr.getUser());
+        listCategory = mngCat.deserializationListCategory(context, usr.getUser());
+        listCategory.remove(cat);
+        cat.setListAcc(data);
+        listCategory.add(cat);
+        mngCat.serializationListCategory(context, listCategory, usr.getUser());
         ArrayList<User> listUsr = mngUsr.deserializationListUser(context);
         listUsr.remove(usr);
         usr.setSort(3);
