@@ -71,6 +71,7 @@ public class CategoryActivity extends AppCompatActivity implements PopupMenu.OnM
         final Toolbar toolbar = findViewById(R.id.catToolbar);
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
+
         User owner = (User) (Objects.requireNonNull(getIntent().getExtras())).get("owner");
         cl = findViewById(R.id.catActivityLay);
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
@@ -254,17 +255,13 @@ public class CategoryActivity extends AppCompatActivity implements PopupMenu.OnM
     @Override
     public boolean onCreateActionMode(ActionMode mode, final Menu menu) {
         MenuInflater inflater = mode.getMenuInflater();
-        inflater.inflate(R.menu.my_context_menu, menu);
+        inflater.inflate(R.menu.my_context_menu_category, menu);
         return true;
     }
 
     @SuppressLint("RestrictedApi")
     private void multiSelect(int position) {
-        settingsButton.setVisibility(View.INVISIBLE);
-        searchButton.setVisibility(View.INVISIBLE);
-        setting.setVisibility(View.INVISIBLE);
-        search.setVisibility(View.INVISIBLE);
-        add.setVisibility(View.INVISIBLE);
+
         Category data = mAdapter.getItem(position);
         if (data != null) {
             if (actionMode != null) {
@@ -335,11 +332,6 @@ public class CategoryActivity extends AppCompatActivity implements PopupMenu.OnM
                     }
                 });
             } else notifyUser("Nessuna categoria è stata selezionata per la rimozione.");
-            settingsButton.setVisibility(View.VISIBLE);
-            searchButton.setVisibility(View.VISIBLE);
-            setting.setVisibility(View.VISIBLE);
-            search.setVisibility(View.VISIBLE);
-            add.setVisibility(View.VISIBLE);
             return true;
         }
         if (menuItem.getItemId() == R.id.select_all) {
@@ -381,14 +373,20 @@ public class CategoryActivity extends AppCompatActivity implements PopupMenu.OnM
         return false;
     }
 
+    @SuppressLint("RestrictedApi")
     @Override
     public boolean onMenuItemClick(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.delete:
+            case R.id.edit:
                 if (!isMultiSelect) {
                     selectedIds = new ArrayList<>();
                     isMultiSelect = true;
                     if (actionMode == null) {
+                        settingsButton.setVisibility(View.GONE);
+                        searchButton.setVisibility(View.GONE);
+                        setting.setVisibility(View.GONE);
+                        search.setVisibility(View.GONE);
+                        add.setVisibility(View.GONE);
                         actionMode = startActionMode(CategoryActivity.this);
                     }
                 }

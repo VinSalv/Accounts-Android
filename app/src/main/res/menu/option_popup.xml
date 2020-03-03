@@ -6,4 +6,11 @@
     <item
         android:id="@+id/delete"
         android:title="@string/action_delete" />
+    <item
+        android:id="@+id/copy"
+        android:title="@string/action_copy" />
+    <item
+        android:id="@+id/cut"
+        android:title="@string/action_cut" />
+
 </menu>

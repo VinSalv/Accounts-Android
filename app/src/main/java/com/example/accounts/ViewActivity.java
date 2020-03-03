@@ -232,6 +232,19 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         finish();
     }
 
+    public void goToCategoryChoseActivity(String opt) {
+        Intent intent = new Intent(ViewActivity.this, CategoryChoseActivity.class);
+        ArrayList<Account> acc = new ArrayList<>();
+        for (String s : selectedIds)
+            acc.add(mngCat.findAccount(cat.getListAcc(), s));
+        intent.putExtra("owner", usr);
+        intent.putExtra("category", cat);
+        intent.putExtra("listAccount", acc);
+        intent.putExtra("option", opt);
+        startActivity(intent);
+        finish();
+    }
+
     public void goToShowElementActivity(User usr, Account acc, Category cat) {
         Intent intent = new Intent(ViewActivity.this, ShowElementActivity.class);
         intent.putExtra("account", acc);
@@ -260,17 +273,12 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     @Override
     public boolean onCreateActionMode(ActionMode mode, final Menu menu) {
         MenuInflater inflater = mode.getMenuInflater();
-        inflater.inflate(R.menu.my_context_menu, menu);
+        inflater.inflate(R.menu.my_context_menu_account, menu);
         return true;
     }
 
     @SuppressLint("RestrictedApi")
     private void multiSelect(int position) {
-        settingsButton.setVisibility(View.INVISIBLE);
-        searchButton.setVisibility(View.INVISIBLE);
-        setting.setVisibility(View.INVISIBLE);
-        search.setVisibility(View.INVISIBLE);
-        add.setVisibility(View.INVISIBLE);
         Account data = mAdapter.getItem(position);
         if (data != null) {
             if (actionMode != null) {
@@ -284,14 +292,13 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         if (selectedIds.size() == cat.getListAcc().size()) {
             Objects.requireNonNull(actionMode).getMenu().getItem(0).setTitle("Deseleziona tutto");
         } else Objects.requireNonNull(actionMode).getMenu().getItem(0).setTitle("Seleziona tutto");
-
         Objects.requireNonNull(actionMode).setTitle("Elem: " + selectedIds.size());
     }
 
     @SuppressLint({"RestrictedApi", "SetTextI18n"})
     @Override
     public boolean onActionItemClicked(ActionMode mode, MenuItem menuItem) {
-        if (menuItem.getItemId() == R.id.delete_id) {
+        if (menuItem.getItemId() == R.id.edit) {
             if (!selectedIds.isEmpty()) {
                 LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
                 final View popupView = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_security, (ViewGroup) findViewById(R.id.popupSecurity));
@@ -345,11 +352,6 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                     }
                 });
             } else notifyUser("Nessun account è stato selezionato per la rimozione.");
-            settingsButton.setVisibility(View.VISIBLE);
-            searchButton.setVisibility(View.VISIBLE);
-            setting.setVisibility(View.VISIBLE);
-            search.setVisibility(View.VISIBLE);
-            add.setVisibility(View.VISIBLE);
             return true;
         }
         if (menuItem.getItemId() == R.id.select_all) {
@@ -368,6 +370,18 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 mAdapter.setSelectedIds(selectedIds);
                 Objects.requireNonNull(actionMode).setTitle("Elem: " + selectedIds.size());
             }
+        }
+        if (menuItem.getItemId() == R.id.copy) {
+            if (!selectedIds.isEmpty()) {
+                goToCategoryChoseActivity("copy");
+            } else notifyUser("Nessun account è stato selezionato per la copia.");
+            return true;
+        }
+        if (menuItem.getItemId() == R.id.cut) {
+            if (!selectedIds.isEmpty()) {
+                goToCategoryChoseActivity("cut");
+            } else notifyUser("Nessun account è stato selezionato per lo spostamento.");
+            return true;
         }
         return false;
     }
@@ -391,14 +405,20 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         return false;
     }
 
+    @SuppressLint("RestrictedApi")
     @Override
     public boolean onMenuItemClick(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.delete:
+            case R.id.edit:
                 if (!isMultiSelect) {
                     selectedIds = new ArrayList<>();
                     isMultiSelect = true;
                     if (actionMode == null) {
+                        settingsButton.setVisibility(View.GONE);
+                        searchButton.setVisibility(View.GONE);
+                        setting.setVisibility(View.GONE);
+                        search.setVisibility(View.GONE);
+                        add.setVisibility(View.GONE);
                         actionMode = startActionMode(ViewActivity.this);
                     }
                 }

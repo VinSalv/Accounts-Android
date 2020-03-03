@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/popupSecurity"
+    android:id="@+id/popupEquals"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="@drawable/rounded_popup">
 
     <TextView
-        android:id="@+id/securityText"
+        android:id="@+id/equalsText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/Sure"
+        android:text="@string/equalsText"
         android:textColor="@color/rightText"
         android:textSize="18sp"
         android:textStyle="normal"
@@ -19,32 +19,50 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/no"
+        android:id="@+id/overWrite"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:background="@drawable/rounded_button"
-        android:text="@string/no"
-        android:textAlignment="center"
+        android:gravity="center"
+        android:text="@string/overWrite"
         android:textColor="@color/colorPrimaryClear"
         android:textSize="18sp"
         android:textStyle="normal"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/securityText"
-        app:layout_constraintWidth_percent="0.5" />
+        app:layout_constraintTop_toBottomOf="@id/equalsText"
+        app:layout_constraintWidth_percent="0.30" />
 
     <Button
-        android:id="@+id/yes"
+        android:id="@+id/rename"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:background="@drawable/rounded_button"
-        android:text="@string/yes"
-        android:textAlignment="center"
+        android:gravity="center"
+        android:text="@string/rename"
+        android:textColor="@color/colorPrimaryClear"
+        android:textSize="18sp"
+        android:textStyle="normal"
+        app:layout_constraintEnd_toStartOf="@+id/ignore"
+        app:layout_constraintStart_toEndOf="@+id/overWrite"
+        app:layout_constraintTop_toBottomOf="@id/equalsText"
+        app:layout_constraintWidth_percent="0.30" />
+
+    <Button
+        android:id="@+id/ignore"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/rounded_button"
+        android:gravity="center"
+        android:text="@string/ignore"
         android:textColor="@color/colorPrimaryClear"
         android:textSize="18sp"
         android:textStyle="normal"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/securityText"
-        app:layout_constraintWidth_percent="0.5" />
+        app:layout_constraintStart_toEndOf="@+id/rename"
+        app:layout_constraintTop_toBottomOf="@id/equalsText"
+        app:layout_constraintWidth_percent="0.30" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

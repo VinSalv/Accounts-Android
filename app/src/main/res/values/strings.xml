@@ -26,6 +26,8 @@
     <string name="settings">Settings</string>
     <string name="action_edit">Modifica</string>
     <string name="action_delete">Elimina</string>
+    <string name="action_copy">Copia</string>
+    <string name="action_cut">Sposta</string>
     <string name="action_sort">Ordina</string>
     <string name="action_setting">Impostazioni</string>
     <string name="action_exit">Esci</string>
@@ -86,4 +88,9 @@
     <string name="searchCategoria">Categoria</string>
     <string name="findSearchCategory">Trovati: 0</string>
     <string name="showSearchCategory">Mostra elementi categoria trovati</string>
+    <string name="equalsText">Esiste gia un account di nome Account nella categoria Categoria. Cosa vuoi fare?</string>
+    <string name="overWrite">Sovrascrivi</string>
+    <string name="rename">Rinomina</string>
+    <string name="ignore">Ignora</string>
+    <string name="renameText">Rinomina account Account</string>
 </resources>

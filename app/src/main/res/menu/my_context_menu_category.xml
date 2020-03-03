@@ -4,11 +4,10 @@
     <item
         android:id="@+id/select_all"
         android:title="@string/action_select"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
     <item
         android:id="@+id/delete_id"
         android:icon="@android:drawable/ic_menu_delete"
         android:title="@string/action_delete"
-        app:showAsAction="always" />
-
+        app:showAsAction="ifRoom" />
 </menu>
