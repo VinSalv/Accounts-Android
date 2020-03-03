@@ -186,7 +186,6 @@ public class AddActivity extends AppCompatActivity {
         }
     }
 
-
     public void goToMainActivity() {
         Intent intent = new Intent(AddActivity.this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -635,13 +634,5 @@ public class AddActivity extends AppCompatActivity {
         });
     }
 
-    public void onBackPressed() {
-        Intent intent = new Intent(AddActivity.this, ViewActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtra("owner", usr);
-        startActivity(intent);
-        this.finish();
-    }
+
 }

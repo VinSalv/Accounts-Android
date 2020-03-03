@@ -50,9 +50,10 @@
     <string name="Confirmation">Conferma</string>
     <string name="signTextView">Inserisci i dati per la registrazione</string>
     <string name="wellcome">Benvenuto</string>
-    <string name="wellcomeMini">Numero elementi</string>
-    <string name="wellcome2">Lista di</string>
+    <string name="wellcomeMini">Numero account: 0</string>
+    <string name="wellcome2">Lista della categoria </string>
     <string name="Sure">Sei sicuro di voler</string>
+    <string name="text_search">Categorie:</string>
     <string name="text_PDF">Imposta l\'ordine dei tuoi account</string>
     <string name="text_PDF2">Imposta l\'orientazione della pagina</string>
     <string name="description">Descrizione</string>
@@ -73,9 +74,16 @@
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="category">Categoria</string>
+    <string name="categoryTextCollapse">Numero categorie: 0</string>
+    <string name="categoryTextCollapse2">Lista categorie di </string>
     <string name="categoryText">Come vuoi chiamare la nuova categoria?</string>
     <string name="categoryHint">Categoria</string>
     <string name="categoryImage">Immagine categoria</string>
     <string name="ColumnCategory">Colonne categorie</string>
     <string name="ColumnAccount">Colonne account</string>
+    <string name="search">Cerca</string>
+    <string name="checkBoxAll">Tutti</string>
+    <string name="searchCategoria">Categoria</string>
+    <string name="findSearchCategory">Trovati: 0</string>
+    <string name="showSearchCategory">Mostra elementi categoria trovati</string>
 </resources>

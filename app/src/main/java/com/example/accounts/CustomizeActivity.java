@@ -64,7 +64,7 @@ public class CustomizeActivity extends AppCompatActivity {
             numColumnCat.add("1");
             numColumnCat.add("2");
             ArrayAdapter<String> adapterCat = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, numColumnCat);
-            adapterCat.setDropDownViewResource(android.R.layout.simple_spinner_item);
+            adapterCat.setDropDownViewResource(R.layout.spinner_item);
             spinnerCategory.setAdapter(adapterCat);
             spinnerCategory.setSelection(usr.getColCat() - 1);
             spinnerCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -87,7 +87,7 @@ public class CustomizeActivity extends AppCompatActivity {
             numColumnAcc.add("1");
             numColumnAcc.add("2");
             ArrayAdapter<String> adapterAcc = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, numColumnAcc);
-            adapterAcc.setDropDownViewResource(android.R.layout.simple_spinner_item);
+            adapterAcc.setDropDownViewResource(R.layout.spinner_item);
             spinnerAccount.setAdapter(adapterAcc);
             spinnerAccount.setSelection(usr.getColAcc() - 1);
             spinnerAccount.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

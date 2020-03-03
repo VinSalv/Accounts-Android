@@ -55,14 +55,13 @@ public class ShowElementActivity extends AppCompatActivity implements PopupMenu.
         LinearLayout ll = findViewById(R.id.linearLayoutShowElements);
         User owner = (User) (Objects.requireNonNull(getIntent().getExtras())).get("owner");
         account = (Account) Objects.requireNonNull(getIntent().getExtras()).get("account");
-        Category category = (Category) (Objects.requireNonNull(getIntent().getExtras())).get("category");
         ManageUser mngUsr = new ManageUser();
         ArrayList<User> listUsr = mngUsr.deserializationListUser(this);
         usr = mngUsr.findUser(listUsr, Objects.requireNonNull(owner).getUser());
         if (usr != null) {
             mngCat = new ManageCategory();
             listCategory = mngCat.deserializationListCategory(this, usr.getUser());
-            cat = mngCat.findAndGetCategory(listCategory, Objects.requireNonNull(category).getCat());
+            cat = mngCat.findAndGetCategory(listCategory, ((Category) (Objects.requireNonNull(getIntent().getExtras())).get("category")).getCat());
             listAccount = cat.getListAcc();
             acc = mngCat.findAccount(listAccount, account.getName());
             if (acc != null) {
@@ -411,7 +410,7 @@ public class ShowElementActivity extends AppCompatActivity implements PopupMenu.
                     edit.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            goToEditActivity(usr, acc, ae);
+                            goToEditActivity(usr, acc, ae, cat);
                         }
                     });
                     ImageButton del = relLey.findViewById(R.id.deleteButton);
@@ -465,7 +464,7 @@ public class ShowElementActivity extends AppCompatActivity implements PopupMenu.
                 });
             } else {
                 notifyUser("Account non rilevato. Impossibile mostrare i dati.");
-                goToViewActivity(usr);
+                goToViewActivity(usr, cat);
             }
         } else {
             notifyUser("Utente non rilevato. Impossibile mostrare l'account.");
@@ -478,7 +477,7 @@ public class ShowElementActivity extends AppCompatActivity implements PopupMenu.
     public boolean onMenuItemClick(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.edit:
-                goToEditActivity(usr, acc);
+                goToEditActivity(usr, acc, cat);
                 return true;
             case R.id.delete:
                 LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
@@ -503,7 +502,7 @@ public class ShowElementActivity extends AppCompatActivity implements PopupMenu.
                         listCategory.add(cat);
                         mngCat.serializationListCategory(ShowElementActivity.this, listCategory, usr.getUser());
                         notifyUser(account.getName() + " è stato rimosso con successo!");
-                        goToViewActivity(usr);
+                        goToViewActivity(usr, cat);
                         popupWindow.dismiss();
                     }
                 });
@@ -534,7 +533,7 @@ public class ShowElementActivity extends AppCompatActivity implements PopupMenu.
         finish();
     }
 
-    public void goToViewActivity(User usr) {
+    public void goToViewActivity(User usr, Category cat) {
         Intent intent = new Intent(ShowElementActivity.this, ViewActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -545,18 +544,20 @@ public class ShowElementActivity extends AppCompatActivity implements PopupMenu.
         finish();
     }
 
-    public void goToEditActivity(User usr, Account acc, AccountElement ae) {
+    public void goToEditActivity(User usr, Account acc, AccountElement ae, Category cat) {
         Intent intent = new Intent(ShowElementActivity.this, EditActivity.class);
         intent.putExtra("owner", usr);
         intent.putExtra("account", acc);
         intent.putExtra("accountElement", ae);
+        intent.putExtra("category", cat);
         startActivity(intent);
     }
 
-    public void goToEditActivity(User usr, Account acc) {
+    public void goToEditActivity(User usr, Account acc, Category cat) {
         Intent intent = new Intent(ShowElementActivity.this, EditActivity.class);
         intent.putExtra("owner", usr);
         intent.putExtra("account", acc);
+        intent.putExtra("category", cat);
         startActivity(intent);
     }
 

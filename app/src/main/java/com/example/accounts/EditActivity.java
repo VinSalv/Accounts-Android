@@ -69,7 +69,6 @@ public class EditActivity extends AppCompatActivity {
         rl = findViewById(R.id.editActivityLay);
         ll = findViewById(R.id.linearLayEdit);
         ConstraintLayout constraintLayoutButtons = findViewById(R.id.constraintLayoutButtons);
-        Account account = (Account) Objects.requireNonNull(getIntent().getExtras()).get("account");
         AccountElement accElem = (AccountElement) (getIntent().getExtras()).get("accountElement");
         ManageUser mngUsr = new ManageUser();
         ArrayList<User> listUser = mngUsr.deserializationListUser(this);
@@ -81,6 +80,7 @@ public class EditActivity extends AppCompatActivity {
             toolbarEdit.setSubtitle("Aggiungi account alla categoria " + cat.getCat());
             setSupportActionBar(toolbarEdit);
             listAccount = cat.getListAcc();
+            acc = mngCat.findAccount(listAccount, ((Account) Objects.requireNonNull(getIntent().getExtras()).get("account")).getName());
             if (acc != null) {
                 accountElementsList = new ArrayList<>();
                 relativeLayoutsList = new ArrayList<>();
@@ -95,7 +95,7 @@ public class EditActivity extends AppCompatActivity {
                 Button saveButton = constraintLayoutButtons.findViewById(R.id.saveButton);
                 Button emptyButton = constraintLayoutButtons.findViewById(R.id.emptyButton);
                 FloatingActionButton addElem = findViewById(R.id.addElemFloatingButton);
-                name.setText(account.getName());
+                name.setText(acc.getName());
                 for (final AccountElement ae : acc.getList()) {
                     LayoutInflater inflater = LayoutInflater.from(EditActivity.this);
                     @SuppressLint("InflateParams") final RelativeLayout relLey = (RelativeLayout) inflater.inflate(R.layout.more_add_lay, null);
@@ -1020,5 +1020,4 @@ public class EditActivity extends AppCompatActivity {
             }
         });
     }
-
 }

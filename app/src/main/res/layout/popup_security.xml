@@ -7,7 +7,7 @@
     android:background="@drawable/rounded_popup">
 
     <TextView
-        android:id="@+id/securityText"
+        android:id="@+id/searchText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/Sure"

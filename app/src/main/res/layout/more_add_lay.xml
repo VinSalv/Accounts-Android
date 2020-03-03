@@ -16,6 +16,7 @@
         android:layout_alignParentStart="true"
         android:layout_toStartOf="@id/deleteButton"
         android:text="@string/name"
+        android:textColor="@color/rightText"
         android:textSize="18sp"
         android:textStyle="bold" />
 
