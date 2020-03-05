@@ -14,6 +14,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -62,6 +64,7 @@ public class SettingActivity extends AppCompatActivity {
     private File dir;
     private ImageButton showPass;
     private ManageCategory mngCat;
+    private ArrayList<Category> listCategoryPdf;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -79,6 +82,7 @@ public class SettingActivity extends AppCompatActivity {
         listUser = mngUsr.deserializationListUser(this);
         usr = mngUsr.findUser(listUser, Objects.requireNonNull(owner).getUser());
         if (usr != null) {
+            mngCat = new ManageCategory();
             Button prof = findViewById(R.id.profile);
             Button custom = findViewById(R.id.customize);
             Button pdf = findViewById(R.id.pdf);
@@ -168,60 +172,165 @@ public class SettingActivity extends AppCompatActivity {
                             if (et.getText().toString().equals(usr.getPassword())) {
                                 popupWindow.dismiss();
                                 LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
-                                @SuppressLint("InflateParams") final View popupView = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_pdf, null);
-                                final PopupWindow popupWindow = new PopupWindow(popupView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
-                                popupWindow.setOutsideTouchable(true);
-                                popupWindow.setFocusable(true);
+                                final View popupViewChoseCat = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_pdf_chose_category, (ViewGroup) findViewById(R.id.pdfChoseCategoryPopup));
+                                final PopupWindow popupWindowChoseCat = new PopupWindow(popupViewChoseCat, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+                                popupWindowChoseCat.setOutsideTouchable(true);
+                                popupWindowChoseCat.setFocusable(true);
                                 //noinspection deprecation
-                                popupWindow.setBackgroundDrawable(new BitmapDrawable());
+                                popupWindowChoseCat.setBackgroundDrawable(new BitmapDrawable());
                                 View parent = cl.getRootView();
-                                popupWindow.showAtLocation(parent, Gravity.CENTER, 0, 0);
-                                final RadioGroup rg1 = popupView.findViewById(R.id.sortPDF);
-                                final RadioGroup rg2 = popupView.findViewById(R.id.orientationPDF);
-                                final RadioButton rb1 = popupView.findViewById(R.id.increasing);
-                                final RadioButton rb2 = popupView.findViewById(R.id.horizontal);
-                                rg1.check(rb1.getId());
-                                rg2.check(rb2.getId());
-                                Button conf = popupView.findViewById(R.id.confirmation);
-                                conf.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        if (rg1.getCheckedRadioButtonId() == rb1.getId()) {
-                                            path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/PDF_Accounts/";
-                                            dir = new File(path);
-                                            if (!dir.exists()) dir.mkdirs();
-                                            if (rg2.getCheckedRadioButtonId() == rb2.getId()) {
-                                                createPDF(usr, increasing(listAccount), path, dir, true);
-                                            } else {
-                                                createPDF(usr, increasing(listAccount), path, dir, false);
+                                popupWindowChoseCat.showAtLocation(parent, Gravity.CENTER, 0, 0);
+                                final Button selectAll = popupViewChoseCat.findViewById(R.id.select_all_cat_pdf);
+                                int i = 0;
+                                for (Category c : mngCat.deserializationListCategory(SettingActivity.this, usr.getUser())) {
+                                    CheckBox checkBox = new CheckBox(SettingActivity.this);
+                                    checkBox.setId(i);
+                                    checkBox.setText(c.getCat());
+                                    checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                                        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                                            Boolean bool = true;
+                                            int i = 0;
+                                            for (Category c : mngCat.deserializationListCategory(SettingActivity.this, usr.getUser())) {
+                                                CheckBox checkBox = popupViewChoseCat.findViewById(i);
+                                                if (!checkBox.isChecked()) bool = false;
+                                                i++;
                                             }
-                                            popupWindow.dismiss();
-
-                                        } else {
-                                            path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/PDF_Accounts/";
-                                            dir = new File(path);
-                                            if (!dir.exists()) dir.mkdirs();
-                                            if (rg2.getCheckedRadioButtonId() == rb2.getId()) {
-                                                createPDF(usr, decreasing(listAccount), path, dir, true);
+                                            if (!bool) {
+                                                selectAll.setText("Seleziona tutto");
                                             } else {
-                                                createPDF(usr, decreasing(listAccount), path, dir, false);
+                                                selectAll.setText("Deseleziona tutto");
                                             }
-                                            popupWindow.dismiss();
-
                                         }
+                                    });
+                                    ((LinearLayout) popupViewChoseCat.findViewById(R.id.pdfChoseCategoryPopupElem)).addView(checkBox, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+                                    i++;
+                                }
+                                selectAll.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        int i = 0;
+
+                                        if (selectAll.getText().toString().toLowerCase().equals("seleziona tutto")) {
+                                            for (Category c : mngCat.deserializationListCategory(SettingActivity.this, usr.getUser())) {
+                                                CheckBox checkBox = popupViewChoseCat.findViewById(i);
+                                                checkBox.setChecked(true);
+                                                i++;
+                                            }
+                                            selectAll.setText("Deseleziona tutto");
+                                        } else {
+                                            for (Category c : mngCat.deserializationListCategory(SettingActivity.this, usr.getUser())) {
+                                                CheckBox checkBox = popupViewChoseCat.findViewById(i);
+                                                checkBox.setChecked(false);
+                                                i++;
+                                            }
+                                            selectAll.setText("Seleziona tutto");
+                                        }
+
                                     }
                                 });
+                                Button conf = new Button(SettingActivity.this);
+                                conf.setBackground(getResources().getDrawable(R.drawable.rounded_button));
+                                conf.setText("Prosegui");
+                                conf.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                                conf.setTextSize(18);
+                                ((LinearLayout) popupViewChoseCat.findViewById(R.id.pdfChoseCategoryPopup)).addView(conf, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+                                conf.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        popupWindowChoseCat.dismiss();
+                                        int i = 0;
+                                        listCategoryPdf = new ArrayList<>();
+                                        for (Category c : mngCat.deserializationListCategory(SettingActivity.this, usr.getUser())) {
+                                            CheckBox checkBox = popupViewChoseCat.findViewById(i);
+                                            if (checkBox.isChecked())
+                                                listCategoryPdf.add(mngCat.findAndGetCategory(mngCat.deserializationListCategory(SettingActivity.this, usr.getUser()), checkBox.getText().toString()));
+                                            i++;
+                                        }
 
+                                        LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+                                        @SuppressLint("InflateParams") final View popupView = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_pdf, null);
+                                        final PopupWindow popupWindow = new PopupWindow(popupView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+                                        popupWindow.setOutsideTouchable(true);
+                                        popupWindow.setFocusable(true);
+                                        //noinspection deprecation
+                                        popupWindow.setBackgroundDrawable(new BitmapDrawable());
+                                        View parent = cl.getRootView();
+                                        popupWindow.showAtLocation(parent, Gravity.CENTER, 0, 0);
+                                        final RadioGroup rg1 = popupView.findViewById(R.id.sortPDF);
+                                        final RadioGroup rg2 = popupView.findViewById(R.id.orientationPDF);
+                                        final RadioButton rb1 = popupView.findViewById(R.id.increasing);
+                                        final RadioButton rb2 = popupView.findViewById(R.id.horizontal);
+                                        rg1.check(rb1.getId());
+                                        rg2.check(rb2.getId());
+                                        Button conf = popupView.findViewById(R.id.confirmation);
+                                        conf.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                if (rg1.getCheckedRadioButtonId() == rb1.getId()) {
+                                                    path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/PDF_Accounts/";
+                                                    dir = new File(path);
+                                                    if (!dir.exists()) dir.mkdirs();
+                                                    if (rg2.getCheckedRadioButtonId() == rb2.getId()) {
+                                                        ArrayList<Category> lCP = new ArrayList<>();
+                                                        for (Category c : listCategoryPdf) {
+                                                            ArrayList<Account> listApp = (increasing(c.getListAcc()));
+                                                            c.setListAcc(listApp);
+                                                            Log.d("stiamomessibene", c.getCat() + c.getListAcc().size());
+                                                            lCP.add(c);
+                                                        }
+                                                        createPDF(usr, listCategoryPdf, path, dir, true);
+                                                    } else {
+                                                        ArrayList<Category> lCP = new ArrayList<>();
+                                                        for (Category c : listCategoryPdf) {
+                                                            ArrayList<Account> listApp = (increasing(c.getListAcc()));
+                                                            c.setListAcc(listApp);
+                                                            Log.d("stiamomessibene", c.getCat() + c.getListAcc().size());
+                                                            lCP.add(c);
+                                                        }
+                                                        createPDF(usr, listCategoryPdf, path, dir, false);
+                                                    }
+                                                    popupWindow.dismiss();
+
+                                                } else {
+                                                    path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/PDF_Accounts/";
+                                                    dir = new File(path);
+                                                    if (!dir.exists()) dir.mkdirs();
+                                                    if (rg2.getCheckedRadioButtonId() == rb2.getId()) {
+                                                        ArrayList<Category> lCP = new ArrayList<>();
+                                                        for (Category c : listCategoryPdf) {
+                                                            ArrayList<Account> listApp = (decreasing(c.getListAcc()));
+                                                            c.setListAcc(listApp);
+                                                            Log.d("stiamomessibene", c.getCat() + c.getListAcc().size());
+                                                            lCP.add(c);
+                                                        }
+                                                        createPDF(usr, listCategoryPdf, path, dir, true);
+                                                    } else {
+                                                        ArrayList<Category> lCP = new ArrayList<>();
+                                                        for (Category c : listCategoryPdf) {
+                                                            ArrayList<Account> listApp = (decreasing(c.getListAcc()));
+                                                            c.setListAcc(listApp);
+                                                            Log.d("stiamomessibene", c.getCat() + c.getListAcc().size());
+                                                            lCP.add(c);
+                                                        }
+                                                        createPDF(usr, listCategoryPdf, path, dir, false);
+                                                    }
+                                                    popupWindow.dismiss();
+                                                }
+                                            }
+                                        });
+                                    }
+                                });
                             } else {
                                 et.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(SettingActivity.this, R.color.errorEditText)));
                                 notifyUser("Password errata! Riprova");
                             }
+                            showPass = popupView.findViewById(R.id.showPass);
+                            showPass(et, showPass);
                         }
                     });
-                    showPass = popupView.findViewById(R.id.showPass);
-                    showPass(et, showPass);
                 }
             });
+
 
             delProf.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -306,10 +415,11 @@ public class SettingActivity extends AppCompatActivity {
         goToCategoryActivity();
     }
 
-    public void createPDF(User usr, ArrayList<Account> listAccount, String path, File dir, Boolean b) {
+    public void createPDF(User usr, ArrayList<Category> listCategory, String path, File dir, Boolean b) {
         Document doc;
         Font font;
         File file;
+        PdfPCell cell;
         if (b) doc = new Document(PageSize.A4.rotate());
         else doc = new Document(PageSize.A4);
         try {
@@ -322,110 +432,174 @@ public class SettingActivity extends AppCompatActivity {
             PdfWriter.getInstance(doc, fOut);
             doc.open();
             try {
-                PdfPTable pt = new PdfPTable(5);
-                pt.setWidthPercentage(100);
-                float[] fl = new float[]{10, 25, 20, 15, 30};
-                pt.setWidths(fl);
-                if (b) font = new Font(Font.FontFamily.TIMES_ROMAN, 14, Font.BOLD);
-                else font = new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.BOLD);
-                Phrase f;
-                PdfPCell cell = new PdfPCell();
-                f = new Phrase("Nome");
-                f.setFont(font);
-                cell.addElement(f);
-                cell.setBorder(0);
-                pt.addCell(cell);
-                cell = new PdfPCell();
-                f = new Phrase("e-Mail");
-                f.setFont(font);
-                cell.addElement(f);
-                cell.setBorder(0);
-                pt.addCell(cell);
-                cell = new PdfPCell();
-                f = new Phrase("Username");
-                f.setFont(font);
-                cell.addElement(f);
-                cell.setBorder(0);
-                pt.addCell(cell);
-                cell = new PdfPCell();
-                f = new Phrase("Password");
-                f.setFont(font);
-                cell.addElement(f);
-                cell.setBorder(0);
-                pt.addCell(cell);
-                cell = new PdfPCell();
-                f = new Phrase("Descrizione");
-                f.setFont(font);
-                cell.addElement(f);
-                cell.setBorder(0);
-                pt.addCell(cell);
-                for (Account a : listAccount) {
-                    if (b) font = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.NORMAL);
-                    else font = new Font(Font.FontFamily.TIMES_ROMAN, 8, Font.NORMAL);
-                    cell = new PdfPCell();
-                    f = new Phrase(a.getName());
-                    f.setFont(font);
-                    cell.addElement(f);
-                    pt.addCell(cell);
-                    if (a.getList().size() == 0) {
-                        if (b) font = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.NORMAL);
-                        else font = new Font(Font.FontFamily.TIMES_ROMAN, 8, Font.NORMAL);
+                int j = 0;
+                for (Category c : listCategory) {
+                    PdfPTable pt = new PdfPTable(5);
+                    pt.setWidthPercentage(100);
+                    float[] fl = new float[]{10, 25, 20, 15, 30};
+                    pt.setWidths(fl);
+                    Phrase f;
+                    if (j != 0) {
+                        font = new Font(Font.FontFamily.TIMES_ROMAN, 2, Font.BOLD);
                         cell = new PdfPCell();
-                        f = new Phrase("");
+                        f = new Phrase(" ");
                         f.setFont(font);
                         cell.addElement(f);
+                        cell.setBorder(0);
                         pt.addCell(cell);
                         cell = new PdfPCell();
                         f = new Phrase("");
                         f.setFont(font);
                         cell.addElement(f);
+                        cell.setBorder(0);
                         pt.addCell(cell);
                         cell = new PdfPCell();
                         f = new Phrase("");
                         f.setFont(font);
                         cell.addElement(f);
+                        cell.setBorder(0);
                         pt.addCell(cell);
+                        cell = new PdfPCell();
                         f = new Phrase("");
                         f.setFont(font);
                         cell.addElement(f);
+                        cell.setBorder(0);
+                        pt.addCell(cell);
+                        cell = new PdfPCell();
+                        f = new Phrase("");
+                        f.setFont(font);
+                        cell.addElement(f);
+                        cell.setBorder(0);
                         pt.addCell(cell);
                     }
-                    int i = 0;
-                    for (AccountElement ae : a.getList()) {
-                        if (i != 0) {
-                            font = new Font(Font.FontFamily.TIMES_ROMAN, 20, Font.NORMAL);
+                    j++;
+                    font = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.BOLD);
+                    cell = new PdfPCell();
+                    f = new Phrase(c.getCat());
+                    f.setFont(font);
+                    cell.addElement(f);
+                    cell.setBorder(0);
+                    pt.addCell(cell);
+                    cell = new PdfPCell();
+                    f = new Phrase("");
+                    f.setFont(font);
+                    cell.addElement(f);
+                    cell.setBorder(0);
+                    pt.addCell(cell);
+                    cell = new PdfPCell();
+                    f = new Phrase("");
+                    f.setFont(font);
+                    cell.addElement(f);
+                    cell.setBorder(0);
+                    pt.addCell(cell);
+                    cell = new PdfPCell();
+                    f = new Phrase("");
+                    f.setFont(font);
+                    cell.addElement(f);
+                    cell.setBorder(0);
+                    pt.addCell(cell);
+                    cell = new PdfPCell();
+                    f = new Phrase("");
+                    f.setFont(font);
+                    cell.addElement(f);
+                    cell.setBorder(0);
+                    pt.addCell(cell);
+                    cell = new PdfPCell();
+                    font = new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.BOLD);
+                    f = new Phrase("Nome");
+                    f.setFont(font);
+                    cell.addElement(f);
+                    cell.setBorder(0);
+                    pt.addCell(cell);
+                    cell = new PdfPCell();
+                    f = new Phrase("e-Mail");
+                    f.setFont(font);
+                    cell.addElement(f);
+                    cell.setBorder(0);
+                    pt.addCell(cell);
+                    cell = new PdfPCell();
+                    f = new Phrase("Username");
+                    f.setFont(font);
+                    cell.addElement(f);
+                    cell.setBorder(0);
+                    pt.addCell(cell);
+                    cell = new PdfPCell();
+                    f = new Phrase("Password");
+                    f.setFont(font);
+                    cell.addElement(f);
+                    cell.setBorder(0);
+                    pt.addCell(cell);
+                    cell = new PdfPCell();
+                    f = new Phrase("Descrizione");
+                    f.setFont(font);
+                    cell.addElement(f);
+                    cell.setBorder(0);
+                    pt.addCell(cell);
+                    for (Account a : c.getListAcc()) {
+                        font = new Font(Font.FontFamily.TIMES_ROMAN, 8, Font.NORMAL);
+                        cell = new PdfPCell();
+                        f = new Phrase(a.getName());
+                        f.setFont(font);
+                        cell.addElement(f);
+                        pt.addCell(cell);
+                        if (a.getList().size() == 0) {
+                            font = new Font(Font.FontFamily.TIMES_ROMAN, 8, Font.NORMAL);
                             cell = new PdfPCell();
-                            f = new Phrase("\"");
+                            f = new Phrase("");
+                            f.setFont(font);
+                            cell.addElement(f);
+                            pt.addCell(cell);
+                            cell = new PdfPCell();
+                            f = new Phrase("");
+                            f.setFont(font);
+                            cell.addElement(f);
+                            pt.addCell(cell);
+                            cell = new PdfPCell();
+                            f = new Phrase("");
+                            f.setFont(font);
+                            cell.addElement(f);
+                            pt.addCell(cell);
+                            f = new Phrase("");
                             f.setFont(font);
                             cell.addElement(f);
                             pt.addCell(cell);
                         }
-                        if (b) font = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.NORMAL);
-                        else font = new Font(Font.FontFamily.TIMES_ROMAN, 8, Font.NORMAL);
-                        cell = new PdfPCell();
-                        f = new Phrase(ae.getEmail());
-                        f.setFont(font);
-                        cell.addElement(f);
-                        pt.addCell(cell);
-                        cell = new PdfPCell();
-                        f = new Phrase(ae.getUser());
-                        f.setFont(font);
-                        cell.addElement(f);
-                        pt.addCell(cell);
-                        cell = new PdfPCell();
-                        f = new Phrase(ae.getPassword());
-                        f.setFont(font);
-                        cell.addElement(f);
-                        pt.addCell(cell);
-                        cell = new PdfPCell();
-                        f = new Phrase(ae.getDescription());
-                        f.setFont(font);
-                        cell.addElement(f);
-                        pt.addCell(cell);
-                        i++;
+                        int i = 0;
+                        for (AccountElement ae : a.getList()) {
+                            if (i != 0) {
+                                font = new Font(Font.FontFamily.TIMES_ROMAN, 8, Font.NORMAL);
+                                cell = new PdfPCell();
+                                f = new Phrase("\"");
+                                f.setFont(font);
+                                cell.addElement(f);
+                                pt.addCell(cell);
+                            }
+                            font = new Font(Font.FontFamily.TIMES_ROMAN, 8, Font.NORMAL);
+                            cell = new PdfPCell();
+                            f = new Phrase(ae.getEmail());
+                            f.setFont(font);
+                            cell.addElement(f);
+                            pt.addCell(cell);
+                            cell = new PdfPCell();
+                            f = new Phrase(ae.getUser());
+                            f.setFont(font);
+                            cell.addElement(f);
+                            pt.addCell(cell);
+                            cell = new PdfPCell();
+                            f = new Phrase(ae.getPassword());
+                            f.setFont(font);
+                            cell.addElement(f);
+                            pt.addCell(cell);
+                            cell = new PdfPCell();
+                            f = new Phrase(ae.getDescription());
+                            f.setFont(font);
+                            cell.addElement(f);
+                            pt.addCell(cell);
+                            i++;
+                        }
                     }
+                    doc.add(pt);
                 }
-                doc.add(pt);
                 notifyUser("PDF creato in " + path + "Lista account di " + usr.getUser() + sdf.format(Calendar.getInstance().getTime()) + ".pdf");
             } catch (DocumentException de) {
                 Log.e("PDFCreator", "DocumentException:" + de);

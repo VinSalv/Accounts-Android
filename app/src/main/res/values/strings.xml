@@ -97,4 +97,7 @@
     <string name="done">Ritorna alle categorie</string>
     <string name="doneText">Fatto!!</string>
     <string name="copy_or_cut">Copia/Sposta</string>
+    <string name="select_category">Seleziona le categorie interessate:</string>
+    <string name="check_all">Tutte</string>
+    <string name="select_all_cat">Seleziona tutto</string>
 </resources>
