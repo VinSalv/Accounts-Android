@@ -80,7 +80,7 @@ public class EditActivity extends AppCompatActivity {
             toolbarEdit.setSubtitle("Aggiungi account alla categoria " + cat.getCat());
             setSupportActionBar(toolbarEdit);
             listAccount = cat.getListAcc();
-            acc = mngCat.findAccount(listAccount, ((Account) Objects.requireNonNull(getIntent().getExtras()).get("account")).getName());
+            acc = mngCat.findAndGetAccount(listAccount, ((Account) Objects.requireNonNull(getIntent().getExtras()).get("account")).getName());
             if (acc != null) {
                 accountElementsList = new ArrayList<>();
                 relativeLayoutsList = new ArrayList<>();
@@ -488,7 +488,7 @@ public class EditActivity extends AppCompatActivity {
                             if (fieldError(elem, n)) return;
                             n++;
                         }
-                        if (mngCat.notFind(acc, listAccount) || a.equals(acc.getName())) {
+                        if (mngCat.notFind(a, listAccount) || a.equals(acc.getName())) {
                             listAccount.remove(acc);
                             listAccount.add(a);
                             listCategory.remove(cat);

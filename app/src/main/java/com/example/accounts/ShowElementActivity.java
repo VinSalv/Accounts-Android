@@ -63,7 +63,7 @@ public class ShowElementActivity extends AppCompatActivity implements PopupMenu.
             listCategory = mngCat.deserializationListCategory(this, usr.getUser());
             cat = mngCat.findAndGetCategory(listCategory, ((Category) (Objects.requireNonNull(getIntent().getExtras())).get("category")).getCat());
             listAccount = cat.getListAcc();
-            acc = mngCat.findAccount(listAccount, account.getName());
+            acc = mngCat.findAndGetAccount(listAccount, account.getName());
             if (acc != null) {
                 name = findViewById(R.id.name);
                 name.setText(acc.getName());
@@ -459,7 +459,7 @@ public class ShowElementActivity extends AppCompatActivity implements PopupMenu.
                 optionButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        popupMenu(R.style.rounded_menu_style_toolbar, R.menu.option_popup, v);
+                        popupMenu(R.style.rounded_menu_style_toolbar, R.menu.popup_single_account, v);
                     }
                 });
             } else {

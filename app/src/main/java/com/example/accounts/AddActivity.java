@@ -54,6 +54,7 @@ public class AddActivity extends AppCompatActivity {
     private ManageCategory mngCat;
     private Category cat;
     private ArrayList<Category> listCategory;
+    private Account acc;
 
     @RequiresApi(api = Build.VERSION_CODES.Q)
     @Override
@@ -103,7 +104,7 @@ public class AddActivity extends AppCompatActivity {
                             accountElementsList.add(elem);
                         } else b = true;
                     }
-                    Account acc = new Account(name.getText().toString(), cat.getCat(), accountElementsList);
+                    acc = new Account(name.getText().toString(), cat.getCat(), accountElementsList);
                     if (acc.getName().isEmpty()) {
                         name.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(AddActivity.this, R.color.errorEditText)));
                         notifyUser("Associare il nome all'account!");

@@ -23,6 +23,11 @@
             android:screenOrientation="fullSensor"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:name=".CategoryChoseActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="fullSensor"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".SearchActivity"
             android:configChanges="orientation"
             android:screenOrientation="fullSensor"

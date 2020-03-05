@@ -63,7 +63,7 @@
     <string name="showButton">Bottone a tendina</string>
     <string name="editButton">Modifica elemento</string>
     <string name="deleteButton">Elimina elemento</string>
-    <string name="action_select">Seleziona tutto</string>
+    <string name="action_select">Tutti</string>
     <string name="horizontal">Orizzontale</string>
     <string name="vertical">Verticale</string>
     <string name="title_activity_category">CategoryActivity</string>
@@ -93,4 +93,8 @@
     <string name="rename">Rinomina</string>
     <string name="ignore">Ignora</string>
     <string name="renameText">Rinomina account Account</string>
+    <string name="append">Accoda</string>
+    <string name="done">Ritorna alle categorie</string>
+    <string name="doneText">Fatto!!</string>
+    <string name="copy_or_cut">Copia/Sposta</string>
 </resources>

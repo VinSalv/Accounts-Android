@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/delete"
+        android:title="@string/action_delete" />
+    <item
+        android:id="@+id/copy_cut"
+        android:title="@string/copy_or_cut" />
+    <item
+        android:id="@+id/sort"
+        android:title="@string/action_sort" />
+    <item
+        android:id="@+id/setting"
+        android:title="@string/action_setting" />
+    <item
+        android:id="@+id/exit"
+        android:title="@string/action_exit" />
+</menu>

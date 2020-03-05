@@ -59,6 +59,7 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     private ManageCategory mngCat;
     private ArrayList<Category> listCategory;
     private Category cat;
+    private Boolean b;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -80,6 +81,7 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         listUser = mngUsr.deserializationListUser(this);
         usr = mngUsr.findUser(listUser, Objects.requireNonNull(owner).getUser());
         if (usr != null) {
+            b = false;
             mngCat = new ManageCategory();
             listCategory = mngCat.deserializationListCategory(this, usr.getUser());
             cat = mngCat.findAndGetCategory(listCategory, Objects.requireNonNull(cat).getCat());
@@ -142,13 +144,13 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 setting.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        popupMenu(R.style.rounded_menu_style, R.menu.popup, v);
+                        popupMenu(R.style.rounded_menu_style, R.menu.popup_account, v);
                     }
                 });
                 settingsButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        popupMenu(R.style.rounded_menu_style_toolbar, R.menu.popup, v);
+                        popupMenu(R.style.rounded_menu_style_toolbar, R.menu.popup_account, v);
                     }
                 });
                 search = findViewById(R.id.searchFloatingButton);
@@ -236,7 +238,7 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         Intent intent = new Intent(ViewActivity.this, CategoryChoseActivity.class);
         ArrayList<Account> acc = new ArrayList<>();
         for (String s : selectedIds)
-            acc.add(mngCat.findAccount(cat.getListAcc(), s));
+            acc.add(mngCat.findAndGetAccount(cat.getListAcc(), s));
         intent.putExtra("owner", usr);
         intent.putExtra("category", cat);
         intent.putExtra("listAccount", acc);
@@ -273,7 +275,11 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     @Override
     public boolean onCreateActionMode(ActionMode mode, final Menu menu) {
         MenuInflater inflater = mode.getMenuInflater();
-        inflater.inflate(R.menu.my_context_menu_account, menu);
+        if (b)
+            inflater.inflate(R.menu.my_context_menu_account, menu);
+        else
+            inflater.inflate(R.menu.my_context_menu_account_delete, menu);
+
         return true;
     }
 
@@ -290,15 +296,15 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             }
         }
         if (selectedIds.size() == cat.getListAcc().size()) {
-            Objects.requireNonNull(actionMode).getMenu().getItem(0).setTitle("Deseleziona tutto");
-        } else Objects.requireNonNull(actionMode).getMenu().getItem(0).setTitle("Seleziona tutto");
-        Objects.requireNonNull(actionMode).setTitle("Elem: " + selectedIds.size());
+            Objects.requireNonNull(actionMode).getMenu().getItem(0).setTitle("Nessuno");
+        } else Objects.requireNonNull(actionMode).getMenu().getItem(0).setTitle("Tutti");
+        Objects.requireNonNull(actionMode).setTitle("Sel: " + selectedIds.size());
     }
 
     @SuppressLint({"RestrictedApi", "SetTextI18n"})
     @Override
     public boolean onActionItemClicked(ActionMode mode, MenuItem menuItem) {
-        if (menuItem.getItemId() == R.id.edit) {
+        if (menuItem.getItemId() == R.id.delete_id) {
             if (!selectedIds.isEmpty()) {
                 LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
                 final View popupView = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_security, (ViewGroup) findViewById(R.id.popupSecurity));
@@ -355,29 +361,29 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             return true;
         }
         if (menuItem.getItemId() == R.id.select_all) {
-            String s = "Seleziona tutto";
+            String s = "Tutti";
             if (menuItem.getTitle().toString().toLowerCase().equals(s.toLowerCase())) {
-                menuItem.setTitle("Deseleziona tutto");
+                menuItem.setTitle("Nessuno");
                 selectedIds.clear();
                 for (Account a : cat.getListAcc()) {
                     selectedIds.add(a.getName());
                 }
                 mAdapter.setSelectedIds(selectedIds);
-                Objects.requireNonNull(actionMode).setTitle("Elem: " + selectedIds.size());
+                Objects.requireNonNull(actionMode).setTitle("Sel: " + selectedIds.size());
             } else {
-                menuItem.setTitle("Seleziona tutto");
+                menuItem.setTitle("Tutti");
                 selectedIds.clear();
                 mAdapter.setSelectedIds(selectedIds);
-                Objects.requireNonNull(actionMode).setTitle("Elem: " + selectedIds.size());
+                Objects.requireNonNull(actionMode).setTitle("Sel: " + selectedIds.size());
             }
         }
-        if (menuItem.getItemId() == R.id.copy) {
+        if (menuItem.getItemId() == R.id.copy_id) {
             if (!selectedIds.isEmpty()) {
                 goToCategoryChoseActivity("copy");
             } else notifyUser("Nessun account è stato selezionato per la copia.");
             return true;
         }
-        if (menuItem.getItemId() == R.id.cut) {
+        if (menuItem.getItemId() == R.id.cut_id) {
             if (!selectedIds.isEmpty()) {
                 goToCategoryChoseActivity("cut");
             } else notifyUser("Nessun account è stato selezionato per lo spostamento.");
@@ -409,7 +415,7 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     @Override
     public boolean onMenuItemClick(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.edit:
+            case (R.id.delete):
                 if (!isMultiSelect) {
                     selectedIds = new ArrayList<>();
                     isMultiSelect = true;
@@ -419,6 +425,24 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                         setting.setVisibility(View.GONE);
                         search.setVisibility(View.GONE);
                         add.setVisibility(View.GONE);
+                        b = false;
+                        actionMode = startActionMode(ViewActivity.this);
+                    }
+                }
+                multiSelect(-1);
+                return true;
+            case R.id.copy_cut:
+                if (!isMultiSelect) {
+                    selectedIds = new ArrayList<>();
+                    isMultiSelect = true;
+                    if (actionMode == null) {
+                        settingsButton.setVisibility(View.GONE);
+                        searchButton.setVisibility(View.GONE);
+                        setting.setVisibility(View.GONE);
+                        search.setVisibility(View.GONE);
+                        add.setVisibility(View.GONE);
+                        b = true;
+
                         actionMode = startActionMode(ViewActivity.this);
                     }
                 }
