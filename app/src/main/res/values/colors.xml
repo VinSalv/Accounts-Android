@@ -16,4 +16,45 @@
     <color name="errorEditText">#B80000</color>
 
     <color name="rightText">#FFFFFF</color>
+
+    <!-- Screens background color-->
+    <color name="bg_screen1">#B80000</color>
+    <color name="bg_screen2">#9F7200</color>
+    <color name="bg_screen3">#002198</color>
+    <color name="bg_screen4">#983500</color>
+    <color name="bg_screen5">#00501A</color>
+
+
+    <!-- dots inactive colors -->
+    <color name="dot_dark_screen1">#872D2D</color>
+    <color name="dot_dark_screen2">#776331</color>
+    <color name="dot_dark_screen3">#2C3B70</color>
+    <color name="dot_dark_screen4">#78472D</color>
+    <color name="dot_dark_screen5">#28653C</color>
+
+
+    <!-- dots active colors -->
+    <color name="dot_light_screen1">#B80000</color>
+    <color name="dot_light_screen2">#9F7200</color>
+    <color name="dot_light_screen3">#002198</color>
+    <color name="dot_light_screen4">#983500</color>
+    <color name="dot_light_screen5">#00501A</color>
+
+
+    <array name="array_dot_active">
+        <item>@color/dot_light_screen1</item>
+        <item>@color/dot_light_screen2</item>
+        <item>@color/dot_light_screen3</item>
+        <item>@color/dot_light_screen4</item>
+        <item>@color/dot_light_screen5</item>
+    </array>
+
+    <array name="array_dot_inactive">
+        <item>@color/dot_dark_screen1</item>
+        <item>@color/dot_dark_screen2</item>
+        <item>@color/dot_dark_screen3</item>
+        <item>@color/dot_dark_screen4</item>
+        <item>@color/dot_dark_screen5</item>
+
+    </array>
 </resources>

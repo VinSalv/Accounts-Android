@@ -116,6 +116,15 @@ public class MainActivity extends AppCompatActivity {
                 goToSignActivity();
             }
         });
+
+        ImageButton about = findViewById(R.id.aboutButton);
+        about.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.P)
+            @Override
+            public void onClick(View view) {
+                goToAboutActivity();
+            }
+        });
     }
 
     public void goToCategoryActivity(User usr) {
@@ -126,6 +135,11 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra("owner", usr);
         startActivity(intent);
         finish();
+    }
+
+    public void goToAboutActivity() {
+        Intent intent = new Intent(MainActivity.this, AboutActivity.class);
+        startActivity(intent);
     }
 
     public void goToMainActivity() {

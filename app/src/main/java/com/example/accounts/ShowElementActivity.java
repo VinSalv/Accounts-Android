@@ -514,6 +514,15 @@ public class ShowElementActivity extends AppCompatActivity implements PopupMenu.
                     }
                 });
                 return true;
+            case R.id.copy:
+                goToCategoryChoseActivity("copy");
+                return true;
+            case R.id.cut:
+                if (listCategory.size() <= 1)
+                    notifyUser("Non ci sono categorie su cui effetturare lo spostamento");
+                else
+                    goToCategoryChoseActivity("cut");
+                return true;
             default:
                 return false;
         }
@@ -558,6 +567,17 @@ public class ShowElementActivity extends AppCompatActivity implements PopupMenu.
         intent.putExtra("owner", usr);
         intent.putExtra("account", acc);
         intent.putExtra("category", cat);
+        startActivity(intent);
+    }
+
+    public void goToCategoryChoseActivity(String opt) {
+        Intent intent = new Intent(ShowElementActivity.this, CategoryChoseActivity.class);
+        ArrayList<Account> listAcc = new ArrayList<>();
+        listAcc.add(acc);
+        intent.putExtra("owner", usr);
+        intent.putExtra("category", cat);
+        intent.putExtra("listAccount", listAcc);
+        intent.putExtra("option", opt);
         startActivity(intent);
     }
 

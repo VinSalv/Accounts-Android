@@ -70,4 +70,13 @@
 
     <include layout="@layout/content_category_chose" />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/cancelFloatingButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|end"
+        android:padding="10dp"
+        app:backgroundTint="@color/transparent"
+        app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

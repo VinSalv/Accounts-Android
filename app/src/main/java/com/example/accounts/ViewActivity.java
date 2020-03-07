@@ -244,7 +244,6 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         intent.putExtra("listAccount", acc);
         intent.putExtra("option", opt);
         startActivity(intent);
-        finish();
     }
 
     public void goToShowElementActivity(User usr, Account acc, Category cat) {
@@ -385,7 +384,10 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         }
         if (menuItem.getItemId() == R.id.cut_id) {
             if (!selectedIds.isEmpty()) {
-                goToCategoryChoseActivity("cut");
+                if (listCategory.size() <= 1)
+                    notifyUser("Non ci sono categorie su cui effetturare lo spostamento");
+                else
+                    goToCategoryChoseActivity("cut");
             } else notifyUser("Nessun account è stato selezionato per lo spostamento.");
             return true;
         }

@@ -26,12 +26,15 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Objects;
 
+
+@SuppressWarnings("ALL")
 public class CategoryChoseActivity extends AppCompatActivity {
     private CoordinatorLayout cl;
     private ArrayList<Category> listCategory;
@@ -46,6 +49,8 @@ public class CategoryChoseActivity extends AppCompatActivity {
     private ArrayList<Account> listAccSet;
     private Category catAdapter;
     private Category catAdapterPosition;
+    private Category cat;
+    private FloatingActionButton cancel;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -66,7 +71,7 @@ public class CategoryChoseActivity extends AppCompatActivity {
         if (usr != null) {
             mngCat = new ManageCategory();
             listCategory = mngCat.deserializationListCategory(this, usr.getUser());
-            final Category cat = mngCat.findAndGetCategory(listCategory, ((Category) Objects.requireNonNull((Objects.requireNonNull(getIntent().getExtras())).get("category"))).getCat());
+            cat = mngCat.findAndGetCategory(listCategory, ((Category) Objects.requireNonNull((Objects.requireNonNull(getIntent().getExtras())).get("category"))).getCat());
             catAdapterPosition = null;
             if (usr.getSort() == 1)
                 listCategory = increasing(listCategory);
@@ -120,8 +125,8 @@ public class CategoryChoseActivity extends AppCompatActivity {
                     LayoutInflater layoutInflaterDone = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
                     View popupViewDone = Objects.requireNonNull(layoutInflaterDone).inflate(R.layout.popup_done, (ViewGroup) findViewById(R.id.popupDone));
                     final PopupWindow popupWindowDone = new PopupWindow(popupViewDone, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
-                    popupWindowDone.setOutsideTouchable(true);
-                    popupWindowDone.setFocusable(true);
+                    popupWindowDone.setOutsideTouchable(false);
+                    popupWindowDone.setFocusable(false);
                     //noinspection deprecation
                     popupWindowDone.setBackgroundDrawable(new BitmapDrawable());
                     View parentDone = cl.getRootView();
@@ -148,19 +153,19 @@ public class CategoryChoseActivity extends AppCompatActivity {
                             popupWindowDone.dismiss();
                         }
                     });
+                    popupViewDone.setVisibility(View.INVISIBLE);
                     catAdapter = mAdapter.getItem(position);
                     listCategory = mngCat.deserializationListCategory(CategoryChoseActivity.this, usr.getUser());
                     mngCat.removeFileCategory(CategoryChoseActivity.this, usr.getUser());
                     listCategory.remove(catAdapter);
                     listAccSet = new ArrayList<>();
-                    popupViewDone.setVisibility(View.INVISIBLE);
                     for (final Account accTake : listAccTake) {
                         if (mngCat.findAccount(mAdapter.getItem(position).getListAcc(), accTake.getName())) {
                             LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
                             final View popupViewChose = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_equals, (ViewGroup) findViewById(R.id.popupEquals));
                             final PopupWindow popupWindowChose = new PopupWindow(popupViewChose, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
-                            popupWindowChose.setOutsideTouchable(true);
-                            popupWindowChose.setFocusable(true);
+                            popupWindowChose.setFocusable(false);
+                            popupWindowChose.setOutsideTouchable(false);
                             //noinspection deprecation
                             popupWindowChose.setBackgroundDrawable(new BitmapDrawable());
                             View parent = cl.getRootView();
@@ -178,7 +183,6 @@ public class CategoryChoseActivity extends AppCompatActivity {
                                     ArrayList<Account> listAccApp = catAdapter.getListAcc();
                                     listAccApp.remove(mngCat.findAndGetAccount(mAdapter.getItem(position).getListAcc(), accTake.getName()));
                                     catAdapter.setListAcc(listAccApp);
-                                    notifyUser("Account sostituito con successo nella categoria " + catAdapter.getCat());
                                     popupWindowChose.dismiss();
                                 }
                             });
@@ -194,7 +198,8 @@ public class CategoryChoseActivity extends AppCompatActivity {
                                     popupWindow.setBackgroundDrawable(new BitmapDrawable());
                                     View parent = cl.getRootView();
                                     popupWindow.showAtLocation(parent, Gravity.CENTER, 0, 0);
-                                    ((TextView) popupView.findViewById(R.id.renameText)).setText("Rinomina account " + accTake.getName());
+                                    String s = "Rinomina account " + "<b>" + accTake.getName() + "</b>";
+                                    ((TextView) popupView.findViewById(R.id.renameText)).setText(Html.fromHtml(s, HtmlCompat.FROM_HTML_MODE_LEGACY));
                                     final EditText et = popupView.findViewById(R.id.renameEditText);
                                     Button conf = popupView.findViewById(R.id.confirmation);
                                     conf.setOnClickListener(new View.OnClickListener() {
@@ -209,7 +214,6 @@ public class CategoryChoseActivity extends AppCompatActivity {
                                                     && !mngCat.findAccount(listAccSet, et.getText().toString())) {
                                                 accTake.setName(et.getText().toString());
                                                 listAccSet.add(accTake);
-                                                notifyUser("Account rinominato e aggiunto con successo alla categoria " + catAdapter.getCat());
                                                 popupWindow.dismiss();
                                                 popupWindowChose.dismiss();
 
@@ -221,7 +225,6 @@ public class CategoryChoseActivity extends AppCompatActivity {
                                     });
                                 }
                             });
-
                             a.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
@@ -234,7 +237,6 @@ public class CategoryChoseActivity extends AppCompatActivity {
                                     ArrayList<Account> listAccApp = catAdapter.getListAcc();
                                     listAccApp.remove(mngCat.findAndGetAccount(mAdapter.getItem(position).getListAcc(), accTake.getName()));
                                     catAdapter.setListAcc(listAccApp);
-                                    notifyUser("Elementi di " + accTake.getName() + " aggiunti con successo nella categoria " + catAdapterPosition.getCat());
                                     popupWindowChose.dismiss();
                                 }
                             });
@@ -242,7 +244,7 @@ public class CategoryChoseActivity extends AppCompatActivity {
                             i.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
-                                    notifyUser("L'account " + accTake.getName() + " non è stato spostato");
+                                    listAccTake.remove(accTake);
                                     popupWindowChose.dismiss();
                                 }
                             });
@@ -252,11 +254,17 @@ public class CategoryChoseActivity extends AppCompatActivity {
                     popupViewDone.setVisibility(View.VISIBLE);
                 }
 
-
                 @Override
                 public void onItemLongClick(View view, int position) {
                 }
             }));
+            cancel = findViewById(R.id.cancelFloatingButton);
+            cancel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    goToCategoryActivity();
+                }
+            });
         } else {
             notifyUser("Utente non rilevato. Impossibile visualizzare la lista degli account.");
             goToMainActivity();
@@ -322,19 +330,9 @@ public class CategoryChoseActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (catAdapterPosition != null) {
-            listCategory.remove(mngCat.findAndGetCategory(listCategory, catAdapterPosition.getCat()));
-            mngCat.removeFileCategory(CategoryChoseActivity.this, usr.getUser());
-            ArrayList<Account> listAccApp = catAdapter.getListAcc();
-            listAccApp.addAll(listAccSet);
-            catAdapter.setListAcc(listAccApp);
-            listCategory.add(catAdapter);
-            mngCat.serializationListCategory(CategoryChoseActivity.this, listCategory, usr.getUser());
-            goToCategoryActivity();
-        } else
-            goToCategoryActivity();
     }
-
 }
+
+
 
 

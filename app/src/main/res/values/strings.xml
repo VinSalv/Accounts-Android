@@ -2,6 +2,7 @@
     <string name="permission_necessary">Permessi necessari</string>
     <string name="storage_permission_is_encessary_to_wrote_event">Permessi per scrivere in memoria</string>
     <string name="uppercaseAppName">ACCOUNTS</string>
+    <string name="AppName">Accounts beta</string>
     <string name="lowercaseAppName">Accounts</string>
     <string name="imageApp">Immagine App</string>
     <string name="usernameHint">Utente</string>
@@ -70,7 +71,6 @@
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
-    <string name="next">Next</string>
     <string name="previous">Previous</string>
 
     <string name="hello_first_fragment">Hello first fragment</string>
@@ -100,4 +100,9 @@
     <string name="select_category">Seleziona le categorie interessate:</string>
     <string name="check_all">Tutte</string>
     <string name="select_all_cat">Seleziona tutto</string>
+    <string name="app_name">Intro Slider</string>
+    <string name="title_activity_welcome">Home Screen</string>
+    <string name="next">NEXT</string>
+    <string name="skip">SKIP</string>
+    <string name="start">GOT IT</string>
 </resources>
