@@ -37,6 +37,6 @@
             android:layout_height="wrap_content"
             android:contentDescription="@string/imageintro4_2"
             android:padding="10dp"
-            app:srcCompat="@drawable/intro_5" />
+            app:srcCompat="@drawable/intro_4_2" />
     </LinearLayout>
 </RelativeLayout>

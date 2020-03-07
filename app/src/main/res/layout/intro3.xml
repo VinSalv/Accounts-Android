@@ -37,7 +37,15 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:padding="10dp"
-            android:text="@string/in_questo_modo_potrai_ricercare_i_tuoi_account_facilmente_senza_dover_scorrere_tra_una_categoria_e_l_altra"
+            android:text="@string/le_password_saranno_invisibili_cos_da_nasconderla_a_qualche_malintenzionato_nelle_vicinanze_tuttavia_possibile_copiarle_anche_da_nascoste"
             android:textSize="16sp" />
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/imageintro3"
+            android:padding="10dp"
+            app:srcCompat="@drawable/intro_3_2" />
     </LinearLayout>
 </RelativeLayout>
