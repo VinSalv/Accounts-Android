@@ -231,6 +231,7 @@ public class SettingActivity extends AppCompatActivity {
                                 conf.setBackground(getResources().getDrawable(R.drawable.rounded_button));
                                 conf.setText("Prosegui");
                                 conf.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                                conf.setTextColor(getResources().getColor(R.color.colorPrimaryClear));
                                 conf.setTextSize(18);
                                 ((LinearLayout) popupViewChoseCat.findViewById(R.id.pdfChoseCategoryPopup)).addView(conf, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
                                 conf.setOnClickListener(new View.OnClickListener() {

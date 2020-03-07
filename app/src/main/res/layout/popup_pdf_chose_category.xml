@@ -33,7 +33,6 @@
                 android:background="@drawable/rounded_button"
                 android:text="@string/select_all_cat"
                 android:textAlignment="center"
-                android:textColor="@color/colorPrimaryClear"
                 android:textSize="14sp"
                 android:textStyle="normal" />
 
