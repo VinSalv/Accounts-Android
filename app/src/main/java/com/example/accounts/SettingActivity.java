@@ -49,7 +49,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Objects;
 
-@SuppressWarnings("ResultOfMethodCallIgnored")
+@SuppressWarnings({"ResultOfMethodCallIgnored", "deprecation", "MismatchedQueryAndUpdateOfCollection"})
 public class SettingActivity extends AppCompatActivity {
     private CoordinatorLayout cl;
     private ManageUser mngUsr;
@@ -57,7 +57,6 @@ public class SettingActivity extends AppCompatActivity {
     private ArrayList<User> listUser = new ArrayList<>();
     private ManageApp mngApp;
     private LogApp log;
-    private ArrayList<Account> listAccount;
     private TextView setting;
     private TextView setting2;
     private String path;
@@ -188,9 +187,9 @@ public class SettingActivity extends AppCompatActivity {
                                     checkBox.setText(c.getCat());
                                     checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                                         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                                            Boolean bool = true;
+                                            boolean bool = true;
                                             int i = 0;
-                                            for (Category c : mngCat.deserializationListCategory(SettingActivity.this, usr.getUser())) {
+                                            for (Category ignored : mngCat.deserializationListCategory(SettingActivity.this, usr.getUser())) {
                                                 CheckBox checkBox = popupViewChoseCat.findViewById(i);
                                                 if (!checkBox.isChecked()) bool = false;
                                                 i++;
@@ -211,14 +210,14 @@ public class SettingActivity extends AppCompatActivity {
                                         int i = 0;
 
                                         if (selectAll.getText().toString().toLowerCase().equals("seleziona tutto")) {
-                                            for (Category c : mngCat.deserializationListCategory(SettingActivity.this, usr.getUser())) {
+                                            for (Category ignored : mngCat.deserializationListCategory(SettingActivity.this, usr.getUser())) {
                                                 CheckBox checkBox = popupViewChoseCat.findViewById(i);
                                                 checkBox.setChecked(true);
                                                 i++;
                                             }
                                             selectAll.setText("Deseleziona tutto");
                                         } else {
-                                            for (Category c : mngCat.deserializationListCategory(SettingActivity.this, usr.getUser())) {
+                                            for (Category ignored : mngCat.deserializationListCategory(SettingActivity.this, usr.getUser())) {
                                                 CheckBox checkBox = popupViewChoseCat.findViewById(i);
                                                 checkBox.setChecked(false);
                                                 i++;
@@ -240,7 +239,7 @@ public class SettingActivity extends AppCompatActivity {
                                         popupWindowChoseCat.dismiss();
                                         int i = 0;
                                         listCategoryPdf = new ArrayList<>();
-                                        for (Category c : mngCat.deserializationListCategory(SettingActivity.this, usr.getUser())) {
+                                        for (Category ignored : mngCat.deserializationListCategory(SettingActivity.this, usr.getUser())) {
                                             CheckBox checkBox = popupViewChoseCat.findViewById(i);
                                             if (checkBox.isChecked())
                                                 listCategoryPdf.add(mngCat.findAndGetCategory(mngCat.deserializationListCategory(SettingActivity.this, usr.getUser()), checkBox.getText().toString()));

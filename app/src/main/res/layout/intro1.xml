@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:padding="10dp"
-            android:text="Benvenuto nell'app Account!! "
+            android:text="@string/benvenuto_nell_app_account"
             android:textSize="18sp"
             android:textStyle="bold" />
 
@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:padding="10dp"
-            android:text="Sei stanco di dover ricordare in continuazione le tue password con le relative e-mail e nomi utente?\nBene hai scaricato l'app che fa per te!! \n\n (E' imortante precisare che le tue credenziali e i tuoi account saranno memorizzati escluisivamente sul tuo Smartphone in specifiche cartelle segrete inaccessibili da terzi. Non vi è l'ausilio di alcun server!!)"
+            android:text="@string/sei_stanco_di_dover_ricordare_in_continuazione_le_tue_password_con_le_relative_e_mail_e_nomi_utente_nbene_hai_scaricato_l_app_che_fa_per_te_n_n_e_imortante_precisare_che_le_tue_credenziali_e_i_tuoi_account_saranno_memorizzati_escluisivamente_sul_tuo_smartphone_in_specifiche_cartelle_segrete_inaccessibili_da_terzi_non_vi_l_ausilio_di_alcun_server"
             android:textSize="16sp" />
 
         <TextView
@@ -37,13 +37,14 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:padding="10dp"
-            android:text="Una volta registrato all'app Account potrai sfruttare appieno le funzionalità che ha da offririti."
+            android:text="@string/una_volta_registrato_all_app_account_potrai_sfruttare_appieno_le_funzionalit_che_ha_da_offririti"
             android:textSize="16sp" />
 
         <ImageView
             android:id="@+id/imageView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:contentDescription="@string/imageintro1"
             android:padding="10dp"
             app:srcCompat="@drawable/intro_1" />
     </LinearLayout>

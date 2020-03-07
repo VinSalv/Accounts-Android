@@ -20,11 +20,11 @@ public class Category implements Serializable {
         this.sort = sort;
     }
 
-    public int getSort() {
+    int getSort() {
         return sort;
     }
 
-    public void setSort(int sort) {
+    void setSort(int sort) {
         this.sort = sort;
     }
 
@@ -32,15 +32,11 @@ public class Category implements Serializable {
         return cat;
     }
 
-    public void setCat(String cat) {
-        this.cat = cat;
-    }
-
-    public ArrayList<Account> getListAcc() {
+    ArrayList<Account> getListAcc() {
         return listAcc;
     }
 
-    public void setListAcc(ArrayList<Account> listAcc) {
+    void setListAcc(ArrayList<Account> listAcc) {
         this.listAcc = listAcc;
     }
 }

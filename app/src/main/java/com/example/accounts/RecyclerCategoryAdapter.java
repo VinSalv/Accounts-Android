@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -23,14 +24,15 @@ public class RecyclerCategoryAdapter extends RecyclerView.Adapter<RecyclerCatego
     private ManageCategory mngCat = new ManageCategory();
     private User usr;
 
-    public RecyclerCategoryAdapter(Context context, ArrayList<Category> data, User usr) {
+    RecyclerCategoryAdapter(Context context, ArrayList<Category> data, User usr) {
         this.context = context;
         this.data = data;
         this.usr = usr;
     }
 
+    @NonNull
     @Override
-    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.list_category, parent, false);
         return new MyViewHolder(view);
@@ -94,11 +96,11 @@ public class RecyclerCategoryAdapter extends RecyclerView.Adapter<RecyclerCatego
     }
 
 
-    public static class MyViewHolder extends RecyclerView.ViewHolder {
+    static class MyViewHolder extends RecyclerView.ViewHolder {
         FrameLayout rootView;
         private TextView mTitle;
 
-        public MyViewHolder(View itemView) {
+        MyViewHolder(View itemView) {
             super(itemView);
             mTitle = itemView.findViewById(R.id.categoryElement);
             rootView = itemView.findViewById(R.id.catActivityLay);

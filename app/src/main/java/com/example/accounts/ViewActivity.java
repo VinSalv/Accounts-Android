@@ -38,9 +38,7 @@ import java.util.Objects;
 
 public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener, ActionMode.Callback {
     boolean doubleBackToExitPressedOnce;
-    private ManageUser mngUsr;
     private CoordinatorLayout cl;
-    private ArrayList<User> listUser;
     private ManageApp mngApp;
     private LogApp log;
     private Button settingsButton;
@@ -77,8 +75,8 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         doubleBackToExitPressedOnce = false;
         mngApp = new ManageApp();
         log = mngApp.deserializationFlag(this);
-        mngUsr = new ManageUser();
-        listUser = mngUsr.deserializationListUser(this);
+        ManageUser mngUsr = new ManageUser();
+        ArrayList<User> listUser = mngUsr.deserializationListUser(this);
         usr = mngUsr.findUser(listUser, Objects.requireNonNull(owner).getUser());
         if (usr != null) {
             b = false;
@@ -181,7 +179,7 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 GridLayoutManager manager = new GridLayoutManager(this, usr.getColAcc(), GridLayoutManager.VERTICAL, false);
                 recyclerView.setLayoutManager(manager);
                 recyclerView.setAdapter(mAdapter);
-                recyclerView.addItemDecoration(new SpacesItemDecoration(20, usr.getColAcc()));
+                recyclerView.addItemDecoration(new SpacesItemDecoration(20));
                 recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this, recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
@@ -321,7 +319,6 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                     et.setText("Sei sicuro di voler eliminare questi " + selectedIds.size() + " account selezionati della lista " + cat.getCat() + "?");
                 Button yes = popupView.findViewById(R.id.yes);
                 Button no = popupView.findViewById(R.id.no);
-                final Account acc;
                 yes.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

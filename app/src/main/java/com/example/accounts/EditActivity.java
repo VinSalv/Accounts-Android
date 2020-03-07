@@ -80,7 +80,7 @@ public class EditActivity extends AppCompatActivity {
             toolbarEdit.setSubtitle("Aggiungi account alla categoria " + cat.getCat());
             setSupportActionBar(toolbarEdit);
             listAccount = cat.getListAcc();
-            acc = mngCat.findAndGetAccount(listAccount, ((Account) Objects.requireNonNull(getIntent().getExtras()).get("account")).getName());
+            acc = mngCat.findAndGetAccount(listAccount, ((Account) Objects.requireNonNull(Objects.requireNonNull(getIntent().getExtras()).get("account"))).getName());
             if (acc != null) {
                 accountElementsList = new ArrayList<>();
                 relativeLayoutsList = new ArrayList<>();

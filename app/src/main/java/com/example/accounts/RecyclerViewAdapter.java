@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -24,15 +25,16 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private ManageCategory mngCat = new ManageCategory();
     private Category cat;
 
-    public RecyclerViewAdapter(Context context, User usr, Category cat) {
+    RecyclerViewAdapter(Context context, User usr, Category cat) {
         this.context = context;
         this.data = cat.getListAcc();
         this.usr = usr;
         this.cat = cat;
     }
 
+    @NonNull
     @Override
-    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.list_account, parent, false);
         return new MyViewHolder(view);
@@ -110,11 +112,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
 
-    public static class MyViewHolder extends RecyclerView.ViewHolder {
+    static class MyViewHolder extends RecyclerView.ViewHolder {
         FrameLayout rootView;
         private TextView mTitle;
 
-        public MyViewHolder(View itemView) {
+        MyViewHolder(View itemView) {
             super(itemView);
             mTitle = itemView.findViewById(R.id.accountElement);
             rootView = itemView.findViewById(R.id.viewActivityLay);

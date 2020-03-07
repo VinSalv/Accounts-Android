@@ -26,7 +26,6 @@ import java.util.Objects;
 
 @SuppressWarnings("SameParameterValue")
 public class SearchActivity extends AppCompatActivity {
-    private ArrayList<Account> listAccount;
     private User usr;
     private LinearLayout lay;
     private TextView elemFind;
@@ -47,7 +46,6 @@ public class SearchActivity extends AppCompatActivity {
         ArrayList<User> listUser = mngUsr.deserializationListUser(this);
         usr = mngUsr.findUser(listUser, Objects.requireNonNull(owner).getUser());
         if (usr != null) {
-            listAccount = null;
             mngCat = new ManageCategory();
             listCategory = mngCat.deserializationListCategory(this, usr.getUser());
             name.addTextChangedListener(new TextWatcher() {

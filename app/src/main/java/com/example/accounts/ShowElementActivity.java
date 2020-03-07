@@ -61,7 +61,7 @@ public class ShowElementActivity extends AppCompatActivity implements PopupMenu.
         if (usr != null) {
             mngCat = new ManageCategory();
             listCategory = mngCat.deserializationListCategory(this, usr.getUser());
-            cat = mngCat.findAndGetCategory(listCategory, ((Category) (Objects.requireNonNull(getIntent().getExtras())).get("category")).getCat());
+            cat = mngCat.findAndGetCategory(listCategory, ((Category) Objects.requireNonNull((Objects.requireNonNull(getIntent().getExtras())).get("category"))).getCat());
             listAccount = cat.getListAcc();
             acc = mngCat.findAndGetAccount(listAccount, account.getName());
             if (acc != null) {

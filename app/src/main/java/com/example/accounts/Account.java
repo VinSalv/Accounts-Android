@@ -34,7 +34,7 @@ public class Account implements Serializable {
         return list;
     }
 
-    public void setList(List<AccountElement> list) {
+    void setList(List<AccountElement> list) {
         this.list = list;
     }
 

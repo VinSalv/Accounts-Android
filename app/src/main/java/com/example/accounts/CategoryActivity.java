@@ -197,7 +197,7 @@ public class CategoryActivity extends AppCompatActivity implements PopupMenu.OnM
             GridLayoutManager manager = new GridLayoutManager(this, usr.getColCat(), GridLayoutManager.VERTICAL, false);
             recyclerView.setLayoutManager(manager);
             recyclerView.setAdapter(mAdapter);
-            recyclerView.addItemDecoration(new SpacesItemDecoration(20, usr.getColCat()));
+            recyclerView.addItemDecoration(new SpacesItemDecoration(20));
             recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this, recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position) {

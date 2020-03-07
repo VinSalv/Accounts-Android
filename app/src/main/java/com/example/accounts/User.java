@@ -46,23 +46,19 @@ public class User implements Serializable {
         this.colAcc = 1;
     }
 
-    public boolean isFinger() {
-        return finger;
-    }
-
-    public int getColCat() {
+    int getColCat() {
         return colCat;
     }
 
-    public void setColCat(int colCat) {
+    void setColCat(int colCat) {
         this.colCat = colCat;
     }
 
-    public int getColAcc() {
+    int getColAcc() {
         return colAcc;
     }
 
-    public void setColAcc(int colAcc) {
+    void setColAcc(int colAcc) {
         this.colAcc = colAcc;
     }
 

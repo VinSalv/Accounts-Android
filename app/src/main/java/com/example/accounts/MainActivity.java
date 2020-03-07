@@ -298,6 +298,7 @@ public class MainActivity extends AppCompatActivity {
                 for (int grantResult : grantResults) {
                     if (grantResult != PackageManager.PERMISSION_GRANTED) {
                         flag = false;
+                        break;
                     }
                 }
                 if (flag) {

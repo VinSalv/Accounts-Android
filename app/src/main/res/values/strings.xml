@@ -105,4 +105,21 @@
     <string name="next">NEXT</string>
     <string name="skip">SKIP</string>
     <string name="start">GOT IT</string>
+    <string name="aboutbutton">aboutButton</string>
+    <string name="copyright">Versione 3.0\n© 2020 Vincenzo Salvati Rights Reserved.</string>
+    <string name="benvenuto_nell_app_account">Benvenuto nell\'app Account!!</string>
+    <string name="sei_stanco_di_dover_ricordare_in_continuazione_le_tue_password_con_le_relative_e_mail_e_nomi_utente_nbene_hai_scaricato_l_app_che_fa_per_te_n_n_e_imortante_precisare_che_le_tue_credenziali_e_i_tuoi_account_saranno_memorizzati_escluisivamente_sul_tuo_smartphone_in_specifiche_cartelle_segrete_inaccessibili_da_terzi_non_vi_l_ausilio_di_alcun_server">Sei stanco di dover ricordare in continuazione le tue password con le relative e-mail e nomi utente?\nBene hai scaricato l\'app che fa per te!! \n\n (E\' imortante precisare che le tue credenziali e i tuoi account saranno memorizzati escluisivamente sul tuo Smartphone in specifiche cartelle segrete inaccessibili da terzi. Non vi è l\'ausilio di alcun server!!)</string>
+    <string name="una_volta_registrato_all_app_account_potrai_sfruttare_appieno_le_funzionalit_che_ha_da_offririti">Una volta registrato all\'app Account potrai sfruttare appieno le funzionalità che ha da offririti.</string>
+    <string name="imageintro1">imageIntro1</string>
+    <string name="verranno_create_inizialmente_delle_categorie_di_default_giochi_siti_e_social_che_potrai_cancellare_oltre_che_crearne_di_nuove">Verranno create inizialmente delle categorie di default (Giochi, Siti e Social) che potrai cancellare oltre che crearne di nuove.</string>
+    <string name="all_interno_di_ciascuna_categoria_verranno_poi_inseriti_i_relativi_account">All\'interno di ciascuna categoria verranno poi inseriti i relativi account.</string>
+    <string name="sar_possibile_dare_loro_un_ordine_a_piacere_semplicemente_trascinandole_da_una_parte_all_altra_o_ordinarle_in_maniera_crescente_e_decrescente" tools:ignore="Typos">Sarà possibile dare loro un ordine a piacere (semplicemente trascinandole da una parte all\'altra) o ordinarle in maniera crescente e decrescente.</string>
+    <string name="imageintro2">imageIntro2</string>
+    <string name="sar_possibile_effettuare_mediante_la_barra_delle_ricerche_una_selezione_dell_account_che_ci_serve_specificandone_la_categoria" tools:ignore="Typos">Sarà possibile effettuare mediante la barra delle ricerche una selezione dell\'account che ci serve, specificandone la categoria.</string>
+    <string name="in_questo_modo_potrai_ricercare_i_tuoi_account_facilmente_senza_dover_scorrere_tra_una_categoria_e_l_altra">In questo modo potrai ricercare i tuoi account facilmente senza dover scorrere tra una categoria e l\'altra.</string>
+    <string name="imageintro3">imageIntro3</string>
+    <string name="imageintro4">imageintro4</string>
+    <string name="estrai_i_pdf_dei_tuoi_account_in_maniera_da_poter_stampare_le_informazioni_di_ciascuno_di_loro_nuna_volta_selezionate_le_categorie_potrai_formalizzare_il_documento_con_il_layout_che_preferisci">Estrai i pdf dei tuoi account in maniera da poter stampare le informazioni di ciascuno di loro.\nUna volta selezionate le categorie potrai formalizzare il documento con il layout che preferisci.</string>
+    <string name="imageintro4_2">imageintro4_4</string>
+    <string name="perfetto_nadesso_sei_pronto_nsai_tutto_quello_che_devi_sapere_d">Perfetto!!\nAdesso sei pronto.\nSai tutto quello che devi sapere =D</string>
 </resources>

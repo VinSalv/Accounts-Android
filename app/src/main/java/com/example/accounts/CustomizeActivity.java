@@ -17,6 +17,7 @@ import com.google.android.material.appbar.AppBarLayout;
 import java.util.ArrayList;
 import java.util.Objects;
 
+@SuppressWarnings("SameParameterValue")
 public class CustomizeActivity extends AppCompatActivity {
     private ManageUser mngUsr;
     private User usr;
@@ -63,7 +64,7 @@ public class CustomizeActivity extends AppCompatActivity {
             ArrayList<String> numColumnCat = new ArrayList<>();
             numColumnCat.add("1");
             numColumnCat.add("2");
-            ArrayAdapter<String> adapterCat = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, numColumnCat);
+            ArrayAdapter<String> adapterCat = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, numColumnCat);
             adapterCat.setDropDownViewResource(R.layout.spinner_item);
             spinnerCategory.setAdapter(adapterCat);
             spinnerCategory.setSelection(usr.getColCat() - 1);
@@ -86,7 +87,7 @@ public class CustomizeActivity extends AppCompatActivity {
             ArrayList<String> numColumnAcc = new ArrayList<>();
             numColumnAcc.add("1");
             numColumnAcc.add("2");
-            ArrayAdapter<String> adapterAcc = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, numColumnAcc);
+            ArrayAdapter<String> adapterAcc = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, numColumnAcc);
             adapterAcc.setDropDownViewResource(R.layout.spinner_item);
             spinnerAccount.setAdapter(adapterAcc);
             spinnerAccount.setSelection(usr.getColAcc() - 1);

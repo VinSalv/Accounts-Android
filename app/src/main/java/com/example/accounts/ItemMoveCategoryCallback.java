@@ -4,11 +4,13 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.Objects;
+
 public class ItemMoveCategoryCallback extends ItemTouchHelper.Callback {
 
     private final ItemTouchHelperContract mAdapter;
 
-    public ItemMoveCategoryCallback(ItemTouchHelperContract adapter) {
+    ItemMoveCategoryCallback(ItemTouchHelperContract adapter) {
         mAdapter = adapter;
     }
 
@@ -29,13 +31,13 @@ public class ItemMoveCategoryCallback extends ItemTouchHelper.Callback {
     }
 
     @Override
-    public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+    public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
         int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT;
         return makeMovementFlags(dragFlags, 0);
     }
 
     @Override
-    public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder,
+    public boolean onMove(@NonNull RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder,
                           RecyclerView.ViewHolder target) {
         mAdapter.onRowMoved(viewHolder.getAdapterPosition(), target.getAdapterPosition());
         return true;
@@ -59,9 +61,9 @@ public class ItemMoveCategoryCallback extends ItemTouchHelper.Callback {
     }
 
     @Override
-    public void clearView(RecyclerView recyclerView,
-                          RecyclerView.ViewHolder viewHolder) {
-        super.clearView(recyclerView, viewHolder);
+    public void clearView(@NonNull RecyclerView recyclerView,
+                          @NonNull RecyclerView.ViewHolder viewHolder) {
+        super.clearView(recyclerView, Objects.requireNonNull(viewHolder));
 
         if (viewHolder instanceof RecyclerCategoryAdapter.MyViewHolder) {
             RecyclerCategoryAdapter.MyViewHolder myViewHolder =
