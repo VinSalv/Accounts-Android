@@ -236,7 +236,6 @@ public class SettingActivity extends AppCompatActivity {
                                 conf.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View view) {
-                                        popupWindowChoseCat.dismiss();
                                         int i = 0;
                                         listCategoryPdf = new ArrayList<>();
                                         for (Category ignored : mngCat.deserializationListCategory(SettingActivity.this, usr.getUser())) {
@@ -245,7 +244,10 @@ public class SettingActivity extends AppCompatActivity {
                                                 listCategoryPdf.add(mngCat.findAndGetCategory(mngCat.deserializationListCategory(SettingActivity.this, usr.getUser()), checkBox.getText().toString()));
                                             i++;
                                         }
-
+                                        if (listCategoryPdf.isEmpty()) {
+                                            notifyUser("Non hai selezionato nessuna categoria!!!");
+                                            return;
+                                        } else popupWindowChoseCat.dismiss();
                                         LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
                                         @SuppressLint("InflateParams") final View popupView = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_pdf, null);
                                         final PopupWindow popupWindow = new PopupWindow(popupView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
@@ -599,7 +601,10 @@ public class SettingActivity extends AppCompatActivity {
                     }
                     doc.add(pt);
                 }
-                notifyUser("PDF creato in " + path + "Lista account di " + usr.getUser() + sdf.format(Calendar.getInstance().getTime()) + ".pdf");
+                if (b)
+                    notifyUser("PDF creato in " + path + "Lista account di " + usr.getUser() + sdf.format(Calendar.getInstance().getTime()) + "Orizzontale.pdf");
+                else
+                    notifyUser("PDF creato in " + path + "Lista account di " + usr.getUser() + sdf.format(Calendar.getInstance().getTime()) + "Verticale.pdf");
             } catch (DocumentException de) {
                 Log.e("PDFCreator", "DocumentException:" + de);
             } finally {
