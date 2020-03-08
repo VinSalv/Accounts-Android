@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:padding="10dp"
-            android:text="@string/benvenuto_nell_app_account"
+            android:text="@string/intro1"
             android:textSize="18sp"
             android:textStyle="bold" />
 
@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:padding="10dp"
-            android:text="@string/sei_stanco_di_dover_ricordare_in_continuazione_le_tue_password_con_le_relative_e_mail_e_nomi_utente_nbene_hai_scaricato_l_app_che_fa_per_te_n_n_e_importante_precisare_che_le_tue_credenziali_e_i_tuoi_account_saranno_memorizzati_escluisivamente_sul_tuo_smartphone_in_specifiche_cartelle_segrete_inaccessibili_da_terzi_non_vi_l_ausilio_di_alcun_server"
+            android:text="@string/intro1_2"
             android:textSize="16sp" />
 
         <TextView
@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:padding="10dp"
-            android:text="@string/una_volta_registrato_all_app_account_potrai_sfruttare_appieno_le_funzionalit_che_ha_da_offririti"
+            android:text="@string/intro1_3"
             android:textSize="16sp" />
 
         <ImageView

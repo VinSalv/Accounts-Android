@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:padding="10dp"
-            android:text="@string/estrai_i_pdf_dei_tuoi_account_in_maniera_da_poter_stampare_le_informazioni_di_ciascuno_di_loro_nuna_volta_selezionate_le_categorie_potrai_formalizzare_il_documento_con_il_layout_che_preferisci"
+            android:text="@string/intro4"
             android:textSize="16sp" />
 
         <ImageView

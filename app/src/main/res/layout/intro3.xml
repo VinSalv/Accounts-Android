@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:padding="10dp"
-            android:text="@string/sar_possibile_effettuare_mediante_la_barra_delle_ricerche_una_selezione_dell_account_che_ci_serve_specificandone_la_categoria"
+            android:text="@string/intro3"
             android:textSize="16sp" />
 
         <ImageView
@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:padding="10dp"
-            android:text="@string/le_password_saranno_invisibili_cos_da_nasconderla_a_qualche_malintenzionato_nelle_vicinanze_tuttavia_possibile_copiarle_anche_da_nascoste"
+            android:text="@string/intro4_2"
             android:textSize="16sp" />
 
         <ImageView

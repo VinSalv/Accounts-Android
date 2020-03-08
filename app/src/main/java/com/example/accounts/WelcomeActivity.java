@@ -68,7 +68,7 @@ public class WelcomeActivity extends AppCompatActivity {
         try {
             s = (String) Objects.requireNonNull(getIntent().getExtras()).get("string");
 
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
         prefManager = new PrefManager(this);
         // Checking for first time launch - before calling setContentView()

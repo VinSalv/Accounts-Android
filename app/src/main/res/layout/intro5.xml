@@ -19,7 +19,7 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:padding="10dp"
-            android:text="@string/perfetto_nadesso_sei_pronto_nsai_tutto_quello_che_devi_sapere_d"
+            android:text="@string/intro5"
             android:textSize="20sp"
             android:textStyle="bold" />
     </LinearLayout>

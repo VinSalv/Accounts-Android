@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:padding="10dp"
-            android:text="@string/verranno_create_inizialmente_delle_categorie_di_default_giochi_siti_e_social_che_potrai_cancellare_oltre_che_crearne_di_nuove"
+            android:text="@string/intro2"
             android:textSize="16sp" />
 
         <TextView
@@ -35,7 +35,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:padding="10dp"
-            android:text="@string/all_interno_di_ciascuna_categoria_verranno_poi_inseriti_i_relativi_account"
+            android:text="@string/intro2_2"
             android:textSize="16sp" />
 
         <TextView
@@ -44,7 +44,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:padding="10dp"
-            android:text="@string/sar_possibile_dare_loro_un_ordine_a_piacere_semplicemente_trascinandole_da_una_parte_all_altra_o_ordinarle_in_maniera_crescente_e_decrescente"
+            android:text="@string/intro2_3"
             android:textSize="16sp" />
     </LinearLayout>
 </RelativeLayout>
