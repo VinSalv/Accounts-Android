@@ -65,6 +65,7 @@ public class CategoryActivity extends AppCompatActivity implements PopupMenu.OnM
     private boolean isMultiSelect;
     private ActionMode actionMode;
     private boolean doubleBackToExitPressedOnce;
+    private boolean b;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -78,6 +79,7 @@ public class CategoryActivity extends AppCompatActivity implements PopupMenu.OnM
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         isMultiSelect = false;
         doubleBackToExitPressedOnce = false;
+        b = true;
         mngApp = new ManageApp();
         logApp = mngApp.deserializationFlag(this);
         mngUsr = new ManageUser();
@@ -120,8 +122,10 @@ public class CategoryActivity extends AppCompatActivity implements PopupMenu.OnM
                     if (scrollRange + verticalOffset == 0) {
                         isShow = true;
                         welcomeToolbar.setVisibility(View.VISIBLE);
-                        settingsButton.setVisibility(View.VISIBLE);
-                        searchButton.setVisibility(View.VISIBLE);
+                        if (b) {
+                            settingsButton.setVisibility(View.VISIBLE);
+                            searchButton.setVisibility(View.VISIBLE);
+                        }
                     } else if (isShow) {
                         isShow = false;
                         welcomeToolbar.setVisibility(View.INVISIBLE);
@@ -351,6 +355,7 @@ public class CategoryActivity extends AppCompatActivity implements PopupMenu.OnM
         floatingButtonSettings.setVisibility(View.VISIBLE);
         floatingButtonSearch.setVisibility(View.VISIBLE);
         floatingButtonAddNewCategory.setVisibility(View.VISIBLE);
+        b = true;
     }
 
     @Override
@@ -372,6 +377,7 @@ public class CategoryActivity extends AppCompatActivity implements PopupMenu.OnM
                         floatingButtonSettings.setVisibility(View.GONE);
                         floatingButtonSearch.setVisibility(View.GONE);
                         floatingButtonAddNewCategory.setVisibility(View.GONE);
+                        b = false;
                         actionMode = startActionMode(CategoryActivity.this);
                     }
                 }

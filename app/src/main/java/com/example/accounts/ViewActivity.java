@@ -61,9 +61,9 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     private FloatingActionButton floatingButtonSetting;
     private FloatingActionButton floatingButtonSearch;
     private FloatingActionButton floatingButtonAddNewAccount;
-    private boolean b;
     private ActionMode actionMode;
     private boolean isMultiSelect;
+    private boolean b, a;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -76,6 +76,7 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         layoutViewActivity = findViewById(R.id.viewActivityLay);
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         isMultiSelect = false;
+        a = true;
         mngApp = new ManageApp();
         log = mngApp.deserializationFlag(this);
         mngUsr = new ManageUser();
@@ -127,8 +128,10 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                         if (scrollRange + verticalOffset == 0) {
                             isShow = true;
                             textViewToolbar.setVisibility(View.VISIBLE);
-                            settingsButton.setVisibility(View.VISIBLE);
-                            searchButton.setVisibility(View.VISIBLE);
+                            if (a) {
+                                settingsButton.setVisibility(View.VISIBLE);
+                                searchButton.setVisibility(View.VISIBLE);
+                            }
                         } else if (isShow) {
                             isShow = false;
                             textViewToolbar.setVisibility(View.INVISIBLE);
@@ -397,6 +400,7 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         floatingButtonSetting.setVisibility(View.VISIBLE);
         floatingButtonSearch.setVisibility(View.VISIBLE);
         floatingButtonAddNewAccount.setVisibility(View.VISIBLE);
+        a = true;
     }
 
     @Override
@@ -455,6 +459,7 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                         floatingButtonSearch.setVisibility(View.GONE);
                         floatingButtonAddNewAccount.setVisibility(View.GONE);
                         b = false;
+                        a = false;
                         actionMode = startActionMode(ViewActivity.this);
                     }
                 }
@@ -471,6 +476,7 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                         floatingButtonSearch.setVisibility(View.GONE);
                         floatingButtonAddNewAccount.setVisibility(View.GONE);
                         b = true;
+                        a = false;
                         actionMode = startActionMode(ViewActivity.this);
                     }
                 }
