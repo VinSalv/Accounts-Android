@@ -25,11 +25,11 @@
     <string name="passHint2">Ripeti password</string>
     <string name="showPassImage">Icona mostra password</string>
     <string name="settings">Settings</string>
-    <string name="action_edit">Modifica</string>
-    <string name="action_delete">Elimina</string>
-    <string name="action_copy">Copia</string>
-    <string name="action_cut">Sposta</string>
-    <string name="action_sort">Ordina</string>
+    <string name="action_edit">Modifica account</string>
+    <string name="action_delete">Elimina account</string>
+    <string name="action_copy">Copia account</string>
+    <string name="action_cut">Sposta account</string>
+    <string name="action_sort">Ordina account</string>
     <string name="action_setting">Impostazioni</string>
     <string name="action_exit">Esci</string>
     <string name="addButton">Aggiungi</string>
@@ -94,7 +94,7 @@
     <string name="append">Accoda</string>
     <string name="done">Ritorna alle categorie</string>
     <string name="doneText">Fatto!!</string>
-    <string name="copy_or_cut">Copia/Sposta</string>
+    <string name="copy_or_cut">Copia/Sposta account</string>
     <string name="select_category">Seleziona le categorie interessate:</string>
     <string name="check_all">Tutte</string>
     <string name="select_all_cat">Seleziona tutto</string>
@@ -121,4 +121,9 @@
     <string name="intro5">Perfetto!!\nAdesso sei pronto.\nSai tutto quello che devi sapere =D</string>
     <string name="intro4_2" tools:ignore="Typos">Le password saranno invisibili così da nasconderle a qualche malintenzionato nelle vicinanze. Tuttavia è possibile copiarle anche da nascoste!!</string>
     <string name="introText">Cosa posso fare?</string>
+    <string name="rename_category">Rinomina categoria</string>
+    <string name="delete_category">Elimina categorie</string>
+    <string name="sort_category">Ordina categorie</string>
+    <string name="delete">Elimina</string>
+    <string name="rename_cat">Come vuoi rinominare Categoria?</string>
 </resources>

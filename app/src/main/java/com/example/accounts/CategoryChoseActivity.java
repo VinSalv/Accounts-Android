@@ -22,6 +22,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.content.ContextCompat;
 import androidx.core.text.HtmlCompat;
+import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -37,18 +38,20 @@ import java.util.Objects;
 @SuppressWarnings("ALL")
 public class CategoryChoseActivity extends AppCompatActivity {
     private CoordinatorLayout layoutCategoryChoseActivity;
+    private RecyclerView recyclerView;
     private ManageCategory mngCat;
     private TextView choseText;
     private TextView choseTextMini;
     private TextView choseTextToolbar;
     private ArrayList<Category> listCategory;
     private ArrayList<Account> listAccountTake;
+    private ArrayList<Account> listAccountTakeApp;
     private ArrayList<Account> listAccountToSet;
+    private ArrayList<String> listCategoryString;
     private RecyclerCategoryChoseAdapter mAdapter;
-    private FloatingActionButton cancel;
+    private FloatingActionButton addNewCategory;
     private User usr;
     private Category category;
-    private Category categoryAdapter;
     private Category categoryAdapterPosition;
     private String opt;
 
@@ -62,20 +65,20 @@ public class CategoryChoseActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         layoutCategoryChoseActivity = findViewById(R.id.catChoseActivityLay);
         listAccountTake = (ArrayList<Account>) (getIntent().getExtras()).get("listAccount");
+        listAccountTakeApp = listAccountTake;
         opt = (String) (Objects.requireNonNull(getIntent().getExtras())).get("option");
-        RecyclerView recyclerView = findViewById(R.id.recyclerView);
+        recyclerView = findViewById(R.id.recyclerView);
         ManageUser mngUsr = new ManageUser();
-        ArrayList<User> listUser = mngUsr.deserializationListUser(this);
+        final ArrayList<User> listUser = mngUsr.deserializationListUser(this);
         usr = mngUsr.findUser(listUser, ((User) (Objects.requireNonNull(getIntent().getExtras())).get("owner")).getUser());
         if (usr != null) {
             mngCat = new ManageCategory();
             listCategory = mngCat.deserializationListCategory(this, usr.getUser());
             category = mngCat.findAndGetCategory(listCategory, ((Category) Objects.requireNonNull((Objects.requireNonNull(getIntent().getExtras())).get("category"))).getCat());
+            listCategoryString = new ArrayList<>();
+            for (Category singleCategory : listCategory)
+                listCategoryString.add(singleCategory.getCat());
             categoryAdapterPosition = null;
-            if (usr.getSort() == 1)
-                listCategory = increasing(listCategory);
-            else if (usr.getSort() == 2)
-                listCategory = decreasing(listCategory);
             choseText = findViewById(R.id.welcomeChoseText);
             choseText.setText("Scegli la categoria");
             choseTextMini = findViewById(R.id.welcomeChoseMiniText);
@@ -136,25 +139,28 @@ public class CategoryChoseActivity extends AppCompatActivity {
                             listCategory.remove(mngCat.findAndGetCategory(listCategory, categoryAdapterPosition.getCat()));
                             mngCat.removeFileCategory(CategoryChoseActivity.this, usr.getUser());
                             if (opt.toLowerCase().equals("cut")) {
-                                ArrayList<Account> listAccountCategoryApp = category.getListAcc();
-                                listAccountCategoryApp.removeAll(listAccountTake);
-                                category.setListAcc(listAccountCategoryApp);
                                 listCategory.remove(mngCat.findAndGetCategory(listCategory, category.getCat()));
+                                ArrayList<Account> listAccountCategoryApp = category.getListAcc();
+                                listAccountCategoryApp.removeAll(listAccountTakeApp);
+                                category.setListAcc(listAccountCategoryApp);
                                 listCategory.add(category);
                             }
-                            ArrayList<Account> listAccountApp = categoryAdapter.getListAcc();
+                            ArrayList<Account> listAccountApp = categoryAdapterPosition.getListAcc();
                             listAccountApp.addAll(listAccountToSet);
-                            categoryAdapter.setListAcc(listAccountApp);
-                            listCategory.add(categoryAdapter);
-                            mngCat.serializationListCategory(CategoryChoseActivity.this, listCategory, usr.getUser());
+                            categoryAdapterPosition.setListAcc(listAccountApp);
+                            listCategory.add(categoryAdapterPosition);
+                            ArrayList<Category> listCategoryApp = new ArrayList<>();
+                            for (String singleStringCategory : listCategoryString) {
+                                listCategoryApp.add(mngCat.findAndGetCategory(listCategory, singleStringCategory));
+                            }
+                            mngCat.serializationListCategory(CategoryChoseActivity.this, listCategoryApp, usr.getUser());
                             goToCategoryActivity();
                             popupWindowDone.dismiss();
                         }
                     });
                     popupViewDone.setVisibility(View.INVISIBLE);
-                    categoryAdapter = categoryAdapterPosition;
                     listCategory = mngCat.deserializationListCategory(CategoryChoseActivity.this, usr.getUser());
-                    listCategory.remove(categoryAdapter);
+                    listCategory.remove(categoryAdapterPosition);
                     listAccountToSet = new ArrayList<>();
                     for (final Account singleAccountTake : listAccountTake) {
                         if (mngCat.findAccount(categoryAdapterPosition.getListAcc(), singleAccountTake.getName())) {
@@ -166,7 +172,7 @@ public class CategoryChoseActivity extends AppCompatActivity {
                             popupWindowChose.setBackgroundDrawable(new BitmapDrawable());
                             View parent = layoutCategoryChoseActivity.getRootView();
                             popupWindowChose.showAtLocation(parent, Gravity.CENTER, 0, 0);
-                            ((TextView) popupViewChose.findViewById(R.id.equalsText)).setText(Html.fromHtml("Esiste già un account di nome " + "<b>" + singleAccountTake.getName() + "</b>" + " nella categoria " + "<b>" + categoryAdapterPosition.getCat() + "</b>" + ". Cosa vuoi fare?", HtmlCompat.FROM_HTML_MODE_LEGACY));
+                            ((TextView) popupViewChose.findViewById(R.id.equalsText)).setText(Html.fromHtml("Esiste già un account di nome <b>" + singleAccountTake.getName() + "</b> nella categoria " + "<b>" + categoryAdapterPosition.getCat() + "</b>. Cosa vuoi fare?", HtmlCompat.FROM_HTML_MODE_LEGACY));
                             Button overWrite = popupViewChose.findViewById(R.id.overWrite);
                             Button rename = popupViewChose.findViewById(R.id.rename);
                             Button append = popupViewChose.findViewById(R.id.append);
@@ -175,9 +181,9 @@ public class CategoryChoseActivity extends AppCompatActivity {
                                 @Override
                                 public void onClick(View view) {
                                     listAccountToSet.add(singleAccountTake);
-                                    ArrayList<Account> listAccountApp = categoryAdapter.getListAcc();
+                                    ArrayList<Account> listAccountApp = categoryAdapterPosition.getListAcc();
                                     listAccountApp.remove(mngCat.findAndGetAccount(categoryAdapterPosition.getListAcc(), singleAccountTake.getName()));
-                                    categoryAdapter.setListAcc(listAccountApp);
+                                    categoryAdapterPosition.setListAcc(listAccountApp);
                                     popupWindowChose.dismiss();
                                 }
                             });
@@ -205,14 +211,14 @@ public class CategoryChoseActivity extends AppCompatActivity {
                                             }
                                             if (!mngCat.findAccount(mngCat.findAndGetCategory(listCategory, categoryAdapterPosition.getCat()).getListAcc(), newAccountName.getText().toString())
                                                     && !mngCat.findAccount(listAccountToSet, newAccountName.getText().toString())) {
-                                                singleAccountTake.setName(newAccountName.getText().toString());
-                                                listAccountToSet.add(singleAccountTake);
+                                                Account accountApp = new Account(singleAccountTake.getName(), singleAccountTake.getCategory(), singleAccountTake.getList());
+                                                accountApp.setName(newAccountName.getText().toString());
+                                                listAccountToSet.add(accountApp);
                                                 popupWindowRename.dismiss();
                                                 popupWindowChose.dismiss();
-
                                             } else {
                                                 newAccountName.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(CategoryChoseActivity.this, R.color.errorEditText)));
-                                                notifyUser(Html.fromHtml("Il nome <b>" + newAccountName.getText().toString() + "</b> è già stato utilizzato nella categoria <b>" + categoryAdapter.getCat() + "</b>.", HtmlCompat.FROM_HTML_MODE_LEGACY).toString());
+                                                notifyUser(Html.fromHtml("Il nome <b>" + newAccountName.getText().toString() + "</b> è già stato utilizzato nella categoria <b>" + categoryAdapterPosition.getCat() + "</b>.", HtmlCompat.FROM_HTML_MODE_LEGACY).toString());
                                             }
                                         }
                                     });
@@ -236,7 +242,7 @@ public class CategoryChoseActivity extends AppCompatActivity {
                             ignore.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
-                                    listAccountTake.remove(singleAccountTake);
+                                    listAccountTakeApp.remove(singleAccountTake);
                                     popupWindowChose.dismiss();
                                 }
                             });
@@ -250,11 +256,61 @@ public class CategoryChoseActivity extends AppCompatActivity {
                 public void onItemLongClick(View view, int position) {
                 }
             }));
-            cancel = findViewById(R.id.cancelFloatingButton);
-            cancel.setOnClickListener(new View.OnClickListener() {
+            addNewCategory = findViewById(R.id.addFloatingButton);
+            addNewCategory.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    goToCategoryActivity();
+                    ((NestedScrollView) findViewById(R.id.catChoseNestedScroll)).setVisibility(View.INVISIBLE);
+                    addNewCategory.setVisibility(View.GONE);
+                    LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+                    final View popupViewAddNewCategory = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_category, (ViewGroup) findViewById(R.id.categoryPopup));
+                    final PopupWindow popupWindowAddNewCategory = new PopupWindow(popupViewAddNewCategory, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+                    popupWindowAddNewCategory.setOutsideTouchable(false);
+                    popupWindowAddNewCategory.setFocusable(false);
+                    popupWindowAddNewCategory.setBackgroundDrawable(new BitmapDrawable());
+                    View parent = layoutCategoryChoseActivity.getRootView();
+                    popupWindowAddNewCategory.showAtLocation(parent, Gravity.CENTER, 0, 0);
+                    if (opt.toLowerCase().equals("cut"))
+                        ((TextView) popupViewAddNewCategory.findViewById(R.id.categoryText)).setText("Crea la nuova categoria su cui effettuare lo spostamento.");
+                    else
+                        ((TextView) popupViewAddNewCategory.findViewById(R.id.categoryText)).setText("Crea la nuova categoria su cui effettuare la copia.");
+                    final EditText popupNewCategoryText = popupViewAddNewCategory.findViewById(R.id.categoryEditText);
+                    Button conf = popupViewAddNewCategory.findViewById(R.id.confirmation);
+                    conf.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            popupNewCategoryText.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(CategoryChoseActivity.this, R.color.colorAccent)));
+                            if (checkGapError(popupNewCategoryText.getText().toString())) {
+                                popupNewCategoryText.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(CategoryChoseActivity.this, R.color.errorEditText)));
+                                return;
+                            }
+                            if ((!mngCat.findCategory(listCategory, popupNewCategoryText.getText().toString())) && (!popupNewCategoryText.getText().toString().toLowerCase().equals(category.getCat().toLowerCase()))) {
+                                mngCat.removeFileCategory(CategoryChoseActivity.this, usr.getUser());
+                                if (opt.toLowerCase().equals("cut")) {
+                                    listCategory.remove(mngCat.findAndGetCategory(listCategory, category.getCat()));
+                                    ArrayList<Account> listAccountCategoryApp = category.getListAcc();
+                                    listAccountCategoryApp.removeAll(listAccountTakeApp);
+                                    category.setListAcc(listAccountCategoryApp);
+                                    listCategory.add(category);
+                                }
+                                ArrayList<Category> listCategoryApp = new ArrayList<>();
+                                for (String singleStringCategory : listCategoryString) {
+                                    listCategoryApp.add(mngCat.findAndGetCategory(listCategory, singleStringCategory));
+                                }
+                                listCategoryApp.add(new Category(fixName(popupNewCategoryText.getText().toString()), listAccountTake, 1));
+                                if (usr.getSort() == 1)
+                                    listCategoryApp = increasing(listCategoryApp);
+                                else if (usr.getSort() == 2)
+                                    listCategoryApp = decreasing(listCategoryApp);
+                                mngCat.serializationListCategory(CategoryChoseActivity.this, listCategoryApp, usr.getUser());
+                                goToCategoryActivity();
+                                popupWindowAddNewCategory.dismiss();
+                            } else {
+                                popupNewCategoryText.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(CategoryChoseActivity.this, R.color.errorEditText)));
+                                notifyUser(Html.fromHtml("Categoria <b>" + popupNewCategoryText.getText().toString() + "</b> già esistente.", HtmlCompat.FROM_HTML_MODE_LEGACY).toString());
+                            }
+                        }
+                    });
                 }
             });
         } else {
@@ -286,6 +342,28 @@ public class CategoryChoseActivity extends AppCompatActivity {
         Toast.makeText(this,
                 message,
                 Toast.LENGTH_LONG).show();
+    }
+
+    public boolean checkGapError(String s) {
+        if (isInvalidWord(s)) {
+            notifyUser("Campo non valido.");
+            return true;
+        }
+        return false;
+    }
+
+    public boolean isInvalidWord(String word) {
+        return ((!word.matches("[A-Za-z0-9?!_.-]*")) || (word.isEmpty()));
+    }
+
+    public String fixName(String name) {
+        if (name.isEmpty()) return name;
+        else {
+            name = name.toLowerCase();
+            String name1 = name.substring(0, 1).toUpperCase();
+            String name2 = name.substring(1).toLowerCase();
+            return name1.concat(name2);
+        }
     }
 
     public ArrayList<Category> increasing(ArrayList<Category> list) {

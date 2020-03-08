@@ -2,10 +2,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/delete"
-        android:title="@string/action_delete" />
+        android:title="@string/delete_category" />
     <item
         android:id="@+id/sort"
-        android:title="@string/action_sort" />
+        android:title="@string/sort_category" />
     <item
         android:id="@+id/setting"
         android:title="@string/action_setting" />

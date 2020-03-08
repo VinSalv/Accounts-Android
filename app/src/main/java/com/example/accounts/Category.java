@@ -32,6 +32,10 @@ public class Category implements Serializable {
         return cat;
     }
 
+    public void setCat(String cat) {
+        this.cat = cat;
+    }
+
     ArrayList<Account> getListAcc() {
         return listAcc;
     }

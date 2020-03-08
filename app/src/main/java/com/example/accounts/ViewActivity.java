@@ -2,6 +2,7 @@ package com.example.accounts;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.text.Html;
@@ -14,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.PopupWindow;
@@ -25,6 +27,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.content.ContextCompat;
 import androidx.core.text.HtmlCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -206,7 +209,10 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     }
 
     public void refresh() {
-        startActivity(getIntent());
+        Intent intent = new Intent(ViewActivity.this, ViewActivity.class);
+        intent.putExtra("owner", usr);
+        intent.putExtra("category", category);
+        startActivity(intent);
         finish();
     }
 
@@ -402,6 +408,42 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     @Override
     public boolean onMenuItemClick(MenuItem item) {
         switch (item.getItemId()) {
+            case (R.id.rename):
+                LayoutInflater layoutInflaterRename = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+                View popupViewRenameCategory = Objects.requireNonNull(layoutInflaterRename).inflate(R.layout.popup_rename_category, (ViewGroup) findViewById(R.id.categoryRenamePopup));
+                final PopupWindow popupWindowRenameCategory = new PopupWindow(popupViewRenameCategory, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+                popupWindowRenameCategory.setOutsideTouchable(true);
+                popupWindowRenameCategory.setFocusable(true);
+                popupWindowRenameCategory.setBackgroundDrawable(new BitmapDrawable());
+                View parent = layoutViewActivity.getRootView();
+                popupWindowRenameCategory.showAtLocation(parent, Gravity.CENTER, 0, 0);
+                ((TextView) popupViewRenameCategory.findViewById(R.id.categoryRenameText)).setText(Html.fromHtml("Come vuoi rinominare la categoria <b>" + category.getCat() + "</b>?", HtmlCompat.FROM_HTML_MODE_LEGACY));
+                final EditText popupRenameCategoryText = popupViewRenameCategory.findViewById(R.id.categoryRenameEditText);
+                Button conf = popupViewRenameCategory.findViewById(R.id.confirmation);
+                conf.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        popupRenameCategoryText.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(ViewActivity.this, R.color.colorAccent)));
+                        if (checkGapError(popupRenameCategoryText.getText().toString())) {
+                            popupRenameCategoryText.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(ViewActivity.this, R.color.errorEditText)));
+                            return;
+                        }
+                        ArrayList<Category> listCategoryApp = new ArrayList<>();
+                        listCategoryApp.addAll(listCategory);
+                        listCategoryApp.remove(category);
+                        if (!mngCat.findCategory(listCategoryApp, popupRenameCategoryText.getText().toString())) {
+                            category.setCat(fixName(popupRenameCategoryText.getText().toString()));
+                            listCategoryApp.add(category);
+                            mngCat.serializationListCategory(ViewActivity.this, listCategoryApp, usr.getUser());
+                            refresh();
+                            popupWindowRenameCategory.dismiss();
+                        } else {
+                            popupRenameCategoryText.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(ViewActivity.this, R.color.errorEditText)));
+                            notifyUser(Html.fromHtml("Categoria <b>" + popupRenameCategoryText.getText().toString() + "</b> già esistente.", HtmlCompat.FROM_HTML_MODE_LEGACY).toString());
+                        }
+                    }
+                });
+                return true;
             case (R.id.delete):
                 if (!isMultiSelect) {
                     selectedIds = new ArrayList<>();
@@ -436,14 +478,14 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 return true;
             case R.id.sort:
                 Category categoryApp = mngCat.findAndGetCategory(mngCat.deserializationListCategory(this, usr.getUser()), category.getCat());
-                LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
-                View popupViewSort = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_sort, (ViewGroup) findViewById(R.id.popupSort));
+                LayoutInflater layoutInflaterSort = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+                View popupViewSort = Objects.requireNonNull(layoutInflaterSort).inflate(R.layout.popup_sort, (ViewGroup) findViewById(R.id.popupSort));
                 final PopupWindow popupWindowSort = new PopupWindow(popupViewSort, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
                 popupWindowSort.setOutsideTouchable(true);
                 popupWindowSort.setFocusable(true);
                 popupWindowSort.setBackgroundDrawable(new BitmapDrawable());
-                View parent = layoutViewActivity.getRootView();
-                popupWindowSort.showAtLocation(parent, Gravity.CENTER, 0, 0);
+                View parentSort = layoutViewActivity.getRootView();
+                popupWindowSort.showAtLocation(parentSort, Gravity.CENTER, 0, 0);
                 RadioGroup radioGroupSort = popupViewSort.findViewById(R.id.radioGroupSorter);
                 final RadioButton radioButtonIncreasing = popupViewSort.findViewById(R.id.increasing);
                 final RadioButton radioButtonDecreasing = popupViewSort.findViewById(R.id.decreasing);
@@ -502,6 +544,28 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         Toast.makeText(this,
                 message,
                 Toast.LENGTH_LONG).show();
+    }
+
+    public boolean checkGapError(String s) {
+        if (isInvalidWord(s)) {
+            notifyUser("Campo non valido.");
+            return true;
+        }
+        return false;
+    }
+
+    public boolean isInvalidWord(String word) {
+        return ((!word.matches("[A-Za-z0-9?!_.-]*")) || (word.isEmpty()));
+    }
+
+    public String fixName(String name) {
+        if (name.isEmpty()) return name;
+        else {
+            name = name.toLowerCase();
+            String name1 = name.substring(0, 1).toUpperCase();
+            String name2 = name.substring(1).toLowerCase();
+            return name1.concat(name2);
+        }
     }
 
     public ArrayList<Account> increasing(ArrayList<Account> list) {

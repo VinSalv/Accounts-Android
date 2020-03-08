@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,16 +57,15 @@ public class SearchActivity extends AppCompatActivity {
                     layoutSearchActivity.removeAllViews();
                     i = 0;
                     if (!s.toString().equals("")) {
-                        for (Category singleCategory : listCategory) {
+                        for (final Category singleCategory : listCategory) {
                             LayoutInflater layoutInflater = LayoutInflater.from(SearchActivity.this);
-                            final View view = layoutInflater.inflate(R.layout.list_search, (ViewGroup) findViewById(R.id.searchLay), false);
+                            final View viewLayoutCategory = layoutInflater.inflate(R.layout.list_search, (ViewGroup) findViewById(R.id.searchLay), false);
                             LinearLayout.LayoutParams lpp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                             lpp.setMargins(0, 0, 0, 20);
-                            TextView categoryFound = view.findViewById(R.id.categorySearch);
+                            TextView categoryFound = viewLayoutCategory.findViewById(R.id.categorySearch);
                             categoryFound.setText(singleCategory.getCat());
-                            TextView accountCategoryFound = view.findViewById(R.id.findSearchCategory);
-                            (view.findViewById(R.id.elmSearchLay)).setVisibility(View.VISIBLE);
-                            layoutSearchActivity.addView(view, lpp);
+                            TextView numberAccountCategoryFound = viewLayoutCategory.findViewById(R.id.findSearchCategory);
+                            layoutSearchActivity.addView(viewLayoutCategory, lpp);
                             j = 0;
                             for (final Account singleAccount : increasing(singleCategory.getListAcc())) {
                                 if (singleAccount.getName().toLowerCase().contains(s.toString().toLowerCase())) {
@@ -77,22 +77,21 @@ public class SearchActivity extends AppCompatActivity {
                                     accountFound.setText(singleAccount.getName());
                                     accountFound.setGravity(View.TEXT_ALIGNMENT_CENTER);
                                     accountFound.setBackground(getDrawable(R.drawable.rounded_color));
-                                    LinearLayout ll = view.findViewById(R.id.elmSearchLay);
-                                    ll.addView(accountFound, param);
+                                    ((LinearLayout) viewLayoutCategory.findViewById(R.id.elmSearchLay)).addView(accountFound, param);
                                     accountFound.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
                                             mngCat = new ManageCategory();
-                                            Category category = mngCat.findAndGetCategory(mngCat.deserializationListCategory(SearchActivity.this, usr.getUser()), singleAccount.getCategory());
-                                            goToShowElementActivity(singleAccount, category);
+                                            goToShowElementActivity(singleAccount, singleCategory);
                                         }
                                     });
                                 }
                             }
-                            if (j == 0) layoutSearchActivity.removeView(view);
+                            if (j == 0) layoutSearchActivity.removeView(viewLayoutCategory);
                             else
-                                accountCategoryFound.setText(Html.fromHtml("Trovati: <b>" + j + "</b>", HtmlCompat.FROM_HTML_MODE_LEGACY));
-                            final ImageButton show = view.findViewById(R.id.showCategory);
+                                numberAccountCategoryFound.setText(Html.fromHtml("Trovati: <b>" + j + "</b>", HtmlCompat.FROM_HTML_MODE_LEGACY));
+                            (viewLayoutCategory.findViewById(R.id.elmSearchLay)).setVisibility(View.VISIBLE);
+                            final ImageButton show = viewLayoutCategory.findViewById(R.id.showCategory);
                             final Boolean[] bool = {true};
                             show.setOnClickListener(new View.OnClickListener() {
                                 @Override
@@ -100,25 +99,25 @@ public class SearchActivity extends AppCompatActivity {
                                     if (bool[0]) {
                                         bool[0] = false;
                                         show.setImageResource(android.R.drawable.arrow_up_float);
-                                        (view.findViewById(R.id.elmSearchLay)).animate()
+                                        (viewLayoutCategory.findViewById(R.id.elmSearchLay)).animate()
                                                 .alpha(0.0f)
                                                 .setListener(new AnimatorListenerAdapter() {
                                                     @Override
                                                     public void onAnimationStart(Animator animation) {
                                                         super.onAnimationStart(animation);
-                                                        (view.findViewById(R.id.elmSearchLay)).setVisibility(View.GONE);
+                                                        (viewLayoutCategory.findViewById(R.id.elmSearchLay)).setVisibility(View.GONE);
                                                     }
                                                 });
                                     } else {
                                         bool[0] = true;
                                         show.setImageResource(android.R.drawable.arrow_down_float);
-                                        (view.findViewById(R.id.elmSearchLay)).animate()
+                                        (viewLayoutCategory.findViewById(R.id.elmSearchLay)).animate()
                                                 .alpha(1.0f)
                                                 .setListener(new AnimatorListenerAdapter() {
                                                     @Override
                                                     public void onAnimationStart(Animator animation) {
                                                         super.onAnimationStart(animation);
-                                                        (view.findViewById(R.id.elmSearchLay)).setVisibility(View.VISIBLE);
+                                                        (viewLayoutCategory.findViewById(R.id.elmSearchLay)).setVisibility(View.VISIBLE);
                                                     }
                                                 });
                                     }
@@ -155,6 +154,7 @@ public class SearchActivity extends AppCompatActivity {
 
     public void goToShowElementActivity(Account account, Category category) {
         Intent intent = new Intent(SearchActivity.this, ShowElementActivity.class);
+        Log.d("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", account.getName() + category.getCat());
         intent.putExtra("account", account);
         intent.putExtra("owner", usr);
         intent.putExtra("category", category);

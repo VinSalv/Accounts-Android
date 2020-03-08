@@ -61,6 +61,10 @@ public class RecyclerCategoryChoseAdapter extends RecyclerView.Adapter<RecyclerC
             return listCategory.get(position);
     }
 
+    public void setClicked(boolean clicked) {
+        this.clicked = clicked;
+    }
+
     static class MyViewHolder extends RecyclerView.ViewHolder {
         FrameLayout rootView;
         private TextView mTitle;
