@@ -44,7 +44,7 @@ public class CategoryChoseActivity extends AppCompatActivity {
     private ArrayList<Category> listCategory;
     private ArrayList<Account> listAccountTake;
     private ArrayList<Account> listAccountToSet;
-    private RecyclerCategoryAdapter mAdapter;
+    private RecyclerCategoryChoseAdapter mAdapter;
     private FloatingActionButton cancel;
     private User usr;
     private Category category;
@@ -110,9 +110,9 @@ public class CategoryChoseActivity extends AppCompatActivity {
             if (opt.toLowerCase().equals("cut")) {
                 ArrayList<Category> listCategoryApp = listCategory;
                 listCategoryApp.remove(category);
-                mAdapter = new RecyclerCategoryAdapter(this, listCategoryApp, usr);
+                mAdapter = new RecyclerCategoryChoseAdapter(this, listCategoryApp);
             } else
-                mAdapter = new RecyclerCategoryAdapter(this, listCategory, usr);
+                mAdapter = new RecyclerCategoryChoseAdapter(this, listCategory);
             GridLayoutManager manager = new GridLayoutManager(this, usr.getColCat(), GridLayoutManager.VERTICAL, false);
             recyclerView.setLayoutManager(manager);
             recyclerView.setAdapter(mAdapter);
@@ -126,7 +126,6 @@ public class CategoryChoseActivity extends AppCompatActivity {
                     final PopupWindow popupWindowDone = new PopupWindow(popupViewDone, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
                     popupWindowDone.setOutsideTouchable(false);
                     popupWindowDone.setFocusable(false);
-                    //noinspection deprecation
                     popupWindowDone.setBackgroundDrawable(new BitmapDrawable());
                     View parentDone = layoutCategoryChoseActivity.getRootView();
                     popupWindowDone.showAtLocation(parentDone, Gravity.CENTER, 0, 0);
@@ -153,12 +152,12 @@ public class CategoryChoseActivity extends AppCompatActivity {
                         }
                     });
                     popupViewDone.setVisibility(View.INVISIBLE);
-                    categoryAdapter = mAdapter.getItem(position);
+                    categoryAdapter = categoryAdapterPosition;
                     listCategory = mngCat.deserializationListCategory(CategoryChoseActivity.this, usr.getUser());
                     listCategory.remove(categoryAdapter);
                     listAccountToSet = new ArrayList<>();
-                    for (final Account accTake : listAccountTake) {
-                        if (mngCat.findAccount(mAdapter.getItem(position).getListAcc(), accTake.getName())) {
+                    for (final Account singleAccountTake : listAccountTake) {
+                        if (mngCat.findAccount(categoryAdapterPosition.getListAcc(), singleAccountTake.getName())) {
                             LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
                             View popupViewChose = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_equals, (ViewGroup) findViewById(R.id.popupEquals));
                             final PopupWindow popupWindowChose = new PopupWindow(popupViewChose, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
@@ -167,7 +166,7 @@ public class CategoryChoseActivity extends AppCompatActivity {
                             popupWindowChose.setBackgroundDrawable(new BitmapDrawable());
                             View parent = layoutCategoryChoseActivity.getRootView();
                             popupWindowChose.showAtLocation(parent, Gravity.CENTER, 0, 0);
-                            ((TextView) popupViewChose.findViewById(R.id.equalsText)).setText(Html.fromHtml("Esiste già un account di nome " + "<b>" + accTake.getName() + "</b>" + " nella categoria " + "<b>" + categoryAdapterPosition.getCat() + "</b>" + ". Cosa vuoi fare?", HtmlCompat.FROM_HTML_MODE_LEGACY));
+                            ((TextView) popupViewChose.findViewById(R.id.equalsText)).setText(Html.fromHtml("Esiste già un account di nome " + "<b>" + singleAccountTake.getName() + "</b>" + " nella categoria " + "<b>" + categoryAdapterPosition.getCat() + "</b>" + ". Cosa vuoi fare?", HtmlCompat.FROM_HTML_MODE_LEGACY));
                             Button overWrite = popupViewChose.findViewById(R.id.overWrite);
                             Button rename = popupViewChose.findViewById(R.id.rename);
                             Button append = popupViewChose.findViewById(R.id.append);
@@ -175,9 +174,9 @@ public class CategoryChoseActivity extends AppCompatActivity {
                             overWrite.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
-                                    listAccountToSet.add(accTake);
+                                    listAccountToSet.add(singleAccountTake);
                                     ArrayList<Account> listAccountApp = categoryAdapter.getListAcc();
-                                    listAccountApp.remove(mngCat.findAndGetAccount(mAdapter.getItem(position).getListAcc(), accTake.getName()));
+                                    listAccountApp.remove(mngCat.findAndGetAccount(categoryAdapterPosition.getListAcc(), singleAccountTake.getName()));
                                     categoryAdapter.setListAcc(listAccountApp);
                                     popupWindowChose.dismiss();
                                 }
@@ -190,25 +189,24 @@ public class CategoryChoseActivity extends AppCompatActivity {
                                     final PopupWindow popupWindowRename = new PopupWindow(popupViewRename, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
                                     popupWindowRename.setOutsideTouchable(true);
                                     popupWindowRename.setFocusable(true);
-                                    //noinspection deprecation
                                     popupWindowRename.setBackgroundDrawable(new BitmapDrawable());
                                     View parent = layoutCategoryChoseActivity.getRootView();
                                     popupWindowRename.showAtLocation(parent, Gravity.CENTER, 0, 0);
-                                    ((TextView) popupViewRename.findViewById(R.id.renameText)).setText(Html.fromHtml("Rinomina account " + "<b>" + accTake.getName() + "</b>", HtmlCompat.FROM_HTML_MODE_LEGACY));
+                                    ((TextView) popupViewRename.findViewById(R.id.renameText)).setText(Html.fromHtml("Rinomina account " + "<b>" + singleAccountTake.getName() + "</b>", HtmlCompat.FROM_HTML_MODE_LEGACY));
                                     final EditText newAccountName = popupViewRename.findViewById(R.id.renameEditText);
                                     Button conf = popupViewRename.findViewById(R.id.confirmation);
                                     conf.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
                                             newAccountName.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(CategoryChoseActivity.this, R.color.colorAccent)));
-                                            if (notFieldCheck(newAccountName.getText().toString())) {
+                                            if (newAccountName.getText().toString().isEmpty()) {
                                                 newAccountName.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(CategoryChoseActivity.this, R.color.errorEditText)));
                                                 return;
                                             }
-                                            if (!mngCat.findAccount(mngCat.findAndGetCategory(listCategory, mAdapter.getItem(position).getCat()).getListAcc(), newAccountName.getText().toString())
+                                            if (!mngCat.findAccount(mngCat.findAndGetCategory(listCategory, categoryAdapterPosition.getCat()).getListAcc(), newAccountName.getText().toString())
                                                     && !mngCat.findAccount(listAccountToSet, newAccountName.getText().toString())) {
-                                                accTake.setName(newAccountName.getText().toString());
-                                                listAccountToSet.add(accTake);
+                                                singleAccountTake.setName(newAccountName.getText().toString());
+                                                listAccountToSet.add(singleAccountTake);
                                                 popupWindowRename.dismiss();
                                                 popupWindowChose.dismiss();
 
@@ -224,26 +222,26 @@ public class CategoryChoseActivity extends AppCompatActivity {
                                 @Override
                                 public void onClick(View view) {
                                     ArrayList<AccountElement> listAccountElementApp = new ArrayList<>();
-                                    Account accountApp = mngCat.findAndGetAccount(mAdapter.getItem(position).getListAcc(), accTake.getName());
+                                    Account accountApp = mngCat.findAndGetAccount(categoryAdapterPosition.getListAcc(), singleAccountTake.getName());
                                     listAccountElementApp.addAll(accountApp.getList());
-                                    listAccountElementApp.addAll(accTake.getList());
+                                    listAccountElementApp.addAll(singleAccountTake.getList());
                                     accountApp.setList(listAccountElementApp);
                                     listAccountToSet.add(accountApp);
-                                    ArrayList<Account> listAccountApp = categoryAdapter.getListAcc();
-                                    listAccountApp.remove(mngCat.findAndGetAccount(mAdapter.getItem(position).getListAcc(), accTake.getName()));
-                                    categoryAdapter.setListAcc(listAccountApp);
+                                    ArrayList<Account> listAccountApp = categoryAdapterPosition.getListAcc();
+                                    listAccountApp.remove(mngCat.findAndGetAccount(categoryAdapterPosition.getListAcc(), singleAccountTake.getName()));
+                                    categoryAdapterPosition.setListAcc(listAccountApp);
                                     popupWindowChose.dismiss();
                                 }
                             });
                             ignore.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
-                                    listAccountTake.remove(accTake);
+                                    listAccountTake.remove(singleAccountTake);
                                     popupWindowChose.dismiss();
                                 }
                             });
                         } else
-                            listAccountToSet.add(accTake);
+                            listAccountToSet.add(singleAccountTake);
                     }
                     popupViewDone.setVisibility(View.VISIBLE);
                 }
@@ -308,18 +306,6 @@ public class CategoryChoseActivity extends AppCompatActivity {
             }
         });
         return list;
-    }
-
-    public boolean notFieldCheck(String s) {
-        if (isInvalidWord(s)) {
-            notifyUser("Campo non valido.");
-            return true;
-        }
-        return false;
-    }
-
-    public boolean isInvalidWord(String word) {
-        return ((!word.matches("[A-Za-z0-9?!_.-]*")) || (word.isEmpty()));
     }
 }
 

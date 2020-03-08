@@ -238,7 +238,7 @@ public class SettingActivity extends AppCompatActivity {
                                             i++;
                                         }
                                         if (listCategoryPdf.isEmpty()) {
-                                            notifyUser("Non hai selezionato nessuna categoria.");
+                                            notifyUserShortWay("Non hai selezionato nessuna categoria.");
                                             return;
                                         } else popupWindowChoseCat.dismiss();
                                         LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
@@ -403,6 +403,12 @@ public class SettingActivity extends AppCompatActivity {
         Toast.makeText(this,
                 message,
                 Toast.LENGTH_LONG).show();
+    }
+
+    private void notifyUserShortWay(String message) {
+        Toast.makeText(this,
+                message,
+                Toast.LENGTH_SHORT).show();
     }
 
     public void onBackPressed() {

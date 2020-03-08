@@ -41,7 +41,6 @@ public class SearchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         layoutSearchActivity = findViewById(R.id.contentSearchLayout);
-
         ManageUser mngUsr = new ManageUser();
         ArrayList<User> listUser = mngUsr.deserializationListUser(this);
         usr = mngUsr.findUser(listUser, ((User) Objects.requireNonNull((Objects.requireNonNull(getIntent().getExtras())).get("owner"))).getUser());

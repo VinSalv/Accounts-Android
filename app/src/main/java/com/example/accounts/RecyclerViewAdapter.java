@@ -82,9 +82,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         }
 
         ArrayList<Category> listCategory2 = new ArrayList<>();
-        for (Category c : listCategory) {
-            if (!c.getCat().toLowerCase().equals(category.getCat().toLowerCase())) {
-                listCategory2.add(c);
+        for (Category singleCategory : listCategory) {
+            if (!singleCategory.getCat().toLowerCase().equals(category.getCat().toLowerCase())) {
+                listCategory2.add(singleCategory);
             } else {
                 listCategory2.add(new Category(category.getCat(), listAccount, 3));
             }

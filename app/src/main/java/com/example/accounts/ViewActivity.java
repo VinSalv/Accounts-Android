@@ -99,8 +99,8 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                         mngCat.serializationListCategory(this, listCategory, category.getCat());
                     }
                 }
-                textView = findViewById(R.id.wellcomeText);
-                textView.setText(category.getCat());
+                textView = findViewById(R.id.welcomeText);
+                textView.setText(Html.fromHtml("<b>" + category.getCat() + "</b>", HtmlCompat.FROM_HTML_MODE_LEGACY));
                 textViewMini = findViewById(R.id.wellcomeMiniText);
                 if (category.getListAcc() != null)
                     textViewMini.setText(Html.fromHtml("Numero account: <b>" + category.getListAcc().size() + "</b>", HtmlCompat.FROM_HTML_MODE_LEGACY));
@@ -435,6 +435,7 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 multiSelect(-1);
                 return true;
             case R.id.sort:
+                Category categoryApp = mngCat.findAndGetCategory(mngCat.deserializationListCategory(this, usr.getUser()), category.getCat());
                 LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
                 View popupViewSort = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_sort, (ViewGroup) findViewById(R.id.popupSort));
                 final PopupWindow popupWindowSort = new PopupWindow(popupViewSort, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
@@ -447,9 +448,9 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 final RadioButton radioButtonIncreasing = popupViewSort.findViewById(R.id.increasing);
                 final RadioButton radioButtonDecreasing = popupViewSort.findViewById(R.id.decreasing);
                 final RadioButton radioButtonCostumized = popupViewSort.findViewById(R.id.customized);
-                if (usr.getSort() == 1)
+                if (categoryApp.getSort() == 1)
                     radioGroupSort.check(radioButtonIncreasing.getId());
-                else if (usr.getSort() == 2)
+                else if (categoryApp.getSort() == 2)
                     radioGroupSort.check(radioButtonDecreasing.getId());
                 else
                     radioGroupSort.check(radioButtonCostumized.getId());
@@ -461,18 +462,17 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                             category.setSort(1);
                             category.setListAcc(increasing(category.getListAcc()));
                             listCategory.add(category);
-                            mngCat.serializationListCategory(ViewActivity.this, listCategory, usr.getUser());
                         } else if (checkedId == radioButtonDecreasing.getId()) {
                             listCategory.remove(category);
                             category.setSort(2);
                             category.setListAcc(decreasing(category.getListAcc()));
                             listCategory.add(category);
-                            mngCat.serializationListCategory(ViewActivity.this, listCategory, usr.getUser());
                         } else {
                             listCategory.remove(category);
                             category.setSort(3);
                             listCategory.add(category);
                         }
+                        mngCat.serializationListCategory(ViewActivity.this, listCategory, usr.getUser());
                         popupWindowSort.dismiss();
                         refresh();
                     }

@@ -91,7 +91,7 @@ public class CategoryActivity extends AppCompatActivity implements PopupMenu.OnM
             else if (usr.getSort() == 2)
                 mngCat.serializationListCategory(this, decreasing(listCategory), usr.getUser());
             listCategory = mngCat.deserializationListCategory(this, usr.getUser());
-            welcome = findViewById(R.id.wellcomeText);
+            welcome = findViewById(R.id.welcomeText);
             welcome.setText(Html.fromHtml("Benvenuto <b>" + usr.getUser() + "</b>", HtmlCompat.FROM_HTML_MODE_LEGACY));
             welcomeMini = findViewById(R.id.wellcomeMiniText);
             welcomeMini.setText(Html.fromHtml("Numero categorie: <b>" + listCategory.size() + "</b>", HtmlCompat.FROM_HTML_MODE_LEGACY));
@@ -317,7 +317,7 @@ public class CategoryActivity extends AppCompatActivity implements PopupMenu.OnM
                         popupWindowSecurityToDeleteCategory.dismiss();
                     }
                 });
-            } else notifyUser("Nessuna categoria è stata selezionata per la rimozione.");
+            } else notifyUserShortWay("Nessuna categoria è stata selezionata per la rimozione.");
             return true;
         }
         if (menuItem.getItemId() == R.id.select_all) {
@@ -378,6 +378,7 @@ public class CategoryActivity extends AppCompatActivity implements PopupMenu.OnM
                 multiSelect(-1);
                 return true;
             case R.id.sort:
+                User usrApp = mngUsr.findUser(listUser = mngUsr.deserializationListUser(this), usr.getUser());
                 LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
                 @SuppressLint("InflateParams") View popupViewSort = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_sort, null);
                 final PopupWindow popupWindowSort = new PopupWindow(popupViewSort, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
@@ -390,9 +391,9 @@ public class CategoryActivity extends AppCompatActivity implements PopupMenu.OnM
                 final RadioButton increasingRadioButton = popupViewSort.findViewById(R.id.increasing);
                 final RadioButton decreasingRadioButton = popupViewSort.findViewById(R.id.decreasing);
                 final RadioButton customizedRadioButton = popupViewSort.findViewById(R.id.customized);
-                if (usr.getSort() == 1)
+                if (usrApp.getSort() == 1)
                     radioGroup.check(increasingRadioButton.getId());
-                else if (usr.getSort() == 2)
+                else if (usrApp.getSort() == 2)
                     radioGroup.check(decreasingRadioButton.getId());
                 else
                     radioGroup.check(customizedRadioButton.getId());
@@ -446,6 +447,12 @@ public class CategoryActivity extends AppCompatActivity implements PopupMenu.OnM
         Toast.makeText(this,
                 message,
                 Toast.LENGTH_LONG).show();
+    }
+
+    private void notifyUserShortWay(String message) {
+        Toast.makeText(this,
+                message,
+                Toast.LENGTH_SHORT).show();
     }
 
     public boolean checkGapError(String s) {

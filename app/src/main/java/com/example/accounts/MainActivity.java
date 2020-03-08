@@ -201,7 +201,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onAuthenticationSucceeded(BiometricPrompt.AuthenticationResult result) {
-                notifyUser("Autenticazione effettuata.");
+                notifyUserShortWay("Autenticazione effettuata.");
                 super.onAuthenticationSucceeded(result);
                 usr = new User(userApp.getText().toString(), passApp.getText().toString(), true, 1);
                 if (flagApp.isChecked()) {
@@ -227,7 +227,7 @@ public class MainActivity extends AppCompatActivity {
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                notifyUser("Autenticazione annullata.");
+                                notifyUserShortWay("Autenticazione annullata.");
                                 log = new LogApp();
                                 mngApp.serializationFlag(MainActivity.this, log);
                                 goToMainActivity();
@@ -272,6 +272,12 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(this,
                 message,
                 Toast.LENGTH_LONG).show();
+    }
+
+    private void notifyUserShortWay(String message) {
+        Toast.makeText(this,
+                message,
+                Toast.LENGTH_SHORT).show();
     }
 
     private boolean checkPermission() {
@@ -358,7 +364,7 @@ public class MainActivity extends AppCompatActivity {
         cancellationSignal.setOnCancelListener(new CancellationSignal.OnCancelListener() {
             @Override
             public void onCancel() {
-                notifyUser("Cancelled via signal");
+                notifyUserShortWay("Cancelled via signal");
             }
         });
         return cancellationSignal;

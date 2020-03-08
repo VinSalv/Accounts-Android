@@ -489,8 +489,8 @@ public class EditActivity extends AppCompatActivity {
                             return;
                         }
                         int n = 0;
-                        for (AccountElement elem : listAccountElement) {
-                            if (fieldError(elem, n)) return;
+                        for (AccountElement singleAccountElement : listAccountElement) {
+                            if (fieldError(singleAccountElement, n)) return;
                             n++;
                         }
                         if (mngCat.accountNotFound(accountToEdit, listAccount) || accountToEdit.equals(accountToEdit.getName())) {
@@ -501,7 +501,7 @@ public class EditActivity extends AppCompatActivity {
                             listCategory.add(category);
                             mngCat.serializationListCategory(EditActivity.this, listCategory, usr.getUser());
                             if (b)
-                                notifyUser("Gli elementi senza nessun campo compilato non verranno memorizzati.");
+                                notifyUserShortWay("Gli elementi senza nessun campo compilato non verranno memorizzati.");
                             goToViewActivity();
                         } else {
                             nameAccount.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(EditActivity.this, R.color.errorEditText)));
@@ -648,6 +648,12 @@ public class EditActivity extends AppCompatActivity {
         Toast.makeText(this,
                 message,
                 Toast.LENGTH_LONG).show();
+    }
+
+    private void notifyUserShortWay(String message) {
+        Toast.makeText(this,
+                message,
+                Toast.LENGTH_SHORT).show();
     }
 
     @SuppressLint("SetTextI18n")

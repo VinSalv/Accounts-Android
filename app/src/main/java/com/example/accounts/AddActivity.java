@@ -128,7 +128,7 @@ public class AddActivity extends AppCompatActivity {
                         listCategory.add(category);
                         mngCat.serializationListCategory(AddActivity.this, listCategory, usr.getUser());
                         if (b)
-                            notifyUser("Gli elementi senza nessun campo compilato non verranno memorizzati.");
+                            notifyUserShortWay("Gli elementi senza nessun campo compilato non verranno memorizzati.");
                         goToViewActivity();
                     } else {
                         nameAccount.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(AddActivity.this, R.color.errorEditText)));
@@ -215,6 +215,12 @@ public class AddActivity extends AppCompatActivity {
         Toast.makeText(this,
                 message,
                 Toast.LENGTH_LONG).show();
+    }
+
+    private void notifyUserShortWay(String message) {
+        Toast.makeText(this,
+                message,
+                Toast.LENGTH_SHORT).show();
     }
 
     public boolean isInvalidWord(String word) {

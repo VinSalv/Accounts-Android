@@ -36,6 +36,7 @@ import java.util.Objects;
 @SuppressWarnings("deprecation")
 public class ShowElementActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
     private CoordinatorLayout layoutShowElementActivity;
+    private LinearLayout layoutShowElement;
     private ManageCategory mngCat;
     private ArrayList<Account> listAccount;
     private ArrayList<Category> listCategory;
@@ -54,7 +55,7 @@ public class ShowElementActivity extends AppCompatActivity implements PopupMenu.
         showToolbar.setTitle("");
         setSupportActionBar(showToolbar);
         layoutShowElementActivity = findViewById(R.id.coordinatorLayShow);
-        LinearLayout layoutShowElement = findViewById(R.id.linearLayoutShowElements);
+        layoutShowElement = findViewById(R.id.linearLayoutShowElements);
         ManageUser mngUsr = new ManageUser();
         ArrayList<User> listUsr = mngUsr.deserializationListUser(this);
         usr = mngUsr.findUser(listUsr, ((User) Objects.requireNonNull((Objects.requireNonNull(getIntent().getExtras())).get("owner"))).getUser());
@@ -96,7 +97,7 @@ public class ShowElementActivity extends AppCompatActivity implements PopupMenu.
                     i++;
                     final String nameText = i + "." + account.getName();
                     LayoutInflater inflater = LayoutInflater.from(ShowElementActivity.this);
-                    final RelativeLayout layoutToAdd = (RelativeLayout) inflater.inflate(R.layout.fragment_show_element, (ViewGroup) findViewById(R.id.subRelLayShow));
+                    @SuppressLint("InflateParams") final RelativeLayout layoutToAdd = (RelativeLayout) inflater.inflate(R.layout.fragment_show_element, null);
                     final RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                     params.setMargins(0, 0, 0, 15);
                     layoutToAdd.setLayoutParams(params);

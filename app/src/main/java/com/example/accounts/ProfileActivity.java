@@ -70,13 +70,13 @@ public class ProfileActivity extends AppCompatActivity {
                         usr.setFinger(true);
                         listUser.add(usr);
                         mngUsr.serializationListUser(ProfileActivity.this, listUser);
-                        notifyUser("Autenticazione biometrica abilitata.");
+                        notifyUserShortWay("Autenticazione biometrica abilitata.");
                     } else {
                         listUser.remove(usr);
                         usr.setFinger(false);
                         listUser.add(usr);
                         mngUsr.serializationListUser(ProfileActivity.this, listUser);
-                        notifyUser("Autenticazione biometrica disabilitata.");
+                        notifyUserShortWay("Autenticazione biometrica disabilitata.");
                     }
                 }
             });
@@ -140,7 +140,7 @@ public class ProfileActivity extends AppCompatActivity {
                                     log.setUser(usr.getUser());
                                     mngApp.serializationFlag(ProfileActivity.this, log);
                                 }
-                                notifyUser("Username cambiato con successo.");
+                                notifyUserShortWay("Username cambiato con successo.");
                                 popupWindowUser.dismiss();
                             } else {
                                 popupText.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(ProfileActivity.this, R.color.errorEditText)));
@@ -184,7 +184,7 @@ public class ProfileActivity extends AppCompatActivity {
                             usr.setPassword(password.getText().toString());
                             listUser.add(usr);
                             mngUsr.serializationListUser(ProfileActivity.this, listUser);
-                            notifyUser("Password cambiata con successo.");
+                            notifyUserShortWay("Password cambiata con successo.");
                             popupWindowPassword.dismiss();
                         }
                     });
@@ -244,6 +244,12 @@ public class ProfileActivity extends AppCompatActivity {
         Toast.makeText(this,
                 message,
                 Toast.LENGTH_LONG).show();
+    }
+
+    private void notifyUserShortWay(String message) {
+        Toast.makeText(this,
+                message,
+                Toast.LENGTH_SHORT).show();
     }
 
     @SuppressLint("ClickableViewAccessibility")
