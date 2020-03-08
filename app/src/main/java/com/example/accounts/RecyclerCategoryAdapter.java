@@ -16,17 +16,16 @@ import java.util.Collections;
 import static androidx.core.content.ContextCompat.getDrawable;
 
 public class RecyclerCategoryAdapter extends RecyclerView.Adapter<RecyclerCategoryAdapter.MyViewHolder> implements ItemMoveCategoryCallback.ItemTouchHelperContract {
-
-    private ArrayList<String> selectedIds = new ArrayList<>();
-    private ArrayList<Category> data;
-    private Context context;
     private ManageUser mngUsr = new ManageUser();
     private ManageCategory mngCat = new ManageCategory();
+    private ArrayList<String> selectedIds = new ArrayList<>();
+    private ArrayList<Category> listCategory;
     private User usr;
+    private Context context;
 
-    RecyclerCategoryAdapter(Context context, ArrayList<Category> data, User usr) {
+    RecyclerCategoryAdapter(Context context, ArrayList<Category> listCategory, User usr) {
         this.context = context;
-        this.data = data;
+        this.listCategory = listCategory;
         this.usr = usr;
     }
 
@@ -40,8 +39,8 @@ public class RecyclerCategoryAdapter extends RecyclerView.Adapter<RecyclerCatego
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        holder.mTitle.setText(data.get(position).getCat());
-        String name = data.get(position).getCat();
+        holder.mTitle.setText(listCategory.get(position).getCat());
+        String name = listCategory.get(position).getCat();
         if (selectedIds.contains(name)) {
             holder.mTitle.setBackground(getDrawable(context, R.drawable.rounded_list_element2));
         } else {
@@ -51,13 +50,13 @@ public class RecyclerCategoryAdapter extends RecyclerView.Adapter<RecyclerCatego
 
     @Override
     public int getItemCount() {
-        return data.size();
+        return listCategory.size();
     }
 
     Category getItem(int position) {
         if (position == -1) return null;
         else
-            return data.get(position);
+            return listCategory.get(position);
     }
 
     void setSelectedIds(ArrayList<String> selectedIds) {
@@ -69,14 +68,14 @@ public class RecyclerCategoryAdapter extends RecyclerView.Adapter<RecyclerCatego
     public void onRowMoved(int fromPosition, int toPosition) {
         if (fromPosition < toPosition) {
             for (int i = fromPosition; i < toPosition; i++) {
-                Collections.swap(data, i, i + 1);
+                Collections.swap(listCategory, i, i + 1);
             }
         } else {
             for (int i = fromPosition; i > toPosition; i--) {
-                Collections.swap(data, i, i - 1);
+                Collections.swap(listCategory, i, i - 1);
             }
         }
-        mngCat.serializationListCategory(context, data, usr.getUser());
+        mngCat.serializationListCategory(context, listCategory, usr.getUser());
         ArrayList<User> listUsr = mngUsr.deserializationListUser(context);
         listUsr.remove(usr);
         usr.setSort(3);
@@ -94,7 +93,6 @@ public class RecyclerCategoryAdapter extends RecyclerView.Adapter<RecyclerCatego
     public void onRowClear(MyViewHolder myViewHolder) {
         myViewHolder.mTitle.setBackground(getDrawable(context, R.drawable.rounded_list_element));
     }
-
 
     static class MyViewHolder extends RecyclerView.ViewHolder {
         FrameLayout rootView;

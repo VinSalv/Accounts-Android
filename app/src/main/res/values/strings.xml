@@ -122,4 +122,5 @@
     <string name="imageintro4_2">imageintro4_4</string>
     <string name="perfetto_nadesso_sei_pronto_nsai_tutto_quello_che_devi_sapere_d">Perfetto!!\nAdesso sei pronto.\nSai tutto quello che devi sapere =D</string>
     <string name="le_password_saranno_invisibili_cos_da_nasconderla_a_qualche_malintenzionato_nelle_vicinanze_tuttavia_possibile_copiarle_anche_da_nascoste">Le password saranno invisibili così da nasconderle a qualche malintenzionato nelle vicinanze. Tuttavia è possibile copiarle anche da nascoste!!</string>
+    <string name="introText">Cosa posso fare?</string>
 </resources>

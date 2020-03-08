@@ -20,10 +20,10 @@ import java.util.Objects;
 @SuppressWarnings("SameParameterValue")
 public class CustomizeActivity extends AppCompatActivity {
     private ManageUser mngUsr;
-    private User usr;
     private ArrayList<User> listUser;
+    private User usr;
     private TextView customize;
-    private TextView customize2;
+    private TextView customizeToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,14 +32,13 @@ public class CustomizeActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.customizeToolbar);
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
-        User owner = (User) (Objects.requireNonNull(getIntent().getExtras())).get("owner");
-        customize = findViewById(R.id.customizeText);
-        customize2 = findViewById(R.id.customizeTextToolbar);
-        customize2.setVisibility(View.INVISIBLE);
         mngUsr = new ManageUser();
         listUser = mngUsr.deserializationListUser(this);
-        usr = mngUsr.findUser(listUser, Objects.requireNonNull(owner).getUser());
+        usr = mngUsr.findUser(listUser, ((User) Objects.requireNonNull((Objects.requireNonNull(getIntent().getExtras())).get("owner"))).getUser());
         if (usr != null) {
+            customize = findViewById(R.id.customizeText);
+            customizeToolbar = findViewById(R.id.customizeTextToolbar);
+            customizeToolbar.setVisibility(View.INVISIBLE);
             AppBarLayout appBar = findViewById(R.id.customizeBarToolbar);
             appBar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
                 boolean isShow = false;
@@ -53,27 +52,27 @@ public class CustomizeActivity extends AppCompatActivity {
                     }
                     if (scrollRange + verticalOffset == 0) {
                         isShow = true;
-                        customize2.setVisibility(View.VISIBLE);
+                        customizeToolbar.setVisibility(View.VISIBLE);
                     } else if (isShow) {
                         isShow = false;
-                        customize2.setVisibility(View.INVISIBLE);
+                        customizeToolbar.setVisibility(View.INVISIBLE);
                     }
                 }
             });
             Spinner spinnerCategory = findViewById(R.id.spinnerCategory);
-            ArrayList<String> numColumnCat = new ArrayList<>();
-            numColumnCat.add("1");
-            numColumnCat.add("2");
-            ArrayAdapter<String> adapterCat = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, numColumnCat);
-            adapterCat.setDropDownViewResource(R.layout.spinner_item);
-            spinnerCategory.setAdapter(adapterCat);
+            ArrayList<String> numberColumnCategory = new ArrayList<>();
+            numberColumnCategory.add("1");
+            numberColumnCategory.add("2");
+            ArrayAdapter<String> adapterCategory = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, numberColumnCategory);
+            adapterCategory.setDropDownViewResource(R.layout.spinner_item);
+            spinnerCategory.setAdapter(adapterCategory);
             spinnerCategory.setSelection(usr.getColCat() - 1);
             spinnerCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    String num = parent.getItemAtPosition(position).toString();
+                    String number = parent.getItemAtPosition(position).toString();
                     listUser.remove(usr);
-                    usr.setColCat(Integer.parseInt(num));
+                    usr.setColCat(Integer.parseInt(number));
                     listUser.add(usr);
                     mngUsr.serializationListUser(CustomizeActivity.this, listUser);
                 }
@@ -82,21 +81,20 @@ public class CustomizeActivity extends AppCompatActivity {
                 public void onNothingSelected(AdapterView<?> parent) {
                 }
             });
-
             Spinner spinnerAccount = findViewById(R.id.spinnerAccount);
-            ArrayList<String> numColumnAcc = new ArrayList<>();
-            numColumnAcc.add("1");
-            numColumnAcc.add("2");
-            ArrayAdapter<String> adapterAcc = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, numColumnAcc);
-            adapterAcc.setDropDownViewResource(R.layout.spinner_item);
-            spinnerAccount.setAdapter(adapterAcc);
+            ArrayList<String> numberColumnAccount = new ArrayList<>();
+            numberColumnAccount.add("1");
+            numberColumnAccount.add("2");
+            ArrayAdapter<String> adapterAccount = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, numberColumnAccount);
+            adapterAccount.setDropDownViewResource(R.layout.spinner_item);
+            spinnerAccount.setAdapter(adapterAccount);
             spinnerAccount.setSelection(usr.getColAcc() - 1);
             spinnerAccount.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    String num = parent.getItemAtPosition(position).toString();
+                    String number = parent.getItemAtPosition(position).toString();
                     listUser.remove(usr);
-                    usr.setColAcc(Integer.parseInt(num));
+                    usr.setColAcc(Integer.parseInt(number));
                     listUser.add(usr);
                     mngUsr.serializationListUser(CustomizeActivity.this, listUser);
                 }
@@ -106,7 +104,7 @@ public class CustomizeActivity extends AppCompatActivity {
                 }
             });
         } else {
-            notifyUser("Utente non rilevato. Impossibile settare i parametri di autenticazione.");
+            notifyUser("Credenziali non rilevate. Impossibile effettuare la personalizzazione.");
             goToMainActivity();
         }
     }
@@ -127,6 +125,7 @@ public class CustomizeActivity extends AppCompatActivity {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("owner", usr);
         startActivity(intent);
+        finish();
     }
 
     private void notifyUser(String message) {

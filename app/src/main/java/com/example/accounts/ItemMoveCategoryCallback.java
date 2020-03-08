@@ -80,5 +80,4 @@ public class ItemMoveCategoryCallback extends ItemTouchHelper.Callback {
 
         void onRowClear(RecyclerCategoryAdapter.MyViewHolder myViewHolder);
     }
-
 }

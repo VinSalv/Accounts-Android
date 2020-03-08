@@ -37,14 +37,15 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 public class MainActivity extends AppCompatActivity {
     private static final int PERMISSION_REQUEST_CODE = 200;
-    private RelativeLayout lay;
+    private RelativeLayout layoutMainActivity;
+    private ManageApp mngApp;
+    private ManageUser mngUsr;
+    private ArrayList<User> listUser;
+    private LogApp log;
+    private User usr;
     private EditText userApp;
     private EditText passApp;
     private Switch flagApp;
-    private ManageApp mngApp;
-    private LogApp log;
-    private ManageUser mngUsr;
-    private ArrayList<User> listUser;
 
     @RequiresApi(api = Build.VERSION_CODES.P)
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
                 openActivity();
             }
         }
-        lay = findViewById(R.id.mainActivityLay);
+        layoutMainActivity = findViewById(R.id.mainActivityLay);
         userApp = findViewById(R.id.userApp);
         passApp = findViewById(R.id.passApp);
         flagApp = findViewById(R.id.flagApp);
@@ -76,12 +77,12 @@ public class MainActivity extends AppCompatActivity {
             if (usr != null) {
                 userApp.setText(usr.getUser());
                 if (usr.getFinger()) {
-                    biometricAuthentication(lay);
+                    biometricAuthentication(layoutMainActivity);
                 } else {
-                    goToCategoryActivity(usr);
+                    goToCategoryActivity();
                 }
             } else {
-                notifyUser("Impossibile restare connesso");
+                notifyUser("Impossibile restare connesso.");
             }
         }
         showPass(passApp, showPass);
@@ -91,22 +92,21 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 userApp.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(MainActivity.this, R.color.colorAccent)));
                 passApp.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(MainActivity.this, R.color.colorAccent)));
-
-                User usr = new User(userApp.getText().toString(), passApp.getText().toString(), false, 0);
+                usr = new User(userApp.getText().toString(), passApp.getText().toString(), false, 0);
                 if (!fieldCheck(usr)) return;
                 if (mngUsr.login(usr, listUser)) {
                     usr = mngUsr.findUser(listUser, userApp.getText().toString());
                     if (usr.getFinger()) {
-                        biometricAuthentication(lay);
+                        biometricAuthentication(layoutMainActivity);
                     } else {
                         log = new LogApp(flagApp.isChecked(), fixName(userApp.getText().toString()));
                         mngApp.serializationFlag(MainActivity.this, log);
-                        goToCategoryActivity(usr);
+                        goToCategoryActivity();
                     }
                 } else {
                     userApp.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(MainActivity.this, R.color.errorEditText)));
                     passApp.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(MainActivity.this, R.color.errorEditText)));
-                    notifyUser("Autenticazione errata");
+                    notifyUser("Autenticazione errata.");
                 }
             }
         });
@@ -125,9 +125,31 @@ public class MainActivity extends AppCompatActivity {
                 goToAboutActivity();
             }
         });
+
+        TextView intro = findViewById(R.id.introText);
+        intro.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.P)
+            @Override
+            public void onClick(View view) {
+                goToWelcomeActivity();
+            }
+        });
     }
 
-    public void goToCategoryActivity(User usr) {
+    public void goToMainActivity() {
+        Intent intent = new Intent(MainActivity.this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        startActivity(intent);
+        finish();
+    }
+
+    public void goToWelcomeActivity() {
+        Intent intent = new Intent(MainActivity.this, WelcomeActivity.class);
+        intent.putExtra("string", "go");
+        startActivity(intent);
+    }
+
+    public void goToCategoryActivity() {
         Intent intent = new Intent(MainActivity.this, CategoryActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -139,12 +161,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void goToAboutActivity() {
         Intent intent = new Intent(MainActivity.this, AboutActivity.class);
-        startActivity(intent);
-    }
-
-    public void goToMainActivity() {
-        Intent intent = new Intent(MainActivity.this, MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         startActivity(intent);
     }
 
@@ -165,7 +181,7 @@ public class MainActivity extends AppCompatActivity {
         return new BiometricPrompt.AuthenticationCallback() {
             @Override
             public void onAuthenticationError(int errorCode, CharSequence errString) {
-                notifyUser("Autenticazione errore: " + errString);
+                notifyUser("Autenticazione errore: " + errString + ".");
                 super.onAuthenticationError(errorCode, errString);
                 log = new LogApp();
                 mngApp.serializationFlag(MainActivity.this, log);
@@ -185,17 +201,17 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onAuthenticationSucceeded(BiometricPrompt.AuthenticationResult result) {
-                notifyUser("Autenticazione effettuata");
+                notifyUser("Autenticazione effettuata.");
                 super.onAuthenticationSucceeded(result);
-                User usr = new User(userApp.getText().toString(), passApp.getText().toString(), true, 1);
+                usr = new User(userApp.getText().toString(), passApp.getText().toString(), true, 1);
                 if (flagApp.isChecked()) {
                     log = new LogApp(flagApp.isChecked(), userApp.getText().toString());
                     mngApp.serializationFlag(MainActivity.this, log);
-                    goToCategoryActivity(usr);
+                    goToCategoryActivity();
                 } else {
                     log = new LogApp();
                     mngApp.serializationFlag(MainActivity.this, log);
-                    goToCategoryActivity(usr);
+                    goToCategoryActivity();
                 }
             }
         };
@@ -211,7 +227,7 @@ public class MainActivity extends AppCompatActivity {
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                notifyUser("Autenticazione annullata");
+                                notifyUser("Autenticazione annullata.");
                                 log = new LogApp();
                                 mngApp.serializationFlag(MainActivity.this, log);
                                 goToMainActivity();
@@ -234,15 +250,15 @@ public class MainActivity extends AppCompatActivity {
         if (isInvalidWord(usr.getUser()) && isInvalidWord(usr.getPassword())) {
             userApp.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(MainActivity.this, R.color.errorEditText)));
             passApp.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(MainActivity.this, R.color.errorEditText)));
-            notifyUser("Campi Utente e Password non validi !!!");
+            notifyUser("Campi Utente e Password non validi.");
             return false;
         } else if (isInvalidWord(usr.getUser())) {
             userApp.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(MainActivity.this, R.color.errorEditText)));
-            notifyUser("Campo Utente non valido !!!");
+            notifyUser("Campo Utente non valido.");
             return false;
         } else if (isInvalidWord(usr.getPassword())) {
             passApp.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(MainActivity.this, R.color.errorEditText)));
-            notifyUser("Campo Password non valido !!!");
+            notifyUser("Campo Password non valido.");
             return false;
         }
         return true;
@@ -323,12 +339,12 @@ public class MainActivity extends AppCompatActivity {
                 (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
         PackageManager packageManager = this.getPackageManager();
         if (keyguardManager != null && !keyguardManager.isKeyguardSecure()) {
-            notifyUser("Lock screen security non abilitato nelle impostazioni");
+            notifyUser("Lock screen security non abilitato nelle impostazioni.");
             return false;
         }
         if (ActivityCompat.checkSelfPermission(this,
                 Manifest.permission.USE_BIOMETRIC) != PackageManager.PERMISSION_GRANTED) {
-            notifyUser("Permesso impronte digitali non abilitato");
+            notifyUser("Permesso impronte digitali non abilitato.");
             return false;
         }
         if (packageManager.hasSystemFeature(PackageManager.FEATURE_FINGERPRINT)) {
@@ -352,7 +368,6 @@ public class MainActivity extends AppCompatActivity {
     public void showPass(final EditText et, ImageButton showPass) {
         showPass.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
-
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         et.setInputType(InputType.TYPE_NULL);

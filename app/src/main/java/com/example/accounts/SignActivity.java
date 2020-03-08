@@ -26,33 +26,25 @@ import com.google.android.material.appbar.AppBarLayout;
 import java.util.ArrayList;
 
 public class SignActivity extends AppCompatActivity {
+    private ManageUser mngUsr;
+    private ManageCategory mngCat;
+    private ArrayList<User> listUser = new ArrayList<>();
+    private ArrayList<Category> listCategory = new ArrayList<>();
     private TextView signText;
     private TextView signTextToolbar;
     private EditText userEdit;
     private EditText passEdit;
     private EditText passEdit2;
     private Switch flagFinger;
-    private ManageUser mngUsr;
-    private ArrayList<User> listUser = new ArrayList<>();
-    private ManageCategory mngCat;
-    private ArrayList<Category> listCategory = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign);
-        final Toolbar toolbar = findViewById(R.id.toolbarSign);
+        Toolbar toolbar = findViewById(R.id.toolbarSign);
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
-        userEdit = findViewById(R.id.usernameEdit);
-        passEdit = findViewById(R.id.passwordEdit);
-        passEdit2 = findViewById(R.id.passwordEdit2);
-        flagFinger = findViewById(R.id.flagFinger);
-        Button sign = findViewById(R.id.signButton);
-        ImageButton showPass = findViewById(R.id.showPass);
-        ImageButton showPass2 = findViewById(R.id.showPass2);
         mngUsr = new ManageUser();
-        mngCat = new ManageCategory();
         listUser = mngUsr.deserializationListUser(this);
         signText = findViewById(R.id.signText);
         signTextToolbar = findViewById(R.id.signTextToolbar);
@@ -77,8 +69,16 @@ public class SignActivity extends AppCompatActivity {
                 }
             }
         });
+        ImageButton showPass = findViewById(R.id.showPass);
+        ImageButton showPass2 = findViewById(R.id.showPass2);
+        userEdit = findViewById(R.id.usernameEdit);
+        passEdit = findViewById(R.id.passwordEdit);
+        passEdit2 = findViewById(R.id.passwordEdit2);
+        flagFinger = findViewById(R.id.flagFinger);
         showPass(passEdit, showPass);
         showPass(passEdit2, showPass2);
+        mngCat = new ManageCategory();
+        Button sign = findViewById(R.id.signButton);
         sign.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -90,7 +90,7 @@ public class SignActivity extends AppCompatActivity {
                 if (!passEdit.getText().toString().equals(passEdit2.getText().toString())) {
                     passEdit.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(SignActivity.this, R.color.errorEditText)));
                     passEdit2.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(SignActivity.this, R.color.errorEditText)));
-                    notifyUser("Le password non corrispondono");
+                    notifyUser("Le password non corrispondono.");
                     return;
                 }
                 if (mngUsr.notFindUser(usr, listUser)) {
@@ -103,11 +103,10 @@ public class SignActivity extends AppCompatActivity {
                     goToCategoryActivity(usr);
                 } else {
                     userEdit.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(SignActivity.this, R.color.errorEditText)));
-                    notifyUser("User già esistente");
+                    notifyUser("Utente già esistente.");
                 }
             }
         });
-
     }
 
     public void goToCategoryActivity(User usr) {
@@ -134,15 +133,15 @@ public class SignActivity extends AppCompatActivity {
         if (isInvalidWord(usr.getUser()) && isInvalidWord(usr.getPassword())) {
             userEdit.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(SignActivity.this, R.color.errorEditText)));
             passEdit.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(SignActivity.this, R.color.errorEditText)));
-            notifyUser("Campi Utente e Password non validi !!!");
+            notifyUser("Campi Utente e Password non validi.");
             return false;
         } else if (isInvalidWord(usr.getUser())) {
             userEdit.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(SignActivity.this, R.color.errorEditText)));
-            notifyUser("Campo Utente non valido !!!");
+            notifyUser("Campo Utente non valido.");
             return false;
         } else if (isInvalidWord(usr.getPassword())) {
             passEdit.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(SignActivity.this, R.color.errorEditText)));
-            notifyUser("Campo Password non valido !!!");
+            notifyUser("Campo Password non valido.");
             return false;
         }
         return true;

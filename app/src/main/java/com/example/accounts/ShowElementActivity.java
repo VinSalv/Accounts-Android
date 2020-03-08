@@ -6,6 +6,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -25,23 +26,24 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.content.ContextCompat;
+import androidx.core.text.HtmlCompat;
 
 import com.google.android.material.appbar.AppBarLayout;
 
 import java.util.ArrayList;
 import java.util.Objects;
 
+@SuppressWarnings("deprecation")
 public class ShowElementActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
-    private CoordinatorLayout cl;
-    private Account account;
-    private ArrayList<Account> listAccount;
-    private Account acc;
-    private TextView name;
-    private TextView name2;
-    private User usr;
+    private CoordinatorLayout layoutShowElementActivity;
     private ManageCategory mngCat;
-    private Category cat;
+    private ArrayList<Account> listAccount;
     private ArrayList<Category> listCategory;
+    private User usr;
+    private Category category;
+    private Account account;
+    private TextView name;
+    private TextView nameToolbar;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -51,25 +53,23 @@ public class ShowElementActivity extends AppCompatActivity implements PopupMenu.
         Toolbar showToolbar = findViewById(R.id.showToolbar);
         showToolbar.setTitle("");
         setSupportActionBar(showToolbar);
-        cl = findViewById(R.id.coordinatorLayShow);
-        LinearLayout ll = findViewById(R.id.linearLayoutShowElements);
-        User owner = (User) (Objects.requireNonNull(getIntent().getExtras())).get("owner");
-        account = (Account) Objects.requireNonNull(getIntent().getExtras()).get("account");
+        layoutShowElementActivity = findViewById(R.id.coordinatorLayShow);
+        LinearLayout layoutShowElement = findViewById(R.id.linearLayoutShowElements);
         ManageUser mngUsr = new ManageUser();
         ArrayList<User> listUsr = mngUsr.deserializationListUser(this);
-        usr = mngUsr.findUser(listUsr, Objects.requireNonNull(owner).getUser());
+        usr = mngUsr.findUser(listUsr, ((User) Objects.requireNonNull((Objects.requireNonNull(getIntent().getExtras())).get("owner"))).getUser());
         if (usr != null) {
             mngCat = new ManageCategory();
             listCategory = mngCat.deserializationListCategory(this, usr.getUser());
-            cat = mngCat.findAndGetCategory(listCategory, ((Category) Objects.requireNonNull((Objects.requireNonNull(getIntent().getExtras())).get("category"))).getCat());
-            listAccount = cat.getListAcc();
-            acc = mngCat.findAndGetAccount(listAccount, account.getName());
-            if (acc != null) {
+            category = mngCat.findAndGetCategory(listCategory, ((Category) Objects.requireNonNull((Objects.requireNonNull(getIntent().getExtras())).get("category"))).getCat());
+            listAccount = category.getListAcc();
+            account = mngCat.findAndGetAccount(listAccount, ((Account) Objects.requireNonNull(Objects.requireNonNull(getIntent().getExtras()).get("account"))).getName());
+            if (account != null) {
                 name = findViewById(R.id.name);
-                name.setText(acc.getName());
-                name2 = findViewById(R.id.nameToolbar);
-                name2.setText(acc.getName());
-                name2.setVisibility(View.INVISIBLE);
+                name.setText(account.getName());
+                nameToolbar = findViewById(R.id.nameToolbar);
+                nameToolbar.setText(account.getName());
+                nameToolbar.setVisibility(View.INVISIBLE);
                 Button optionButton = findViewById(R.id.optionsButton);
                 AppBarLayout appBar = findViewById(R.id.app_bar_show);
                 appBar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
@@ -84,377 +84,374 @@ public class ShowElementActivity extends AppCompatActivity implements PopupMenu.
                         }
                         if (scrollRange + verticalOffset == 0) {
                             isShow = true;
-                            name2.setVisibility(View.VISIBLE);
+                            nameToolbar.setVisibility(View.VISIBLE);
                         } else if (isShow) {
                             isShow = false;
-                            name2.setVisibility(View.INVISIBLE);
+                            nameToolbar.setVisibility(View.INVISIBLE);
                         }
                     }
                 });
                 int i = 0;
-                for (final AccountElement ae : acc.getList()) {
+                for (final AccountElement singleAccountElement : account.getList()) {
                     i++;
-                    final String nameText = i + "." + acc.getName();
+                    final String nameText = i + "." + account.getName();
                     LayoutInflater inflater = LayoutInflater.from(ShowElementActivity.this);
-                    @SuppressLint("InflateParams") final RelativeLayout relLey = (RelativeLayout) inflater.inflate(R.layout.fragment_show_element, null);
+                    final RelativeLayout layoutToAdd = (RelativeLayout) inflater.inflate(R.layout.fragment_show_element, (ViewGroup) findViewById(R.id.subRelLayShow));
                     final RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                     params.setMargins(0, 0, 0, 15);
-                    relLey.setLayoutParams(params);
-                    ((TextView) relLey.findViewById(R.id.cardinalityElements)).setText(nameText);
-                    (relLey.findViewById(R.id.emailShowImage)).setVisibility(View.GONE);
-                    (relLey.findViewById(R.id.emailShowText)).setVisibility(View.GONE);
-                    (relLey.findViewById(R.id.userShowImage)).setVisibility(View.GONE);
-                    (relLey.findViewById(R.id.userShowText)).setVisibility(View.GONE);
-                    (relLey.findViewById(R.id.passShowImage)).setVisibility(View.GONE);
-                    (relLey.findViewById(R.id.passShowText)).setVisibility(View.GONE);
-                    (relLey.findViewById(R.id.showPass)).setVisibility(View.GONE);
-                    ((TextView) relLey.findViewById(R.id.descriptionShowText)).setText(ae.getDescription());
-                    ll.addView(relLey);
-                    final ImageButton show = relLey.findViewById(R.id.showButton);
+                    layoutToAdd.setLayoutParams(params);
+                    ((TextView) layoutToAdd.findViewById(R.id.cardinalityElements)).setText(nameText);
+                    (layoutToAdd.findViewById(R.id.emailShowImage)).setVisibility(View.GONE);
+                    (layoutToAdd.findViewById(R.id.emailShowText)).setVisibility(View.GONE);
+                    (layoutToAdd.findViewById(R.id.userShowImage)).setVisibility(View.GONE);
+                    (layoutToAdd.findViewById(R.id.userShowText)).setVisibility(View.GONE);
+                    (layoutToAdd.findViewById(R.id.passShowImage)).setVisibility(View.GONE);
+                    (layoutToAdd.findViewById(R.id.passShowText)).setVisibility(View.GONE);
+                    (layoutToAdd.findViewById(R.id.showPass)).setVisibility(View.GONE);
+                    ((TextView) layoutToAdd.findViewById(R.id.descriptionShowText)).setText(singleAccountElement.getDescription());
+                    layoutShowElement.addView(layoutToAdd);
+                    final ImageButton showLayout = layoutToAdd.findViewById(R.id.showButton);
                     final Boolean[] bool = {true};
-                    show.setOnClickListener(new View.OnClickListener() {
+                    showLayout.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             if (bool[0]) {
                                 bool[0] = false;
-                                show.setImageResource(android.R.drawable.arrow_down_float);
-                                if (!ae.getEmail().isEmpty()) {
-                                    ((TextView) relLey.findViewById(R.id.emailShowText)).setText(ae.getEmail());
-                                    (relLey.findViewById(R.id.emailShowText)).animate()
+                                showLayout.setImageResource(android.R.drawable.arrow_down_float);
+                                if (!singleAccountElement.getEmail().isEmpty()) {
+                                    ((TextView) layoutToAdd.findViewById(R.id.emailShowText)).setText(singleAccountElement.getEmail());
+                                    (layoutToAdd.findViewById(R.id.emailShowText)).animate()
                                             .alpha(1.0f)
                                             .setListener(new AnimatorListenerAdapter() {
                                                 @Override
                                                 public void onAnimationStart(Animator animation) {
                                                     super.onAnimationStart(animation);
-                                                    (relLey.findViewById(R.id.emailShowText)).setVisibility(View.VISIBLE);
+                                                    (layoutToAdd.findViewById(R.id.emailShowText)).setVisibility(View.VISIBLE);
                                                 }
                                             });
-                                    (relLey.findViewById(R.id.emailShowImage)).animate()
+                                    (layoutToAdd.findViewById(R.id.emailShowImage)).animate()
                                             .alpha(1.0f)
                                             .setListener(new AnimatorListenerAdapter() {
                                                 @Override
                                                 public void onAnimationStart(Animator animation) {
                                                     super.onAnimationStart(animation);
-                                                    (relLey.findViewById(R.id.emailShowImage)).setVisibility(View.VISIBLE);
-                                                }
-                                            });
-                                }
-                                if (!ae.getUser().isEmpty()) {
-                                    ((TextView) relLey.findViewById(R.id.userShowText)).setText(ae.getUser());
-                                    (relLey.findViewById(R.id.userShowText)).animate()
-                                            .alpha(1.0f)
-                                            .setListener(new AnimatorListenerAdapter() {
-                                                @Override
-                                                public void onAnimationStart(Animator animation) {
-                                                    super.onAnimationStart(animation);
-                                                    (relLey.findViewById(R.id.userShowText)).setVisibility(View.VISIBLE);
-                                                }
-                                            });
-                                    (relLey.findViewById(R.id.userShowImage)).animate()
-                                            .alpha(1.0f)
-                                            .setListener(new AnimatorListenerAdapter() {
-                                                @Override
-                                                public void onAnimationStart(Animator animation) {
-                                                    super.onAnimationStart(animation);
-                                                    (relLey.findViewById(R.id.userShowImage)).setVisibility(View.VISIBLE);
+                                                    (layoutToAdd.findViewById(R.id.emailShowImage)).setVisibility(View.VISIBLE);
                                                 }
                                             });
                                 }
-                                if (!ae.getPassword().isEmpty()) {
-                                    ((TextView) relLey.findViewById(R.id.passShowText)).setText(ae.getPassword());
-                                    (relLey.findViewById(R.id.passShowText)).animate()
+                                if (!singleAccountElement.getUser().isEmpty()) {
+                                    ((TextView) layoutToAdd.findViewById(R.id.userShowText)).setText(singleAccountElement.getUser());
+                                    (layoutToAdd.findViewById(R.id.userShowText)).animate()
                                             .alpha(1.0f)
                                             .setListener(new AnimatorListenerAdapter() {
                                                 @Override
                                                 public void onAnimationStart(Animator animation) {
                                                     super.onAnimationStart(animation);
-                                                    (relLey.findViewById(R.id.passShowText)).setVisibility(View.VISIBLE);
+                                                    (layoutToAdd.findViewById(R.id.userShowText)).setVisibility(View.VISIBLE);
                                                 }
                                             });
-                                    (relLey.findViewById(R.id.showPass)).animate()
+                                    (layoutToAdd.findViewById(R.id.userShowImage)).animate()
                                             .alpha(1.0f)
                                             .setListener(new AnimatorListenerAdapter() {
                                                 @Override
                                                 public void onAnimationStart(Animator animation) {
                                                     super.onAnimationStart(animation);
-                                                    (relLey.findViewById(R.id.showPass)).setVisibility(View.VISIBLE);
+                                                    (layoutToAdd.findViewById(R.id.userShowImage)).setVisibility(View.VISIBLE);
                                                 }
                                             });
-                                    (relLey.findViewById(R.id.passShowImage)).animate()
+                                }
+                                if (!singleAccountElement.getPassword().isEmpty()) {
+                                    ((TextView) layoutToAdd.findViewById(R.id.passShowText)).setText(singleAccountElement.getPassword());
+                                    (layoutToAdd.findViewById(R.id.passShowText)).animate()
                                             .alpha(1.0f)
                                             .setListener(new AnimatorListenerAdapter() {
                                                 @Override
                                                 public void onAnimationStart(Animator animation) {
                                                     super.onAnimationStart(animation);
-                                                    (relLey.findViewById(R.id.passShowImage)).setVisibility(View.VISIBLE);
+                                                    (layoutToAdd.findViewById(R.id.passShowText)).setVisibility(View.VISIBLE);
+                                                }
+                                            });
+                                    (layoutToAdd.findViewById(R.id.showPass)).animate()
+                                            .alpha(1.0f)
+                                            .setListener(new AnimatorListenerAdapter() {
+                                                @Override
+                                                public void onAnimationStart(Animator animation) {
+                                                    super.onAnimationStart(animation);
+                                                    (layoutToAdd.findViewById(R.id.showPass)).setVisibility(View.VISIBLE);
+                                                }
+                                            });
+                                    (layoutToAdd.findViewById(R.id.passShowImage)).animate()
+                                            .alpha(1.0f)
+                                            .setListener(new AnimatorListenerAdapter() {
+                                                @Override
+                                                public void onAnimationStart(Animator animation) {
+                                                    super.onAnimationStart(animation);
+                                                    (layoutToAdd.findViewById(R.id.passShowImage)).setVisibility(View.VISIBLE);
                                                 }
                                             });
                                 }
                             } else {
                                 bool[0] = true;
-                                show.setImageResource(android.R.drawable.arrow_up_float);
-                                (relLey.findViewById(R.id.emailShowImage)).animate()
+                                showLayout.setImageResource(android.R.drawable.arrow_up_float);
+                                (layoutToAdd.findViewById(R.id.emailShowImage)).animate()
                                         .alpha(0.0f)
                                         .setListener(new AnimatorListenerAdapter() {
                                             @Override
                                             public void onAnimationStart(Animator animation) {
                                                 super.onAnimationStart(animation);
-                                                (relLey.findViewById(R.id.emailShowImage)).setVisibility(View.GONE);
+                                                (layoutToAdd.findViewById(R.id.emailShowImage)).setVisibility(View.GONE);
                                             }
                                         });
-                                (relLey.findViewById(R.id.emailShowText)).animate()
+                                (layoutToAdd.findViewById(R.id.emailShowText)).animate()
                                         .alpha(0.0f)
                                         .setListener(new AnimatorListenerAdapter() {
                                             @Override
                                             public void onAnimationStart(Animator animation) {
                                                 super.onAnimationStart(animation);
-                                                (relLey.findViewById(R.id.emailShowText)).setVisibility(View.GONE);
+                                                (layoutToAdd.findViewById(R.id.emailShowText)).setVisibility(View.GONE);
                                             }
                                         });
-                                (relLey.findViewById(R.id.userShowImage)).animate()
+                                (layoutToAdd.findViewById(R.id.userShowImage)).animate()
                                         .alpha(0.0f)
                                         .setListener(new AnimatorListenerAdapter() {
                                             @Override
                                             public void onAnimationStart(Animator animation) {
                                                 super.onAnimationStart(animation);
-                                                (relLey.findViewById(R.id.userShowImage)).setVisibility(View.GONE);
+                                                (layoutToAdd.findViewById(R.id.userShowImage)).setVisibility(View.GONE);
                                             }
                                         });
-                                (relLey.findViewById(R.id.userShowText)).animate()
+                                (layoutToAdd.findViewById(R.id.userShowText)).animate()
                                         .alpha(0.0f)
                                         .setListener(new AnimatorListenerAdapter() {
                                             @Override
                                             public void onAnimationStart(Animator animation) {
                                                 super.onAnimationStart(animation);
-                                                (relLey.findViewById(R.id.userShowText)).setVisibility(View.GONE);
+                                                (layoutToAdd.findViewById(R.id.userShowText)).setVisibility(View.GONE);
                                             }
                                         });
-                                (relLey.findViewById(R.id.passShowImage)).animate()
+                                (layoutToAdd.findViewById(R.id.passShowImage)).animate()
                                         .alpha(0.0f)
                                         .setListener(new AnimatorListenerAdapter() {
                                             @Override
                                             public void onAnimationStart(Animator animation) {
                                                 super.onAnimationStart(animation);
-                                                (relLey.findViewById(R.id.passShowImage)).setVisibility(View.GONE);
+                                                (layoutToAdd.findViewById(R.id.passShowImage)).setVisibility(View.GONE);
                                             }
                                         });
-                                (relLey.findViewById(R.id.passShowText)).animate()
+                                (layoutToAdd.findViewById(R.id.passShowText)).animate()
                                         .alpha(0.0f)
                                         .setListener(new AnimatorListenerAdapter() {
                                             @Override
                                             public void onAnimationStart(Animator animation) {
                                                 super.onAnimationStart(animation);
-                                                (relLey.findViewById(R.id.passShowText)).setVisibility(View.GONE);
+                                                (layoutToAdd.findViewById(R.id.passShowText)).setVisibility(View.GONE);
                                             }
                                         });
-                                (relLey.findViewById(R.id.showPass)).animate()
+                                (layoutToAdd.findViewById(R.id.showPass)).animate()
                                         .alpha(0.0f)
                                         .setListener(new AnimatorListenerAdapter() {
                                             @Override
                                             public void onAnimationStart(Animator animation) {
                                                 super.onAnimationStart(animation);
-                                                (relLey.findViewById(R.id.showPass)).setVisibility(View.GONE);
+                                                (layoutToAdd.findViewById(R.id.showPass)).setVisibility(View.GONE);
                                             }
                                         });
                             }
                         }
                     });
-                    (relLey.findViewById(R.id.cardinalityElements)).setOnClickListener(new View.OnClickListener() {
+                    (layoutToAdd.findViewById(R.id.cardinalityElements)).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             if (bool[0]) {
                                 bool[0] = false;
-                                show.setImageResource(android.R.drawable.arrow_down_float);
-                                if (!ae.getEmail().isEmpty()) {
-                                    ((TextView) relLey.findViewById(R.id.emailShowText)).setText(ae.getEmail());
-                                    (relLey.findViewById(R.id.emailShowText)).animate()
+                                showLayout.setImageResource(android.R.drawable.arrow_down_float);
+                                if (!singleAccountElement.getEmail().isEmpty()) {
+                                    ((TextView) layoutToAdd.findViewById(R.id.emailShowText)).setText(singleAccountElement.getEmail());
+                                    (layoutToAdd.findViewById(R.id.emailShowText)).animate()
                                             .alpha(1.0f)
                                             .setListener(new AnimatorListenerAdapter() {
                                                 @Override
                                                 public void onAnimationStart(Animator animation) {
                                                     super.onAnimationStart(animation);
-                                                    (relLey.findViewById(R.id.emailShowText)).setVisibility(View.VISIBLE);
+                                                    (layoutToAdd.findViewById(R.id.emailShowText)).setVisibility(View.VISIBLE);
                                                 }
                                             });
-                                    (relLey.findViewById(R.id.emailShowImage)).animate()
+                                    (layoutToAdd.findViewById(R.id.emailShowImage)).animate()
                                             .alpha(1.0f)
                                             .setListener(new AnimatorListenerAdapter() {
                                                 @Override
                                                 public void onAnimationStart(Animator animation) {
                                                     super.onAnimationStart(animation);
-                                                    (relLey.findViewById(R.id.emailShowImage)).setVisibility(View.VISIBLE);
-                                                }
-                                            });
-                                }
-                                if (!ae.getUser().isEmpty()) {
-                                    ((TextView) relLey.findViewById(R.id.userShowText)).setText(ae.getUser());
-                                    (relLey.findViewById(R.id.userShowText)).animate()
-                                            .alpha(1.0f)
-                                            .setListener(new AnimatorListenerAdapter() {
-                                                @Override
-                                                public void onAnimationStart(Animator animation) {
-                                                    super.onAnimationStart(animation);
-                                                    (relLey.findViewById(R.id.userShowText)).setVisibility(View.VISIBLE);
-                                                }
-                                            });
-                                    (relLey.findViewById(R.id.userShowImage)).animate()
-                                            .alpha(1.0f)
-                                            .setListener(new AnimatorListenerAdapter() {
-                                                @Override
-                                                public void onAnimationStart(Animator animation) {
-                                                    super.onAnimationStart(animation);
-                                                    (relLey.findViewById(R.id.userShowImage)).setVisibility(View.VISIBLE);
+                                                    (layoutToAdd.findViewById(R.id.emailShowImage)).setVisibility(View.VISIBLE);
                                                 }
                                             });
                                 }
-                                if (!ae.getPassword().isEmpty()) {
-                                    ((TextView) relLey.findViewById(R.id.passShowText)).setText(ae.getPassword());
-                                    (relLey.findViewById(R.id.passShowText)).animate()
+                                if (!singleAccountElement.getUser().isEmpty()) {
+                                    ((TextView) layoutToAdd.findViewById(R.id.userShowText)).setText(singleAccountElement.getUser());
+                                    (layoutToAdd.findViewById(R.id.userShowText)).animate()
                                             .alpha(1.0f)
                                             .setListener(new AnimatorListenerAdapter() {
                                                 @Override
                                                 public void onAnimationStart(Animator animation) {
                                                     super.onAnimationStart(animation);
-                                                    (relLey.findViewById(R.id.passShowText)).setVisibility(View.VISIBLE);
+                                                    (layoutToAdd.findViewById(R.id.userShowText)).setVisibility(View.VISIBLE);
                                                 }
                                             });
-                                    (relLey.findViewById(R.id.showPass)).animate()
+                                    (layoutToAdd.findViewById(R.id.userShowImage)).animate()
                                             .alpha(1.0f)
                                             .setListener(new AnimatorListenerAdapter() {
                                                 @Override
                                                 public void onAnimationStart(Animator animation) {
                                                     super.onAnimationStart(animation);
-                                                    (relLey.findViewById(R.id.showPass)).setVisibility(View.VISIBLE);
+                                                    (layoutToAdd.findViewById(R.id.userShowImage)).setVisibility(View.VISIBLE);
                                                 }
                                             });
-                                    (relLey.findViewById(R.id.passShowImage)).animate()
+                                }
+                                if (!singleAccountElement.getPassword().isEmpty()) {
+                                    ((TextView) layoutToAdd.findViewById(R.id.passShowText)).setText(singleAccountElement.getPassword());
+                                    (layoutToAdd.findViewById(R.id.passShowText)).animate()
                                             .alpha(1.0f)
                                             .setListener(new AnimatorListenerAdapter() {
                                                 @Override
                                                 public void onAnimationStart(Animator animation) {
                                                     super.onAnimationStart(animation);
-                                                    (relLey.findViewById(R.id.passShowImage)).setVisibility(View.VISIBLE);
+                                                    (layoutToAdd.findViewById(R.id.passShowText)).setVisibility(View.VISIBLE);
+                                                }
+                                            });
+                                    (layoutToAdd.findViewById(R.id.showPass)).animate()
+                                            .alpha(1.0f)
+                                            .setListener(new AnimatorListenerAdapter() {
+                                                @Override
+                                                public void onAnimationStart(Animator animation) {
+                                                    super.onAnimationStart(animation);
+                                                    (layoutToAdd.findViewById(R.id.showPass)).setVisibility(View.VISIBLE);
+                                                }
+                                            });
+                                    (layoutToAdd.findViewById(R.id.passShowImage)).animate()
+                                            .alpha(1.0f)
+                                            .setListener(new AnimatorListenerAdapter() {
+                                                @Override
+                                                public void onAnimationStart(Animator animation) {
+                                                    super.onAnimationStart(animation);
+                                                    (layoutToAdd.findViewById(R.id.passShowImage)).setVisibility(View.VISIBLE);
                                                 }
                                             });
                                 }
                             } else {
                                 bool[0] = true;
-                                show.setImageResource(android.R.drawable.arrow_up_float);
-                                (relLey.findViewById(R.id.emailShowImage)).animate()
+                                showLayout.setImageResource(android.R.drawable.arrow_up_float);
+                                (layoutToAdd.findViewById(R.id.emailShowImage)).animate()
                                         .alpha(0.0f)
                                         .setListener(new AnimatorListenerAdapter() {
                                             @Override
                                             public void onAnimationStart(Animator animation) {
                                                 super.onAnimationStart(animation);
-                                                (relLey.findViewById(R.id.emailShowImage)).setVisibility(View.GONE);
+                                                (layoutToAdd.findViewById(R.id.emailShowImage)).setVisibility(View.GONE);
                                             }
                                         });
-                                (relLey.findViewById(R.id.emailShowText)).animate()
+                                (layoutToAdd.findViewById(R.id.emailShowText)).animate()
                                         .alpha(0.0f)
                                         .setListener(new AnimatorListenerAdapter() {
                                             @Override
                                             public void onAnimationStart(Animator animation) {
                                                 super.onAnimationStart(animation);
-                                                (relLey.findViewById(R.id.emailShowText)).setVisibility(View.GONE);
+                                                (layoutToAdd.findViewById(R.id.emailShowText)).setVisibility(View.GONE);
                                             }
                                         });
-                                (relLey.findViewById(R.id.userShowImage)).animate()
+                                (layoutToAdd.findViewById(R.id.userShowImage)).animate()
                                         .alpha(0.0f)
                                         .setListener(new AnimatorListenerAdapter() {
                                             @Override
                                             public void onAnimationStart(Animator animation) {
                                                 super.onAnimationStart(animation);
-                                                (relLey.findViewById(R.id.userShowImage)).setVisibility(View.GONE);
+                                                (layoutToAdd.findViewById(R.id.userShowImage)).setVisibility(View.GONE);
                                             }
                                         });
-                                (relLey.findViewById(R.id.userShowText)).animate()
+                                (layoutToAdd.findViewById(R.id.userShowText)).animate()
                                         .alpha(0.0f)
                                         .setListener(new AnimatorListenerAdapter() {
                                             @Override
                                             public void onAnimationStart(Animator animation) {
                                                 super.onAnimationStart(animation);
-                                                (relLey.findViewById(R.id.userShowText)).setVisibility(View.GONE);
+                                                (layoutToAdd.findViewById(R.id.userShowText)).setVisibility(View.GONE);
                                             }
                                         });
-                                (relLey.findViewById(R.id.passShowImage)).animate()
+                                (layoutToAdd.findViewById(R.id.passShowImage)).animate()
                                         .alpha(0.0f)
                                         .setListener(new AnimatorListenerAdapter() {
                                             @Override
                                             public void onAnimationStart(Animator animation) {
                                                 super.onAnimationStart(animation);
-                                                (relLey.findViewById(R.id.passShowImage)).setVisibility(View.GONE);
+                                                (layoutToAdd.findViewById(R.id.passShowImage)).setVisibility(View.GONE);
                                             }
                                         });
-                                (relLey.findViewById(R.id.passShowText)).animate()
+                                (layoutToAdd.findViewById(R.id.passShowText)).animate()
                                         .alpha(0.0f)
                                         .setListener(new AnimatorListenerAdapter() {
                                             @Override
                                             public void onAnimationStart(Animator animation) {
                                                 super.onAnimationStart(animation);
-                                                (relLey.findViewById(R.id.passShowText)).setVisibility(View.GONE);
+                                                (layoutToAdd.findViewById(R.id.passShowText)).setVisibility(View.GONE);
                                             }
                                         });
-                                (relLey.findViewById(R.id.showPass)).animate()
+                                (layoutToAdd.findViewById(R.id.showPass)).animate()
                                         .alpha(0.0f)
                                         .setListener(new AnimatorListenerAdapter() {
                                             @Override
                                             public void onAnimationStart(Animator animation) {
                                                 super.onAnimationStart(animation);
-                                                (relLey.findViewById(R.id.showPass)).setVisibility(View.GONE);
+                                                (layoutToAdd.findViewById(R.id.showPass)).setVisibility(View.GONE);
                                             }
                                         });
                             }
                         }
                     });
-                    ImageButton edit = relLey.findViewById(R.id.editButton);
+                    ImageButton edit = layoutToAdd.findViewById(R.id.editButton);
                     edit.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            goToEditActivity(usr, acc, ae, cat);
+                            goToEditActivity(account, singleAccountElement, category);
                         }
                     });
-                    ImageButton del = relLey.findViewById(R.id.deleteButton);
-                    del.setOnClickListener(new View.OnClickListener() {
+                    ImageButton delete = layoutToAdd.findViewById(R.id.deleteButton);
+                    delete.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
-                            final View popupView = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_security, (ViewGroup) findViewById(R.id.popupSecurity));
-                            final PopupWindow popupWindow = new PopupWindow(popupView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
-                            popupWindow.setOutsideTouchable(true);
-                            popupWindow.setFocusable(true);
-                            //noinspection deprecation
-                            popupWindow.setBackgroundDrawable(new BitmapDrawable());
-                            View parent = cl.getRootView();
-                            popupWindow.showAtLocation(parent, Gravity.CENTER, 0, 0);
-                            TextView et = popupView.findViewById(R.id.securityText);
-                            et.setText("Sei sicuro di voler eliminare " + nameText + " dai tuoi account?");
-                            Button yes = popupView.findViewById(R.id.yes);
-                            Button no = popupView.findViewById(R.id.no);
+                            View popupViewSecurity = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_security, (ViewGroup) findViewById(R.id.popupSecurity));
+                            final PopupWindow popupWindowSecurity = new PopupWindow(popupViewSecurity, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+                            popupWindowSecurity.setOutsideTouchable(true);
+                            popupWindowSecurity.setFocusable(true);
+                            popupWindowSecurity.setBackgroundDrawable(new BitmapDrawable());
+                            View parent = layoutShowElementActivity.getRootView();
+                            popupWindowSecurity.showAtLocation(parent, Gravity.CENTER, 0, 0);
+                            TextView popupText = popupViewSecurity.findViewById(R.id.securityText);
+                            popupText.setText(Html.fromHtml("Sei sicuro di voler eliminare <b>" + nameText + "</b> dai tuoi account?", HtmlCompat.FROM_HTML_MODE_LEGACY));
+                            Button yes = popupViewSecurity.findViewById(R.id.yes);
+                            Button no = popupViewSecurity.findViewById(R.id.no);
                             yes.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    acc.getList().remove(ae);
+                                    account.getList().remove(singleAccountElement);
                                     listAccount.remove(account);
-                                    listAccount.add(acc);
-                                    listCategory.remove(cat);
-                                    cat.setListAcc(listAccount);
-                                    listCategory.add(cat);
+                                    listAccount.add(account);
+                                    listCategory.remove(category);
+                                    category.setListAcc(listAccount);
+                                    listCategory.add(category);
                                     mngCat.serializationListCategory(ShowElementActivity.this, listCategory, usr.getUser());
-                                    notifyUser(nameText + " è stato rimosso con successo!");
                                     refresh();
-                                    popupWindow.dismiss();
+                                    popupWindowSecurity.dismiss();
                                 }
                             });
                             no.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    notifyUser(nameText + " non è stato rimosso.");
-                                    popupWindow.dismiss();
+                                    popupWindowSecurity.dismiss();
                                 }
                             });
                         }
                     });
-                    showPass((TextView) relLey.findViewById(R.id.passShowText), (ImageButton) relLey.findViewById((R.id.showPass)));
+                    showPass((TextView) layoutToAdd.findViewById(R.id.passShowText), (ImageButton) layoutToAdd.findViewById((R.id.showPass)));
                 }
                 optionButton.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -464,10 +461,10 @@ public class ShowElementActivity extends AppCompatActivity implements PopupMenu.
                 });
             } else {
                 notifyUser("Account non rilevato. Impossibile mostrare i dati.");
-                goToViewActivity(usr, cat);
+                goToViewActivity(category);
             }
         } else {
-            notifyUser("Utente non rilevato. Impossibile mostrare l'account.");
+            notifyUser("Credenziali non rilevate. Impossibile mostrare l'account.");
             goToMainActivity();
         }
     }
@@ -477,40 +474,38 @@ public class ShowElementActivity extends AppCompatActivity implements PopupMenu.
     public boolean onMenuItemClick(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.edit:
-                goToEditActivity(usr, acc, cat);
+                goToEditActivity(account, category);
                 return true;
             case R.id.delete:
                 LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
-                final View popupView = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_security, (ViewGroup) findViewById(R.id.popupSecurity));
-                final PopupWindow popupWindow = new PopupWindow(popupView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
-                popupWindow.setOutsideTouchable(true);
-                popupWindow.setFocusable(true);
+                View popupViewDeleteAccount = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_security, (ViewGroup) findViewById(R.id.popupSecurity));
+                final PopupWindow popupWindowDeleteAccount = new PopupWindow(popupViewDeleteAccount, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+                popupWindowDeleteAccount.setOutsideTouchable(true);
+                popupWindowDeleteAccount.setFocusable(true);
                 //noinspection deprecation
-                popupWindow.setBackgroundDrawable(new BitmapDrawable());
-                View parent = cl.getRootView();
-                popupWindow.showAtLocation(parent, Gravity.CENTER, 0, 0);
-                TextView et = popupView.findViewById(R.id.securityText);
-                et.setText("Sei sicuro di voler eliminare " + account.getName() + " dai tuoi account?");
-                Button yes = popupView.findViewById(R.id.yes);
-                Button no = popupView.findViewById(R.id.no);
+                popupWindowDeleteAccount.setBackgroundDrawable(new BitmapDrawable());
+                View parent = layoutShowElementActivity.getRootView();
+                popupWindowDeleteAccount.showAtLocation(parent, Gravity.CENTER, 0, 0);
+                TextView et = popupViewDeleteAccount.findViewById(R.id.securityText);
+                et.setText(Html.fromHtml("Sei sicuro di voler eliminare <b>" + account.getName() + "</b> dai tuoi account?", HtmlCompat.FROM_HTML_MODE_LEGACY));
+                Button yes = popupViewDeleteAccount.findViewById(R.id.yes);
+                Button no = popupViewDeleteAccount.findViewById(R.id.no);
                 yes.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         listAccount.remove(account);
-                        listCategory.remove(cat);
-                        cat.setListAcc(listAccount);
-                        listCategory.add(cat);
+                        listCategory.remove(category);
+                        category.setListAcc(listAccount);
+                        listCategory.add(category);
                         mngCat.serializationListCategory(ShowElementActivity.this, listCategory, usr.getUser());
-                        notifyUser(account.getName() + " è stato rimosso con successo!");
-                        goToViewActivity(usr, cat);
-                        popupWindow.dismiss();
+                        goToViewActivity(category);
+                        popupWindowDeleteAccount.dismiss();
                     }
                 });
                 no.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        notifyUser(account.getName() + " non è stato rimosso.");
-                        popupWindow.dismiss();
+                        popupWindowDeleteAccount.dismiss();
                     }
                 });
                 return true;
@@ -519,7 +514,7 @@ public class ShowElementActivity extends AppCompatActivity implements PopupMenu.
                 return true;
             case R.id.cut:
                 if (listCategory.size() <= 1)
-                    notifyUser("Non ci sono categorie su cui effetturare lo spostamento");
+                    notifyUser("Non ci sono categorie su cui effetturare lo spostamento.");
                 else
                     goToCategoryChoseActivity("cut");
                 return true;
@@ -542,40 +537,40 @@ public class ShowElementActivity extends AppCompatActivity implements PopupMenu.
         finish();
     }
 
-    public void goToViewActivity(User usr, Category cat) {
+    public void goToViewActivity(Category category) {
         Intent intent = new Intent(ShowElementActivity.this, ViewActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("owner", usr);
-        intent.putExtra("category", cat);
+        intent.putExtra("category", category);
         startActivity(intent);
         finish();
     }
 
-    public void goToEditActivity(User usr, Account acc, AccountElement ae, Category cat) {
+    public void goToEditActivity(Account account, AccountElement accountElement, Category category) {
         Intent intent = new Intent(ShowElementActivity.this, EditActivity.class);
         intent.putExtra("owner", usr);
-        intent.putExtra("account", acc);
-        intent.putExtra("accountElement", ae);
-        intent.putExtra("category", cat);
+        intent.putExtra("account", account);
+        intent.putExtra("accountElement", accountElement);
+        intent.putExtra("category", category);
         startActivity(intent);
     }
 
-    public void goToEditActivity(User usr, Account acc, Category cat) {
+    public void goToEditActivity(Account account, Category category) {
         Intent intent = new Intent(ShowElementActivity.this, EditActivity.class);
         intent.putExtra("owner", usr);
-        intent.putExtra("account", acc);
-        intent.putExtra("category", cat);
+        intent.putExtra("account", account);
+        intent.putExtra("category", category);
         startActivity(intent);
     }
 
     public void goToCategoryChoseActivity(String opt) {
         Intent intent = new Intent(ShowElementActivity.this, CategoryChoseActivity.class);
         ArrayList<Account> listAcc = new ArrayList<>();
-        listAcc.add(acc);
+        listAcc.add(account);
         intent.putExtra("owner", usr);
-        intent.putExtra("category", cat);
+        intent.putExtra("category", category);
         intent.putExtra("listAccount", listAcc);
         intent.putExtra("option", opt);
         startActivity(intent);
@@ -610,5 +605,4 @@ public class ShowElementActivity extends AppCompatActivity implements PopupMenu.
             }
         });
     }
-
 }

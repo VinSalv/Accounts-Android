@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.RecyclerView;
 class SpacesItemDecoration extends RecyclerView.ItemDecoration {
     private int space;
 
-
     SpacesItemDecoration(int space) {
         this.space = space;
     }

@@ -16,20 +16,19 @@ import java.util.Collections;
 import static androidx.core.content.ContextCompat.getDrawable;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyViewHolder> implements ItemMoveCallback.ItemTouchHelperContract {
-
-    private ArrayList<String> selectedIds = new ArrayList<>();
-    private ArrayList<Account> data;
-    private Context context;
     private ManageUser mngUsr = new ManageUser();
-    private User usr;
     private ManageCategory mngCat = new ManageCategory();
-    private Category cat;
+    private ArrayList<String> selectedIds = new ArrayList<>();
+    private ArrayList<Account> listAccount;
+    private User usr;
+    private Category category;
+    private Context context;
 
-    RecyclerViewAdapter(Context context, User usr, Category cat) {
+    RecyclerViewAdapter(Context context, User usr, Category category) {
         this.context = context;
-        this.data = cat.getListAcc();
+        this.listAccount = category.getListAcc();
         this.usr = usr;
-        this.cat = cat;
+        this.category = category;
     }
 
     @NonNull
@@ -42,8 +41,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        holder.mTitle.setText(data.get(position).getName());
-        String name = data.get(position).getName();
+        holder.mTitle.setText(listAccount.get(position).getName());
+        String name = listAccount.get(position).getName();
         if (selectedIds.contains(name)) {
             holder.mTitle.setBackground(getDrawable(context, R.drawable.rounded_list_element2));
         } else {
@@ -53,13 +52,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public int getItemCount() {
-        return data.size();
+        return listAccount.size();
     }
 
     Account getItem(int position) {
         if (position == -1) return null;
         else
-            return data.get(position);
+            return listAccount.get(position);
     }
 
     void setSelectedIds(ArrayList<String> selectedIds) {
@@ -74,20 +73,20 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         if (fromPosition < toPosition) {
             for (int i = fromPosition; i < toPosition; i++) {
-                Collections.swap(data, i, i + 1);
+                Collections.swap(listAccount, i, i + 1);
             }
         } else {
             for (int i = fromPosition; i > toPosition; i--) {
-                Collections.swap(data, i, i - 1);
+                Collections.swap(listAccount, i, i - 1);
             }
         }
 
         ArrayList<Category> listCategory2 = new ArrayList<>();
         for (Category c : listCategory) {
-            if (!c.getCat().toLowerCase().equals(cat.getCat().toLowerCase())) {
+            if (!c.getCat().toLowerCase().equals(category.getCat().toLowerCase())) {
                 listCategory2.add(c);
             } else {
-                listCategory2.add(new Category(cat.getCat(), data, 3));
+                listCategory2.add(new Category(category.getCat(), listAccount, 3));
             }
         }
         mngCat.serializationListCategory(context, listCategory2, usr.getUser());
@@ -110,7 +109,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public void onRowClear(MyViewHolder myViewHolder) {
         myViewHolder.mTitle.setBackground(getDrawable(context, R.drawable.rounded_list_element));
     }
-
 
     static class MyViewHolder extends RecyclerView.ViewHolder {
         FrameLayout rootView;

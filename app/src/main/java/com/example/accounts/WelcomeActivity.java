@@ -21,9 +21,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import java.util.Objects;
+
 @SuppressWarnings({"SameParameterValue", "deprecation"})
 public class WelcomeActivity extends AppCompatActivity {
-
     private ViewPager viewPager;
     private LinearLayout dotsLayout;
     private int[] layouts;
@@ -63,10 +64,15 @@ public class WelcomeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        String s = null;
+        try {
+            s = (String) Objects.requireNonNull(getIntent().getExtras()).get("string");
 
-        // Checking for first time launch - before calling setContentView()
+        } catch (Exception e) {
+        }
         prefManager = new PrefManager(this);
-        if (!prefManager.isFirstTimeLaunch()) {
+        // Checking for first time launch - before calling setContentView()
+        if (!prefManager.isFirstTimeLaunch() && s == null) {
             launchHomeScreen();
             finish();
         }

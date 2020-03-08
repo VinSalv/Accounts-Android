@@ -31,5 +31,4 @@ class PrefManager {
         editor.putBoolean(IS_FIRST_TIME_LAUNCH, isFirstTime);
         editor.commit();
     }
-
 }

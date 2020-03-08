@@ -6,8 +6,8 @@ import android.content.res.ColorStateList;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Environment;
+import android.text.Html;
 import android.text.InputType;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -29,10 +29,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.content.ContextCompat;
+import androidx.core.text.HtmlCompat;
 
 import com.google.android.material.appbar.AppBarLayout;
 import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Phrase;
@@ -51,19 +51,19 @@ import java.util.Objects;
 
 @SuppressWarnings({"ResultOfMethodCallIgnored", "deprecation", "MismatchedQueryAndUpdateOfCollection"})
 public class SettingActivity extends AppCompatActivity {
-    private CoordinatorLayout cl;
-    private ManageUser mngUsr;
-    private User usr;
-    private ArrayList<User> listUser = new ArrayList<>();
+    private CoordinatorLayout layoutSettingActivity;
     private ManageApp mngApp;
-    private LogApp log;
-    private TextView setting;
-    private TextView setting2;
-    private String path;
-    private File dir;
-    private ImageButton showPass;
+    private ManageUser mngUsr;
     private ManageCategory mngCat;
+    private ArrayList<User> listUser = new ArrayList<>();
     private ArrayList<Category> listCategoryPdf;
+    private LogApp log;
+    private User usr;
+    private TextView setting;
+    private TextView settingToolbar;
+    private ImageButton showPass;
+    private File dir;
+    private String path;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -73,24 +73,19 @@ public class SettingActivity extends AppCompatActivity {
         final Toolbar toolbar = findViewById(R.id.settingToolbar);
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
-        cl = findViewById(R.id.settingActivityLay);
-        User owner = (User) (Objects.requireNonNull(getIntent().getExtras())).get("owner");
+        layoutSettingActivity = findViewById(R.id.settingActivityLay);
         mngApp = new ManageApp();
         log = mngApp.deserializationFlag(this);
         mngUsr = new ManageUser();
         listUser = mngUsr.deserializationListUser(this);
-        usr = mngUsr.findUser(listUser, Objects.requireNonNull(owner).getUser());
+        usr = mngUsr.findUser(listUser, ((User) Objects.requireNonNull((Objects.requireNonNull(getIntent().getExtras())).get("owner"))).getUser());
         if (usr != null) {
             mngCat = new ManageCategory();
-            Button prof = findViewById(R.id.profile);
-            Button custom = findViewById(R.id.customize);
-            Button pdf = findViewById(R.id.pdf);
-            Button delProf = findViewById(R.id.deleteProfile);
             setting = findViewById(R.id.settingText);
             setting.setText("Impostazioni");
-            setting2 = findViewById(R.id.settingTextToolbar);
-            setting2.setText("Impostazioni");
-            setting2.setVisibility(View.INVISIBLE);
+            settingToolbar = findViewById(R.id.settingTextToolbar);
+            settingToolbar.setText("Impostazioni");
+            settingToolbar.setVisibility(View.INVISIBLE);
             AppBarLayout appBar = findViewById(R.id.settingBarToolbar);
             appBar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
                 boolean isShow = false;
@@ -104,87 +99,85 @@ public class SettingActivity extends AppCompatActivity {
                     }
                     if (scrollRange + verticalOffset == 0) {
                         isShow = true;
-                        setting2.setVisibility(View.VISIBLE);
+                        settingToolbar.setVisibility(View.VISIBLE);
                     } else if (isShow) {
                         isShow = false;
-                        setting2.setVisibility(View.INVISIBLE);
+                        settingToolbar.setVisibility(View.INVISIBLE);
                     }
                 }
             });
+            Button prof = findViewById(R.id.profile);
             prof.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
-                    final View popupView = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_security_password, (ViewGroup) findViewById(R.id.passSecurityPopup));
-                    final PopupWindow popupWindow = new PopupWindow(popupView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
-                    popupWindow.setOutsideTouchable(true);
-                    popupWindow.setFocusable(true);
-                    //noinspection deprecation
-                    popupWindow.setBackgroundDrawable(new BitmapDrawable());
-                    View parent = cl.getRootView();
-                    popupWindow.showAtLocation(parent, Gravity.CENTER, 0, 0);
-                    final EditText et = popupView.findViewById(R.id.passSecurityEditText);
-                    Button conf = popupView.findViewById(R.id.confirmation);
+                    View popupViewProfile = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_security_password, (ViewGroup) findViewById(R.id.passSecurityPopup));
+                    final PopupWindow popupWindowProfile = new PopupWindow(popupViewProfile, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+                    popupWindowProfile.setOutsideTouchable(true);
+                    popupWindowProfile.setFocusable(true);
+                    popupWindowProfile.setBackgroundDrawable(new BitmapDrawable());
+                    View parent = layoutSettingActivity.getRootView();
+                    popupWindowProfile.showAtLocation(parent, Gravity.CENTER, 0, 0);
+                    final EditText popupText = popupViewProfile.findViewById(R.id.passSecurityEditText);
+                    Button conf = popupViewProfile.findViewById(R.id.confirmation);
                     conf.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            et.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(SettingActivity.this, R.color.colorAccent)));
-                            if (et.getText().toString().equals(usr.getPassword())) {
-                                goToProfileActivity(usr);
-                                popupWindow.dismiss();
+                            popupText.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(SettingActivity.this, R.color.colorAccent)));
+                            if (popupText.getText().toString().equals(usr.getPassword())) {
+                                goToProfileActivity();
+                                popupWindowProfile.dismiss();
                             } else {
-                                et.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(SettingActivity.this, R.color.errorEditText)));
-                                notifyUser("Password errata! Riprova");
+                                popupText.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(SettingActivity.this, R.color.errorEditText)));
+                                notifyUser("Password errata.");
                             }
                         }
                     });
-                    showPass = popupView.findViewById(R.id.showPass);
-                    showPass(et, showPass);
+                    showPass = popupViewProfile.findViewById(R.id.showPass);
+                    showPass(popupText, showPass);
                 }
             });
-
+            Button custom = findViewById(R.id.customize);
             custom.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    goToCustomizeActivity(usr);
+                    goToCustomizeActivity();
                 }
             });
-
+            Button pdf = findViewById(R.id.pdf);
             pdf.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
-                    final View popupView = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_security_password, (ViewGroup) findViewById(R.id.passSecurityPopup));
-                    final PopupWindow popupWindow = new PopupWindow(popupView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
-                    popupWindow.setOutsideTouchable(true);
-                    popupWindow.setFocusable(true);
-                    //noinspection deprecation
-                    popupWindow.setBackgroundDrawable(new BitmapDrawable());
-                    View parent = cl.getRootView();
-                    popupWindow.showAtLocation(parent, Gravity.CENTER, 0, 0);
-                    final EditText et = popupView.findViewById(R.id.passSecurityEditText);
-                    Button conf = popupView.findViewById(R.id.confirmation);
+                    final View popupViewPdf = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_security_password, (ViewGroup) findViewById(R.id.passSecurityPopup));
+                    final PopupWindow popupWindowPdf = new PopupWindow(popupViewPdf, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+                    popupWindowPdf.setOutsideTouchable(true);
+                    popupWindowPdf.setFocusable(true);
+                    popupWindowPdf.setBackgroundDrawable(new BitmapDrawable());
+                    View parent = layoutSettingActivity.getRootView();
+                    popupWindowPdf.showAtLocation(parent, Gravity.CENTER, 0, 0);
+                    final EditText popupText = popupViewPdf.findViewById(R.id.passSecurityEditText);
+                    Button conf = popupViewPdf.findViewById(R.id.confirmation);
                     conf.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            et.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(SettingActivity.this, R.color.colorAccent)));
-                            if (et.getText().toString().equals(usr.getPassword())) {
-                                popupWindow.dismiss();
+                            popupText.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(SettingActivity.this, R.color.colorAccent)));
+                            if (popupText.getText().toString().equals(usr.getPassword())) {
+                                popupWindowPdf.dismiss();
                                 LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
                                 final View popupViewChoseCat = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_pdf_chose_category, (ViewGroup) findViewById(R.id.pdfChoseCategoryPopup));
                                 final PopupWindow popupWindowChoseCat = new PopupWindow(popupViewChoseCat, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
                                 popupWindowChoseCat.setOutsideTouchable(true);
                                 popupWindowChoseCat.setFocusable(true);
-                                //noinspection deprecation
                                 popupWindowChoseCat.setBackgroundDrawable(new BitmapDrawable());
-                                View parent = cl.getRootView();
+                                View parent = layoutSettingActivity.getRootView();
                                 popupWindowChoseCat.showAtLocation(parent, Gravity.CENTER, 0, 0);
                                 final Button selectAll = popupViewChoseCat.findViewById(R.id.select_all_cat_pdf);
                                 int i = 0;
-                                for (Category c : mngCat.deserializationListCategory(SettingActivity.this, usr.getUser())) {
+                                for (Category singleCategory : mngCat.deserializationListCategory(SettingActivity.this, usr.getUser())) {
                                     CheckBox checkBox = new CheckBox(SettingActivity.this);
                                     checkBox.setId(i);
-                                    checkBox.setText(c.getCat());
+                                    checkBox.setText(singleCategory.getCat());
                                     checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                                         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                                             boolean bool = true;
@@ -208,7 +201,6 @@ public class SettingActivity extends AppCompatActivity {
                                     @Override
                                     public void onClick(View view) {
                                         int i = 0;
-
                                         if (selectAll.getText().toString().toLowerCase().equals("seleziona tutto")) {
                                             for (Category ignored : mngCat.deserializationListCategory(SettingActivity.this, usr.getUser())) {
                                                 CheckBox checkBox = popupViewChoseCat.findViewById(i);
@@ -246,132 +238,124 @@ public class SettingActivity extends AppCompatActivity {
                                             i++;
                                         }
                                         if (listCategoryPdf.isEmpty()) {
-                                            notifyUser("Non hai selezionato nessuna categoria!!!");
+                                            notifyUser("Non hai selezionato nessuna categoria.");
                                             return;
                                         } else popupWindowChoseCat.dismiss();
                                         LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
-                                        @SuppressLint("InflateParams") final View popupView = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_pdf, null);
-                                        final PopupWindow popupWindow = new PopupWindow(popupView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
-                                        popupWindow.setOutsideTouchable(true);
-                                        popupWindow.setFocusable(true);
-                                        //noinspection deprecation
-                                        popupWindow.setBackgroundDrawable(new BitmapDrawable());
-                                        View parent = cl.getRootView();
-                                        popupWindow.showAtLocation(parent, Gravity.CENTER, 0, 0);
-                                        final RadioGroup rg1 = popupView.findViewById(R.id.sortPDF);
-                                        final RadioGroup rg2 = popupView.findViewById(R.id.orientationPDF);
-                                        final RadioButton rb1 = popupView.findViewById(R.id.increasing);
-                                        final RadioButton rb2 = popupView.findViewById(R.id.horizontal);
-                                        rg1.check(rb1.getId());
-                                        rg2.check(rb2.getId());
-                                        Button conf = popupView.findViewById(R.id.confirmation);
+                                        View popupViewCreatePdf = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_pdf, (ViewGroup) findViewById(R.id.popupPdf));
+                                        final PopupWindow popupWindowCreatePdf = new PopupWindow(popupViewCreatePdf, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+                                        popupWindowCreatePdf.setOutsideTouchable(true);
+                                        popupWindowCreatePdf.setFocusable(true);
+                                        popupWindowCreatePdf.setBackgroundDrawable(new BitmapDrawable());
+                                        View parent = layoutSettingActivity.getRootView();
+                                        popupWindowCreatePdf.showAtLocation(parent, Gravity.CENTER, 0, 0);
+                                        final RadioGroup radioGroupSortPdf = popupViewCreatePdf.findViewById(R.id.sortPDF);
+                                        final RadioGroup radioGroupOrientationPdf = popupViewCreatePdf.findViewById(R.id.orientationPDF);
+                                        final RadioButton radioButtonIncreasing = popupViewCreatePdf.findViewById(R.id.increasing);
+                                        final RadioButton radioButtonHorizontal = popupViewCreatePdf.findViewById(R.id.horizontal);
+                                        radioGroupSortPdf.check(radioButtonIncreasing.getId());
+                                        radioGroupOrientationPdf.check(radioButtonHorizontal.getId());
+                                        Button conf = popupViewCreatePdf.findViewById(R.id.confirmation);
                                         conf.setOnClickListener(new View.OnClickListener() {
                                             @Override
                                             public void onClick(View v) {
-                                                if (rg1.getCheckedRadioButtonId() == rb1.getId()) {
+                                                if (radioGroupSortPdf.getCheckedRadioButtonId() == radioButtonIncreasing.getId()) {
                                                     path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/PDF_Accounts/";
                                                     dir = new File(path);
                                                     if (!dir.exists()) dir.mkdirs();
-                                                    if (rg2.getCheckedRadioButtonId() == rb2.getId()) {
-                                                        ArrayList<Category> lCP = new ArrayList<>();
-                                                        for (Category c : listCategoryPdf) {
-                                                            ArrayList<Account> listApp = (increasing(c.getListAcc()));
-                                                            c.setListAcc(listApp);
-                                                            Log.d("stiamomessibene", c.getCat() + c.getListAcc().size());
-                                                            lCP.add(c);
+                                                    if (radioGroupOrientationPdf.getCheckedRadioButtonId() == radioButtonHorizontal.getId()) {
+                                                        ArrayList<Category> listCategoryApp = new ArrayList<>();
+                                                        for (Category singleCategory : listCategoryPdf) {
+                                                            ArrayList<Account> listApp = (increasing(singleCategory.getListAcc()));
+                                                            singleCategory.setListAcc(listApp);
+                                                            listCategoryApp.add(singleCategory);
                                                         }
-                                                        createPDF(usr, listCategoryPdf, path, dir, true);
+                                                        createPDF(listCategoryPdf, path, dir, true);
                                                     } else {
-                                                        ArrayList<Category> lCP = new ArrayList<>();
-                                                        for (Category c : listCategoryPdf) {
-                                                            ArrayList<Account> listApp = (increasing(c.getListAcc()));
-                                                            c.setListAcc(listApp);
-                                                            Log.d("stiamomessibene", c.getCat() + c.getListAcc().size());
-                                                            lCP.add(c);
+                                                        ArrayList<Category> listCategoryApp = new ArrayList<>();
+                                                        for (Category singleCategory : listCategoryPdf) {
+                                                            ArrayList<Account> listApp = (increasing(singleCategory.getListAcc()));
+                                                            singleCategory.setListAcc(listApp);
+                                                            listCategoryApp.add(singleCategory);
                                                         }
-                                                        createPDF(usr, listCategoryPdf, path, dir, false);
+                                                        createPDF(listCategoryPdf, path, dir, false);
                                                     }
-                                                    popupWindow.dismiss();
-
+                                                    popupWindowCreatePdf.dismiss();
                                                 } else {
                                                     path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/PDF_Accounts/";
                                                     dir = new File(path);
                                                     if (!dir.exists()) dir.mkdirs();
-                                                    if (rg2.getCheckedRadioButtonId() == rb2.getId()) {
-                                                        ArrayList<Category> lCP = new ArrayList<>();
-                                                        for (Category c : listCategoryPdf) {
-                                                            ArrayList<Account> listApp = (decreasing(c.getListAcc()));
-                                                            c.setListAcc(listApp);
-                                                            Log.d("stiamomessibene", c.getCat() + c.getListAcc().size());
-                                                            lCP.add(c);
+                                                    if (radioGroupOrientationPdf.getCheckedRadioButtonId() == radioButtonHorizontal.getId()) {
+                                                        ArrayList<Category> listCategoryApp = new ArrayList<>();
+                                                        for (Category singleCategory : listCategoryPdf) {
+                                                            ArrayList<Account> listApp = (decreasing(singleCategory.getListAcc()));
+                                                            singleCategory.setListAcc(listApp);
+                                                            listCategoryApp.add(singleCategory);
                                                         }
-                                                        createPDF(usr, listCategoryPdf, path, dir, true);
+                                                        createPDF(listCategoryPdf, path, dir, true);
                                                     } else {
-                                                        ArrayList<Category> lCP = new ArrayList<>();
-                                                        for (Category c : listCategoryPdf) {
-                                                            ArrayList<Account> listApp = (decreasing(c.getListAcc()));
-                                                            c.setListAcc(listApp);
-                                                            Log.d("stiamomessibene", c.getCat() + c.getListAcc().size());
-                                                            lCP.add(c);
+                                                        ArrayList<Category> listCategoryApp = new ArrayList<>();
+                                                        for (Category singleCategory : listCategoryPdf) {
+                                                            ArrayList<Account> listApp = (decreasing(singleCategory.getListAcc()));
+                                                            singleCategory.setListAcc(listApp);
+                                                            listCategoryApp.add(singleCategory);
                                                         }
-                                                        createPDF(usr, listCategoryPdf, path, dir, false);
+                                                        createPDF(listCategoryPdf, path, dir, false);
                                                     }
-                                                    popupWindow.dismiss();
+                                                    popupWindowCreatePdf.dismiss();
                                                 }
                                             }
                                         });
                                     }
                                 });
                             } else {
-                                et.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(SettingActivity.this, R.color.errorEditText)));
-                                notifyUser("Password errata! Riprova");
+                                popupText.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(SettingActivity.this, R.color.errorEditText)));
+                                notifyUser("Password errata.");
                             }
-                            showPass = popupView.findViewById(R.id.showPass);
-                            showPass(et, showPass);
+                            showPass = popupViewPdf.findViewById(R.id.showPass);
+                            showPass(popupText, showPass);
                         }
                     });
                 }
             });
-
-
+            Button delProf = findViewById(R.id.deleteProfile);
             delProf.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
-                    final View popupView = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_security_password, (ViewGroup) findViewById(R.id.passSecurityPopup));
-                    final PopupWindow popupWindow = new PopupWindow(popupView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
-                    popupWindow.setOutsideTouchable(true);
-                    popupWindow.setFocusable(true);
-                    //noinspection deprecation
-                    popupWindow.setBackgroundDrawable(new BitmapDrawable());
-                    View parent = cl.getRootView();
-                    popupWindow.showAtLocation(parent, Gravity.CENTER, 0, 0);
-                    final EditText et = popupView.findViewById(R.id.passSecurityEditText);
-                    Button conf = popupView.findViewById(R.id.confirmation);
+                    View popupViewDeleteProfile = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_security_password, (ViewGroup) findViewById(R.id.passSecurityPopup));
+                    final PopupWindow popupWindowDeleteProfile = new PopupWindow(popupViewDeleteProfile, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+                    popupWindowDeleteProfile.setOutsideTouchable(true);
+                    popupWindowDeleteProfile.setFocusable(true);
+                    popupWindowDeleteProfile.setBackgroundDrawable(new BitmapDrawable());
+                    View parent = layoutSettingActivity.getRootView();
+                    popupWindowDeleteProfile.showAtLocation(parent, Gravity.CENTER, 0, 0);
+                    final EditText popupText = popupViewDeleteProfile.findViewById(R.id.passSecurityEditText);
+                    Button conf = popupViewDeleteProfile.findViewById(R.id.confirmation);
                     conf.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            et.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(SettingActivity.this, R.color.colorAccent)));
-                            if (et.getText().toString().equals(usr.getPassword())) {
+                            popupText.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(SettingActivity.this, R.color.colorAccent)));
+                            if (popupText.getText().toString().equals(usr.getPassword())) {
                                 log = new LogApp();
                                 mngApp.serializationFlag(SettingActivity.this, log);
                                 listUser.remove(usr);
                                 mngUsr.serializationListUser(SettingActivity.this, listUser);
                                 mngCat.removeFileCategory(SettingActivity.this, usr.getUser());
                                 goToMainActivity();
-                                popupWindow.dismiss();
+                                popupWindowDeleteProfile.dismiss();
                             } else {
-                                et.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(SettingActivity.this, R.color.errorEditText)));
-                                notifyUser("Password errata! Riprova");
+                                popupText.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(SettingActivity.this, R.color.errorEditText)));
+                                notifyUser("Password errata.");
                             }
                         }
                     });
-                    showPass = popupView.findViewById(R.id.showPass);
-                    showPass(et, showPass);
+                    showPass = popupViewDeleteProfile.findViewById(R.id.showPass);
+                    showPass(popupText, showPass);
                 }
             });
         } else {
-            notifyUser("Utente non rilevato. Impossibile aprire le impostazioni.");
+            notifyUser("Credenziali non rilevate. Impossibile aprire le impostazioni.");
             goToMainActivity();
         }
     }
@@ -395,16 +379,24 @@ public class SettingActivity extends AppCompatActivity {
         finish();
     }
 
-    public void goToProfileActivity(User usr) {
+    public void goToProfileActivity() {
         Intent intent = new Intent(SettingActivity.this, ProfileActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("owner", usr);
         startActivity(intent);
+        finish();
     }
 
-    public void goToCustomizeActivity(User usr) {
+    public void goToCustomizeActivity() {
         Intent intent = new Intent(SettingActivity.this, CustomizeActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("owner", usr);
         startActivity(intent);
+        finish();
     }
 
     private void notifyUser(String message) {
@@ -417,7 +409,7 @@ public class SettingActivity extends AppCompatActivity {
         goToCategoryActivity();
     }
 
-    public void createPDF(User usr, ArrayList<Category> listCategory, String path, File dir, Boolean b) {
+    public void createPDF(ArrayList<Category> listCategory, String path, File dir, Boolean b) {
         Document doc;
         Font font;
         File file;
@@ -603,16 +595,14 @@ public class SettingActivity extends AppCompatActivity {
                     doc.add(pt);
                 }
                 if (b)
-                    notifyUser("PDF creato in " + path + "Lista account di " + usr.getUser() + sdf.format(Calendar.getInstance().getTime()) + "Orizzontale.pdf");
+                    notifyUser(Html.fromHtml("PDF creato in <b>" + path + "Lista account di " + usr.getUser() + sdf.format(Calendar.getInstance().getTime()) + "Orizzontale.pdf</b>", HtmlCompat.FROM_HTML_MODE_LEGACY).toString());
                 else
-                    notifyUser("PDF creato in " + path + "Lista account di " + usr.getUser() + sdf.format(Calendar.getInstance().getTime()) + "Verticale.pdf");
-            } catch (DocumentException de) {
-                Log.e("PDFCreator", "DocumentException:" + de);
+                    notifyUser(Html.fromHtml("PDF creato in <b>" + path + "Lista account di " + usr.getUser() + sdf.format(Calendar.getInstance().getTime()) + "Verticale.pdf</b>", HtmlCompat.FROM_HTML_MODE_LEGACY).toString());
+            } catch (Exception ignored) {
             } finally {
                 doc.close();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ignored) {
         }
     }
 
@@ -640,7 +630,6 @@ public class SettingActivity extends AppCompatActivity {
     public void showPass(final EditText et, ImageButton showPass) {
         showPass.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
-
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         et.setInputType(InputType.TYPE_NULL);

@@ -75,12 +75,10 @@ public class ManageCategory {
         return false;
     }
 
-
-    boolean notFind(Account acc, ArrayList<Account> list) {
+    boolean accountNotFound(Account acc, ArrayList<Account> list) {
         for (Account a : list)
             if (a.getName().toLowerCase().equals(acc.getName().toLowerCase()))
                 return false;
         return true;
     }
-
 }

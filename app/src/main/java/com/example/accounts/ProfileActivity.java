@@ -31,19 +31,20 @@ import com.google.android.material.appbar.AppBarLayout;
 import java.util.ArrayList;
 import java.util.Objects;
 
+@SuppressWarnings("deprecation")
 public class ProfileActivity extends AppCompatActivity {
-    private CoordinatorLayout cl;
+    private CoordinatorLayout layoutProfileActivity;
+    private ManageApp mngApp;
     private ManageUser mngUsr;
+    private ManageCategory mngCat;
+    private LogApp log;
     private User usr;
     private ArrayList<User> listUser;
-    private ManageApp mngApp;
-    private LogApp log;
+    private ArrayList<Category> listCategory;
     private TextView profile;
-    private TextView profile2;
+    private TextView profileToolbar;
     private ImageButton showPass;
     private ImageButton showPass2;
-    private ManageCategory mngCat;
-    private ArrayList<Category> listCategory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,19 +53,13 @@ public class ProfileActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.profileToolbar);
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
-        User owner = (User) (Objects.requireNonNull(getIntent().getExtras())).get("owner");
-        cl = findViewById(R.id.profileActivityLay);
-        Button editUser = findViewById(R.id.editProfUsername);
-        Button editPass = findViewById(R.id.editProfPassword);
-        Switch flagProfApp = findViewById(R.id.flagProfApp);
-        profile = findViewById(R.id.profileText);
-        profile2 = findViewById(R.id.profileTextToolbar);
-        profile2.setVisibility(View.INVISIBLE);
+        layoutProfileActivity = findViewById(R.id.profileActivityLay);
         mngUsr = new ManageUser();
         listUser = mngUsr.deserializationListUser(this);
-        usr = mngUsr.findUser(listUser, Objects.requireNonNull(owner).getUser());
+        usr = mngUsr.findUser(listUser, ((User) Objects.requireNonNull((Objects.requireNonNull(getIntent().getExtras())).get("owner"))).getUser());
         if (usr != null) {
             mngCat = new ManageCategory();
+            Switch flagProfApp = findViewById(R.id.flagProfApp);
             if (usr.getFinger()) {
                 flagProfApp.setChecked(true);
             }
@@ -75,16 +70,19 @@ public class ProfileActivity extends AppCompatActivity {
                         usr.setFinger(true);
                         listUser.add(usr);
                         mngUsr.serializationListUser(ProfileActivity.this, listUser);
-                        notifyUser("Autenticazione biometrica abilitata");
+                        notifyUser("Autenticazione biometrica abilitata.");
                     } else {
                         listUser.remove(usr);
                         usr.setFinger(false);
                         listUser.add(usr);
                         mngUsr.serializationListUser(ProfileActivity.this, listUser);
-                        notifyUser("Autenticazione biometrica disabilitata");
+                        notifyUser("Autenticazione biometrica disabilitata.");
                     }
                 }
             });
+            profile = findViewById(R.id.profileText);
+            profileToolbar = findViewById(R.id.profileTextToolbar);
+            profileToolbar.setVisibility(View.INVISIBLE);
             AppBarLayout appBar = findViewById(R.id.profileBarToolbar);
             appBar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
                 boolean isShow = false;
@@ -98,41 +96,41 @@ public class ProfileActivity extends AppCompatActivity {
                     }
                     if (scrollRange + verticalOffset == 0) {
                         isShow = true;
-                        profile2.setVisibility(View.VISIBLE);
+                        profileToolbar.setVisibility(View.VISIBLE);
                     } else if (isShow) {
                         isShow = false;
-                        profile2.setVisibility(View.INVISIBLE);
+                        profileToolbar.setVisibility(View.INVISIBLE);
                     }
                 }
             });
+            Button editUser = findViewById(R.id.editProfUsername);
             editUser.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
-                    final View popupView = Objects.requireNonNull(layoutInflater).inflate(R.layout.edit_user, (ViewGroup) findViewById(R.id.editUserLayout));
-                    final PopupWindow popupWindow = new PopupWindow(popupView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
-                    popupWindow.setOutsideTouchable(true);
-                    popupWindow.setFocusable(true);
-                    //noinspection deprecation
-                    popupWindow.setBackgroundDrawable(new BitmapDrawable());
-                    View parent = cl.getRootView();
-                    popupWindow.showAtLocation(parent, Gravity.CENTER, 0, 0);
-                    final EditText username = popupView.findViewById(R.id.userEditText);
-                    Button save = popupView.findViewById(R.id.saveUsrEditButton);
+                    View popupViewUser = Objects.requireNonNull(layoutInflater).inflate(R.layout.edit_user, (ViewGroup) findViewById(R.id.editUserLayout));
+                    final PopupWindow popupWindowUser = new PopupWindow(popupViewUser, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+                    popupWindowUser.setOutsideTouchable(true);
+                    popupWindowUser.setFocusable(true);
+                    popupWindowUser.setBackgroundDrawable(new BitmapDrawable());
+                    View parent = layoutProfileActivity.getRootView();
+                    popupWindowUser.showAtLocation(parent, Gravity.CENTER, 0, 0);
+                    final EditText popupText = popupViewUser.findViewById(R.id.userEditText);
+                    Button save = popupViewUser.findViewById(R.id.saveUsrEditButton);
                     save.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             User usrApp = usr;
-                            username.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(ProfileActivity.this, R.color.colorAccent)));
-                            if (notFieldCheck(username.getText().toString())) {
-                                username.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(ProfileActivity.this, R.color.errorEditText)));
+                            popupText.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(ProfileActivity.this, R.color.colorAccent)));
+                            if (notFieldCheck(popupText.getText().toString())) {
+                                popupText.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(ProfileActivity.this, R.color.errorEditText)));
                                 return;
                             }
-                            if (mngUsr.notFindUser(new User(username.getText().toString(), "", false, 0), listUser)) {
+                            if (mngUsr.notFindUser(new User(popupText.getText().toString(), "", false, 0), listUser)) {
                                 listCategory = mngCat.deserializationListCategory(ProfileActivity.this, usrApp.getUser());
                                 mngCat.removeFileCategory(ProfileActivity.this, usrApp.getUser());
                                 listUser.remove(usrApp);
-                                usr.setUser(fixName(username.getText().toString()));
+                                usr.setUser(fixName(popupText.getText().toString()));
                                 mngCat.serializationListCategory(ProfileActivity.this, listCategory, usr.getUser());
                                 listUser.add(usr);
                                 mngUsr.serializationListUser(ProfileActivity.this, listUser);
@@ -142,31 +140,31 @@ public class ProfileActivity extends AppCompatActivity {
                                     log.setUser(usr.getUser());
                                     mngApp.serializationFlag(ProfileActivity.this, log);
                                 }
-                                notifyUser("Username cambiato con successo");
-                                popupWindow.dismiss();
+                                notifyUser("Username cambiato con successo.");
+                                popupWindowUser.dismiss();
                             } else {
-                                username.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(ProfileActivity.this, R.color.errorEditText)));
-                                notifyUser("Username gia esistente");
+                                popupText.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(ProfileActivity.this, R.color.errorEditText)));
+                                notifyUser("Username gia esistente.");
                             }
                         }
                     });
                 }
             });
+            Button editPass = findViewById(R.id.editProfPassword);
             editPass.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
-                    final View popupView = Objects.requireNonNull(layoutInflater).inflate(R.layout.edit_password, (ViewGroup) findViewById(R.id.edit_password_layout));
-                    final PopupWindow popupWindow = new PopupWindow(popupView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
-                    popupWindow.setOutsideTouchable(true);
-                    popupWindow.setFocusable(true);
-                    //noinspection deprecation
-                    popupWindow.setBackgroundDrawable(new BitmapDrawable());
-                    View parent = cl.getRootView();
-                    popupWindow.showAtLocation(parent, Gravity.CENTER, 0, 0);
-                    final EditText password = popupView.findViewById(R.id.passEditText);
-                    final EditText password2 = popupView.findViewById(R.id.passEditText2);
-                    Button save = popupView.findViewById(R.id.savePassEditButton);
+                    View popupViewPassword = Objects.requireNonNull(layoutInflater).inflate(R.layout.edit_password, (ViewGroup) findViewById(R.id.edit_password_layout));
+                    final PopupWindow popupWindowPassword = new PopupWindow(popupViewPassword, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+                    popupWindowPassword.setOutsideTouchable(true);
+                    popupWindowPassword.setFocusable(true);
+                    popupWindowPassword.setBackgroundDrawable(new BitmapDrawable());
+                    View parent = layoutProfileActivity.getRootView();
+                    popupWindowPassword.showAtLocation(parent, Gravity.CENTER, 0, 0);
+                    final EditText password = popupViewPassword.findViewById(R.id.passEditText);
+                    final EditText password2 = popupViewPassword.findViewById(R.id.passEditText2);
+                    Button save = popupViewPassword.findViewById(R.id.savePassEditButton);
                     save.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -179,25 +177,25 @@ public class ProfileActivity extends AppCompatActivity {
                             if (!password.getText().toString().equals(password2.getText().toString())) {
                                 password.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(ProfileActivity.this, R.color.errorEditText)));
                                 password2.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(ProfileActivity.this, R.color.errorEditText)));
-                                notifyUser("Le password non corrispondono");
+                                notifyUser("Le password non corrispondono.");
                                 return;
                             }
                             listUser.remove(usr);
                             usr.setPassword(password.getText().toString());
                             listUser.add(usr);
                             mngUsr.serializationListUser(ProfileActivity.this, listUser);
-                            notifyUser("Password cambiata con successo");
-                            popupWindow.dismiss();
+                            notifyUser("Password cambiata con successo.");
+                            popupWindowPassword.dismiss();
                         }
                     });
-                    showPass = popupView.findViewById(R.id.showPass);
+                    showPass = popupViewPassword.findViewById(R.id.showPass);
                     showPass(password, showPass);
-                    showPass2 = popupView.findViewById(R.id.showPass2);
+                    showPass2 = popupViewPassword.findViewById(R.id.showPass2);
                     showPass(password2, showPass2);
                 }
             });
         } else {
-            notifyUser("Utente non rilevato. Impossibile settare i parametri di autenticazione.");
+            notifyUser("Credenziali non rilevate. Impossibile settare i parametri di autenticazione.");
             goToMainActivity();
         }
     }
@@ -232,7 +230,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     public boolean notFieldCheck(String s) {
         if (isInvalidWord(s)) {
-            notifyUser("Campo non valido !!!");
+            notifyUser("Campo non valido.");
             return true;
         }
         return false;
@@ -252,7 +250,6 @@ public class ProfileActivity extends AppCompatActivity {
     public void showPass(final EditText et, ImageButton showPass) {
         showPass.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
-
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         et.setInputType(InputType.TYPE_NULL);

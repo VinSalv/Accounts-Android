@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.ActionMode;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -24,6 +25,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.text.HtmlCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
@@ -36,28 +38,29 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Objects;
 
+@SuppressWarnings("deprecation")
 public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener, ActionMode.Callback {
-    boolean doubleBackToExitPressedOnce;
-    private CoordinatorLayout cl;
+    private CoordinatorLayout layoutViewActivity;
     private ManageApp mngApp;
+    private ManageUser mngUsr;
+    private ManageCategory mngCat;
+    private RecyclerViewAdapter mAdapter;
+    private ArrayList<Category> listCategory;
+    private ArrayList<String> selectedIds;
+    private TextView textView;
+    private TextView textViewMini;
+    private TextView textViewToolbar;
     private LogApp log;
+    private User usr;
+    private Category category;
     private Button settingsButton;
     private Button searchButton;
-    private User usr;
-    private TextView wellcome;
-    private TextView wellcomeMini;
-    private TextView wellcome2;
-    private RecyclerViewAdapter mAdapter;
-    private boolean isMultiSelect;
-    private ArrayList<String> selectedIds;
+    private FloatingActionButton floatingButtonSetting;
+    private FloatingActionButton floatingButtonSearch;
+    private FloatingActionButton floatingButtonAddNewAccount;
+    private boolean b;
     private ActionMode actionMode;
-    private FloatingActionButton setting;
-    private FloatingActionButton search;
-    private FloatingActionButton add;
-    private ManageCategory mngCat;
-    private ArrayList<Category> listCategory;
-    private Category cat;
-    private Boolean b;
+    private boolean isMultiSelect;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -67,52 +70,45 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         final Toolbar toolbar = findViewById(R.id.viewToolbar);
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
-        User owner = (User) (Objects.requireNonNull(getIntent().getExtras())).get("owner");
-        cat = (Category) (Objects.requireNonNull(getIntent().getExtras())).get("category");
-        cl = findViewById(R.id.viewActivityLay);
+        layoutViewActivity = findViewById(R.id.viewActivityLay);
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         isMultiSelect = false;
-        doubleBackToExitPressedOnce = false;
         mngApp = new ManageApp();
         log = mngApp.deserializationFlag(this);
-        ManageUser mngUsr = new ManageUser();
+        mngUsr = new ManageUser();
         ArrayList<User> listUser = mngUsr.deserializationListUser(this);
-        usr = mngUsr.findUser(listUser, Objects.requireNonNull(owner).getUser());
+        usr = mngUsr.findUser(listUser, ((User) Objects.requireNonNull((Objects.requireNonNull(getIntent().getExtras())).get("owner"))).getUser());
         if (usr != null) {
             b = false;
             mngCat = new ManageCategory();
             listCategory = mngCat.deserializationListCategory(this, usr.getUser());
-            cat = mngCat.findAndGetCategory(listCategory, Objects.requireNonNull(cat).getCat());
-            if (cat != null) {
-                if (cat.getSort() == 1) {
-                    if (cat.getListAcc() != null) {
-                        listCategory.remove(cat);
-                        cat.setListAcc(increasing(cat.getListAcc()));
-                        listCategory.add(cat);
-                        mngCat.serializationListCategory(this, listCategory, cat.getCat());
+            category = mngCat.findAndGetCategory(listCategory, ((Category) Objects.requireNonNull((Objects.requireNonNull(getIntent().getExtras())).get("category"))).getCat());
+            if (category != null) {
+                if (category.getSort() == 1) {
+                    if (category.getListAcc() != null) {
+                        listCategory.remove(category);
+                        category.setListAcc(increasing(category.getListAcc()));
+                        listCategory.add(category);
+                        mngCat.serializationListCategory(this, listCategory, category.getCat());
                     }
                 } else if (usr.getSort() == 2) {
-                    if (cat.getListAcc() != null) {
-                        listCategory.remove(cat);
-                        cat.setListAcc(decreasing(cat.getListAcc()));
-                        listCategory.add(cat);
-                        mngCat.serializationListCategory(this, listCategory, cat.getCat());
+                    if (category.getListAcc() != null) {
+                        listCategory.remove(category);
+                        category.setListAcc(decreasing(category.getListAcc()));
+                        listCategory.add(category);
+                        mngCat.serializationListCategory(this, listCategory, category.getCat());
                     }
                 }
-                wellcome = findViewById(R.id.wellcomeText);
-                wellcome.setText(cat.getCat());
-                wellcomeMini = findViewById(R.id.wellcomeMiniText);
-                if (cat.getListAcc() != null)
-                    wellcomeMini.setText("Numero account: " + cat.getListAcc().size());
+                textView = findViewById(R.id.wellcomeText);
+                textView.setText(category.getCat());
+                textViewMini = findViewById(R.id.wellcomeMiniText);
+                if (category.getListAcc() != null)
+                    textViewMini.setText(Html.fromHtml("Numero account: <b>" + category.getListAcc().size() + "</b>", HtmlCompat.FROM_HTML_MODE_LEGACY));
                 else
-                    wellcomeMini.setText("Numero account: 0");
-                wellcome2 = findViewById(R.id.wellcomeTextToolbar);
-                wellcome2.setText("Lista della categoria " + cat.getCat());
-                wellcome2.setVisibility(View.INVISIBLE);
-                settingsButton = findViewById(R.id.settingsButton);
-                settingsButton.setVisibility(View.INVISIBLE);
-                searchButton = findViewById(R.id.searchButton);
-                searchButton.setVisibility(View.INVISIBLE);
+                    textViewMini.setText(Html.fromHtml("Numero account: <b>0</b>", HtmlCompat.FROM_HTML_MODE_LEGACY));
+                textViewToolbar = findViewById(R.id.wellcomeTextToolbar);
+                textViewToolbar.setText(Html.fromHtml("Lista della categoria <b>" + category.getCat() + "</b>", HtmlCompat.FROM_HTML_MODE_LEGACY));
+                textViewToolbar.setVisibility(View.INVISIBLE);
                 AppBarLayout appBar = findViewById(R.id.viewBarToolbar);
                 appBar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
                     boolean isShow = false;
@@ -120,59 +116,62 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
                     @Override
                     public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                        wellcome.setAlpha((1.0f - (float) Math.abs(verticalOffset) / appBarLayout.getTotalScrollRange()));
-                        wellcomeMini.setAlpha((1.0f - (float) Math.abs(verticalOffset) / appBarLayout.getTotalScrollRange()));
+                        textView.setAlpha((1.0f - (float) Math.abs(verticalOffset) / appBarLayout.getTotalScrollRange()));
+                        textViewMini.setAlpha((1.0f - (float) Math.abs(verticalOffset) / appBarLayout.getTotalScrollRange()));
                         if (scrollRange == -1) {
                             scrollRange = appBarLayout.getTotalScrollRange();
                         }
                         if (scrollRange + verticalOffset == 0) {
                             isShow = true;
-                            wellcome2.setVisibility(View.VISIBLE);
+                            textViewToolbar.setVisibility(View.VISIBLE);
                             settingsButton.setVisibility(View.VISIBLE);
                             searchButton.setVisibility(View.VISIBLE);
                         } else if (isShow) {
                             isShow = false;
-                            wellcome2.setVisibility(View.INVISIBLE);
+                            textViewToolbar.setVisibility(View.INVISIBLE);
                             settingsButton.setVisibility(View.INVISIBLE);
                             searchButton.setVisibility(View.INVISIBLE);
                         }
                     }
                 });
-                setting = findViewById(R.id.settingsFloatingButton);
-                setting.setOnClickListener(new View.OnClickListener() {
+                searchButton = findViewById(R.id.searchButton);
+                searchButton.setVisibility(View.INVISIBLE);
+                searchButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        popupMenu(R.style.rounded_menu_style, R.menu.popup_account, v);
+                        goToSearchActivity();
                     }
                 });
+                settingsButton = findViewById(R.id.settingsButton);
+                settingsButton.setVisibility(View.INVISIBLE);
                 settingsButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         popupMenu(R.style.rounded_menu_style_toolbar, R.menu.popup_account, v);
                     }
                 });
-                search = findViewById(R.id.searchFloatingButton);
-                search.setOnClickListener(new View.OnClickListener() {
+                floatingButtonSearch = findViewById(R.id.searchFloatingButton);
+                floatingButtonSearch.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        goToSearchActivity(usr);
+                        goToSearchActivity();
                     }
                 });
-                searchButton.setOnClickListener(new View.OnClickListener() {
+                floatingButtonSetting = findViewById(R.id.settingsFloatingButton);
+                floatingButtonSetting.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        goToSearchActivity(usr);
+                        popupMenu(R.style.rounded_menu_style, R.menu.popup_account, v);
                     }
                 });
-                add = findViewById(R.id.addFloatingButton);
-                add.setOnClickListener(new View.OnClickListener() {
+                floatingButtonAddNewAccount = findViewById(R.id.addFloatingButton);
+                floatingButtonAddNewAccount.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        goToAddActivity(usr);
+                        goToAddActivity();
                     }
                 });
-
-                mAdapter = new RecyclerViewAdapter(this, usr, cat);
+                mAdapter = new RecyclerViewAdapter(this, usr, category);
                 ItemTouchHelper.Callback callback = new ItemMoveCallback(mAdapter);
                 ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
                 touchHelper.attachToRecyclerView(recyclerView);
@@ -186,7 +185,7 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                         if (isMultiSelect) {
                             multiSelect(position);
                         } else {
-                            goToShowElementActivity(usr, mAdapter.getItem(position), cat);
+                            goToShowElementActivity(mAdapter.getItem(position), category);
                         }
                     }
 
@@ -201,9 +200,14 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 goToMainActivity();
             }
         } else {
-            notifyUser("Utente non rilevato. Impossibile visualizzare la lista degli account.");
+            notifyUser("Credenziali non rilevate. Impossibile visualizzare la lista degli account.");
             goToMainActivity();
         }
+    }
+
+    public void refresh() {
+        startActivity(getIntent());
+        finish();
     }
 
     public void goToMainActivity() {
@@ -215,10 +219,10 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         finish();
     }
 
-    public void goToAddActivity(User usr) {
+    public void goToAddActivity() {
         Intent intent = new Intent(ViewActivity.this, AddActivity.class);
         intent.putExtra("owner", usr);
-        intent.putExtra("category", cat);
+        intent.putExtra("category", category);
         startActivity(intent);
     }
 
@@ -236,37 +240,32 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         Intent intent = new Intent(ViewActivity.this, CategoryChoseActivity.class);
         ArrayList<Account> acc = new ArrayList<>();
         for (String s : selectedIds)
-            acc.add(mngCat.findAndGetAccount(cat.getListAcc(), s));
+            acc.add(mngCat.findAndGetAccount(category.getListAcc(), s));
         intent.putExtra("owner", usr);
-        intent.putExtra("category", cat);
+        intent.putExtra("category", category);
         intent.putExtra("listAccount", acc);
         intent.putExtra("option", opt);
         startActivity(intent);
     }
 
-    public void goToShowElementActivity(User usr, Account acc, Category cat) {
+    public void goToShowElementActivity(Account account, Category category) {
         Intent intent = new Intent(ViewActivity.this, ShowElementActivity.class);
-        intent.putExtra("account", acc);
+        intent.putExtra("account", account);
         intent.putExtra("owner", usr);
-        intent.putExtra("category", cat);
+        intent.putExtra("category", category);
         startActivity(intent);
     }
 
-    public void goToSettingActivity(User usr) {
+    public void goToSettingActivity() {
         Intent intent = new Intent(ViewActivity.this, SettingActivity.class);
         intent.putExtra("owner", usr);
         startActivity(intent);
     }
 
-    public void goToSearchActivity(User usr) {
+    public void goToSearchActivity() {
         Intent intent = new Intent(ViewActivity.this, SearchActivity.class);
         intent.putExtra("owner", usr);
         startActivity(intent);
-    }
-
-    public void refresh() {
-        startActivity(getIntent());
-        finish();
     }
 
     @Override
@@ -276,7 +275,6 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             inflater.inflate(R.menu.my_context_menu_account, menu);
         else
             inflater.inflate(R.menu.my_context_menu_account_delete, menu);
-
         return true;
     }
 
@@ -292,10 +290,10 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 mAdapter.setSelectedIds(selectedIds);
             }
         }
-        if (selectedIds.size() == cat.getListAcc().size()) {
+        if (selectedIds.size() == category.getListAcc().size()) {
             Objects.requireNonNull(actionMode).getMenu().getItem(0).setTitle("Nessuno");
         } else Objects.requireNonNull(actionMode).getMenu().getItem(0).setTitle("Tutti");
-        Objects.requireNonNull(actionMode).setTitle("Sel: " + selectedIds.size());
+        Objects.requireNonNull(actionMode).setTitle(Html.fromHtml("Sel: <b>" + selectedIds.size() + "</b>", HtmlCompat.FROM_HTML_MODE_LEGACY));
     }
 
     @SuppressLint({"RestrictedApi", "SetTextI18n"})
@@ -304,41 +302,36 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         if (menuItem.getItemId() == R.id.delete_id) {
             if (!selectedIds.isEmpty()) {
                 LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
-                final View popupView = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_security, (ViewGroup) findViewById(R.id.popupSecurity));
-                final PopupWindow popupWindow = new PopupWindow(popupView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
-                popupWindow.setOutsideTouchable(true);
-                popupWindow.setFocusable(true);
-                //noinspection deprecation
-                popupWindow.setBackgroundDrawable(new BitmapDrawable());
-                View parent = cl.getRootView();
-                popupWindow.showAtLocation(parent, Gravity.CENTER, 0, 0);
-                TextView et = popupView.findViewById(R.id.securityText);
+                View popupViewSecurity = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_security, (ViewGroup) findViewById(R.id.popupSecurity));
+                final PopupWindow popupWindowSecurity = new PopupWindow(popupViewSecurity, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+                popupWindowSecurity.setOutsideTouchable(true);
+                popupWindowSecurity.setFocusable(true);
+                popupWindowSecurity.setBackgroundDrawable(new BitmapDrawable());
+                View parent = layoutViewActivity.getRootView();
+                popupWindowSecurity.showAtLocation(parent, Gravity.CENTER, 0, 0);
+                TextView popupText = popupViewSecurity.findViewById(R.id.securityText);
                 if (selectedIds.size() == 1)
-                    et.setText("Sei sicuro di voler eliminare " + selectedIds.get(0) + " nella lista " + cat.getCat() + "?");
+                    popupText.setText(Html.fromHtml("Sei sicuro di voler eliminare <b>" + selectedIds.get(0) + "</b> nella lista <b>" + category.getCat() + "</b>?", HtmlCompat.FROM_HTML_MODE_LEGACY));
                 else
-                    et.setText("Sei sicuro di voler eliminare questi " + selectedIds.size() + " account selezionati della lista " + cat.getCat() + "?");
-                Button yes = popupView.findViewById(R.id.yes);
-                Button no = popupView.findViewById(R.id.no);
+                    popupText.setText(Html.fromHtml("Sei sicuro di voler eliminare questi <b>" + selectedIds.size() + "</b> account selezionati della lista <b>" + category.getCat() + "</b>?", HtmlCompat.FROM_HTML_MODE_LEGACY));
+                Button yes = popupViewSecurity.findViewById(R.id.yes);
+                Button no = popupViewSecurity.findViewById(R.id.no);
                 yes.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        listCategory.remove(cat);
-                        ArrayList<Account> listToRemove = cat.getListAcc();
-                        for (String data : selectedIds) {
-                            for (Account a : cat.getListAcc()) {
-                                if (a.getName().toLowerCase().equals(data.toLowerCase())) {
-                                    listToRemove.remove(a);
+                        listCategory.remove(category);
+                        ArrayList<Account> listToRemove = category.getListAcc();
+                        for (String singleAccountString : selectedIds) {
+                            for (Account singleAccount : category.getListAcc()) {
+                                if (singleAccount.getName().toLowerCase().equals(singleAccountString.toLowerCase())) {
+                                    listToRemove.remove(singleAccount);
                                     break;
                                 }
                             }
                         }
-                        cat.setListAcc(listToRemove);
-                        listCategory.add(cat);
-                        if (selectedIds.size() == 1)
-                            notifyUser(selectedIds.get(0) + " è stato rimosso con successo!");
-                        else
-                            notifyUser(selectedIds.size() + " account sono stati rimossi con successo!");
-                        popupWindow.dismiss();
+                        category.setListAcc(listToRemove);
+                        listCategory.add(category);
+                        popupWindowSecurity.dismiss();
                         mngCat.serializationListCategory(ViewActivity.this, listCategory, usr.getUser());
                         refresh();
                     }
@@ -346,31 +339,26 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 no.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (selectedIds.size() == 1)
-                            notifyUser(selectedIds.get(0) + " non è stato rimosso.");
-                        else
-                            notifyUser("Nessun account è stato rimosso.");
-                        popupWindow.dismiss();
+                        popupWindowSecurity.dismiss();
                     }
                 });
             } else notifyUser("Nessun account è stato selezionato per la rimozione.");
             return true;
         }
         if (menuItem.getItemId() == R.id.select_all) {
-            String s = "Tutti";
-            if (menuItem.getTitle().toString().toLowerCase().equals(s.toLowerCase())) {
+            if (menuItem.getTitle().toString().toLowerCase().equals("tutti")) {
                 menuItem.setTitle("Nessuno");
                 selectedIds.clear();
-                for (Account a : cat.getListAcc()) {
-                    selectedIds.add(a.getName());
+                for (Account singleAccount : category.getListAcc()) {
+                    selectedIds.add(singleAccount.getName());
                 }
                 mAdapter.setSelectedIds(selectedIds);
-                Objects.requireNonNull(actionMode).setTitle("Sel: " + selectedIds.size());
+                Objects.requireNonNull(actionMode).setTitle(Html.fromHtml("Sel: <b>" + selectedIds.size() + "</b>", HtmlCompat.FROM_HTML_MODE_LEGACY));
             } else {
                 menuItem.setTitle("Tutti");
                 selectedIds.clear();
                 mAdapter.setSelectedIds(selectedIds);
-                Objects.requireNonNull(actionMode).setTitle("Sel: " + selectedIds.size());
+                Objects.requireNonNull(actionMode).setTitle(Html.fromHtml("Sel: <b>" + selectedIds.size() + "</b>", HtmlCompat.FROM_HTML_MODE_LEGACY));
             }
         }
         if (menuItem.getItemId() == R.id.copy_id) {
@@ -382,7 +370,7 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         if (menuItem.getItemId() == R.id.cut_id) {
             if (!selectedIds.isEmpty()) {
                 if (listCategory.size() <= 1)
-                    notifyUser("Non ci sono categorie su cui effetturare lo spostamento");
+                    notifyUser("Non ci sono categorie su cui effetturare lo spostamento.");
                 else
                     goToCategoryChoseActivity("cut");
             } else notifyUser("Nessun account è stato selezionato per lo spostamento.");
@@ -400,9 +388,9 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         mAdapter.setSelectedIds(new ArrayList<String>());
         settingsButton.setVisibility(View.VISIBLE);
         searchButton.setVisibility(View.VISIBLE);
-        setting.setVisibility(View.VISIBLE);
-        search.setVisibility(View.VISIBLE);
-        add.setVisibility(View.VISIBLE);
+        floatingButtonSetting.setVisibility(View.VISIBLE);
+        floatingButtonSearch.setVisibility(View.VISIBLE);
+        floatingButtonAddNewAccount.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -421,9 +409,9 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                     if (actionMode == null) {
                         settingsButton.setVisibility(View.GONE);
                         searchButton.setVisibility(View.GONE);
-                        setting.setVisibility(View.GONE);
-                        search.setVisibility(View.GONE);
-                        add.setVisibility(View.GONE);
+                        floatingButtonSetting.setVisibility(View.GONE);
+                        floatingButtonSearch.setVisibility(View.GONE);
+                        floatingButtonAddNewAccount.setVisibility(View.GONE);
                         b = false;
                         actionMode = startActionMode(ViewActivity.this);
                     }
@@ -437,11 +425,10 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                     if (actionMode == null) {
                         settingsButton.setVisibility(View.GONE);
                         searchButton.setVisibility(View.GONE);
-                        setting.setVisibility(View.GONE);
-                        search.setVisibility(View.GONE);
-                        add.setVisibility(View.GONE);
+                        floatingButtonSetting.setVisibility(View.GONE);
+                        floatingButtonSearch.setVisibility(View.GONE);
+                        floatingButtonAddNewAccount.setVisibility(View.GONE);
                         b = true;
-
                         actionMode = startActionMode(ViewActivity.this);
                     }
                 }
@@ -449,52 +436,50 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 return true;
             case R.id.sort:
                 LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
-                @SuppressLint("InflateParams") final View popupView = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_sort, null);
-                final PopupWindow popupWindow = new PopupWindow(popupView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
-                popupWindow.setOutsideTouchable(true);
-                popupWindow.setFocusable(true);
-                //noinspection deprecation
-                popupWindow.setBackgroundDrawable(new BitmapDrawable());
-                View parent = cl.getRootView();
-                popupWindow.showAtLocation(parent, Gravity.CENTER, 0, 0);
-                RadioGroup rg = popupView.findViewById(R.id.radioGroupSorter);
-                final RadioButton rb1 = popupView.findViewById(R.id.increasing);
-                final RadioButton rb2 = popupView.findViewById(R.id.decreasing);
-                final RadioButton rb3 = popupView.findViewById(R.id.customized);
+                View popupViewSort = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_sort, (ViewGroup) findViewById(R.id.popupSort));
+                final PopupWindow popupWindowSort = new PopupWindow(popupViewSort, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+                popupWindowSort.setOutsideTouchable(true);
+                popupWindowSort.setFocusable(true);
+                popupWindowSort.setBackgroundDrawable(new BitmapDrawable());
+                View parent = layoutViewActivity.getRootView();
+                popupWindowSort.showAtLocation(parent, Gravity.CENTER, 0, 0);
+                RadioGroup radioGroupSort = popupViewSort.findViewById(R.id.radioGroupSorter);
+                final RadioButton radioButtonIncreasing = popupViewSort.findViewById(R.id.increasing);
+                final RadioButton radioButtonDecreasing = popupViewSort.findViewById(R.id.decreasing);
+                final RadioButton radioButtonCostumized = popupViewSort.findViewById(R.id.customized);
                 if (usr.getSort() == 1)
-                    rg.check(rb1.getId());
+                    radioGroupSort.check(radioButtonIncreasing.getId());
                 else if (usr.getSort() == 2)
-                    rg.check(rb2.getId());
+                    radioGroupSort.check(radioButtonDecreasing.getId());
                 else
-                    rg.check(rb3.getId());
-
-                rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                    radioGroupSort.check(radioButtonCostumized.getId());
+                radioGroupSort.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(RadioGroup group, int checkedId) {
-                        if (checkedId == rb1.getId()) {
-                            listCategory.remove(cat);
-                            cat.setSort(1);
-                            cat.setListAcc(increasing(cat.getListAcc()));
-                            listCategory.add(cat);
+                        if (checkedId == radioButtonIncreasing.getId()) {
+                            listCategory.remove(category);
+                            category.setSort(1);
+                            category.setListAcc(increasing(category.getListAcc()));
+                            listCategory.add(category);
                             mngCat.serializationListCategory(ViewActivity.this, listCategory, usr.getUser());
-                        } else if (checkedId == rb2.getId()) {
-                            listCategory.remove(cat);
-                            cat.setSort(2);
-                            cat.setListAcc(decreasing(cat.getListAcc()));
-                            listCategory.add(cat);
+                        } else if (checkedId == radioButtonDecreasing.getId()) {
+                            listCategory.remove(category);
+                            category.setSort(2);
+                            category.setListAcc(decreasing(category.getListAcc()));
+                            listCategory.add(category);
                             mngCat.serializationListCategory(ViewActivity.this, listCategory, usr.getUser());
                         } else {
-                            listCategory.remove(cat);
-                            cat.setSort(3);
-                            listCategory.add(cat);
+                            listCategory.remove(category);
+                            category.setSort(3);
+                            listCategory.add(category);
                         }
-                        popupWindow.dismiss();
+                        popupWindowSort.dismiss();
                         refresh();
                     }
                 });
                 return true;
             case R.id.setting:
-                goToSettingActivity(usr);
+                goToSettingActivity();
                 return true;
             case R.id.exit:
                 log = new LogApp();
@@ -541,12 +526,10 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
         goToCategoryActivity();
     }
 
     @Override
     public void onPointerCaptureChanged(boolean hasCapture) {
-
     }
 }

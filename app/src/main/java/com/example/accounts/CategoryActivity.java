@@ -6,6 +6,7 @@ import android.content.res.ColorStateList;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Html;
 import android.view.ActionMode;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -28,6 +29,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.content.ContextCompat;
+import androidx.core.text.HtmlCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
@@ -40,28 +42,29 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Objects;
 
+@SuppressWarnings("deprecation")
 public class CategoryActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener, ActionMode.Callback {
-    boolean doubleBackToExitPressedOnce;
-    private ManageUser mngUsr;
-    private CoordinatorLayout cl;
-    private ArrayList<User> listUser;
+    private CoordinatorLayout layoutCategoryActivity;
     private ManageApp mngApp;
-    private LogApp log;
+    private ManageUser mngUsr;
+    private ManageCategory mngCat;
+    private ArrayList<User> listUser;
+    private ArrayList<Category> listCategory;
+    private ArrayList<String> selectedIds;
+    private TextView welcome;
+    private TextView welcomeMini;
+    private TextView welcomeToolbar;
+    private RecyclerCategoryAdapter categoryAdapter;
     private Button settingsButton;
     private Button searchButton;
-    private ArrayList<Category> listCategory;
-    private ManageCategory mngCat;
+    private FloatingActionButton floatingButtonSettings;
+    private FloatingActionButton floatingButtonSearch;
+    private FloatingActionButton floatingButtonAddNewCategory;
+    private LogApp logApp;
     private User usr;
-    private TextView wellcome;
-    private TextView wellcomeMini;
-    private TextView wellcome2;
-    private RecyclerCategoryAdapter mAdapter;
     private boolean isMultiSelect;
-    private ArrayList<String> selectedIds;
     private ActionMode actionMode;
-    private FloatingActionButton setting;
-    private FloatingActionButton search;
-    private FloatingActionButton add;
+    private boolean doubleBackToExitPressedOnce;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -71,17 +74,15 @@ public class CategoryActivity extends AppCompatActivity implements PopupMenu.OnM
         final Toolbar toolbar = findViewById(R.id.catToolbar);
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
-
-        User owner = (User) (Objects.requireNonNull(getIntent().getExtras())).get("owner");
-        cl = findViewById(R.id.catActivityLay);
+        layoutCategoryActivity = findViewById(R.id.catActivityLay);
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         isMultiSelect = false;
         doubleBackToExitPressedOnce = false;
         mngApp = new ManageApp();
-        log = mngApp.deserializationFlag(this);
+        logApp = mngApp.deserializationFlag(this);
         mngUsr = new ManageUser();
         listUser = mngUsr.deserializationListUser(this);
-        usr = mngUsr.findUser(listUser, Objects.requireNonNull(owner).getUser());
+        usr = mngUsr.findUser(listUser, ((User) Objects.requireNonNull((Objects.requireNonNull(getIntent().getExtras())).get("owner"))).getUser());
         if (usr != null) {
             mngCat = new ManageCategory();
             listCategory = mngCat.deserializationListCategory(this, usr.getUser());
@@ -90,17 +91,20 @@ public class CategoryActivity extends AppCompatActivity implements PopupMenu.OnM
             else if (usr.getSort() == 2)
                 mngCat.serializationListCategory(this, decreasing(listCategory), usr.getUser());
             listCategory = mngCat.deserializationListCategory(this, usr.getUser());
-            wellcome = findViewById(R.id.wellcomeText);
-            wellcome.setText("Benvenuto " + usr.getUser());
-            wellcomeMini = findViewById(R.id.wellcomeMiniText);
-            wellcomeMini.setText("Numero categorie: " + listCategory.size());
-            wellcome2 = findViewById(R.id.wellcomeTextToolbar);
-            wellcome2.setText("Lista categorie di " + usr.getUser());
-            wellcome2.setVisibility(View.INVISIBLE);
+            welcome = findViewById(R.id.wellcomeText);
+            welcome.setText(Html.fromHtml("Benvenuto <b>" + usr.getUser() + "</b>", HtmlCompat.FROM_HTML_MODE_LEGACY));
+            welcomeMini = findViewById(R.id.wellcomeMiniText);
+            welcomeMini.setText(Html.fromHtml("Numero categorie: <b>" + listCategory.size() + "</b>", HtmlCompat.FROM_HTML_MODE_LEGACY));
+            welcomeToolbar = findViewById(R.id.wellcomeTextToolbar);
+            welcomeToolbar.setText(Html.fromHtml("Lista categorie di <b>" + usr.getUser() + "</b>", HtmlCompat.FROM_HTML_MODE_LEGACY));
+            welcomeToolbar.setVisibility(View.INVISIBLE);
             settingsButton = findViewById(R.id.settingsButton);
             settingsButton.setVisibility(View.INVISIBLE);
             searchButton = findViewById(R.id.searchButton);
             searchButton.setVisibility(View.INVISIBLE);
+            floatingButtonSettings = findViewById(R.id.settingsFloatingButton);
+            floatingButtonSearch = findViewById(R.id.searchFloatingButton);
+            floatingButtonAddNewCategory = findViewById(R.id.addFloatingButton);
             AppBarLayout appBar = findViewById(R.id.catBarToolbar);
             appBar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
                 boolean isShow = false;
@@ -108,29 +112,22 @@ public class CategoryActivity extends AppCompatActivity implements PopupMenu.OnM
 
                 @Override
                 public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                    wellcome.setAlpha((1.0f - (float) Math.abs(verticalOffset) / appBarLayout.getTotalScrollRange()));
-                    wellcomeMini.setAlpha((1.0f - (float) Math.abs(verticalOffset) / appBarLayout.getTotalScrollRange()));
+                    welcome.setAlpha((1.0f - (float) Math.abs(verticalOffset) / appBarLayout.getTotalScrollRange()));
+                    welcomeMini.setAlpha((1.0f - (float) Math.abs(verticalOffset) / appBarLayout.getTotalScrollRange()));
                     if (scrollRange == -1) {
                         scrollRange = appBarLayout.getTotalScrollRange();
                     }
                     if (scrollRange + verticalOffset == 0) {
                         isShow = true;
-                        wellcome2.setVisibility(View.VISIBLE);
+                        welcomeToolbar.setVisibility(View.VISIBLE);
                         settingsButton.setVisibility(View.VISIBLE);
                         searchButton.setVisibility(View.VISIBLE);
                     } else if (isShow) {
                         isShow = false;
-                        wellcome2.setVisibility(View.INVISIBLE);
+                        welcomeToolbar.setVisibility(View.INVISIBLE);
                         settingsButton.setVisibility(View.INVISIBLE);
                         searchButton.setVisibility(View.INVISIBLE);
                     }
-                }
-            });
-            setting = findViewById(R.id.settingsFloatingButton);
-            setting.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    popupMenu(R.style.rounded_menu_style, R.menu.popup_category, v);
                 }
             });
             settingsButton.setOnClickListener(new View.OnClickListener() {
@@ -139,64 +136,65 @@ public class CategoryActivity extends AppCompatActivity implements PopupMenu.OnM
                     popupMenu(R.style.rounded_menu_style_toolbar, R.menu.popup_category, v);
                 }
             });
-            search = findViewById(R.id.searchFloatingButton);
-            search.setOnClickListener(new View.OnClickListener() {
+            floatingButtonSettings.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    goToSearchActivity(usr);
+                    popupMenu(R.style.rounded_menu_style, R.menu.popup_category, v);
                 }
             });
             searchButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    goToSearchActivity(usr);
+                    goToSearchActivity();
                 }
             });
-            add = findViewById(R.id.addFloatingButton);
-            add.setOnClickListener(new View.OnClickListener() {
+            floatingButtonSearch.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    goToSearchActivity();
+                }
+            });
+            floatingButtonAddNewCategory.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
-                    final View popupView = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_category, (ViewGroup) findViewById(R.id.categoryPopup));
-                    final PopupWindow popupWindow = new PopupWindow(popupView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
-                    popupWindow.setOutsideTouchable(true);
-                    popupWindow.setFocusable(true);
-                    //noinspection deprecation
-                    popupWindow.setBackgroundDrawable(new BitmapDrawable());
-                    View parent = cl.getRootView();
-                    popupWindow.showAtLocation(parent, Gravity.CENTER, 0, 0);
-                    final EditText et = popupView.findViewById(R.id.categoryEditText);
-                    Button conf = popupView.findViewById(R.id.confirmation);
+                    final View popupViewAddNewCategory = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_category, (ViewGroup) findViewById(R.id.categoryPopup));
+                    final PopupWindow popupWindowAddNewCategory = new PopupWindow(popupViewAddNewCategory, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+                    popupWindowAddNewCategory.setOutsideTouchable(true);
+                    popupWindowAddNewCategory.setFocusable(true);
+                    popupWindowAddNewCategory.setBackgroundDrawable(new BitmapDrawable());
+                    View parent = layoutCategoryActivity.getRootView();
+                    popupWindowAddNewCategory.showAtLocation(parent, Gravity.CENTER, 0, 0);
+                    final EditText popupNewCategoryText = popupViewAddNewCategory.findViewById(R.id.categoryEditText);
+                    Button conf = popupViewAddNewCategory.findViewById(R.id.confirmation);
                     conf.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            et.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(CategoryActivity.this, R.color.colorAccent)));
-                            if (notFieldCheck(et.getText().toString())) {
-                                et.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(CategoryActivity.this, R.color.errorEditText)));
+                            popupNewCategoryText.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(CategoryActivity.this, R.color.colorAccent)));
+                            if (checkGapError(popupNewCategoryText.getText().toString())) {
+                                popupNewCategoryText.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(CategoryActivity.this, R.color.errorEditText)));
                                 return;
                             }
-                            if (!mngCat.findCategory(listCategory, et.getText().toString())) {
-                                listCategory.add(new Category(fixName(et.getText().toString()), 1));
+                            if (!mngCat.findCategory(listCategory, popupNewCategoryText.getText().toString())) {
+                                listCategory.add(new Category(fixName(popupNewCategoryText.getText().toString()), 1));
                                 mngCat.serializationListCategory(CategoryActivity.this, listCategory, usr.getUser());
-                                notifyUser("Categoria aggiunta con successo");
                                 refresh();
-                                popupWindow.dismiss();
+                                popupWindowAddNewCategory.dismiss();
                             } else {
-                                et.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(CategoryActivity.this, R.color.errorEditText)));
-                                notifyUser("Categoria gia esistente");
+                                popupNewCategoryText.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(CategoryActivity.this, R.color.errorEditText)));
+                                notifyUser(Html.fromHtml("Categoria <b>" + popupNewCategoryText.getText().toString() + "</b> già esistente.", HtmlCompat.FROM_HTML_MODE_LEGACY).toString());
                             }
                         }
                     });
                 }
             });
-
-            mAdapter = new RecyclerCategoryAdapter(this, listCategory, usr);
-            ItemTouchHelper.Callback callback = new ItemMoveCategoryCallback(mAdapter);
+            categoryAdapter = new RecyclerCategoryAdapter(this, listCategory, usr);
+            ItemTouchHelper.Callback callback = new ItemMoveCategoryCallback(categoryAdapter);
             ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
             touchHelper.attachToRecyclerView(recyclerView);
             GridLayoutManager manager = new GridLayoutManager(this, usr.getColCat(), GridLayoutManager.VERTICAL, false);
             recyclerView.setLayoutManager(manager);
-            recyclerView.setAdapter(mAdapter);
+            recyclerView.setAdapter(categoryAdapter);
             recyclerView.addItemDecoration(new SpacesItemDecoration(20));
             recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this, recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
                 @Override
@@ -204,17 +202,16 @@ public class CategoryActivity extends AppCompatActivity implements PopupMenu.OnM
                     if (isMultiSelect) {
                         multiSelect(position);
                     } else {
-                        goViewActivity(usr, mAdapter.getItem(position));
+                        goViewActivity(categoryAdapter.getItem(position));
                     }
                 }
 
                 @Override
                 public void onItemLongClick(View view, int position) {
-
                 }
             }));
         } else {
-            notifyUser("Utente non rilevato. Impossibile visualizzare la lista degli account.");
+            notifyUser("Credenziali non rilevate. Impossibile visualizzare la lista degli account.");
             goToMainActivity();
         }
     }
@@ -233,20 +230,20 @@ public class CategoryActivity extends AppCompatActivity implements PopupMenu.OnM
         finish();
     }
 
-    public void goViewActivity(User usr, Category cat) {
+    public void goViewActivity(Category cat) {
         Intent intent = new Intent(CategoryActivity.this, ViewActivity.class);
         intent.putExtra("owner", usr);
         intent.putExtra("category", cat);
         startActivity(intent);
     }
 
-    public void goToSettingActivity(User usr) {
+    public void goToSettingActivity() {
         Intent intent = new Intent(CategoryActivity.this, SettingActivity.class);
         intent.putExtra("owner", usr);
         startActivity(intent);
     }
 
-    public void goToSearchActivity(User usr) {
+    public void goToSearchActivity() {
         Intent intent = new Intent(CategoryActivity.this, SearchActivity.class);
         intent.putExtra("owner", usr);
         startActivity(intent);
@@ -261,23 +258,21 @@ public class CategoryActivity extends AppCompatActivity implements PopupMenu.OnM
 
     @SuppressLint("RestrictedApi")
     private void multiSelect(int position) {
-
-        Category data = mAdapter.getItem(position);
-        if (data != null) {
+        Category categorySelected = categoryAdapter.getItem(position);
+        if (categorySelected != null) {
             if (actionMode != null) {
-                if (selectedIds.contains(data.getCat()))
-                    selectedIds.remove(data.getCat());
+                if (selectedIds.contains(categorySelected.getCat()))
+                    selectedIds.remove(categorySelected.getCat());
                 else
-                    selectedIds.add(data.getCat());
-                mAdapter.setSelectedIds(selectedIds);
+                    selectedIds.add(categorySelected.getCat());
+                categoryAdapter.setSelectedIds(selectedIds);
             }
         }
         if (selectedIds.size() == listCategory.size()) {
             Objects.requireNonNull(actionMode).getMenu().getItem(0).setTitle("Nessuno");
         } else
             Objects.requireNonNull(actionMode).getMenu().getItem(0).setTitle("Tutti");
-
-        Objects.requireNonNull(actionMode).setTitle("Sel: " + selectedIds.size());
+        Objects.requireNonNull(actionMode).setTitle(Html.fromHtml("Sel: <b>" + selectedIds.size() + "</b>", HtmlCompat.FROM_HTML_MODE_LEGACY));
     }
 
     @SuppressLint({"RestrictedApi", "SetTextI18n"})
@@ -286,36 +281,31 @@ public class CategoryActivity extends AppCompatActivity implements PopupMenu.OnM
         if (menuItem.getItemId() == R.id.delete_id) {
             if (!selectedIds.isEmpty()) {
                 LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
-                final View popupView = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_security, (ViewGroup) findViewById(R.id.popupSecurity));
-                final PopupWindow popupWindow = new PopupWindow(popupView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
-                popupWindow.setOutsideTouchable(true);
-                popupWindow.setFocusable(true);
-                //noinspection deprecation
-                popupWindow.setBackgroundDrawable(new BitmapDrawable());
-                View parent = cl.getRootView();
-                popupWindow.showAtLocation(parent, Gravity.CENTER, 0, 0);
-                TextView et = popupView.findViewById(R.id.securityText);
+                View popupViewSecurityToDeleteCategory = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_security, (ViewGroup) findViewById(R.id.popupSecurity));
+                final PopupWindow popupWindowSecurityToDeleteCategory = new PopupWindow(popupViewSecurityToDeleteCategory, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+                popupWindowSecurityToDeleteCategory.setOutsideTouchable(true);
+                popupWindowSecurityToDeleteCategory.setFocusable(true);
+                popupWindowSecurityToDeleteCategory.setBackgroundDrawable(new BitmapDrawable());
+                View parent = layoutCategoryActivity.getRootView();
+                popupWindowSecurityToDeleteCategory.showAtLocation(parent, Gravity.CENTER, 0, 0);
+                TextView popupSecurityToDeleteCategoryViewByIdText = popupViewSecurityToDeleteCategory.findViewById(R.id.securityText);
                 if (selectedIds.size() == 1)
-                    et.setText("Sei sicuro di voler eliminare " + selectedIds.get(0) + " dalla lista delle tue categorie? (Verrano eliminati anche i relativi account)");
+                    popupSecurityToDeleteCategoryViewByIdText.setText(Html.fromHtml("Sei sicuro di voler eliminare <b>" + selectedIds.get(0) + "</b> dalla lista delle tue categorie? (Verrano eliminati anche i relativi account)", HtmlCompat.FROM_HTML_MODE_LEGACY));
                 else
-                    et.setText("Sei sicuro di voler eliminare queste " + selectedIds.size() + " categorie selezionate? (Verrano eliminati anche i relativi account)");
-                Button yes = popupView.findViewById(R.id.yes);
-                Button no = popupView.findViewById(R.id.no);
+                    popupSecurityToDeleteCategoryViewByIdText.setText(Html.fromHtml("Sei sicuro di voler eliminare queste <b>" + selectedIds.size() + "</b> categorie selezionate? (Verrano eliminati anche i relativi account)", HtmlCompat.FROM_HTML_MODE_LEGACY));
+                Button yes = popupViewSecurityToDeleteCategory.findViewById(R.id.yes);
+                Button no = popupViewSecurityToDeleteCategory.findViewById(R.id.no);
                 yes.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        for (String data : selectedIds) {
-                            Category cat = mngCat.findAndGetCategory(listCategory, data);
-                            if (cat != null)
-                                listCategory.remove(cat);
+                        for (String singleCategoryString : selectedIds) {
+                            Category category = mngCat.findAndGetCategory(listCategory, singleCategoryString);
+                            if (category != null)
+                                listCategory.remove(category);
                             else
-                                notifyUser("Categoria " + data + " non rimossa. Non è stato rilevato nella lista delle tue categorie!");
+                                notifyUser(Html.fromHtml("Categoria <b>" + singleCategoryString + "</b> non rimossa. Non è stato rilevato nella lista delle tue categorie.", HtmlCompat.FROM_HTML_MODE_LEGACY).toString());
                         }
-                        if (selectedIds.size() == 1)
-                            notifyUser(selectedIds.get(0) + " è stato rimossa con successo!");
-                        else
-                            notifyUser(selectedIds.size() + " categorie sono state rimosse con successo!");
-                        popupWindow.dismiss();
+                        popupWindowSecurityToDeleteCategory.dismiss();
                         mngCat.serializationListCategory(CategoryActivity.this, listCategory, usr.getUser());
                         startActivity(getIntent());
                         finish();
@@ -324,31 +314,26 @@ public class CategoryActivity extends AppCompatActivity implements PopupMenu.OnM
                 no.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (selectedIds.size() == 1)
-                            notifyUser(selectedIds.get(0) + " non è stato rimossa.");
-                        else
-                            notifyUser("Nessuna categoria è stata rimossa.");
-                        popupWindow.dismiss();
+                        popupWindowSecurityToDeleteCategory.dismiss();
                     }
                 });
             } else notifyUser("Nessuna categoria è stata selezionata per la rimozione.");
             return true;
         }
         if (menuItem.getItemId() == R.id.select_all) {
-            String s = "Tutti";
-            if (menuItem.getTitle().toString().toLowerCase().equals(s.toLowerCase())) {
+            if (menuItem.getTitle().toString().toLowerCase().equals("tutti")) {
                 menuItem.setTitle("Nessuno");
                 selectedIds.clear();
-                for (Category cat : listCategory) {
-                    selectedIds.add(cat.getCat());
+                for (Category singleCategory : listCategory) {
+                    selectedIds.add(singleCategory.getCat());
                 }
-                mAdapter.setSelectedIds(selectedIds);
-                Objects.requireNonNull(actionMode).setTitle("Sel: " + selectedIds.size());
+                categoryAdapter.setSelectedIds(selectedIds);
+                Objects.requireNonNull(actionMode).setTitle(Html.fromHtml("Sel: <b>" + selectedIds.size() + "</b>", HtmlCompat.FROM_HTML_MODE_LEGACY));
             } else {
                 menuItem.setTitle("Tutti");
                 selectedIds.clear();
-                mAdapter.setSelectedIds(selectedIds);
-                Objects.requireNonNull(actionMode).setTitle("Sel: " + selectedIds.size());
+                categoryAdapter.setSelectedIds(selectedIds);
+                Objects.requireNonNull(actionMode).setTitle(Html.fromHtml("Sel: <b>" + selectedIds.size() + "</b>", HtmlCompat.FROM_HTML_MODE_LEGACY));
             }
         }
         return false;
@@ -360,12 +345,12 @@ public class CategoryActivity extends AppCompatActivity implements PopupMenu.OnM
         actionMode = null;
         isMultiSelect = false;
         selectedIds = new ArrayList<>();
-        mAdapter.setSelectedIds(new ArrayList<String>());
+        categoryAdapter.setSelectedIds(new ArrayList<String>());
         settingsButton.setVisibility(View.VISIBLE);
         searchButton.setVisibility(View.VISIBLE);
-        setting.setVisibility(View.VISIBLE);
-        search.setVisibility(View.VISIBLE);
-        add.setVisibility(View.VISIBLE);
+        floatingButtonSettings.setVisibility(View.VISIBLE);
+        floatingButtonSearch.setVisibility(View.VISIBLE);
+        floatingButtonAddNewCategory.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -384,9 +369,9 @@ public class CategoryActivity extends AppCompatActivity implements PopupMenu.OnM
                     if (actionMode == null) {
                         settingsButton.setVisibility(View.GONE);
                         searchButton.setVisibility(View.GONE);
-                        setting.setVisibility(View.GONE);
-                        search.setVisibility(View.GONE);
-                        add.setVisibility(View.GONE);
+                        floatingButtonSettings.setVisibility(View.GONE);
+                        floatingButtonSearch.setVisibility(View.GONE);
+                        floatingButtonAddNewCategory.setVisibility(View.GONE);
                         actionMode = startActionMode(CategoryActivity.this);
                     }
                 }
@@ -394,35 +379,33 @@ public class CategoryActivity extends AppCompatActivity implements PopupMenu.OnM
                 return true;
             case R.id.sort:
                 LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
-                @SuppressLint("InflateParams") final View popupView = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_sort, null);
-                final PopupWindow popupWindow = new PopupWindow(popupView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
-                popupWindow.setOutsideTouchable(true);
-                popupWindow.setFocusable(true);
-                //noinspection deprecation
-                popupWindow.setBackgroundDrawable(new BitmapDrawable());
-                View parent = cl.getRootView();
-                popupWindow.showAtLocation(parent, Gravity.CENTER, 0, 0);
-                RadioGroup rg = popupView.findViewById(R.id.radioGroupSorter);
-                final RadioButton rb1 = popupView.findViewById(R.id.increasing);
-                final RadioButton rb2 = popupView.findViewById(R.id.decreasing);
-                final RadioButton rb3 = popupView.findViewById(R.id.customized);
+                @SuppressLint("InflateParams") View popupViewSort = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_sort, null);
+                final PopupWindow popupWindowSort = new PopupWindow(popupViewSort, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+                popupWindowSort.setOutsideTouchable(true);
+                popupWindowSort.setFocusable(true);
+                popupWindowSort.setBackgroundDrawable(new BitmapDrawable());
+                View parent = layoutCategoryActivity.getRootView();
+                popupWindowSort.showAtLocation(parent, Gravity.CENTER, 0, 0);
+                RadioGroup radioGroup = popupViewSort.findViewById(R.id.radioGroupSorter);
+                final RadioButton increasingRadioButton = popupViewSort.findViewById(R.id.increasing);
+                final RadioButton decreasingRadioButton = popupViewSort.findViewById(R.id.decreasing);
+                final RadioButton customizedRadioButton = popupViewSort.findViewById(R.id.customized);
                 if (usr.getSort() == 1)
-                    rg.check(rb1.getId());
+                    radioGroup.check(increasingRadioButton.getId());
                 else if (usr.getSort() == 2)
-                    rg.check(rb2.getId());
+                    radioGroup.check(decreasingRadioButton.getId());
                 else
-                    rg.check(rb3.getId());
-
-                rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                    radioGroup.check(customizedRadioButton.getId());
+                radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(RadioGroup group, int checkedId) {
-                        if (checkedId == rb1.getId()) {
+                        if (checkedId == increasingRadioButton.getId()) {
                             listUser.remove(usr);
                             usr.setSort(1);
                             listUser.add(usr);
                             mngUsr.serializationListUser(CategoryActivity.this, listUser);
                             mngCat.serializationListCategory(CategoryActivity.this, increasing(listCategory), usr.getUser());
-                        } else if (checkedId == rb2.getId()) {
+                        } else if (checkedId == decreasingRadioButton.getId()) {
                             listUser.remove(usr);
                             usr.setSort(2);
                             listUser.add(usr);
@@ -434,17 +417,17 @@ public class CategoryActivity extends AppCompatActivity implements PopupMenu.OnM
                             listUser.add(usr);
                             mngUsr.serializationListUser(CategoryActivity.this, listUser);
                         }
-                        popupWindow.dismiss();
+                        popupWindowSort.dismiss();
                         refresh();
                     }
                 });
                 return true;
             case R.id.setting:
-                goToSettingActivity(usr);
+                goToSettingActivity();
                 return true;
             case R.id.exit:
-                log = new LogApp();
-                mngApp.serializationFlag(this, log);
+                logApp = new LogApp();
+                mngApp.serializationFlag(this, logApp);
                 goToMainActivity();
                 return true;
             default:
@@ -465,9 +448,9 @@ public class CategoryActivity extends AppCompatActivity implements PopupMenu.OnM
                 Toast.LENGTH_LONG).show();
     }
 
-    public boolean notFieldCheck(String s) {
+    public boolean checkGapError(String s) {
         if (isInvalidWord(s)) {
-            notifyUser("Campo non valido !!!");
+            notifyUser("Campo non valido.");
             return true;
         }
         return false;
@@ -515,7 +498,7 @@ public class CategoryActivity extends AppCompatActivity implements PopupMenu.OnM
             System.exit(0);
         }
         this.doubleBackToExitPressedOnce = true;
-        Toast.makeText(this, "Clicca di nuovo BACK per uscire", Toast.LENGTH_SHORT).show();
+        notifyUser(Html.fromHtml("Premi nuovamente <b> INDIETRO </b> per uscire dall'applicazione.", HtmlCompat.FROM_HTML_MODE_LEGACY).toString());
 
         new Handler().postDelayed(new Runnable() {
 
@@ -525,12 +508,6 @@ public class CategoryActivity extends AppCompatActivity implements PopupMenu.OnM
             }
         }, 2000);
     }
-
-    @Override
-    public void onPointerCaptureChanged(boolean hasCapture) {
-
-    }
-
 }
 
 
