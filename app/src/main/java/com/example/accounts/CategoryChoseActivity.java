@@ -123,6 +123,7 @@ public class CategoryChoseActivity extends AppCompatActivity {
             recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this, recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
                 @Override
                 public void onItemClick(View view, final int position) {
+                    addNewCategory.setVisibility(View.GONE);
                     categoryAdapterPosition = mAdapter.getItem(position);
                     LayoutInflater layoutInflaterDone = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
                     View popupViewDone = Objects.requireNonNull(layoutInflaterDone).inflate(R.layout.popup_done, (ViewGroup) findViewById(R.id.popupDone));
@@ -260,13 +261,13 @@ public class CategoryChoseActivity extends AppCompatActivity {
             addNewCategory.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ((NestedScrollView) findViewById(R.id.catChoseNestedScroll)).setVisibility(View.INVISIBLE);
+                    ((NestedScrollView) findViewById(R.id.catChoseNestedScroll)).setVisibility(View.GONE);
                     addNewCategory.setVisibility(View.GONE);
                     LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
                     final View popupViewAddNewCategory = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_category, (ViewGroup) findViewById(R.id.categoryPopup));
                     final PopupWindow popupWindowAddNewCategory = new PopupWindow(popupViewAddNewCategory, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
-                    popupWindowAddNewCategory.setOutsideTouchable(false);
-                    popupWindowAddNewCategory.setFocusable(false);
+                    popupWindowAddNewCategory.setOutsideTouchable(true);
+                    popupWindowAddNewCategory.setFocusable(true);
                     popupWindowAddNewCategory.setBackgroundDrawable(new BitmapDrawable());
                     View parent = layoutCategoryChoseActivity.getRootView();
                     popupWindowAddNewCategory.showAtLocation(parent, Gravity.CENTER, 0, 0);
@@ -309,6 +310,15 @@ public class CategoryChoseActivity extends AppCompatActivity {
                                 popupNewCategoryText.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(CategoryChoseActivity.this, R.color.errorEditText)));
                                 notifyUser(Html.fromHtml("Categoria <b>" + popupNewCategoryText.getText().toString() + "</b> già esistente.", HtmlCompat.FROM_HTML_MODE_LEGACY).toString());
                             }
+                        }
+                    });
+                    popupWindowAddNewCategory.setOnDismissListener(new PopupWindow.OnDismissListener() {
+
+                        @Override
+                        public void onDismiss() {
+                            ((NestedScrollView) findViewById(R.id.catChoseNestedScroll)).setVisibility(View.VISIBLE);
+                            addNewCategory.setVisibility(View.VISIBLE);
+
                         }
                     });
                 }
