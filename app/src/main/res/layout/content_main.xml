@@ -46,19 +46,12 @@
         app:layout_constraintTop_toBottomOf="@+id/nameApp"
         app:layout_constraintWidth_percent="0.75">
 
-        <EditText
+        <Spinner
             android:id="@+id/userApp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="30dp"
             android:autofillHints=""
-            android:ems="10"
-            android:hint="@string/usernameHint"
-            android:inputType="text"
-            android:maxLength="10"
-            android:textColor="@color/rightText"
-            android:textColorHighlight="@color/textSelection"
-            android:textSize="16sp"
             android:theme="@style/inputField"
             tools:targetApi="o" />
 

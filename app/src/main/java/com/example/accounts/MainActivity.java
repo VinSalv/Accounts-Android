@@ -13,12 +13,16 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.CancellationSignal;
 import android.text.InputType;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,9 +47,10 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<User> listUser;
     private LogApp log;
     private User usr;
-    private EditText userApp;
+    private Spinner userApp;
     private EditText passApp;
     private Switch flagApp;
+    private String u;
 
     @RequiresApi(api = Build.VERSION_CODES.P)
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,13 +74,30 @@ public class MainActivity extends AppCompatActivity {
         ImageButton showPass = findViewById(R.id.showPass);
         mngUsr = new ManageUser();
         listUser = mngUsr.deserializationListUser(this);
+        ArrayList<String> listUsr = new ArrayList<>();
+        listUsr.add("Utente");
+        for (User u : listUser)
+            listUsr.add(u.getUser());
+        ArrayAdapter<String> adapterUser = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, listUsr);
+        adapterUser.setDropDownViewResource(R.layout.spinner_item);
+        userApp.setAdapter(adapterUser);
+        userApp.setSelection(0);
+        userApp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                u = parent.getItemAtPosition(position).toString();
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
         mngApp = new ManageApp();
         log = mngApp.deserializationFlag(this);
         if (log.getFlagApp()) {
+            u=log.getUser();
             flagApp.setChecked(true);
-            User usr = mngUsr.findUser(listUser, log.getUser());
+            usr = mngUsr.findUser(listUser, u);
             if (usr != null) {
-                userApp.setText(usr.getUser());
                 if (usr.getFinger()) {
                     biometricAuthentication(layoutMainActivity);
                 } else {
@@ -90,21 +112,19 @@ public class MainActivity extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.P)
             @Override
             public void onClick(View view) {
-                userApp.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(MainActivity.this, R.color.colorAccent)));
                 passApp.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(MainActivity.this, R.color.colorAccent)));
-                usr = new User(userApp.getText().toString(), passApp.getText().toString(), false, 0);
+                usr = new User(u, passApp.getText().toString(), false, 0);
                 if (!fieldCheck(usr)) return;
                 if (mngUsr.login(usr, listUser)) {
-                    usr = mngUsr.findUser(listUser, userApp.getText().toString());
+                    usr = mngUsr.findUser(listUser, u);
                     if (usr.getFinger()) {
                         biometricAuthentication(layoutMainActivity);
                     } else {
-                        log = new LogApp(flagApp.isChecked(), fixName(userApp.getText().toString()));
+                        log = new LogApp(flagApp.isChecked(), u);
                         mngApp.serializationFlag(MainActivity.this, log);
                         goToCategoryActivity();
                     }
                 } else {
-                    userApp.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(MainActivity.this, R.color.errorEditText)));
                     passApp.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(MainActivity.this, R.color.errorEditText)));
                     notifyUser("Autenticazione errata.");
                 }
@@ -169,13 +189,6 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public String fixName(String name) {
-        name = name.toLowerCase();
-        String name1 = name.substring(0, 1).toUpperCase();
-        String name2 = name.substring(1).toLowerCase();
-        return name1.concat(name2);
-    }
-
     @RequiresApi(api = Build.VERSION_CODES.P)
     private BiometricPrompt.AuthenticationCallback getAuthenticationCallback() {
         return new BiometricPrompt.AuthenticationCallback() {
@@ -203,9 +216,9 @@ public class MainActivity extends AppCompatActivity {
             public void onAuthenticationSucceeded(BiometricPrompt.AuthenticationResult result) {
                 notifyUserShortWay("Autenticazione effettuata.");
                 super.onAuthenticationSucceeded(result);
-                usr = new User(userApp.getText().toString(), passApp.getText().toString(), true, 1);
+                usr = new User(u, passApp.getText().toString(), true, 1);
                 if (flagApp.isChecked()) {
-                    log = new LogApp(flagApp.isChecked(), userApp.getText().toString());
+                    log = new LogApp(flagApp.isChecked(), u);
                     mngApp.serializationFlag(MainActivity.this, log);
                     goToCategoryActivity();
                 } else {

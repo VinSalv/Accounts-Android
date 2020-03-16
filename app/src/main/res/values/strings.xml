@@ -126,4 +126,7 @@
     <string name="sort_category">Ordina categorie</string>
     <string name="delete">Elimina</string>
     <string name="rename_cat">Come vuoi rinominare Categoria?</string>
+    <string name="credentialText">Credenziali</string>
+    <string name="authenticationText">Autenticazione Biometrica</string>
+    <string name="recoveryText">Recupero password</string>
 </resources>

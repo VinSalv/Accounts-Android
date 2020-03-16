@@ -8,129 +8,183 @@
     tools:context=".SignActivity"
     tools:showIn="@layout/activity_sign">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/rounded_color">
+        android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/usernameEdit"
+        <TextView
+            android:id="@+id/credential"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="30dp"
-            android:autofillHints=""
-            android:ems="10"
-            android:hint="@string/userHint"
-            android:inputType="text"
-            android:maxLength="10"
-            android:shadowColor="#00D50D0D"
+            android:text="@string/credentialText"
             android:textColor="@color/rightText"
-            android:textColorHighlight="@color/textSelection"
-            android:textSize="14sp"
-            android:theme="@style/inputField"
-            tools:targetApi="o" />
+            android:padding="5dp"/>
 
-        <ImageView
-            android:id="@+id/userEditImage"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_alignStart="@+id/usernameEdit"
-            android:layout_alignTop="@id/usernameEdit"
-            android:layout_alignBottom="@id/usernameEdit"
-            android:layout_alignParentStart="true"
-            android:contentDescription="@string/userImage"
-            android:src="@drawable/user" />
-
-        <EditText
-            android:id="@+id/passwordEdit"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/usernameEdit"
-            android:layout_marginStart="30dp"
-            android:autofillHints=""
-            android:ems="10"
-            android:hint="@string/passHint"
-            android:inputType="textPassword"
-            android:textColor="@color/rightText"
-            android:textColorHighlight="@color/textSelection"
-            android:textSize="14sp"
-            android:theme="@style/inputField"
-            tools:targetApi="o" />
+            android:background="@drawable/rounded_color">
 
-        <ImageView
-            android:id="@+id/passwordImage"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_alignStart="@+id/passwordEdit"
-            android:layout_alignTop="@id/passwordEdit"
-            android:layout_alignBottom="@id/passwordEdit"
-            android:layout_alignParentStart="true"
-            android:contentDescription="@string/passImage"
-            android:src="@drawable/pass" />
+            <EditText
+                android:id="@+id/usernameEdit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:autofillHints=""
+                android:ems="10"
+                android:hint="@string/userHint"
+                android:inputType="text"
+                android:maxLength="10"
+                android:shadowColor="#00D50D0D"
+                android:textColor="@color/rightText"
+                android:textColorHighlight="@color/textSelection"
+                android:textSize="14sp"
+                android:theme="@style/inputField"
+                tools:targetApi="o" />
 
-        <ImageButton
-            android:id="@+id/showPass"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@id/passwordEdit"
-            android:layout_alignEnd="@+id/passwordEdit"
-            android:layout_alignBottom="@+id/passwordEdit"
-            android:backgroundTint="@color/transparent"
-            android:contentDescription="@string/showPassImage"
-            android:src="@android:drawable/ic_menu_view" />
+            <ImageView
+                android:id="@+id/userEditImage"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_alignStart="@+id/usernameEdit"
+                android:layout_alignTop="@id/usernameEdit"
+                android:layout_alignBottom="@id/usernameEdit"
+                android:layout_alignParentStart="true"
+                android:contentDescription="@string/userImage"
+                android:src="@drawable/user" />
 
-        <EditText
-            android:id="@+id/passwordEdit2"
+            <EditText
+                android:id="@+id/passwordEdit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/usernameEdit"
+                android:layout_marginStart="30dp"
+                android:autofillHints=""
+                android:ems="10"
+                android:hint="@string/passHint"
+                android:inputType="textPassword"
+                android:textColor="@color/rightText"
+                android:textColorHighlight="@color/textSelection"
+                android:textSize="14sp"
+                android:theme="@style/inputField"
+                tools:targetApi="o" />
+
+            <ImageView
+                android:id="@+id/passwordImage"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_alignStart="@+id/passwordEdit"
+                android:layout_alignTop="@id/passwordEdit"
+                android:layout_alignBottom="@id/passwordEdit"
+                android:layout_alignParentStart="true"
+                android:contentDescription="@string/passImage"
+                android:src="@drawable/pass" />
+
+            <ImageButton
+                android:id="@+id/showPass"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@id/passwordEdit"
+                android:layout_alignEnd="@+id/passwordEdit"
+                android:layout_alignBottom="@+id/passwordEdit"
+                android:backgroundTint="@color/transparent"
+                android:contentDescription="@string/showPassImage"
+                android:src="@android:drawable/ic_menu_view" />
+
+            <EditText
+                android:id="@+id/passwordEdit2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/passwordEdit"
+                android:layout_marginStart="30dp"
+                android:autofillHints=""
+                android:ems="10"
+                android:hint="@string/passHint"
+                android:inputType="textPassword"
+                android:textColor="@color/rightText"
+                android:textColorHighlight="@color/textSelection"
+                android:textSize="14sp"
+                android:theme="@style/inputField"
+                tools:targetApi="o" />
+
+            <ImageView
+                android:id="@+id/passwordImage2"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_alignStart="@+id/passwordEdit2"
+                android:layout_alignTop="@id/passwordEdit2"
+                android:layout_alignBottom="@id/passwordEdit2"
+                android:layout_alignParentStart="true"
+                android:contentDescription="@string/passImage"
+                android:src="@drawable/pass" />
+
+            <ImageButton
+                android:id="@+id/showPass2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@id/passwordEdit2"
+                android:layout_alignEnd="@+id/passwordEdit2"
+                android:layout_alignBottom="@+id/passwordEdit2"
+                android:backgroundTint="@color/transparent"
+                android:contentDescription="@string/showPassImage"
+                android:src="@android:drawable/ic_menu_view" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/authentication"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/passwordEdit"
-            android:layout_marginStart="30dp"
-            android:autofillHints=""
-            android:ems="10"
-            android:hint="@string/passHint"
-            android:inputType="textPassword"
+            android:layout_marginTop="10dp"
+            android:text="@string/authenticationText"
             android:textColor="@color/rightText"
-            android:textColorHighlight="@color/textSelection"
-            android:textSize="14sp"
-            android:theme="@style/inputField"
-            tools:targetApi="o" />
+            android:padding="5dp"/>
 
-        <ImageView
-            android:id="@+id/passwordImage2"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_alignStart="@+id/passwordEdit2"
-            android:layout_alignTop="@id/passwordEdit2"
-            android:layout_alignBottom="@id/passwordEdit2"
-            android:layout_alignParentStart="true"
-            android:contentDescription="@string/passImage"
-            android:src="@drawable/pass" />
-
-        <ImageButton
-            android:id="@+id/showPass2"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@id/passwordEdit2"
-            android:layout_alignEnd="@+id/passwordEdit2"
-            android:layout_alignBottom="@+id/passwordEdit2"
-            android:backgroundTint="@color/transparent"
-            android:contentDescription="@string/showPassImage"
-            android:src="@android:drawable/ic_menu_view" />
+            android:background="@drawable/rounded_color">
 
-        <Switch
-            android:id="@+id/flagFinger"
-            android:layout_width="wrap_content"
+            <ImageView
+                android:id="@+id/fingerprint"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_alignStart="@id/flagFinger"
+                android:layout_alignTop="@id/flagFinger"
+                android:layout_alignBottom="@id/flagFinger"
+                app:srcCompat="@drawable/fingerprint" />
+
+            <Switch
+                android:id="@+id/flagFinger"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:paddingStart="30dp"
+                android:paddingEnd="10dp"
+                android:text="@string/flagFinger"
+                android:textSize="13sp"
+                android:textStyle="normal|bold"
+                android:theme="@style/SelectionSwitch"
+                app:titleTextColor="@color/rightText" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/support"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/passwordEdit2"
-            android:layout_marginTop="5dp"
-            android:paddingStart="30dp"
-            android:paddingEnd="10dp"
-            android:text="@string/flagFinger"
-            android:textSize="13sp"
-            android:textStyle="normal|bold"
-            android:theme="@style/SelectionSwitch"
-            app:titleTextColor="@color/rightText" />
-    </RelativeLayout>
+            android:layout_marginTop="10dp"
+            android:text="@string/recoveryText"
+            android:textColor="@color/rightText"
+            android:padding="5dp"/>
 
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_color">
+
+        </RelativeLayout>
+
+    </LinearLayout>
 </androidx.core.widget.NestedScrollView>
 
