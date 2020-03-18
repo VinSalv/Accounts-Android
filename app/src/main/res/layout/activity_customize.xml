@@ -11,7 +11,7 @@
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/customizeBarToolbar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/app_bar_profile">
+        android:layout_height="@dimen/app_bar">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
@@ -42,13 +42,12 @@
 
             <TextView
                 android:id="@+id/customizeTextToolbar"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="15dp"
-                android:layout_marginTop="10dp"
+                android:padding="15dp"
                 android:text="@string/textCostusmize"
                 android:textColor="@color/rightText"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 app:layout_collapseMode="pin" />
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>

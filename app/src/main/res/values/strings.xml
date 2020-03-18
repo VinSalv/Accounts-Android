@@ -35,7 +35,8 @@
     <string name="addButton">Aggiungi</string>
     <string name="emptyButton">Resetta</string>
     <string name="saveButton">Salva</string>
-    <string name="customized">Personalizzato</string>
+    <string name="customized">Non ordinare</string>
+    <string name="customizedPopup">Personalizzato</string>
     <string name="increasing">Crescente</string>
     <string name="decreasing">Decrescente</string>
     <string name="profile">Profilo</string>
@@ -57,7 +58,7 @@
     <string name="wellcome2">Lista della categoria </string>
     <string name="Sure">Sei sicuro di voler</string>
     <string name="text_search">Categorie:</string>
-    <string name="text_PDF">Imposta l\'ordine dei tuoi account</string>
+    <string name="text_PDF_Account">Imposta l\'ordine degli account</string>
     <string name="text_PDF2">Imposta l\'orientazione della pagina</string>
     <string name="description">Descrizione</string>
     <string name="name">Name</string>
@@ -129,4 +130,20 @@
     <string name="credentialText">Credenziali</string>
     <string name="authenticationText">Autenticazione Biometrica</string>
     <string name="recoveryText">Recupero password</string>
+    <string name="questionEditText">Domanda personale</string>
+    <string name="answerEditText">Risposta (solo una parola)</string>
+    <string name="questionText">Inserisci la domanda (Seleziona "Altro" per inserire una domanda personale)</string>
+    <string name="fingerImage">immagine biometrica</string>
+    <string name="questionImage">Immagine domanda</string>
+    <string name="infoButton">infoButton</string>
+    <string name="passwordRecovery">Recupera la password</string>
+    <string name="recoveryUserText">Scegli l\'utente associato alla password</string>
+    <string name="goOn">PROSEGUI</string>
+    <string name="recoveryPass">RECUPERA PASSWORD</string>
+    <string name="answerEdit">Risposta</string>
+    <string name="passTextView">La password è:</string>
+    <string name="question">Domanda</string>
+    <string name="editQuestion">MODIFICA DOMANDA SICUREZZA</string>
+    <string name="changeQuestionAnsware">IMPOSTA</string>
+    <string name="text_PDF_Category">Imposta l\'ordine delle categorie</string>
 </resources>

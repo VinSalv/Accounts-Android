@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/questionPopup"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:animateLayoutChanges="true"
+    android:background="@drawable/rounded_popup">
+
+    <TextView
+        android:id="@+id/questionText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:shadowColor="@color/rightText"
+        android:text="@string/questionText"
+        android:textSize="16sp" />
+
+    <ImageView
+        android:id="@+id/questionMarkImage"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_alignTop="@id/questionSpinner"
+        android:layout_alignBottom="@id/questionSpinner"
+        android:layout_alignParentStart="true"
+        android:contentDescription="@string/userImage"
+        android:src="@drawable/questionmark" />
+
+    <Spinner
+        android:id="@+id/questionSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/questionText"
+        android:layout_marginStart="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_toEndOf="@id/questionMarkImage" />
+
+    <EditText
+        android:id="@+id/questionEdit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/questionSpinner"
+        android:layout_marginBottom="5dp"
+        android:autofillHints=""
+        android:hint="@string/questionEditText"
+        android:maxLength="12"
+        android:textColor="@color/rightText"
+        android:textColorHighlight="@color/textSelection"
+        android:textSize="16sp"
+        android:theme="@style/inputField"
+        tools:targetApi="o" />
+
+    <EditText
+        android:id="@+id/answerEdit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/questionEdit"
+        android:layout_marginBottom="5dp"
+        android:autofillHints=""
+        android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890"
+        android:hint="@string/answerEditText"
+        android:maxLength="12"
+        android:textColor="@color/rightText"
+        android:textColorHighlight="@color/textSelection"
+        android:textSize="16sp"
+        android:theme="@style/inputField"
+        tools:targetApi="o" />
+
+    <Button
+        android:id="@+id/setButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/answerEdit"
+        android:background="@drawable/rounded_button"
+        android:text="@string/changeQuestionAnsware"
+        android:textAlignment="center"
+        android:textColor="@color/colorPrimaryClear"
+        android:textSize="18sp" />
+</RelativeLayout>
+

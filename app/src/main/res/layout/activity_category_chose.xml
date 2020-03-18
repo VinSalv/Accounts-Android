@@ -10,7 +10,7 @@
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/catChoseBarToolbar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/app_bar_view">
+        android:layout_height="@dimen/app_bar">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:id="@+id/catChoseCollapsingToolbar"
@@ -37,6 +37,10 @@
                 android:textAlignment="center"
                 android:textColor="@color/rightText"
                 android:textSize="30sp"
+                app:autoSizeMaxTextSize="60sp"
+                app:autoSizeMinTextSize="30sp"
+                app:autoSizeStepGranularity="2sp"
+                app:autoSizeTextType="uniform"
                 app:layout_collapseMode="parallax" />
 
             <TextView
@@ -50,18 +54,17 @@
                 android:text="@string/categoryTextCollapse"
                 android:textAlignment="center"
                 android:textColor="@color/rightText"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 app:layout_collapseMode="parallax" />
 
             <TextView
                 android:id="@+id/welcomeChoseTextToolbar"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="15dp"
-                android:layout_marginTop="10dp"
+                android:padding="15dp"
                 android:text="@string/wellcome2"
                 android:textColor="@color/rightText"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 app:layout_collapseMode="pin" />
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>

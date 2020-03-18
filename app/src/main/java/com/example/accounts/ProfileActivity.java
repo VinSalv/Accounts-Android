@@ -1,5 +1,7 @@
 package com.example.accounts;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.res.ColorStateList;
@@ -11,12 +13,15 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -45,6 +50,11 @@ public class ProfileActivity extends AppCompatActivity {
     private TextView profileToolbar;
     private ImageButton showPass;
     private ImageButton showPass2;
+    private Spinner questionSpinner;
+    private EditText questionEdit;
+    private EditText answerEdit;
+    private ArrayAdapter<String> adapterQuestion;
+    private ArrayList<String> listQuestion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +68,12 @@ public class ProfileActivity extends AppCompatActivity {
         listUser = mngUsr.deserializationListUser(this);
         usr = mngUsr.findUser(listUser, ((User) Objects.requireNonNull((Objects.requireNonNull(getIntent().getExtras())).get("owner"))).getUser());
         if (usr != null) {
+            listQuestion = new ArrayList<>();
+            listQuestion.add("Altro");
+            listQuestion.add("Qual è il tuo colore preferito?");
+            listQuestion.add("Qual era il tuo soprannome da bambino?");
+            listQuestion.add("Qual è il nome del tuo primo animale domestico?");
+            adapterQuestion = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, listQuestion);
             mngCat = new ManageCategory();
             Switch flagProfApp = findViewById(R.id.flagProfApp);
             if (usr.getFinger()) {
@@ -109,7 +125,7 @@ public class ProfileActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
                     View popupViewUser = Objects.requireNonNull(layoutInflater).inflate(R.layout.edit_user, (ViewGroup) findViewById(R.id.editUserLayout));
-                    final PopupWindow popupWindowUser = new PopupWindow(popupViewUser, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+                    final PopupWindow popupWindowUser = new PopupWindow(popupViewUser, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
                     popupWindowUser.setOutsideTouchable(true);
                     popupWindowUser.setFocusable(true);
                     popupWindowUser.setBackgroundDrawable(new BitmapDrawable());
@@ -156,7 +172,7 @@ public class ProfileActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
                     View popupViewPassword = Objects.requireNonNull(layoutInflater).inflate(R.layout.edit_password, (ViewGroup) findViewById(R.id.edit_password_layout));
-                    final PopupWindow popupWindowPassword = new PopupWindow(popupViewPassword, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+                    final PopupWindow popupWindowPassword = new PopupWindow(popupViewPassword, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
                     popupWindowPassword.setOutsideTouchable(true);
                     popupWindowPassword.setFocusable(true);
                     popupWindowPassword.setBackgroundDrawable(new BitmapDrawable());
@@ -192,6 +208,100 @@ public class ProfileActivity extends AppCompatActivity {
                     showPass(password, showPass);
                     showPass2 = popupViewPassword.findViewById(R.id.showPass2);
                     showPass(password2, showPass2);
+                }
+            });
+            Button editQuestion = findViewById(R.id.editProfQuestion);
+            editQuestion.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+                    View popupViewQuestion = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_question, (ViewGroup) findViewById(R.id.questionPopup));
+                    final PopupWindow popupWindowQuestion = new PopupWindow(popupViewQuestion, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+                    popupWindowQuestion.setOutsideTouchable(true);
+                    popupWindowQuestion.setFocusable(true);
+                    popupWindowQuestion.setBackgroundDrawable(new BitmapDrawable());
+                    View parent = layoutProfileActivity.getRootView();
+                    popupWindowQuestion.showAtLocation(parent, Gravity.CENTER, 0, 0);
+                    questionEdit = popupViewQuestion.findViewById(R.id.questionEdit);
+                    answerEdit = popupViewQuestion.findViewById(R.id.answerEdit);
+                    questionSpinner = popupViewQuestion.findViewById(R.id.questionSpinner);
+                    adapterQuestion.setDropDownViewResource(R.layout.spinner_item_question);
+                    questionSpinner.setAdapter(adapterQuestion);
+                    questionSpinner.setSelection(0);
+                    questionSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                            if (parent.getItemAtPosition(position).toString().equals("Altro"))
+                                questionEdit.animate()
+                                        .alpha(1.0f)
+                                        .setListener(new AnimatorListenerAdapter() {
+                                            @Override
+                                            public void onAnimationStart(Animator animation) {
+                                                super.onAnimationStart(animation);
+                                                questionEdit.setVisibility(View.VISIBLE);
+                                            }
+                                        });
+                            else
+                                questionEdit.animate()
+                                        .alpha(0.0f)
+                                        .setListener(new AnimatorListenerAdapter() {
+                                            @Override
+                                            public void onAnimationStart(Animator animation) {
+                                                super.onAnimationStart(animation);
+                                                questionEdit.setVisibility(View.GONE);
+                                            }
+                                        });
+                        }
+
+                        @Override
+                        public void onNothingSelected(AdapterView<?> parent) {
+                        }
+                    });
+                    Button set = popupViewQuestion.findViewById(R.id.setButton);
+                    set.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            listUser.remove(usr);
+                            if (questionSpinner.getSelectedItemPosition() == 0) {
+                                if (questionEdit.getText().toString().isEmpty() && answerEdit.getText().toString().isEmpty()) {
+                                    questionEdit.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(ProfileActivity.this, R.color.colorAccent)));
+                                    answerEdit.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(ProfileActivity.this, R.color.colorAccent)));
+                                } else if (questionEdit.getText().toString().isEmpty()) {
+                                    questionEdit.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(ProfileActivity.this, R.color.colorAccent)));
+                                } else if (answerEdit.getText().toString().isEmpty()) {
+                                    answerEdit.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(ProfileActivity.this, R.color.colorAccent)));
+                                }
+                            } else {
+                                answerEdit.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(ProfileActivity.this, R.color.colorAccent)));
+                            }
+                            if (questionSpinner.getSelectedItemPosition() == 0) {
+                                if (questionEdit.getText().toString().isEmpty() && answerEdit.getText().toString().isEmpty()) {
+                                    questionEdit.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(ProfileActivity.this, R.color.errorEditText)));
+                                    answerEdit.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(ProfileActivity.this, R.color.errorEditText)));
+                                    return;
+                                } else if (questionEdit.getText().toString().isEmpty()) {
+                                    questionEdit.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(ProfileActivity.this, R.color.errorEditText)));
+                                    return;
+                                } else if (answerEdit.getText().toString().isEmpty()) {
+                                    answerEdit.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(ProfileActivity.this, R.color.errorEditText)));
+                                    return;
+                                }
+                                usr.setQuestion(questionEdit.getText().toString());
+                                usr.setAnswer(answerEdit.getText().toString());
+                            } else {
+                                if (answerEdit.getText().toString().isEmpty()) {
+                                    answerEdit.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(ProfileActivity.this, R.color.errorEditText)));
+                                    return;
+                                }
+                                usr.setQuestion(questionSpinner.getSelectedItem().toString());
+                                usr.setAnswer(answerEdit.getText().toString());
+                            }
+                            listUser.add(usr);
+                            mngUsr.serializationListUser(ProfileActivity.this, listUser);
+                            notifyUserShortWay("Domanda di sicurezza cambiata con successo.");
+                            popupWindowQuestion.dismiss();
+                        }
+                    });
                 }
             });
         } else {
@@ -230,14 +340,14 @@ public class ProfileActivity extends AppCompatActivity {
 
     public boolean notFieldCheck(String s) {
         if (isInvalidWord(s)) {
-            notifyUser("Campo non valido.");
+            notifyUser("Campo non valido. Caratteri validi: A-Z a-z 0-9 @#$%^&+=!?._");
             return true;
         }
         return false;
     }
 
     public boolean isInvalidWord(String word) {
-        return ((!word.matches("[A-Za-z0-9?!_.-]*")) || (word.isEmpty()));
+        return ((!word.matches("[A-Za-z0-9@#$%^&+=!?._-]*")) || (word.isEmpty()));
     }
 
     private void notifyUser(String message) {

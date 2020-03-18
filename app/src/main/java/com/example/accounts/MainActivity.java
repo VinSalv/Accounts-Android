@@ -8,19 +8,24 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
+import android.graphics.drawable.BitmapDrawable;
 import android.hardware.biometrics.BiometricPrompt;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CancellationSignal;
 import android.text.InputType;
-import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Switch;
@@ -35,6 +40,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
@@ -51,6 +57,8 @@ public class MainActivity extends AppCompatActivity {
     private EditText passApp;
     private Switch flagApp;
     private String u;
+    private ArrayList<String> listUsr;
+    private ArrayAdapter<String> adapterUser;
 
     @RequiresApi(api = Build.VERSION_CODES.P)
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,11 +82,11 @@ public class MainActivity extends AppCompatActivity {
         ImageButton showPass = findViewById(R.id.showPass);
         mngUsr = new ManageUser();
         listUser = mngUsr.deserializationListUser(this);
-        ArrayList<String> listUsr = new ArrayList<>();
+        listUsr = new ArrayList<>();
         listUsr.add("Utente");
-        for (User u : listUser)
-            listUsr.add(u.getUser());
-        ArrayAdapter<String> adapterUser = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, listUsr);
+        for (User us : listUser)
+            listUsr.add(us.getUser());
+        adapterUser = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, listUsr);
         adapterUser.setDropDownViewResource(R.layout.spinner_item);
         userApp.setAdapter(adapterUser);
         userApp.setSelection(0);
@@ -86,7 +94,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 u = parent.getItemAtPosition(position).toString();
+                if (!(u.toLowerCase().equals("utente")))
+                    usr = new User(u, passApp.getText().toString());
             }
+
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
             }
@@ -94,9 +105,8 @@ public class MainActivity extends AppCompatActivity {
         mngApp = new ManageApp();
         log = mngApp.deserializationFlag(this);
         if (log.getFlagApp()) {
-            u=log.getUser();
             flagApp.setChecked(true);
-            usr = mngUsr.findUser(listUser, u);
+            usr = mngUsr.findUser(listUser, log.getUser());
             if (usr != null) {
                 if (usr.getFinger()) {
                     biometricAuthentication(layoutMainActivity);
@@ -113,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 passApp.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(MainActivity.this, R.color.colorAccent)));
-                usr = new User(u, passApp.getText().toString(), false, 0);
+                usr = new User(u, passApp.getText().toString());
                 if (!fieldCheck(usr)) return;
                 if (mngUsr.login(usr, listUser)) {
                     usr = mngUsr.findUser(listUser, u);
@@ -146,12 +156,81 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        TextView intro = findViewById(R.id.introText);
+        ImageButton intro = findViewById(R.id.introText);
         intro.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.P)
             @Override
             public void onClick(View view) {
                 goToWelcomeActivity();
+            }
+        });
+
+        TextView forgotPass = findViewById(R.id.forgotText);
+        forgotPass.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.P)
+            @Override
+            public void onClick(View view) {
+                LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+                View popupViewRecovery = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_recovery, (ViewGroup) findViewById(R.id.popupRecovery));
+                final PopupWindow popupWindowRecovery = new PopupWindow(popupViewRecovery, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+                popupWindowRecovery.setFocusable(true);
+                popupWindowRecovery.setOutsideTouchable(true);
+                popupWindowRecovery.setBackgroundDrawable(new BitmapDrawable());
+                View parent = layoutMainActivity.getRootView();
+                popupWindowRecovery.showAtLocation(parent, Gravity.CENTER, 0, 0);
+                final Spinner spinnerUser = popupViewRecovery.findViewById(R.id.userSpinner);
+                spinnerUser.setAdapter(adapterUser);
+                spinnerUser.setSelection(0);
+                Button goOn = popupViewRecovery.findViewById(R.id.goOnButton);
+                goOn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+                        View popupViewAnswer = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_answer, (ViewGroup) findViewById(R.id.popupAnswer));
+                        final PopupWindow popupWindowAnswer = new PopupWindow(popupViewAnswer, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+                        popupWindowAnswer.setFocusable(true);
+                        popupWindowAnswer.setOutsideTouchable(true);
+                        popupWindowAnswer.setBackgroundDrawable(new BitmapDrawable());
+                        View parent = layoutMainActivity.getRootView();
+                        popupWindowAnswer.showAtLocation(parent, Gravity.CENTER, 0, 0);
+                        if ((spinnerUser.getSelectedItem()).equals("Utente")) {
+                            popupWindowAnswer.dismiss();
+                            return;
+                        } else {
+                            popupWindowRecovery.dismiss();
+                        }
+                        ((TextView) popupViewAnswer.findViewById(R.id.questionText)).setText((mngUsr.findUser(listUser, (String) (spinnerUser.getSelectedItem()))).getQuestion());
+                        final EditText answer = popupViewAnswer.findViewById(R.id.answerEditText);
+                        Button recovery = popupViewAnswer.findViewById(R.id.recoveryButton);
+                        recovery.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                if (answer.getText().toString().toLowerCase().equals((mngUsr.findUser(listUser, ((String) spinnerUser.getSelectedItem()))).getAnswer().toLowerCase())) {
+                                    popupWindowAnswer.dismiss();
+                                    LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+                                    View popupViewPassRec = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_pass_recovery, (ViewGroup) findViewById(R.id.popupPassRecovery));
+                                    final PopupWindow popupWindowPassRec = new PopupWindow(popupViewPassRec, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+                                    popupWindowPassRec.setFocusable(true);
+                                    popupWindowPassRec.setOutsideTouchable(true);
+                                    popupWindowPassRec.setBackgroundDrawable(new BitmapDrawable());
+                                    View parent = layoutMainActivity.getRootView();
+                                    popupWindowPassRec.showAtLocation(parent, Gravity.CENTER, 0, 0);
+                                    ((TextView) popupViewPassRec.findViewById(R.id.passShowText)).setText((mngUsr.findUser(listUser, ((String) spinnerUser.getSelectedItem()))).getPassword());
+                                    Button done = popupViewPassRec.findViewById(R.id.done);
+                                    done.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            popupWindowPassRec.dismiss();
+                                        }
+                                    });
+                                    showPass((TextView) popupViewPassRec.findViewById(R.id.passShowText), (ImageButton) popupViewPassRec.findViewById((R.id.showPass)));
+                                } else {
+                                    answer.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(MainActivity.this, R.color.errorEditText)));
+                                }
+                            }
+                        });
+                    }
+                });
             }
         });
     }
@@ -174,7 +253,7 @@ public class MainActivity extends AppCompatActivity {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtra("owner", usr);
+        intent.putExtra("owner", mngUsr.findUser(listUser, usr.getUser()));
         startActivity(intent);
         finish();
     }
@@ -216,9 +295,8 @@ public class MainActivity extends AppCompatActivity {
             public void onAuthenticationSucceeded(BiometricPrompt.AuthenticationResult result) {
                 notifyUserShortWay("Autenticazione effettuata.");
                 super.onAuthenticationSucceeded(result);
-                usr = new User(u, passApp.getText().toString(), true, 1);
                 if (flagApp.isChecked()) {
-                    log = new LogApp(flagApp.isChecked(), u);
+                    log = new LogApp(flagApp.isChecked(), usr.getUser());
                     mngApp.serializationFlag(MainActivity.this, log);
                     goToCategoryActivity();
                 } else {
@@ -263,22 +341,22 @@ public class MainActivity extends AppCompatActivity {
         if (isInvalidWord(usr.getUser()) && isInvalidWord(usr.getPassword())) {
             userApp.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(MainActivity.this, R.color.errorEditText)));
             passApp.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(MainActivity.this, R.color.errorEditText)));
-            notifyUser("Campi Utente e Password non validi.");
+            notifyUser("Campi Utente e Password non validi. Caratteri validi: A-Z a-z 0-9 @#$%^&+=!?._");
             return false;
         } else if (isInvalidWord(usr.getUser())) {
             userApp.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(MainActivity.this, R.color.errorEditText)));
-            notifyUser("Campo Utente non valido.");
+            notifyUser("Campo Utente non valido. Caratteri validi: A-Z a-z 0-9 @#$%^&+=!?._");
             return false;
         } else if (isInvalidWord(usr.getPassword())) {
             passApp.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(MainActivity.this, R.color.errorEditText)));
-            notifyUser("Campo Password non valido.");
+            notifyUser("Campo Password non valido. Caratteri validi: A-Z a-z 0-9 @#$%^&+=!?._");
             return false;
         }
         return true;
     }
 
     public boolean isInvalidWord(String word) {
-        return ((!word.matches("[A-Za-z0-9?!_.-]*")) || (word.isEmpty()));
+        return ((!word.matches("[A-Za-z0-9@#$%^&+=!?._-]*")) || (word.isEmpty()));
     }
 
     private void notifyUser(String message) {
@@ -393,6 +471,23 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case MotionEvent.ACTION_UP:
                         et.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                        break;
+                }
+                return true;
+            }
+        });
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    public void showPass(final TextView tv, ImageButton showPass) {
+        showPass.setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        tv.setTextColor(ContextCompat.getColor(v.getContext(), R.color.rightText));
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        tv.setTextColor(ContextCompat.getColor(v.getContext(), R.color.transparent));
                         break;
                 }
                 return true;

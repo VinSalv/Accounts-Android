@@ -20,8 +20,11 @@
         android:layout_toStartOf="@id/editButton"
         android:text="@string/name"
         android:textColor="@color/rightText"
-        android:textSize="18sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        app:autoSizeMaxTextSize="20sp"
+        app:autoSizeMinTextSize="12sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform" />
 
     <ImageButton
         android:id="@+id/showButton"
@@ -66,12 +69,14 @@
         android:layout_marginStart="30dp"
         android:layout_marginBottom="15dp"
         android:autofillHints=""
-        android:ems="10"
         android:hint="@string/emailHint"
         android:textColor="@color/rightText"
         android:textColorHighlight="@color/textSelection"
         android:textIsSelectable="true"
-        android:textSize="16sp"
+        app:autoSizeMaxTextSize="20sp"
+        app:autoSizeMinTextSize="12sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
         tools:targetApi="o" />
 
     <ImageView
@@ -94,12 +99,14 @@
         android:layout_marginStart="30dp"
         android:layout_marginBottom="15dp"
         android:autofillHints=""
-        android:ems="10"
         android:hint="@string/userHint"
         android:textColor="@color/rightText"
         android:textColorHighlight="@color/textSelection"
         android:textIsSelectable="true"
-        android:textSize="16sp"
+        app:autoSizeMaxTextSize="20sp"
+        app:autoSizeMinTextSize="12sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
         tools:targetApi="o" />
 
     <ImageView
@@ -122,12 +129,14 @@
         android:layout_marginStart="30dp"
         android:layout_marginBottom="15dp"
         android:autofillHints=""
-        android:ems="10"
         android:hint="@string/passHint"
         android:textColor="@color/transparent"
         android:textColorHighlight="@color/textSelection"
         android:textIsSelectable="true"
-        android:textSize="16sp"
+        app:autoSizeMaxTextSize="20sp"
+        app:autoSizeMinTextSize="12sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
         tools:targetApi="o" />
 
     <ImageView
@@ -161,14 +170,15 @@
         android:layout_below="@id/passShowText"
         android:layout_marginStart="30dp"
         android:autofillHints=""
-        android:ems="10"
         android:gravity="start|top"
         android:hint="@string/description"
         android:textColor="@color/rightText"
         android:textColorHighlight="@color/textSelection"
         android:textIsSelectable="true"
-        android:textSize="16sp"
-        android:theme="@style/inputField"
+        app:autoSizeMaxTextSize="20sp"
+        app:autoSizeMinTextSize="12sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
         tools:targetApi="o" />
 
     <ImageView

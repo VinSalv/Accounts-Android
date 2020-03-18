@@ -412,7 +412,7 @@ public class EditActivity extends AppCompatActivity {
                         public void onClick(View v) {
                             LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
                             View popupViewSecurityToDeleteOneInflater = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_security, (ViewGroup) findViewById(R.id.popupSecurity));
-                            final PopupWindow popupWindowSecurityToDeleteOneInflater = new PopupWindow(popupViewSecurityToDeleteOneInflater, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+                            final PopupWindow popupWindowSecurityToDeleteOneInflater = new PopupWindow(popupViewSecurityToDeleteOneInflater, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
                             popupWindowSecurityToDeleteOneInflater.setOutsideTouchable(true);
                             popupWindowSecurityToDeleteOneInflater.setFocusable(true);
                             //noinspection deprecation
@@ -515,7 +515,7 @@ public class EditActivity extends AppCompatActivity {
                     public void onClick(View v) {
                         LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
                         View popupViewSecurity = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_security, (ViewGroup) findViewById(R.id.popupSecurity));
-                        final PopupWindow popupWindowSecurity = new PopupWindow(popupViewSecurity, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+                        final PopupWindow popupWindowSecurity = new PopupWindow(popupViewSecurity, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
                         popupWindowSecurity.setOutsideTouchable(false);
                         popupWindowSecurity.setFocusable(false);
                         popupWindowSecurity.setBackgroundDrawable(new BitmapDrawable());
@@ -963,7 +963,7 @@ public class EditActivity extends AppCompatActivity {
             public void onClick(View v) {
                 LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
                 View popupViewSecurityToDeleteOneInflater = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_security, (ViewGroup) findViewById(R.id.popupSecurity));
-                final PopupWindow popupWindowSecurityToDeleteOneInflater = new PopupWindow(popupViewSecurityToDeleteOneInflater, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+                final PopupWindow popupWindowSecurityToDeleteOneInflater = new PopupWindow(popupViewSecurityToDeleteOneInflater, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
                 popupWindowSecurityToDeleteOneInflater.setOutsideTouchable(true);
                 popupWindowSecurityToDeleteOneInflater.setFocusable(true);
                 popupWindowSecurityToDeleteOneInflater.setBackgroundDrawable(new BitmapDrawable());

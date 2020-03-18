@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/editUserLayout"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/rounded_popup"
     tools:context=".ProfileActivity">
@@ -14,13 +14,12 @@
         android:layout_marginStart="30dp"
         android:layout_marginBottom="5dp"
         android:autofillHints=""
-        android:ems="10"
         android:hint="@string/userHint"
         android:inputType="textPersonName"
-        android:maxLength="10"
+        android:maxLength="12"
         android:textColor="@color/rightText"
         android:textColorHighlight="@color/textSelection"
-        android:textSize="14sp"
+        android:textSize="16sp"
         android:theme="@style/inputField"
         tools:targetApi="o" />
 
@@ -44,7 +43,6 @@
         android:text="@string/saveButton"
         android:textAlignment="center"
         android:textColor="@color/colorPrimaryClear"
-        android:textSize="18sp"
-        android:textStyle="normal" />
+        android:textSize="18sp" />
 
 </RelativeLayout>

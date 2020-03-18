@@ -5,6 +5,8 @@ import java.io.Serializable;
 public class User implements Serializable {
     private String user;
     private String password;
+    private String question;
+    private String answer;
     private boolean finger;
     private int sort;
     private int colCat;
@@ -17,15 +19,8 @@ public class User implements Serializable {
         this.sort = sort;
         this.colCat = colCat;
         this.colAcc = colAcc;
-    }
-
-    public User(String user, String password, boolean finger) {
-        this.user = user;
-        this.password = password;
-        this.finger = finger;
-        this.sort = 1;
-        this.colCat = 2;
-        this.colAcc = 1;
+        this.answer = "";
+        this.question = "";
     }
 
     public User(String user, String password, boolean finger, int sort) {
@@ -35,6 +30,30 @@ public class User implements Serializable {
         this.sort = sort;
         this.colCat = 2;
         this.colAcc = 1;
+        this.answer = "";
+        this.question = "";
+    }
+
+    public User(String user, String password, boolean finger, String question, String answer) {
+        this.user = user;
+        this.password = password;
+        this.question = question;
+        this.answer = answer;
+        this.finger = false;
+        this.sort = 1;
+        this.colCat = 2;
+        this.colAcc = 1;
+    }
+
+    public User(String user, String password, boolean finger) {
+        this.user = user;
+        this.password = password;
+        this.finger = finger;
+        this.sort = 1;
+        this.colCat = 2;
+        this.colAcc = 1;
+        this.answer = "";
+        this.question = "";
     }
 
     public User(String user, String password) {
@@ -44,6 +63,8 @@ public class User implements Serializable {
         this.sort = 1;
         this.colCat = 2;
         this.colAcc = 1;
+        this.answer = "";
+        this.question = "";
     }
 
     int getColCat() {
@@ -88,6 +109,26 @@ public class User implements Serializable {
 
     boolean getFinger() {
         return this.finger;
+    }
+
+    public String getQuestion() {
+        return question;
+    }
+
+    public void setQuestion(String question) {
+        this.question = question;
+    }
+
+    public String getAnswer() {
+        return answer;
+    }
+
+    public void setAnswer(String answer) {
+        this.answer = answer;
+    }
+
+    public boolean isFinger() {
+        return finger;
     }
 
     void setFinger(boolean finger) {

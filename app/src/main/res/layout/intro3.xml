@@ -21,7 +21,10 @@
             android:gravity="center"
             android:padding="10dp"
             android:text="@string/intro3"
-            android:textSize="16sp" />
+            app:autoSizeMaxTextSize="14sp"
+            app:autoSizeMinTextSize="12sp"
+            app:autoSizeStepGranularity="2sp"
+            app:autoSizeTextType="uniform" />
 
         <ImageView
             android:id="@+id/textView2"
@@ -38,7 +41,10 @@
             android:gravity="center"
             android:padding="10dp"
             android:text="@string/intro4_2"
-            android:textSize="16sp" />
+            app:autoSizeMaxTextSize="14sp"
+            app:autoSizeMinTextSize="12sp"
+            app:autoSizeStepGranularity="2sp"
+            app:autoSizeTextType="uniform" />
 
         <ImageView
             android:id="@+id/imageView2"

@@ -17,9 +17,10 @@
             android:id="@+id/credential"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:padding="5dp"
             android:text="@string/credentialText"
             android:textColor="@color/rightText"
-            android:padding="5dp"/>
+            android:textSize="16sp" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -32,14 +33,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
                 android:autofillHints=""
-                android:ems="10"
                 android:hint="@string/userHint"
-                android:inputType="text"
-                android:maxLength="10"
-                android:shadowColor="#00D50D0D"
+                android:maxLength="12"
                 android:textColor="@color/rightText"
                 android:textColorHighlight="@color/textSelection"
-                android:textSize="14sp"
+                android:textSize="16sp"
                 android:theme="@style/inputField"
                 tools:targetApi="o" />
 
@@ -61,12 +59,11 @@
                 android:layout_below="@id/usernameEdit"
                 android:layout_marginStart="30dp"
                 android:autofillHints=""
-                android:ems="10"
                 android:hint="@string/passHint"
                 android:inputType="textPassword"
                 android:textColor="@color/rightText"
                 android:textColorHighlight="@color/textSelection"
-                android:textSize="14sp"
+                android:textSize="16sp"
                 android:theme="@style/inputField"
                 tools:targetApi="o" />
 
@@ -99,12 +96,11 @@
                 android:layout_below="@id/passwordEdit"
                 android:layout_marginStart="30dp"
                 android:autofillHints=""
-                android:ems="10"
                 android:hint="@string/passHint"
                 android:inputType="textPassword"
                 android:textColor="@color/rightText"
                 android:textColorHighlight="@color/textSelection"
-                android:textSize="14sp"
+                android:textSize="16sp"
                 android:theme="@style/inputField"
                 tools:targetApi="o" />
 
@@ -136,9 +132,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
+            android:padding="5dp"
             android:text="@string/authenticationText"
             android:textColor="@color/rightText"
-            android:padding="5dp"/>
+            android:textSize="16sp" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -152,18 +149,18 @@
                 android:layout_alignStart="@id/flagFinger"
                 android:layout_alignTop="@id/flagFinger"
                 android:layout_alignBottom="@id/flagFinger"
+                android:contentDescription="@string/fingerImage"
                 app:srcCompat="@drawable/fingerprint" />
 
             <Switch
                 android:id="@+id/flagFinger"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
                 android:paddingStart="30dp"
                 android:paddingEnd="10dp"
                 android:text="@string/flagFinger"
-                android:textSize="13sp"
-                android:textStyle="normal|bold"
+                android:textSize="14sp"
+                android:textStyle="normal"
                 android:theme="@style/SelectionSwitch"
                 app:titleTextColor="@color/rightText" />
         </RelativeLayout>
@@ -173,16 +170,70 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
+            android:padding="5dp"
             android:text="@string/recoveryText"
             android:textColor="@color/rightText"
-            android:padding="5dp"/>
+            android:textSize="16sp" />
 
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:animateLayoutChanges="true"
             android:background="@drawable/rounded_color">
 
+            <TextView
+                android:id="@+id/questionText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:text="@string/questionText"
+                android:textColor="@color/rightText"
+                android:textSize="14sp" />
+
+            <ImageView
+                android:id="@+id/questionMarkImage"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_alignTop="@id/questionSpinner"
+                android:layout_alignBottom="@id/questionSpinner"
+                android:contentDescription="@string/questionImage"
+                app:srcCompat="@drawable/questionmark" />
+
+            <Spinner
+                android:id="@+id/questionSpinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/questionText"
+                android:layout_alignStart="@id/questionText"
+                android:layout_marginStart="30sp" />
+
+            <EditText
+                android:id="@+id/questionEdit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/questionSpinner"
+                android:autofillHints=""
+                android:hint="@string/questionEditText"
+                android:textColor="@color/rightText"
+                android:textColorHighlight="@color/textSelection"
+                android:textSize="16sp"
+                android:theme="@style/inputField"
+                tools:targetApi="o" />
+
+            <EditText
+                android:id="@+id/answerEdit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/questionEdit"
+                android:autofillHints=""
+                android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890"
+                android:hint="@string/answerEditText"
+                android:textColor="@color/rightText"
+                android:textColorHighlight="@color/textSelection"
+                android:textSize="16sp"
+                android:theme="@style/inputField"
+                tools:targetApi="o" />
         </RelativeLayout>
 
     </LinearLayout>

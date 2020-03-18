@@ -24,7 +24,7 @@
             android:paddingEnd="7dp"
             android:text="@string/ColumnCategory"
             android:textColor="@color/rightText"
-            android:textSize="20sp"
+            android:textSize="18sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintWidth_percent="0.8"
             tools:ignore="MissingConstraints" />
@@ -51,7 +51,7 @@
             android:paddingEnd="7dp"
             android:text="@string/ColumnAccount"
             android:textColor="@color/rightText"
-            android:textSize="20sp"
+            android:textSize="18sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/customizeCategory"
             app:layout_constraintWidth_percent="0.8" />

@@ -19,8 +19,12 @@
             android:gravity="center"
             android:padding="10dp"
             android:text="@string/intro1"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:autoSizeMaxTextSize="22sp"
+            app:autoSizeMinTextSize="20sp"
+            app:autoSizeStepGranularity="2sp"
+            app:autoSizeTextType="uniform" />
 
         <TextView
             android:id="@+id/textView2"
@@ -29,7 +33,10 @@
             android:gravity="center"
             android:padding="10dp"
             android:text="@string/intro1_2"
-            android:textSize="16sp" />
+            app:autoSizeMaxTextSize="14sp"
+            app:autoSizeMinTextSize="12sp"
+            app:autoSizeStepGranularity="2sp"
+            app:autoSizeTextType="uniform" />
 
         <TextView
             android:id="@+id/textView3"
@@ -38,7 +45,10 @@
             android:gravity="center"
             android:padding="10dp"
             android:text="@string/intro1_3"
-            android:textSize="16sp" />
+            app:autoSizeMaxTextSize="14sp"
+            app:autoSizeMinTextSize="12sp"
+            app:autoSizeStepGranularity="2sp"
+            app:autoSizeTextType="uniform" />
 
         <ImageView
             android:id="@+id/imageView"

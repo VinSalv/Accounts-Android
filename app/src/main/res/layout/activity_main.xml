@@ -15,6 +15,15 @@
         android:theme="@style/AppTheme.AppBarOverlay" />
 
     <ImageButton
+        android:id="@+id/introText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/transparent"
+        android:contentDescription="@string/infoButton"
+        android:padding="10dp"
+        app:srcCompat="@android:drawable/ic_menu_help" />
+
+    <ImageButton
         android:id="@+id/aboutButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -49,8 +58,7 @@
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
             android:textColor="@color/colorPrimaryDark"
-            android:textSize="22sp"
-            android:textStyle="normal"
+            android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintWidth_percent="0.5"
             tools:ignore="MissingConstraints" />
@@ -64,8 +72,7 @@
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
             android:textColor="@color/colorPrimaryDark"
-            android:textSize="22sp"
-            android:textStyle="normal"
+            android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintWidth_percent="0.5"
             tools:ignore="MissingConstraints" />

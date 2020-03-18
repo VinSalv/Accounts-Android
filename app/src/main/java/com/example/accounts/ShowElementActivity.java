@@ -420,7 +420,7 @@ public class ShowElementActivity extends AppCompatActivity implements PopupMenu.
                         public void onClick(View v) {
                             LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
                             View popupViewSecurity = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_security, (ViewGroup) findViewById(R.id.popupSecurity));
-                            final PopupWindow popupWindowSecurity = new PopupWindow(popupViewSecurity, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+                            final PopupWindow popupWindowSecurity = new PopupWindow(popupViewSecurity, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
                             popupWindowSecurity.setOutsideTouchable(true);
                             popupWindowSecurity.setFocusable(true);
                             popupWindowSecurity.setBackgroundDrawable(new BitmapDrawable());
@@ -480,7 +480,7 @@ public class ShowElementActivity extends AppCompatActivity implements PopupMenu.
             case R.id.delete:
                 LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
                 View popupViewDeleteAccount = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_security, (ViewGroup) findViewById(R.id.popupSecurity));
-                final PopupWindow popupWindowDeleteAccount = new PopupWindow(popupViewDeleteAccount, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+                final PopupWindow popupWindowDeleteAccount = new PopupWindow(popupViewDeleteAccount, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
                 popupWindowDeleteAccount.setOutsideTouchable(true);
                 popupWindowDeleteAccount.setFocusable(true);
                 //noinspection deprecation

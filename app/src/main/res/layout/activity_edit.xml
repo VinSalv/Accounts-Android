@@ -47,8 +47,7 @@
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
             android:textColor="@color/colorPrimaryDark"
-            android:textSize="22sp"
-            android:textStyle="normal"
+            android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintWidth_percent="0.5"
             tools:ignore="MissingConstraints" />
@@ -62,8 +61,7 @@
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
             android:textColor="@color/colorPrimaryDark"
-            android:textSize="22sp"
-            android:textStyle="normal"
+            android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintWidth_percent="0.5"
             tools:ignore="MissingConstraints" />

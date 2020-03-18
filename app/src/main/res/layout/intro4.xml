@@ -29,7 +29,10 @@
             android:gravity="center"
             android:padding="10dp"
             android:text="@string/intro4"
-            android:textSize="16sp" />
+            app:autoSizeMaxTextSize="14sp"
+            app:autoSizeMinTextSize="12sp"
+            app:autoSizeStepGranularity="2sp"
+            app:autoSizeTextType="uniform" />
 
         <ImageView
             android:id="@+id/textView3"

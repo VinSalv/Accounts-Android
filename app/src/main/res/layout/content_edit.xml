@@ -35,13 +35,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:autofillHints=""
-                    android:ems="10"
                     android:hint="@string/nameHint"
                     android:inputType="textPersonName"
-                    android:maxLength="10"
+                    android:maxLength="12"
                     android:textColor="@color/rightText"
                     android:textColorHighlight="@color/textSelection"
-                    android:textSize="14sp"
+                    android:textSize="16sp"
                     android:theme="@style/inputField"
                     tools:targetApi="o" />
 

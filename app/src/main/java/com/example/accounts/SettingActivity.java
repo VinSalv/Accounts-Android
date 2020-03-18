@@ -112,7 +112,7 @@ public class SettingActivity extends AppCompatActivity {
                 public void onClick(View view) {
                     LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
                     View popupViewProfile = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_security_password, (ViewGroup) findViewById(R.id.passSecurityPopup));
-                    final PopupWindow popupWindowProfile = new PopupWindow(popupViewProfile, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+                    final PopupWindow popupWindowProfile = new PopupWindow(popupViewProfile, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
                     popupWindowProfile.setOutsideTouchable(true);
                     popupWindowProfile.setFocusable(true);
                     popupWindowProfile.setBackgroundDrawable(new BitmapDrawable());
@@ -150,7 +150,7 @@ public class SettingActivity extends AppCompatActivity {
                 public void onClick(View view) {
                     LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
                     final View popupViewPdf = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_security_password, (ViewGroup) findViewById(R.id.passSecurityPopup));
-                    final PopupWindow popupWindowPdf = new PopupWindow(popupViewPdf, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+                    final PopupWindow popupWindowPdf = new PopupWindow(popupViewPdf, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
                     popupWindowPdf.setOutsideTouchable(true);
                     popupWindowPdf.setFocusable(true);
                     popupWindowPdf.setBackgroundDrawable(new BitmapDrawable());
@@ -166,7 +166,7 @@ public class SettingActivity extends AppCompatActivity {
                                 popupWindowPdf.dismiss();
                                 LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
                                 final View popupViewChoseCat = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_pdf_chose_category, (ViewGroup) findViewById(R.id.pdfChoseCategoryPopup));
-                                final PopupWindow popupWindowChoseCat = new PopupWindow(popupViewChoseCat, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+                                final PopupWindow popupWindowChoseCat = new PopupWindow(popupViewChoseCat, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
                                 popupWindowChoseCat.setOutsideTouchable(true);
                                 popupWindowChoseCat.setFocusable(true);
                                 popupWindowChoseCat.setBackgroundDrawable(new BitmapDrawable());
@@ -243,67 +243,62 @@ public class SettingActivity extends AppCompatActivity {
                                         } else popupWindowChoseCat.dismiss();
                                         LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
                                         View popupViewCreatePdf = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_pdf, (ViewGroup) findViewById(R.id.popupPdf));
-                                        final PopupWindow popupWindowCreatePdf = new PopupWindow(popupViewCreatePdf, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+                                        final PopupWindow popupWindowCreatePdf = new PopupWindow(popupViewCreatePdf, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
                                         popupWindowCreatePdf.setOutsideTouchable(true);
                                         popupWindowCreatePdf.setFocusable(true);
                                         popupWindowCreatePdf.setBackgroundDrawable(new BitmapDrawable());
                                         View parent = layoutSettingActivity.getRootView();
                                         popupWindowCreatePdf.showAtLocation(parent, Gravity.CENTER, 0, 0);
-                                        final RadioGroup radioGroupSortPdf = popupViewCreatePdf.findViewById(R.id.sortPDF);
+                                        final RadioGroup radioGroupSortPdfCategory = popupViewCreatePdf.findViewById(R.id.sortPDFCategory);
+                                        final RadioGroup radioGroupSortPdfAccount = popupViewCreatePdf.findViewById(R.id.sortPDFAccount);
                                         final RadioGroup radioGroupOrientationPdf = popupViewCreatePdf.findViewById(R.id.orientationPDF);
-                                        final RadioButton radioButtonIncreasing = popupViewCreatePdf.findViewById(R.id.increasing);
+                                        final RadioButton radioButtonIncreasingCategory = popupViewCreatePdf.findViewById(R.id.increasingCategory);
+                                        final RadioButton radioButtonDecreasingCategory = popupViewCreatePdf.findViewById(R.id.decreasingCategory);
+                                        final RadioButton radioButtonIncreasingAccount = popupViewCreatePdf.findViewById(R.id.increasingAccount);
+                                        final RadioButton radioButtonDecreasingAccount = popupViewCreatePdf.findViewById(R.id.decreasingAccount);
                                         final RadioButton radioButtonHorizontal = popupViewCreatePdf.findViewById(R.id.horizontal);
-                                        radioGroupSortPdf.check(radioButtonIncreasing.getId());
+                                        radioGroupSortPdfCategory.check(radioButtonIncreasingCategory.getId());
+                                        radioGroupSortPdfAccount.check(radioButtonIncreasingAccount.getId());
                                         radioGroupOrientationPdf.check(radioButtonHorizontal.getId());
                                         Button conf = popupViewCreatePdf.findViewById(R.id.confirmation);
                                         conf.setOnClickListener(new View.OnClickListener() {
                                             @Override
                                             public void onClick(View v) {
-                                                if (radioGroupSortPdf.getCheckedRadioButtonId() == radioButtonIncreasing.getId()) {
-                                                    path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/PDF_Accounts/";
-                                                    dir = new File(path);
-                                                    if (!dir.exists()) dir.mkdirs();
-                                                    if (radioGroupOrientationPdf.getCheckedRadioButtonId() == radioButtonHorizontal.getId()) {
-                                                        ArrayList<Category> listCategoryApp = new ArrayList<>();
-                                                        for (Category singleCategory : listCategoryPdf) {
-                                                            ArrayList<Account> listApp = (increasing(singleCategory.getListAcc()));
-                                                            singleCategory.setListAcc(listApp);
-                                                            listCategoryApp.add(singleCategory);
-                                                        }
-                                                        createPDF(listCategoryPdf, path, dir, true);
-                                                    } else {
-                                                        ArrayList<Category> listCategoryApp = new ArrayList<>();
-                                                        for (Category singleCategory : listCategoryPdf) {
-                                                            ArrayList<Account> listApp = (increasing(singleCategory.getListAcc()));
-                                                            singleCategory.setListAcc(listApp);
-                                                            listCategoryApp.add(singleCategory);
-                                                        }
-                                                        createPDF(listCategoryPdf, path, dir, false);
+                                                path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/PDF_Accounts/";
+                                                dir = new File(path);
+                                                if (!dir.exists()) dir.mkdirs();
+                                                ArrayList<Category> listCategoryApp = new ArrayList<>();
+                                                if (radioGroupSortPdfCategory.getCheckedRadioButtonId() == radioButtonIncreasingCategory.getId()) {
+                                                    listCategoryApp = increasingCat(listCategoryPdf);
+                                                } else if (radioGroupSortPdfCategory.getCheckedRadioButtonId() == radioButtonDecreasingCategory.getId()) {
+                                                    listCategoryApp = decreasingCat(listCategoryPdf);
+                                                } else listCategoryApp = listCategoryPdf;
+                                                ArrayList<Category> listCategoryAppPDF = new ArrayList<>();
+                                                if (radioGroupSortPdfAccount.getCheckedRadioButtonId() == radioButtonIncreasingAccount.getId()) {
+                                                    for (Category singleCategory : listCategoryApp) {
+                                                        ArrayList<Account> listApp = (increasing(singleCategory.getListAcc()));
+                                                        singleCategory.setListAcc(listApp);
+                                                        listCategoryAppPDF.add(singleCategory);
                                                     }
-                                                    popupWindowCreatePdf.dismiss();
+                                                } else if (radioGroupSortPdfAccount.getCheckedRadioButtonId() == radioButtonDecreasingAccount.getId()) {
+                                                    for (Category singleCategory : listCategoryApp) {
+                                                        ArrayList<Account> listApp = (decreasing(singleCategory.getListAcc()));
+                                                        singleCategory.setListAcc(listApp);
+                                                        listCategoryAppPDF.add(singleCategory);
+                                                    }
                                                 } else {
-                                                    path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/PDF_Accounts/";
-                                                    dir = new File(path);
-                                                    if (!dir.exists()) dir.mkdirs();
-                                                    if (radioGroupOrientationPdf.getCheckedRadioButtonId() == radioButtonHorizontal.getId()) {
-                                                        ArrayList<Category> listCategoryApp = new ArrayList<>();
-                                                        for (Category singleCategory : listCategoryPdf) {
-                                                            ArrayList<Account> listApp = (decreasing(singleCategory.getListAcc()));
-                                                            singleCategory.setListAcc(listApp);
-                                                            listCategoryApp.add(singleCategory);
-                                                        }
-                                                        createPDF(listCategoryPdf, path, dir, true);
-                                                    } else {
-                                                        ArrayList<Category> listCategoryApp = new ArrayList<>();
-                                                        for (Category singleCategory : listCategoryPdf) {
-                                                            ArrayList<Account> listApp = (decreasing(singleCategory.getListAcc()));
-                                                            singleCategory.setListAcc(listApp);
-                                                            listCategoryApp.add(singleCategory);
-                                                        }
-                                                        createPDF(listCategoryPdf, path, dir, false);
+                                                    for (Category singleCategory : listCategoryApp) {
+                                                        ArrayList<Account> listApp = singleCategory.getListAcc();
+                                                        singleCategory.setListAcc(listApp);
+                                                        listCategoryAppPDF.add(singleCategory);
                                                     }
-                                                    popupWindowCreatePdf.dismiss();
                                                 }
+                                                if (radioGroupOrientationPdf.getCheckedRadioButtonId() == radioButtonHorizontal.getId()) {
+                                                    createPDF(listCategoryAppPDF, path, dir, true);
+                                                } else {
+                                                    createPDF(listCategoryAppPDF, path, dir, false);
+                                                }
+                                                popupWindowCreatePdf.dismiss();
                                             }
                                         });
                                     }
@@ -312,7 +307,9 @@ public class SettingActivity extends AppCompatActivity {
                                 popupText.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(SettingActivity.this, R.color.errorEditText)));
                                 notifyUser("Password errata.");
                             }
+
                             showPass = popupViewPdf.findViewById(R.id.showPass);
+
                             showPass(popupText, showPass);
                         }
                     });
@@ -324,7 +321,7 @@ public class SettingActivity extends AppCompatActivity {
                 public void onClick(View view) {
                     LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
                     View popupViewDeleteProfile = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_security_password, (ViewGroup) findViewById(R.id.passSecurityPopup));
-                    final PopupWindow popupWindowDeleteProfile = new PopupWindow(popupViewDeleteProfile, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+                    final PopupWindow popupWindowDeleteProfile = new PopupWindow(popupViewDeleteProfile, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
                     popupWindowDeleteProfile.setOutsideTouchable(true);
                     popupWindowDeleteProfile.setFocusable(true);
                     popupWindowDeleteProfile.setBackgroundDrawable(new BitmapDrawable());
@@ -358,6 +355,7 @@ public class SettingActivity extends AppCompatActivity {
             notifyUser("Credenziali non rilevate. Impossibile aprire le impostazioni.");
             goToMainActivity();
         }
+
     }
 
     public void goToMainActivity() {
@@ -436,7 +434,7 @@ public class SettingActivity extends AppCompatActivity {
                 for (Category c : listCategory) {
                     PdfPTable pt = new PdfPTable(5);
                     pt.setWidthPercentage(100);
-                    float[] fl = new float[]{10, 25, 20, 15, 30};
+                    float[] fl = new float[]{15, 25, 20, 15, 25};
                     pt.setWidths(fl);
                     Phrase f;
                     if (j != 0) {
@@ -627,6 +625,26 @@ public class SettingActivity extends AppCompatActivity {
             @Override
             public int compare(Account lhs, Account rhs) {
                 return rhs.getName().toLowerCase().compareTo(lhs.getName().toLowerCase());
+            }
+        });
+        return list;
+    }
+
+    public ArrayList<Category> increasingCat(ArrayList<Category> list) {
+        Collections.sort(list, new Comparator<Category>() {
+            @Override
+            public int compare(Category lhs, Category rhs) {
+                return lhs.getCat().toLowerCase().compareTo(rhs.getCat().toLowerCase());
+            }
+        });
+        return list;
+    }
+
+    public ArrayList<Category> decreasingCat(ArrayList<Category> list) {
+        Collections.sort(list, new Comparator<Category>() {
+            @Override
+            public int compare(Category lhs, Category rhs) {
+                return rhs.getCat().toLowerCase().compareTo(lhs.getCat().toLowerCase());
             }
         });
         return list;

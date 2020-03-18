@@ -18,6 +18,10 @@
         android:textColor="@color/rightText"
         android:textSize="50sp"
         android:textStyle="bold"
+        app:autoSizeMaxTextSize="60sp"
+        app:autoSizeMinTextSize="30sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintWidth_percent="0.8"
@@ -51,6 +55,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="30dp"
+            android:layout_marginBottom="5dp"
             android:autofillHints=""
             android:theme="@style/inputField"
             tools:targetApi="o" />
@@ -73,7 +78,6 @@
             android:layout_below="@id/userApp"
             android:layout_marginStart="30dp"
             android:autofillHints=""
-            android:ems="10"
             android:hint="@string/passswordHint"
             android:inputType="textPassword"
             android:textColor="@color/rightText"
@@ -115,20 +119,21 @@
             android:layout_marginTop="5dp"
             android:text="@string/flagApp"
             android:textColor="@color/rightText"
-            android:textSize="13sp"
             android:textStyle="normal|bold"
             android:theme="@style/SelectionSwitch" />
 
     </RelativeLayout>
 
     <TextView
-        android:id="@+id/introText"
+        android:id="@+id/forgotText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:gravity="end"
         android:padding="10dp"
-        android:text="@string/introText"
+        android:text="@string/passwordRecovery"
         android:textColor="@color/colorPrimaryDark"
+        android:textSize="14sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="@+id/relativeLayout"
         app:layout_constraintTop_toBottomOf="@+id/relativeLayout"
         app:layout_constraintWidth_percent="0.5" />

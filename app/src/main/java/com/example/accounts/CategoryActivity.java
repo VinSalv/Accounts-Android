@@ -163,7 +163,7 @@ public class CategoryActivity extends AppCompatActivity implements PopupMenu.OnM
                 public void onClick(View v) {
                     LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
                     final View popupViewAddNewCategory = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_category, (ViewGroup) findViewById(R.id.categoryPopup));
-                    final PopupWindow popupWindowAddNewCategory = new PopupWindow(popupViewAddNewCategory, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+                    final PopupWindow popupWindowAddNewCategory = new PopupWindow(popupViewAddNewCategory, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
                     popupWindowAddNewCategory.setOutsideTouchable(true);
                     popupWindowAddNewCategory.setFocusable(true);
                     popupWindowAddNewCategory.setBackgroundDrawable(new BitmapDrawable());
@@ -286,7 +286,7 @@ public class CategoryActivity extends AppCompatActivity implements PopupMenu.OnM
             if (!selectedIds.isEmpty()) {
                 LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
                 View popupViewSecurityToDeleteCategory = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_security, (ViewGroup) findViewById(R.id.popupSecurity));
-                final PopupWindow popupWindowSecurityToDeleteCategory = new PopupWindow(popupViewSecurityToDeleteCategory, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+                final PopupWindow popupWindowSecurityToDeleteCategory = new PopupWindow(popupViewSecurityToDeleteCategory, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
                 popupWindowSecurityToDeleteCategory.setOutsideTouchable(true);
                 popupWindowSecurityToDeleteCategory.setFocusable(true);
                 popupWindowSecurityToDeleteCategory.setBackgroundDrawable(new BitmapDrawable());
@@ -387,7 +387,7 @@ public class CategoryActivity extends AppCompatActivity implements PopupMenu.OnM
                 User usrApp = mngUsr.findUser(listUser = mngUsr.deserializationListUser(this), usr.getUser());
                 LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
                 @SuppressLint("InflateParams") View popupViewSort = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_sort, null);
-                final PopupWindow popupWindowSort = new PopupWindow(popupViewSort, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+                final PopupWindow popupWindowSort = new PopupWindow(popupViewSort, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
                 popupWindowSort.setOutsideTouchable(true);
                 popupWindowSort.setFocusable(true);
                 popupWindowSort.setBackgroundDrawable(new BitmapDrawable());
@@ -470,7 +470,7 @@ public class CategoryActivity extends AppCompatActivity implements PopupMenu.OnM
     }
 
     public boolean isInvalidWord(String word) {
-        return ((!word.matches("[A-Za-z0-9?!_.-]*")) || (word.isEmpty()));
+        return ((!word.matches("[A-Za-z0-9@#$%^&+=!?._-]*")) || (word.isEmpty()));
     }
 
     public String fixName(String name) {

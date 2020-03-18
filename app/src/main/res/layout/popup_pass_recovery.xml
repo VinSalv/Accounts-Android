@@ -1,67 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/passSecurityPopup"
+    android:id="@+id/popupPassRecovery"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/rounded_popup"
-    android:orientation="vertical">
+    tools:context=".ProfileActivity">
 
     <TextView
-        android:id="@+id/passSecurityText"
+        android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
-        android:text="@string/passwordSecurityText"
-        android:textColor="@color/rightText"
+        android:shadowColor="@color/rightEditText"
+        android:text="@string/passTextView"
         android:textSize="16sp" />
 
-    <EditText
-        android:id="@+id/passSecurityEditText"
+    <TextView
+        android:id="@+id/passShowText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/passSecurityText"
+        android:layout_below="@id/textView"
         android:layout_marginStart="30dp"
         android:layout_marginBottom="5dp"
         android:autofillHints=""
+        android:ems="10"
         android:hint="@string/passHint"
-        android:inputType="textPassword"
-        android:textColor="@color/rightText"
+        android:textColor="@color/transparent"
         android:textColorHighlight="@color/textSelection"
-        android:textSize="16sp"
-        android:theme="@style/inputField"
+        android:textIsSelectable="true"
+        app:autoSizeMaxTextSize="14sp"
+        app:autoSizeMinTextSize="12sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
         tools:targetApi="o" />
 
     <ImageView
-        android:id="@+id/passSecurityImage"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_alignStart="@+id/passSecurityEditText"
-        android:layout_alignTop="@id/passSecurityEditText"
-        android:layout_alignBottom="@+id/passSecurityEditText"
+        android:id="@+id/passShowImage"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_alignStart="@+id/passShowText"
+        android:layout_alignTop="@id/passShowText"
+        android:layout_alignBottom="@+id/passShowText"
         android:layout_alignParentStart="true"
+        android:layout_marginBottom="3dp"
         android:contentDescription="@string/passImage"
         android:src="@drawable/pass" />
 
     <ImageButton
         android:id="@+id/showPass"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@id/passSecurityEditText"
-        android:layout_alignEnd="@+id/passSecurityEditText"
-        android:layout_alignBottom="@+id/passSecurityEditText"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_alignTop="@id/passShowText"
+        android:layout_alignEnd="@+id/passShowText"
+        android:layout_alignBottom="@+id/passShowText"
         android:backgroundTint="@color/transparent"
         android:contentDescription="@string/showPassImage"
         android:src="@android:drawable/ic_menu_view" />
 
     <Button
-        android:id="@+id/confirmation"
+        android:id="@+id/done"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/passSecurityEditText"
+        android:layout_below="@id/passShowText"
         android:background="@drawable/rounded_button"
-        android:text="@string/Confirmation"
+        android:text="@string/doneText"
         android:textAlignment="center"
         android:textColor="@color/colorPrimaryClear"
         android:textSize="18sp" />
+
 </RelativeLayout>

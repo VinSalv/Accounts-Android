@@ -1,5 +1,7 @@
 package com.example.accounts;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.res.ColorStateList;
@@ -9,9 +11,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,6 +41,9 @@ public class SignActivity extends AppCompatActivity {
     private EditText passEdit;
     private EditText passEdit2;
     private Switch flagFinger;
+    private Spinner questionSpinner;
+    private EditText questionEdit;
+    private EditText answerEdit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +85,47 @@ public class SignActivity extends AppCompatActivity {
         flagFinger = findViewById(R.id.flagFinger);
         showPass(passEdit, showPass);
         showPass(passEdit2, showPass2);
+        questionEdit = findViewById(R.id.questionEdit);
+        answerEdit = findViewById(R.id.answerEdit);
+        questionSpinner = findViewById(R.id.questionSpinner);
+        ArrayList<String> listQuestion = new ArrayList<>();
+        listQuestion.add("Altro");
+        listQuestion.add("Qual è il tuo colore preferito?");
+        listQuestion.add("Qual era il tuo soprannome da bambino?");
+        listQuestion.add("Qual è il nome del tuo primo animale domestico?");
+        ArrayAdapter<String> adapterUser = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, listQuestion);
+        adapterUser.setDropDownViewResource(R.layout.spinner_item_question);
+        questionSpinner.setAdapter(adapterUser);
+        questionSpinner.setSelection(0);
+        questionSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (parent.getItemAtPosition(position).toString().equals("Altro"))
+                    questionEdit.animate()
+                            .alpha(1.0f)
+                            .setListener(new AnimatorListenerAdapter() {
+                                @Override
+                                public void onAnimationStart(Animator animation) {
+                                    super.onAnimationStart(animation);
+                                    questionEdit.setVisibility(View.VISIBLE);
+                                }
+                            });
+                else
+                    questionEdit.animate()
+                            .alpha(0.0f)
+                            .setListener(new AnimatorListenerAdapter() {
+                                @Override
+                                public void onAnimationStart(Animator animation) {
+                                    super.onAnimationStart(animation);
+                                    questionEdit.setVisibility(View.GONE);
+                                }
+                            });
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
         mngCat = new ManageCategory();
         Button sign = findViewById(R.id.signButton);
         sign.setOnClickListener(new View.OnClickListener() {
@@ -85,7 +134,35 @@ public class SignActivity extends AppCompatActivity {
                 userEdit.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(SignActivity.this, R.color.colorAccent)));
                 passEdit.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(SignActivity.this, R.color.colorAccent)));
                 passEdit2.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(SignActivity.this, R.color.colorAccent)));
+                questionEdit.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(SignActivity.this, R.color.colorAccent)));
+                answerEdit.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(SignActivity.this, R.color.colorAccent)));
                 User usr = new User(fixName(userEdit.getText().toString()), passEdit.getText().toString(), flagFinger.isChecked());
+                if (questionSpinner.getSelectedItemPosition() == 0) {
+                    if (questionEdit.getText().toString().isEmpty() && answerEdit.getText().toString().isEmpty()) {
+                        questionEdit.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(SignActivity.this, R.color.errorEditText)));
+                        answerEdit.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(SignActivity.this, R.color.errorEditText)));
+                        notifyUser("Domanda e risposta non compilati.");
+                        return;
+                    } else if (questionEdit.getText().toString().isEmpty()) {
+                        questionEdit.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(SignActivity.this, R.color.errorEditText)));
+                        notifyUser("Domanda non compilata.");
+                        return;
+                    } else if (answerEdit.getText().toString().isEmpty()) {
+                        answerEdit.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(SignActivity.this, R.color.errorEditText)));
+                        notifyUser("Risposta non compilata.");
+                        return;
+                    }
+                    usr.setQuestion(questionEdit.getText().toString());
+                    usr.setAnswer(answerEdit.getText().toString());
+                } else {
+                    if (answerEdit.getText().toString().isEmpty()) {
+                        answerEdit.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(SignActivity.this, R.color.errorEditText)));
+                        notifyUser("Risposta non compilata.");
+                        return;
+                    }
+                    usr.setQuestion(questionSpinner.getSelectedItem().toString());
+                    usr.setAnswer(answerEdit.getText().toString());
+                }
                 if (!fieldCheck(usr)) return;
                 if (!passEdit.getText().toString().equals(passEdit2.getText().toString())) {
                     passEdit.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(SignActivity.this, R.color.errorEditText)));
@@ -133,22 +210,22 @@ public class SignActivity extends AppCompatActivity {
         if (isInvalidWord(usr.getUser()) && isInvalidWord(usr.getPassword())) {
             userEdit.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(SignActivity.this, R.color.errorEditText)));
             passEdit.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(SignActivity.this, R.color.errorEditText)));
-            notifyUser("Campi Utente e Password non validi.");
+            notifyUser("Campi Utente e Password non validi. Caratteri validi: A-Z a-z 0-9 @#$%^&+=!?._");
             return false;
         } else if (isInvalidWord(usr.getUser())) {
             userEdit.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(SignActivity.this, R.color.errorEditText)));
-            notifyUser("Campo Utente non valido.");
+            notifyUser("Campo Utente non valido. Caratteri validi: A-Z a-z 0-9 @#$%^&+=!?._");
             return false;
         } else if (isInvalidWord(usr.getPassword())) {
             passEdit.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(SignActivity.this, R.color.errorEditText)));
-            notifyUser("Campo Password non valido.");
+            notifyUser("Campo Password non valido. Caratteri validi: A-Z a-z 0-9 @#$%^&+=!?._");
             return false;
         }
         return true;
     }
 
     public boolean isInvalidWord(String word) {
-        return ((!word.matches("[A-Za-z0-9?!_.-]*")) || (word.isEmpty()));
+        return ((!word.matches("[A-Za-z0-9@#$%^&+=!?._-]*")) || (word.isEmpty()));
     }
 
     private void notifyUser(String message) {

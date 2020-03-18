@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/popupRename"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/rounded_popup"
     android:orientation="vertical">
@@ -11,11 +11,10 @@
         android:id="@+id/renameText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="5dp"
         android:text="@string/renameText"
         android:textColor="@color/rightText"
-        android:textSize="18sp"
-        android:textStyle="normal" />
+        android:textSize="16sp" />
 
     <EditText
         android:id="@+id/renameEditText"
@@ -24,13 +23,11 @@
         android:layout_below="@id/renameText"
         android:layout_marginBottom="5dp"
         android:autofillHints=""
-        android:ems="10"
         android:hint="@string/nameHint"
-        android:inputType="none"
-        android:maxLength="10"
+        android:maxLength="12"
         android:textColor="@color/rightText"
         android:textColorHighlight="@color/textSelection"
-        android:textSize="14sp"
+        android:textSize="16sp"
         android:theme="@style/inputField"
         tools:targetApi="o" />
 
@@ -43,6 +40,5 @@
         android:text="@string/Confirmation"
         android:textAlignment="center"
         android:textColor="@color/colorPrimaryClear"
-        android:textSize="18sp"
-        android:textStyle="normal" />
+        android:textSize="18sp" />
 </RelativeLayout>
