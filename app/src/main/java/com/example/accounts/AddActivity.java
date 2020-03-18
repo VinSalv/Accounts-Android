@@ -36,7 +36,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.Objects;
 
-@SuppressWarnings({"MismatchedQueryAndUpdateOfCollection", "SuspiciousMethodCalls", "deprecation"})
+@SuppressWarnings({"MismatchedQueryAndUpdateOfCollection", "SuspiciousMethodCalls", "deprecation", "SameParameterValue"})
 public class AddActivity extends AppCompatActivity {
     private RelativeLayout layoutAddActivity;
     private LinearLayout layoutContentAddToAddOtherAccount;

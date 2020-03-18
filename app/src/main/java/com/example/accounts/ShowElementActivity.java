@@ -36,7 +36,6 @@ import java.util.Objects;
 @SuppressWarnings("deprecation")
 public class ShowElementActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
     private CoordinatorLayout layoutShowElementActivity;
-    private LinearLayout layoutShowElement;
     private ManageCategory mngCat;
     private ArrayList<Account> listAccount;
     private ArrayList<Category> listCategory;
@@ -55,7 +54,7 @@ public class ShowElementActivity extends AppCompatActivity implements PopupMenu.
         showToolbar.setTitle("");
         setSupportActionBar(showToolbar);
         layoutShowElementActivity = findViewById(R.id.coordinatorLayShow);
-        layoutShowElement = findViewById(R.id.linearLayoutShowElements);
+        LinearLayout layoutShowElement = findViewById(R.id.linearLayoutShowElements);
         ManageUser mngUsr = new ManageUser();
         ArrayList<User> listUsr = mngUsr.deserializationListUser(this);
         usr = mngUsr.findUser(listUsr, ((User) Objects.requireNonNull((Objects.requireNonNull(getIntent().getExtras())).get("owner"))).getUser());

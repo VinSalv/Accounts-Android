@@ -45,6 +45,7 @@ import java.util.Objects;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
+@SuppressWarnings("deprecation")
 public class MainActivity extends AppCompatActivity {
     private static final int PERMISSION_REQUEST_CODE = 200;
     private RelativeLayout layoutMainActivity;
@@ -57,7 +58,6 @@ public class MainActivity extends AppCompatActivity {
     private EditText passApp;
     private Switch flagApp;
     private String u;
-    private ArrayList<String> listUsr;
     private ArrayAdapter<String> adapterUser;
 
     @RequiresApi(api = Build.VERSION_CODES.P)
@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
         ImageButton showPass = findViewById(R.id.showPass);
         mngUsr = new ManageUser();
         listUser = mngUsr.deserializationListUser(this);
-        listUsr = new ArrayList<>();
+        ArrayList<String> listUsr = new ArrayList<>();
         listUsr.add("Utente");
         for (User us : listUser)
             listUsr.add(us.getUser());

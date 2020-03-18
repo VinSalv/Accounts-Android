@@ -54,7 +54,6 @@ public class ProfileActivity extends AppCompatActivity {
     private EditText questionEdit;
     private EditText answerEdit;
     private ArrayAdapter<String> adapterQuestion;
-    private ArrayList<String> listQuestion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +67,7 @@ public class ProfileActivity extends AppCompatActivity {
         listUser = mngUsr.deserializationListUser(this);
         usr = mngUsr.findUser(listUser, ((User) Objects.requireNonNull((Objects.requireNonNull(getIntent().getExtras())).get("owner"))).getUser());
         if (usr != null) {
-            listQuestion = new ArrayList<>();
+            ArrayList<String> listQuestion = new ArrayList<>();
             listQuestion.add("Altro");
             listQuestion.add("Qual è il tuo colore preferito?");
             listQuestion.add("Qual era il tuo soprannome da bambino?");

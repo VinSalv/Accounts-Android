@@ -42,7 +42,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Objects;
 
-@SuppressWarnings("deprecation")
+@SuppressWarnings({"deprecation", "SameParameterValue"})
 public class CategoryActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener, ActionMode.Callback {
     private CoordinatorLayout layoutCategoryActivity;
     private ManageApp mngApp;

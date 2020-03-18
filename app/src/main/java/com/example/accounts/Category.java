@@ -32,7 +32,7 @@ public class Category implements Serializable {
         return cat;
     }
 
-    public void setCat(String cat) {
+    void setCat(String cat) {
         this.cat = cat;
     }
 

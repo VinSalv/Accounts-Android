@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 public class RecyclerCategoryChoseAdapter extends RecyclerView.Adapter<RecyclerCategoryChoseAdapter.MyViewHolder> {
-    public boolean clicked = false;
+    private boolean clicked = false;
     private ArrayList<Category> listCategory;
     private Context context;
 
@@ -59,10 +59,6 @@ public class RecyclerCategoryChoseAdapter extends RecyclerView.Adapter<RecyclerC
         if (position == -1) return null;
         else
             return listCategory.get(position);
-    }
-
-    public void setClicked(boolean clicked) {
-        this.clicked = clicked;
     }
 
     static class MyViewHolder extends RecyclerView.ViewHolder {

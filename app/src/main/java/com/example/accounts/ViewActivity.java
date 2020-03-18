@@ -41,11 +41,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Objects;
 
-@SuppressWarnings("deprecation")
+@SuppressWarnings({"deprecation", "CollectionAddAllCanBeReplacedWithConstructor"})
 public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener, ActionMode.Callback {
     private CoordinatorLayout layoutViewActivity;
     private ManageApp mngApp;
-    private ManageUser mngUsr;
     private ManageCategory mngCat;
     private RecyclerViewAdapter mAdapter;
     private ArrayList<Category> listCategory;
@@ -79,7 +78,7 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         a = true;
         mngApp = new ManageApp();
         log = mngApp.deserializationFlag(this);
-        mngUsr = new ManageUser();
+        ManageUser mngUsr = new ManageUser();
         ArrayList<User> listUser = mngUsr.deserializationListUser(this);
         usr = mngUsr.findUser(listUser, ((User) Objects.requireNonNull((Objects.requireNonNull(getIntent().getExtras())).get("owner"))).getUser());
         if (usr != null) {

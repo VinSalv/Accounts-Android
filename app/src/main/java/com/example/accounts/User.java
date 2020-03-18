@@ -34,7 +34,7 @@ public class User implements Serializable {
         this.question = "";
     }
 
-    public User(String user, String password, boolean finger, String question, String answer) {
+    public User(String user, String password, String question, String answer) {
         this.user = user;
         this.password = password;
         this.question = question;
@@ -111,28 +111,24 @@ public class User implements Serializable {
         return this.finger;
     }
 
-    public String getQuestion() {
+    void setFinger(boolean finger) {
+        this.finger = finger;
+    }
+
+    String getQuestion() {
         return question;
     }
 
-    public void setQuestion(String question) {
+    void setQuestion(String question) {
         this.question = question;
     }
 
-    public String getAnswer() {
+    String getAnswer() {
         return answer;
     }
 
-    public void setAnswer(String answer) {
+    void setAnswer(String answer) {
         this.answer = answer;
-    }
-
-    public boolean isFinger() {
-        return finger;
-    }
-
-    void setFinger(boolean finger) {
-        this.finger = finger;
     }
 
     @Override

@@ -49,7 +49,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Objects;
 
-@SuppressWarnings({"ResultOfMethodCallIgnored", "deprecation", "MismatchedQueryAndUpdateOfCollection"})
+@SuppressWarnings({"ResultOfMethodCallIgnored", "deprecation", "MismatchedQueryAndUpdateOfCollection", "SameParameterValue"})
 public class SettingActivity extends AppCompatActivity {
     private CoordinatorLayout layoutSettingActivity;
     private ManageApp mngApp;
@@ -267,7 +267,7 @@ public class SettingActivity extends AppCompatActivity {
                                                 path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/PDF_Accounts/";
                                                 dir = new File(path);
                                                 if (!dir.exists()) dir.mkdirs();
-                                                ArrayList<Category> listCategoryApp = new ArrayList<>();
+                                                ArrayList<Category> listCategoryApp;
                                                 if (radioGroupSortPdfCategory.getCheckedRadioButtonId() == radioButtonIncreasingCategory.getId()) {
                                                     listCategoryApp = increasingCat(listCategoryPdf);
                                                 } else if (radioGroupSortPdfCategory.getCheckedRadioButtonId() == radioButtonDecreasingCategory.getId()) {
