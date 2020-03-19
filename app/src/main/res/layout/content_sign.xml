@@ -96,7 +96,7 @@
                 android:layout_below="@id/passwordEdit"
                 android:layout_marginStart="30dp"
                 android:autofillHints=""
-                android:hint="@string/passHint"
+                android:hint="@string/passHint2"
                 android:inputType="textPassword"
                 android:textColor="@color/rightText"
                 android:textColorHighlight="@color/textSelection"
