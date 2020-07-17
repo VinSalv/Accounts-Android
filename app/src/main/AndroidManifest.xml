@@ -1,91 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.accounts">
+    package="com.app.accounts">
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.USE_BIOMETRIC" />
-    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
+        android:debuggable="false"
         android:icon="@mipmap/image_app_square"
         android:label="@string/lowercaseAppName"
         android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/image_app"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:ignore="AllowBackup,GoogleAppIndexingWarning,UnusedAttribute">
-        <activity android:name="com.example.accounts.AboutActivity" />
+        tools:ignore="AllowBackup,GoogleAppIndexingWarning,HardcodedDebugMode,UnusedAttribute">
+        <activity android:name="com.app.accounts.AboutActivity" />
         <activity
-            android:name="com.example.accounts.CategoryActivity"
+            android:name="com.app.accounts.CategoryActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             tools:ignore="LockedOrientationActivity" />
         <activity
-            android:name="com.example.accounts.CategoryChoseActivity"
+            android:name="com.app.accounts.CategoryChoseActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             tools:ignore="LockedOrientationActivity" />
         <activity
-            android:name="com.example.accounts.SearchActivity"
+            android:name="com.app.accounts.SearchActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             tools:ignore="LockedOrientationActivity" />
         <activity
-            android:name="com.example.accounts.ProfileActivity"
+            android:name="com.app.accounts.ProfileActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             tools:ignore="LockedOrientationActivity" />
         <activity
-            android:name="com.example.accounts.CustomizeActivity"
+            android:name="com.app.accounts.CustomizeActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             tools:ignore="LockedOrientationActivity" />
         <activity
-            android:name="com.example.accounts.SettingActivity"
+            android:name="com.app.accounts.SettingActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             tools:ignore="LockedOrientationActivity" />
         <activity
-            android:name="com.example.accounts.EditActivity"
+            android:name="com.app.accounts.EditActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             tools:ignore="LockedOrientationActivity" />
         <activity
-            android:name="com.example.accounts.ShowElementActivity"
+            android:name="com.app.accounts.ShowElementActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             tools:ignore="LockedOrientationActivity" />
         <activity
-            android:name="com.example.accounts.AddActivity"
+            android:name="com.app.accounts.AddActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             tools:ignore="LockedOrientationActivity" />
         <activity
-            android:name="com.example.accounts.ViewActivity"
+            android:name="com.app.accounts.ViewActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             tools:ignore="LockedOrientationActivity" />
         <activity
-            android:name="com.example.accounts.SignActivity"
+            android:name="com.app.accounts.SignActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             tools:ignore="LockedOrientationActivity" />
         <activity
-            android:name="com.example.accounts.WelcomeActivity"
+            android:name="com.app.accounts.WelcomeActivity"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity">
             <intent-filter>
@@ -94,7 +94,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.example.accounts.MainActivity"
+            android:name="com.app.accounts.MainActivity"
             android:label="@string/title_activity_welcome"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
