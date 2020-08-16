@@ -367,6 +367,21 @@ public class CategoryChoseActivity extends AppCompatActivity {
         finish();
     }
 
+    public void goToViewActivity() {
+        Intent intent = new Intent(CategoryChoseActivity.this, ViewActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra("owner", usr);
+        intent.putExtra("category", category);
+        startActivity(intent);
+        finish();
+    }
+
+    public void onBackPressed() {
+        goToCategoryActivity();
+    }
+
     private void notifyUser(String message) {
         Toast.makeText(this,
                 message,
@@ -420,7 +435,6 @@ public class CategoryChoseActivity extends AppCompatActivity {
         });
         return list;
     }
-
 
     @RequiresApi(api = Build.VERSION_CODES.P)
     @Override

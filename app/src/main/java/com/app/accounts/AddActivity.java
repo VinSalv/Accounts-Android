@@ -225,6 +225,21 @@ public class AddActivity extends AppCompatActivity {
         finish();
     }
 
+    public void goToShowElementActivity(Account account, Category category) {
+        Intent intent = new Intent(AddActivity.this, ShowElementActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra("account", account);
+        intent.putExtra("owner", usr);
+        intent.putExtra("category", category);
+        startActivity(intent);
+    }
+
+    public void onBackPressed() {
+        goToShowElementActivity(accountToAdd, category);
+    }
+
     private void notifyUser(String message) {
         Toast.makeText(this,
                 message,

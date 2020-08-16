@@ -225,7 +225,7 @@ public class CategoryActivity extends AppCompatActivity implements PopupMenu.OnM
                     if (isMultiSelect) {
                         multiSelect(position);
                     } else {
-                        goViewActivity(categoryAdapter.getItem(position));
+                        goToViewActivity(categoryAdapter.getItem(position));
                     }
                 }
 
@@ -253,8 +253,11 @@ public class CategoryActivity extends AppCompatActivity implements PopupMenu.OnM
         finish();
     }
 
-    public void goViewActivity(Category cat) {
+    public void goToViewActivity(Category cat) {
         Intent intent = new Intent(CategoryActivity.this, ViewActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("owner", usr);
         intent.putExtra("category", cat);
         startActivity(intent);
@@ -262,13 +265,21 @@ public class CategoryActivity extends AppCompatActivity implements PopupMenu.OnM
 
     public void goToSettingActivity() {
         Intent intent = new Intent(CategoryActivity.this, SettingActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("owner", usr);
+        intent.putExtra("cat", "");
         startActivity(intent);
     }
 
     public void goToSearchActivity() {
         Intent intent = new Intent(CategoryActivity.this, SearchActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("owner", usr);
+        intent.putExtra("cat", "");
         startActivity(intent);
     }
 

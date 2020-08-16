@@ -66,7 +66,9 @@ public class SettingActivity extends AppCompatActivity {
     private ManageApp mngApp;
     private ManageUser mngUsr;
     private ManageCategory mngCat;
+    private Category category;
     private ArrayList<User> listUser = new ArrayList<>();
+    private ArrayList<Category> listCategory;
     private ArrayList<Category> listCategoryPdf;
     private LogApp log;
     private User usr;
@@ -398,6 +400,14 @@ public class SettingActivity extends AppCompatActivity {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("owner", usr);
+        if (((String) getIntent().getExtras().get("cat")).equals(""))
+            intent.putExtra("cat", "");
+        else {
+            listCategory = mngCat.deserializationListCategory(this, usr.getUser());
+            category = mngCat.findAndGetCategory(listCategory, ((Category) Objects.requireNonNull((Objects.requireNonNull(getIntent().getExtras())).get("category"))).getCat());
+            intent.putExtra("category", category);
+            intent.putExtra("cat", category.getCat());
+        }
         startActivity(intent);
         finish();
     }
@@ -408,8 +418,37 @@ public class SettingActivity extends AppCompatActivity {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("owner", usr);
+        if (((String) getIntent().getExtras().get("cat")).equals(""))
+            intent.putExtra("cat", "");
+        else {
+            listCategory = mngCat.deserializationListCategory(this, usr.getUser());
+            category = mngCat.findAndGetCategory(listCategory, ((Category) Objects.requireNonNull((Objects.requireNonNull(getIntent().getExtras())).get("category"))).getCat());
+            intent.putExtra("category", category);
+            intent.putExtra("cat", category.getCat());
+        }
         startActivity(intent);
         finish();
+    }
+
+    public void goToViewActivity() {
+        Intent intent = new Intent(SettingActivity.this, ViewActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra("owner", usr);
+        intent.putExtra("category", category);
+        startActivity(intent);
+        finish();
+    }
+
+    public void onBackPressed() {
+        if (((String) getIntent().getExtras().get("cat")).equals(""))
+            goToCategoryActivity();
+        else {
+            listCategory = mngCat.deserializationListCategory(this, usr.getUser());
+            category = mngCat.findAndGetCategory(listCategory, ((Category) Objects.requireNonNull((Objects.requireNonNull(getIntent().getExtras())).get("category"))).getCat());
+            goToViewActivity();
+        }
     }
 
     private void notifyUser(String message) {
@@ -422,10 +461,6 @@ public class SettingActivity extends AppCompatActivity {
         Toast.makeText(this,
                 message,
                 Toast.LENGTH_SHORT).show();
-    }
-
-    public void onBackPressed() {
-        goToCategoryActivity();
     }
 
     public void createPDF(ArrayList<Category> listCategory, String path, File dir, Boolean b) {

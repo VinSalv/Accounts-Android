@@ -47,8 +47,11 @@ import java.util.Objects;
 public class CustomizeActivity extends AppCompatActivity {
     private CoordinatorLayout layoutCustomizeActivity;
     private ManageUser mngUsr;
+    private ManageCategory mngCat;
     private ArrayList<User> listUser;
+    private ArrayList<Category> listCategory;
     private User usr;
+    private Category category;
     private TextView customize;
     private TextView customizeToolbar;
     private ImageButton showPass;
@@ -157,6 +160,15 @@ public class CustomizeActivity extends AppCompatActivity {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("owner", usr);
+        if (((String) getIntent().getExtras().get("cat")).equals(""))
+            intent.putExtra("cat", "");
+        else {
+            mngCat = new ManageCategory();
+            listCategory = mngCat.deserializationListCategory(this, usr.getUser());
+            category = mngCat.findAndGetCategory(listCategory, ((Category) Objects.requireNonNull((Objects.requireNonNull(getIntent().getExtras())).get("category"))).getCat());
+            intent.putExtra("category", category);
+            intent.putExtra("cat", category.getCat());
+        }
         startActivity(intent);
         finish();
     }

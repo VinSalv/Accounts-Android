@@ -49,6 +49,7 @@ public class SearchActivity extends AppCompatActivity {
     private LinearLayout layoutSearchActivity;
     private ManageCategory mngCat;
     private User usr;
+    private Category category;
     private ArrayList<Category> listCategory;
     private TextView accountFound;
     private int i;
@@ -176,10 +177,43 @@ public class SearchActivity extends AppCompatActivity {
 
     public void goToShowElementActivity(Account account, Category category) {
         Intent intent = new Intent(SearchActivity.this, ShowElementActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("account", account);
         intent.putExtra("owner", usr);
         intent.putExtra("category", category);
         startActivity(intent);
+    }
+
+    public void goToCategoryActivity() {
+        Intent intent = new Intent(SearchActivity.this, CategoryActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra("owner", usr);
+        startActivity(intent);
+        finish();
+    }
+
+    public void goToViewActivity() {
+        Intent intent = new Intent(SearchActivity.this, ViewActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra("owner", usr);
+        intent.putExtra("category", category);
+        startActivity(intent);
+        finish();
+    }
+
+    public void onBackPressed() {
+        if (((String) getIntent().getExtras().get("cat")).equals(""))
+            goToCategoryActivity();
+        else {
+            category = mngCat.findAndGetCategory(listCategory, ((Category) Objects.requireNonNull((Objects.requireNonNull(getIntent().getExtras())).get("category"))).getCat());
+            goToViewActivity();
+        }
     }
 
     private void notifyUser(String message) {

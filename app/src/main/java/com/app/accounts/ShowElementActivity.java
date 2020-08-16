@@ -568,6 +568,9 @@ public class ShowElementActivity extends AppCompatActivity implements PopupMenu.
 
     public void goToEditActivity(Account account, AccountElement accountElement, Category category) {
         Intent intent = new Intent(ShowElementActivity.this, EditActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("owner", usr);
         intent.putExtra("account", account);
         intent.putExtra("accountElement", accountElement);
@@ -577,6 +580,9 @@ public class ShowElementActivity extends AppCompatActivity implements PopupMenu.
 
     public void goToEditActivity(Account account, Category category) {
         Intent intent = new Intent(ShowElementActivity.this, EditActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("owner", usr);
         intent.putExtra("account", account);
         intent.putExtra("category", category);
@@ -585,6 +591,9 @@ public class ShowElementActivity extends AppCompatActivity implements PopupMenu.
 
     public void goToCategoryChoseActivity(String opt) {
         Intent intent = new Intent(ShowElementActivity.this, CategoryChoseActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         ArrayList<Account> listAcc = new ArrayList<>();
         listAcc.add(account);
         intent.putExtra("owner", usr);
@@ -592,6 +601,11 @@ public class ShowElementActivity extends AppCompatActivity implements PopupMenu.
         intent.putExtra("listAccount", listAcc);
         intent.putExtra("option", opt);
         startActivity(intent);
+    }
+
+    @Override
+    public void onBackPressed() {
+        goToViewActivity(category);
     }
 
     private void notifyUser(String message) {
@@ -605,7 +619,6 @@ public class ShowElementActivity extends AppCompatActivity implements PopupMenu.
                 message,
                 Toast.LENGTH_SHORT).show();
     }
-
 
     public void popupMenu(int style, int menu, View v) {
         PopupMenu popup = new PopupMenu(ShowElementActivity.this, v, Gravity.END, 0, style);
@@ -630,7 +643,6 @@ public class ShowElementActivity extends AppCompatActivity implements PopupMenu.
             }
         });
     }
-
 
     @RequiresApi(api = Build.VERSION_CODES.P)
     @Override

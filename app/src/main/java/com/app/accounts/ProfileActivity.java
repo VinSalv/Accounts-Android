@@ -55,6 +55,7 @@ public class ProfileActivity extends AppCompatActivity {
     private ManageCategory mngCat;
     private LogApp log;
     private User usr;
+    private Category category;
     private ArrayList<User> listUser;
     private ArrayList<Category> listCategory;
     private TextView profile;
@@ -367,6 +368,14 @@ public class ProfileActivity extends AppCompatActivity {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("owner", usr);
+        if (((String) getIntent().getExtras().get("cat")).equals(""))
+            intent.putExtra("cat", "");
+        else {
+            listCategory = mngCat.deserializationListCategory(this, usr.getUser());
+            category = mngCat.findAndGetCategory(listCategory, ((Category) Objects.requireNonNull((Objects.requireNonNull(getIntent().getExtras())).get("category"))).getCat());
+            intent.putExtra("category", category);
+            intent.putExtra("cat", category.getCat());
+        }
         startActivity(intent);
     }
 

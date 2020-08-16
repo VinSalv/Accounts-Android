@@ -247,6 +247,9 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
     public void goToAddActivity() {
         Intent intent = new Intent(ViewActivity.this, AddActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("owner", usr);
         intent.putExtra("category", category);
         startActivity(intent);
@@ -264,6 +267,9 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
     public void goToCategoryChoseActivity(String opt) {
         Intent intent = new Intent(ViewActivity.this, CategoryChoseActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         ArrayList<Account> acc = new ArrayList<>();
         for (String s : selectedIds)
             acc.add(mngCat.findAndGetAccount(category.getListAcc(), s));
@@ -276,6 +282,9 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
     public void goToShowElementActivity(Account account, Category category) {
         Intent intent = new Intent(ViewActivity.this, ShowElementActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("account", account);
         intent.putExtra("owner", usr);
         intent.putExtra("category", category);
@@ -284,14 +293,29 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
     public void goToSettingActivity() {
         Intent intent = new Intent(ViewActivity.this, SettingActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("owner", usr);
+        intent.putExtra("category", category);
+        intent.putExtra("cat", category.getCat());
         startActivity(intent);
     }
 
     public void goToSearchActivity() {
         Intent intent = new Intent(ViewActivity.this, SearchActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("owner", usr);
+        intent.putExtra("category", category);
+        intent.putExtra("cat", category.getCat());
         startActivity(intent);
+    }
+
+    @Override
+    public void onBackPressed() {
+        goToCategoryActivity();
     }
 
     @Override
@@ -615,11 +639,6 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     }
 
     @Override
-    public void onBackPressed() {
-        goToCategoryActivity();
-    }
-
-    @Override
     public void onPointerCaptureChanged(boolean hasCapture) {
     }
 
@@ -779,4 +798,5 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         showPass = popupViewCheck.findViewById(R.id.showPass);
         showPass(popupText, showPass);
     }
+
 }
