@@ -11,9 +11,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
@@ -24,6 +26,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.biometric.BiometricManager;
 import androidx.core.content.ContextCompat;
 
 import com.google.android.material.appbar.AppBarLayout;
@@ -48,6 +51,8 @@ public class SignActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE,
+                WindowManager.LayoutParams.FLAG_SECURE);
         setContentView(R.layout.activity_sign);
         Toolbar toolbar = findViewById(R.id.toolbarSign);
         toolbar.setTitle("");
@@ -128,6 +133,28 @@ public class SignActivity extends AppCompatActivity {
         });
         mngCat = new ManageCategory();
         Button sign = findViewById(R.id.signButton);
+        flagFinger.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @SuppressLint("SwitchIntDef")
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    BiometricManager biometricManager = BiometricManager.from(SignActivity.this);
+                    switch (biometricManager.canAuthenticate()) {
+                        case BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE:
+                            notifyUserShortWay("Il dispositivo non dispone del sensore biometrico.");
+                            flagFinger.setChecked(false);
+                            break;
+                        case BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE:
+                            notifyUserShortWay("Il sensore biometrico non è attualmente disponibile.");
+                            flagFinger.setChecked(false);
+                            break;
+                        case BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED:
+                            notifyUserShortWay("Imposta la tua impronta digitale nelle impostazioni dispositivo.");
+                            flagFinger.setChecked(false);
+                            break;
+                    }
+                }
+            }
+        });
         sign.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -232,6 +259,12 @@ public class SignActivity extends AppCompatActivity {
         Toast.makeText(this,
                 message,
                 Toast.LENGTH_LONG).show();
+    }
+
+    private void notifyUserShortWay(String message) {
+        Toast.makeText(this,
+                message,
+                Toast.LENGTH_SHORT).show();
     }
 
     @Override

@@ -1,19 +1,30 @@
 package com.app.accounts;
 
+import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
+import android.app.KeyguardManager;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
 import android.graphics.drawable.BitmapDrawable;
+import android.hardware.biometrics.BiometricPrompt;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.CancellationSignal;
 import android.text.Html;
+import android.text.InputType;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
@@ -22,9 +33,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.biometric.BiometricManager;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.text.HtmlCompat;
 
@@ -44,11 +58,15 @@ public class ShowElementActivity extends AppCompatActivity implements PopupMenu.
     private Account account;
     private TextView name;
     private TextView nameToolbar;
+    private ImageButton showPass;
+    private int attempts;
 
     @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE,
+                WindowManager.LayoutParams.FLAG_SECURE);
         setContentView(R.layout.activity_show_element);
         Toolbar showToolbar = findViewById(R.id.showToolbar);
         showToolbar.setTitle("");
@@ -582,6 +600,13 @@ public class ShowElementActivity extends AppCompatActivity implements PopupMenu.
                 Toast.LENGTH_LONG).show();
     }
 
+    private void notifyUserShortWay(String message) {
+        Toast.makeText(this,
+                message,
+                Toast.LENGTH_SHORT).show();
+    }
+
+
     public void popupMenu(int style, int menu, View v) {
         PopupMenu popup = new PopupMenu(ShowElementActivity.this, v, Gravity.END, 0, style);
         popup.setOnMenuItemClickListener(ShowElementActivity.this);
@@ -604,5 +629,163 @@ public class ShowElementActivity extends AppCompatActivity implements PopupMenu.
                 return true;
             }
         });
+    }
+
+
+    @RequiresApi(api = Build.VERSION_CODES.P)
+    @Override
+    public void onRestart() {
+        super.onRestart();
+        layoutShowElementActivity.setVisibility(View.INVISIBLE);
+        BiometricManager biometricManager = BiometricManager.from(ShowElementActivity.this);
+        if (usr.getFinger() && biometricManager.canAuthenticate() == BiometricManager.BIOMETRIC_SUCCESS)
+            biometricAuthentication(layoutShowElementActivity);
+        else {
+            recheckPass();
+        }
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    public void showPass(final EditText et, ImageButton showPass) {
+        showPass.setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        et.setInputType(InputType.TYPE_NULL);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        et.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                        break;
+                }
+                return true;
+            }
+        });
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.P)
+    private BiometricPrompt.AuthenticationCallback getAuthenticationCallback() {
+        return new BiometricPrompt.AuthenticationCallback() {
+            @Override
+            public void onAuthenticationError(int errorCode, CharSequence errString) {
+                notifyUser("Autenticazione errore: " + errString + ".");
+                super.onAuthenticationError(errorCode, errString);
+                recheckPass();
+            }
+
+            @Override
+            public void onAuthenticationHelp(int helpCode, CharSequence helpString) {
+                super.onAuthenticationHelp(helpCode, helpString);
+            }
+
+            @Override
+            public void onAuthenticationFailed() {
+                super.onAuthenticationFailed();
+            }
+
+            @Override
+            public void onAuthenticationSucceeded(BiometricPrompt.AuthenticationResult result) {
+                notifyUserShortWay("Autenticazione effettuata.");
+                super.onAuthenticationSucceeded(result);
+                layoutShowElementActivity.setVisibility(View.VISIBLE);
+            }
+        };
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.P)
+    public void authenticateUser(View view) {
+        BiometricPrompt biometricPrompt = new BiometricPrompt.Builder(this)
+                .setTitle("Lettura impronta digitale")
+                .setSubtitle("Autenticazione richiesta per continuare")
+                .setDescription("Account con autenticazione biometrica per proteggere i dati.")
+                .setNegativeButton("Annulla", this.getMainExecutor(),
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                notifyUserShortWay("Autenticazione annullata.");
+                                recheckPass();
+                            }
+                        })
+                .build();
+        biometricPrompt.authenticate(getCancellationSignal(), getMainExecutor(), getAuthenticationCallback());
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.P)
+    public void biometricAuthentication(CoordinatorLayout lay) {
+        if (!checkBiometricSupport()) {
+            return;
+        }
+        authenticateUser(lay);
+    }
+
+    private Boolean checkBiometricSupport() {
+        KeyguardManager keyguardManager =
+                (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
+        PackageManager packageManager = this.getPackageManager();
+        if (keyguardManager != null && !keyguardManager.isKeyguardSecure()) {
+            notifyUser("Lock screen security non abilitato nelle impostazioni.");
+            recheckPass();
+            return false;
+        }
+        if (ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.USE_BIOMETRIC) != PackageManager.PERMISSION_GRANTED) {
+            notifyUser("Permesso impronte digitali non abilitato.");
+            recheckPass();
+            return false;
+        }
+        if (packageManager.hasSystemFeature(PackageManager.FEATURE_FINGERPRINT)) {
+            return true;
+        }
+        return true;
+    }
+
+    private CancellationSignal getCancellationSignal() {
+        CancellationSignal cancellationSignal = new CancellationSignal();
+        cancellationSignal.setOnCancelListener(new CancellationSignal.OnCancelListener() {
+            @Override
+            public void onCancel() {
+                notifyUserShortWay("Cancelled via signal");
+            }
+        });
+        return cancellationSignal;
+    }
+
+    public void recheckPass() {
+        LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+        View popupViewCheck = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_security_password_match_parent, (ViewGroup) findViewById(R.id.passSecurityPopupMatchParent));
+        final PopupWindow popupWindowCheck = new PopupWindow(popupViewCheck, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, true);
+        popupWindowCheck.setBackgroundDrawable(new BitmapDrawable());
+        View parent = layoutShowElementActivity.getRootView();
+        popupWindowCheck.showAtLocation(parent, Gravity.CENTER, 0, 0);
+        final EditText popupText = popupViewCheck.findViewById(R.id.passSecurityEditText);
+        Button conf = popupViewCheck.findViewById(R.id.confirmation);
+        conf.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                popupText.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(ShowElementActivity.this, R.color.colorAccent)));
+                if (popupText.getText().toString().isEmpty()) {
+                    popupText.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(ShowElementActivity.this, R.color.errorEditText)));
+                    notifyUser("Il campo password è vuoto");
+                } else {
+                    if (popupText.getText().toString().equals(usr.getPassword())) {
+                        layoutShowElementActivity.setVisibility(View.VISIBLE);
+                        attempts = 3;
+                        popupWindowCheck.dismiss();
+                    } else {
+                        popupText.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(ShowElementActivity.this, R.color.errorEditText)));
+                        attempts--;
+                        if (attempts == 2)
+                            notifyUserShortWay("Password errata. Hai altri " + attempts + "tenativi");
+                        else if (attempts == 1)
+                            notifyUserShortWay("Password errata. Hai un ultimo tenativo");
+                        else {
+                            notifyUserShortWay("Password errata");
+                            goToMainActivity();
+                        }
+                    }
+                }
+            }
+        });
+        showPass = popupViewCheck.findViewById(R.id.showPass);
+        showPass(popupText, showPass);
     }
 }

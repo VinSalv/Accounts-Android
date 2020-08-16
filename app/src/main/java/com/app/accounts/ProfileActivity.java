@@ -1,18 +1,26 @@
 package com.app.accounts;
 
+import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
+import android.app.KeyguardManager;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.BitmapDrawable;
+import android.hardware.biometrics.BiometricPrompt;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.CancellationSignal;
 import android.text.InputType;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -26,9 +34,12 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.biometric.BiometricManager;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.google.android.material.appbar.AppBarLayout;
@@ -54,10 +65,14 @@ public class ProfileActivity extends AppCompatActivity {
     private EditText questionEdit;
     private EditText answerEdit;
     private ArrayAdapter<String> adapterQuestion;
+    private Switch flagProfApp;
+    private int attempts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE,
+                WindowManager.LayoutParams.FLAG_SECURE);
         setContentView(R.layout.activity_profile);
         Toolbar toolbar = findViewById(R.id.profileToolbar);
         toolbar.setTitle("");
@@ -74,13 +89,41 @@ public class ProfileActivity extends AppCompatActivity {
             listQuestion.add("Qual è il nome del tuo primo animale domestico?");
             adapterQuestion = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, listQuestion);
             mngCat = new ManageCategory();
-            Switch flagProfApp = findViewById(R.id.flagProfApp);
             if (usr.getFinger()) {
                 flagProfApp.setChecked(true);
             }
+            flagProfApp = findViewById(R.id.flagProfApp);
             flagProfApp.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @SuppressLint("SwitchIntDef")
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     if (isChecked) {
+                        BiometricManager biometricManager = BiometricManager.from(ProfileActivity.this);
+                        switch (biometricManager.canAuthenticate()) {
+                            case BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE:
+                                notifyUserShortWay("Il dispositivo non dispone del sensore biometrico.");
+                                flagProfApp.setChecked(false);
+                                listUser.remove(usr);
+                                usr.setFinger(false);
+                                listUser.add(usr);
+                                mngUsr.serializationListUser(ProfileActivity.this, listUser);
+                                return;
+                            case BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE:
+                                notifyUserShortWay("Il sensore biometrico non è attualmente disponibile.");
+                                flagProfApp.setChecked(false);
+                                listUser.remove(usr);
+                                usr.setFinger(false);
+                                listUser.add(usr);
+                                mngUsr.serializationListUser(ProfileActivity.this, listUser);
+                                return;
+                            case BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED:
+                                notifyUserShortWay("Imposta la tua impronta nelle impostazioni del dispositivo.");
+                                flagProfApp.setChecked(false);
+                                listUser.remove(usr);
+                                usr.setFinger(false);
+                                listUser.add(usr);
+                                mngUsr.serializationListUser(ProfileActivity.this, listUser);
+                                return;
+                        }
                         listUser.remove(usr);
                         usr.setFinger(true);
                         listUser.add(usr);
@@ -361,6 +404,24 @@ public class ProfileActivity extends AppCompatActivity {
                 Toast.LENGTH_SHORT).show();
     }
 
+    public void onBackPressed() {
+        goToSettingActivity();
+    }
+
+
+    @RequiresApi(api = Build.VERSION_CODES.P)
+    @Override
+    public void onRestart() {
+        super.onRestart();
+        layoutProfileActivity.setVisibility(View.INVISIBLE);
+        BiometricManager biometricManager = BiometricManager.from(ProfileActivity.this);
+        if (usr.getFinger() && biometricManager.canAuthenticate() == BiometricManager.BIOMETRIC_SUCCESS)
+            biometricAuthentication(layoutProfileActivity);
+        else {
+            recheckPass();
+        }
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     public void showPass(final EditText et, ImageButton showPass) {
         showPass.setOnTouchListener(new View.OnTouchListener() {
@@ -378,7 +439,130 @@ public class ProfileActivity extends AppCompatActivity {
         });
     }
 
-    public void onBackPressed() {
-        goToSettingActivity();
+    @RequiresApi(api = Build.VERSION_CODES.P)
+    private BiometricPrompt.AuthenticationCallback getAuthenticationCallback() {
+        return new BiometricPrompt.AuthenticationCallback() {
+            @Override
+            public void onAuthenticationError(int errorCode, CharSequence errString) {
+                notifyUser("Autenticazione errore: " + errString + ".");
+                super.onAuthenticationError(errorCode, errString);
+                recheckPass();
+            }
+
+            @Override
+            public void onAuthenticationHelp(int helpCode, CharSequence helpString) {
+                super.onAuthenticationHelp(helpCode, helpString);
+            }
+
+            @Override
+            public void onAuthenticationFailed() {
+                super.onAuthenticationFailed();
+            }
+
+            @Override
+            public void onAuthenticationSucceeded(BiometricPrompt.AuthenticationResult result) {
+                notifyUserShortWay("Autenticazione effettuata.");
+                super.onAuthenticationSucceeded(result);
+                layoutProfileActivity.setVisibility(View.VISIBLE);
+            }
+        };
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.P)
+    public void authenticateUser(View view) {
+        BiometricPrompt biometricPrompt = new BiometricPrompt.Builder(this)
+                .setTitle("Lettura impronta digitale")
+                .setSubtitle("Autenticazione richiesta per continuare")
+                .setDescription("Account con autenticazione biometrica per proteggere i dati.")
+                .setNegativeButton("Annulla", this.getMainExecutor(),
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                notifyUserShortWay("Autenticazione annullata.");
+                                recheckPass();
+                            }
+                        })
+                .build();
+        biometricPrompt.authenticate(getCancellationSignal(), getMainExecutor(), getAuthenticationCallback());
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.P)
+    public void biometricAuthentication(CoordinatorLayout lay) {
+        if (!checkBiometricSupport()) {
+            return;
+        }
+        authenticateUser(lay);
+    }
+
+    private Boolean checkBiometricSupport() {
+        KeyguardManager keyguardManager =
+                (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
+        PackageManager packageManager = this.getPackageManager();
+        if (keyguardManager != null && !keyguardManager.isKeyguardSecure()) {
+            notifyUser("Lock screen security non abilitato nelle impostazioni.");
+            recheckPass();
+            return false;
+        }
+        if (ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.USE_BIOMETRIC) != PackageManager.PERMISSION_GRANTED) {
+            notifyUser("Permesso impronte digitali non abilitato.");
+            recheckPass();
+            return false;
+        }
+        if (packageManager.hasSystemFeature(PackageManager.FEATURE_FINGERPRINT)) {
+            return true;
+        }
+        return true;
+    }
+
+    private CancellationSignal getCancellationSignal() {
+        CancellationSignal cancellationSignal = new CancellationSignal();
+        cancellationSignal.setOnCancelListener(new CancellationSignal.OnCancelListener() {
+            @Override
+            public void onCancel() {
+                notifyUserShortWay("Cancelled via signal");
+            }
+        });
+        return cancellationSignal;
+    }
+
+    public void recheckPass() {
+        LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+        View popupViewCheck = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_security_password_match_parent, (ViewGroup) findViewById(R.id.passSecurityPopupMatchParent));
+        final PopupWindow popupWindowCheck = new PopupWindow(popupViewCheck, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, true);
+        popupWindowCheck.setBackgroundDrawable(new BitmapDrawable());
+        View parent = layoutProfileActivity.getRootView();
+        popupWindowCheck.showAtLocation(parent, Gravity.CENTER, 0, 0);
+        final EditText popupText = popupViewCheck.findViewById(R.id.passSecurityEditText);
+        Button conf = popupViewCheck.findViewById(R.id.confirmation);
+        conf.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                popupText.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(ProfileActivity.this, R.color.colorAccent)));
+                if (popupText.getText().toString().isEmpty()) {
+                    popupText.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(ProfileActivity.this, R.color.errorEditText)));
+                    notifyUser("Il campo password è vuoto");
+                } else {
+                    if (popupText.getText().toString().equals(usr.getPassword())) {
+                        layoutProfileActivity.setVisibility(View.VISIBLE);
+                        attempts = 3;
+                        popupWindowCheck.dismiss();
+                    } else {
+                        popupText.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(ProfileActivity.this, R.color.errorEditText)));
+                        attempts--;
+                        if (attempts == 2)
+                            notifyUserShortWay("Password errata. Hai altri " + attempts + "tenativi");
+                        else if (attempts == 1)
+                            notifyUserShortWay("Password errata. Hai un ultimo tenativo");
+                        else {
+                            notifyUserShortWay("Password errata");
+                            goToMainActivity();
+                        }
+                    }
+                }
+            }
+        });
+        showPass = popupViewCheck.findViewById(R.id.showPass);
+        showPass(popupText, showPass);
     }
 }

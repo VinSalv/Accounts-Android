@@ -106,9 +106,9 @@
     <string name="start">GOT IT</string>
     <string name="aboutbutton">aboutButton</string>
     <string name="copyright">Versione 3.0\n© 2020 Vincenzo Salvati Rights Reserved.</string>
-    <string name="intro1">Benvenuto nell\'app Account!!</string>
+    <string name="intro1">Benvenuto nell\'app Accounts!!</string>
     <string name="intro1_2">Sei stanco di dover ricordare in continuazione le tue password con le relative e-mail e nomi utente?\nBene hai scaricato l\'app che fa per te!! \n\n (È importante precisare che le tue credenziali e i tuoi account saranno memorizzati escluisivamente sul tuo Smartphone in specifiche cartelle segrete inaccessibili da terzi. Non vi è l\'ausilio di alcun server!!)</string>
-    <string name="intro1_3">Una volta registrato all\'app Account potrai sfruttare appieno le funzionalità che ha da offririti.</string>
+    <string name="intro1_3">Una volta registrato all\'app Accounts potrai sfruttare appieno le funzionalità che ha da offririti.</string>
     <string name="imageintro1">imageIntro1</string>
     <string name="intro2">Verranno create inizialmente delle categorie di default (Giochi, Siti e Social) che potrai cancellare oltre che crearne di nuove.</string>
     <string name="intro2_2">All\'interno di ciascuna categoria verranno poi inseriti i relativi account.</string>

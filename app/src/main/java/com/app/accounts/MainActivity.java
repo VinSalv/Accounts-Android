@@ -19,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -63,6 +64,8 @@ public class MainActivity extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.P)
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE,
+                WindowManager.LayoutParams.FLAG_SECURE);
         setContentView(R.layout.activity_main);
         if (!checkPermission()) {
             openActivity();
@@ -436,7 +439,7 @@ public class MainActivity extends AppCompatActivity {
                 (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
         PackageManager packageManager = this.getPackageManager();
         if (keyguardManager != null && !keyguardManager.isKeyguardSecure()) {
-            notifyUser("Lock screen security non abilitato nelle impostazioni.");
+            notifyUser("Imposta la tua impronta digitale nelle impostazioni dispositivo.");
             return false;
         }
         if (ActivityCompat.checkSelfPermission(this,
