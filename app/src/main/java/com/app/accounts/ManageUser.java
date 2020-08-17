@@ -1,18 +1,51 @@
 package com.app.accounts;
 
 import android.content.Context;
+import android.os.Environment;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.security.InvalidKeyException;
+import java.security.Key;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.spec.SecretKeySpec;
 
 class ManageUser implements Serializable {
 
     public ManageUser() {
+    }
+
+    private static void execCryptDecrypt(int cipherMode, String key,
+                                         File inputFile, File outputFile) {
+        try {
+            Key secretKey = new SecretKeySpec(key.getBytes(), "AES");
+            Cipher cipher = Cipher.getInstance("AES");
+            cipher.init(cipherMode, secretKey);
+            byte[] inputBytes;
+            try (FileInputStream inputStream = new FileInputStream(inputFile)) {
+                inputBytes = new byte[(int) inputFile.length()];
+                inputStream.read(inputBytes);
+            }
+            byte[] outputBytes = cipher.doFinal(inputBytes);
+            try (FileOutputStream outputStream = new FileOutputStream(outputFile)) {
+                outputStream.write(outputBytes);
+            }
+        } catch (NoSuchPaddingException | NoSuchAlgorithmException
+                | InvalidKeyException | BadPaddingException
+                | IllegalBlockSizeException | IOException e) {
+            e.printStackTrace();
+        }
     }
 
     boolean notFindUser(User u, ArrayList<User> listUser) {
@@ -32,19 +65,40 @@ class ManageUser implements Serializable {
 
     void serializationListUser(Context context, ArrayList<User> list) {
         try {
-            FileOutputStream fos = context.openFileOutput("Users.txt", Context.MODE_PRIVATE);
-            ObjectOutputStream os = new ObjectOutputStream(fos);
+            String rootPath = Environment.getExternalStorageDirectory()
+                    .getAbsolutePath() + "/Accounts/Utenti";
+            File root = new File(rootPath);
+            if (!root.exists()) {
+                root.mkdirs();
+            }
+            File f = new File(rootPath + "/Users.txt");
+            if (f.exists()) {
+                f.delete();
+            }
+            f.createNewFile();
+
+            FileOutputStream out = new FileOutputStream(f);
+            ObjectOutputStream os = new ObjectOutputStream(out);
             os.writeObject(list);
-            os.close();
-            fos.close();
+            out.flush();
+            out.close();
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            execCryptDecrypt(Cipher.ENCRYPT_MODE,
+                    "dfgfdgdfgfdlwerknwkfjewh",
+                    new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Accounts/Utenti/Users.txt"),
+                    new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Accounts/Utenti/Users.txt"));
         }
+
     }
 
     public ArrayList<User> deserializationListUser(Context context) {
         try {
-            FileInputStream fis = context.openFileInput("Users.txt");
+            File f = new File(Environment.getExternalStorageDirectory()
+                    .getAbsolutePath() + "/Accounts/Utenti/Users.txt");
+            execCryptDecrypt(Cipher.DECRYPT_MODE, "dfgfdgdfgfdlwerknwkfjewh", f, f);
+            FileInputStream fis = new FileInputStream(f);
             ObjectInputStream is = new ObjectInputStream(fis);
             @SuppressWarnings("unchecked") ArrayList<User> x = (ArrayList<User>) is.readObject();
             is.close();
@@ -53,6 +107,11 @@ class ManageUser implements Serializable {
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
             return new ArrayList<>();
+        } finally {
+            execCryptDecrypt(Cipher.ENCRYPT_MODE,
+                    "dfgfdgdfgfdlwerknwkfjewh",
+                    new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Accounts/Utenti/Users.txt"),
+                    new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Accounts/Utenti/Users.txt"));
         }
     }
 

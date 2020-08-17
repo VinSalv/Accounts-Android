@@ -1,33 +1,85 @@
 package com.app.accounts;
 
 import android.content.Context;
+import android.os.Environment;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.security.InvalidKeyException;
+import java.security.Key;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.spec.SecretKeySpec;
 
 public class ManageCategory {
     ManageCategory() {
     }
 
+    private static void execCryptDecrypt(int cipherMode, String key,
+                                         File inputFile, File outputFile) {
+        try {
+            Key secretKey = new SecretKeySpec(key.getBytes(), "AES");
+            Cipher cipher = Cipher.getInstance("AES");
+            cipher.init(cipherMode, secretKey);
+            byte[] inputBytes;
+            try (FileInputStream inputStream = new FileInputStream(inputFile)) {
+                inputBytes = new byte[(int) inputFile.length()];
+                inputStream.read(inputBytes);
+            }
+            byte[] outputBytes = cipher.doFinal(inputBytes);
+            try (FileOutputStream outputStream = new FileOutputStream(outputFile)) {
+                outputStream.write(outputBytes);
+            }
+        } catch (NoSuchPaddingException | NoSuchAlgorithmException
+                | InvalidKeyException | BadPaddingException
+                | IllegalBlockSizeException | IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     void serializationListCategory(Context context, ArrayList<Category> list, String owner) {
         try {
-            FileOutputStream fos = context.openFileOutput("Category" + owner + ".txt", Context.MODE_PRIVATE);
-            ObjectOutputStream os = new ObjectOutputStream(fos);
+            String rootPath = Environment.getExternalStorageDirectory()
+                    .getAbsolutePath() + "/Accounts/Categorie";
+            File root = new File(rootPath);
+            if (!root.exists()) {
+                root.mkdirs();
+            }
+            File f = new File(rootPath + "/" + owner + ".txt");
+            if (f.exists()) {
+                f.delete();
+            }
+            f.createNewFile();
+            FileOutputStream out = new FileOutputStream(f);
+            ObjectOutputStream os = new ObjectOutputStream(out);
             os.writeObject(list);
-            os.close();
-            fos.close();
+            out.flush();
+            out.close();
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            execCryptDecrypt(Cipher.ENCRYPT_MODE,
+                    "dfgfdgdfgfdlwerknwkfjewh",
+                    new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Accounts/Categorie/" + owner + ".txt"),
+                    new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Accounts/Categorie/" + owner + ".txt"));
         }
     }
 
     ArrayList<Category> deserializationListCategory(Context context, String owner) {
         try {
-            FileInputStream fis = context.openFileInput("Category" + owner + ".txt");
+            File f = new File(Environment.getExternalStorageDirectory()
+                    .getAbsolutePath() + "/Accounts/Categorie/" + owner + ".txt");
+            execCryptDecrypt(Cipher.DECRYPT_MODE, "dfgfdgdfgfdlwerknwkfjewh", f, f);
+            FileInputStream fis = new FileInputStream(f);
             ObjectInputStream is = new ObjectInputStream(fis);
             @SuppressWarnings("unchecked") ArrayList<Category> x = (ArrayList<Category>) is.readObject();
             is.close();
@@ -36,6 +88,11 @@ public class ManageCategory {
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
             return new ArrayList<>();
+        } finally {
+            execCryptDecrypt(Cipher.ENCRYPT_MODE,
+                    "dfgfdgdfgfdlwerknwkfjewh",
+                    new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Accounts/Categorie/" + owner + ".txt"),
+                    new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Accounts/Categorie/" + owner + ".txt"));
         }
     }
 
