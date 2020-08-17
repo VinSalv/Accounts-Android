@@ -146,4 +146,5 @@
     <string name="editQuestion">MODIFICA DOMANDA SICUREZZA</string>
     <string name="changeQuestionAnsware">IMPOSTA</string>
     <string name="text_PDF_Category">Imposta l\'ordine delle categorie</string>
+    <string name="accountsIcon">IconaAccounts</string>
 </resources>

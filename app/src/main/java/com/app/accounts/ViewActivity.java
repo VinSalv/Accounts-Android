@@ -784,7 +784,7 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                         popupText.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(ViewActivity.this, R.color.errorEditText)));
                         attempts--;
                         if (attempts == 2)
-                            notifyUserShortWay("Password errata. Hai altri " + attempts + "tenativi");
+                            notifyUserShortWay("Password errata. Hai altri " + attempts + " tentativi");
                         else if (attempts == 1)
                             notifyUserShortWay("Password errata. Hai un ultimo tenativo");
                         else {
