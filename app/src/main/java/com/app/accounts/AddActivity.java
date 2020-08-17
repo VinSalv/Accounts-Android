@@ -14,6 +14,7 @@ import android.hardware.biometrics.BiometricPrompt;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CancellationSignal;
+import android.os.Handler;
 import android.text.Html;
 import android.text.InputType;
 import android.util.Patterns;
@@ -68,6 +69,8 @@ public class AddActivity extends AppCompatActivity {
     private boolean b;
     private int attempts;
     private ImageButton showPass;
+    private boolean blockBack;
+    private boolean doubleBackToExitPressedOnce;
 
     @RequiresApi(api = Build.VERSION_CODES.Q)
     @Override
@@ -83,6 +86,7 @@ public class AddActivity extends AppCompatActivity {
         ArrayList<User> listUser = mngUsr.deserializationListUser(this);
         usr = mngUsr.findUser(listUser, ((User) Objects.requireNonNull((Objects.requireNonNull(getIntent().getExtras())).get("owner"))).getUser());
         if (usr != null) {
+            blockBack = true;
             attempts = 3;
             mngCat = new ManageCategory();
             listCategory = mngCat.deserializationListCategory(this, usr.getUser());
@@ -225,19 +229,25 @@ public class AddActivity extends AppCompatActivity {
         finish();
     }
 
-    public void goToShowElementActivity(Account account, Category category) {
-        Intent intent = new Intent(AddActivity.this, ShowElementActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtra("account", account);
-        intent.putExtra("owner", usr);
-        intent.putExtra("category", category);
-        startActivity(intent);
-    }
-
+    @Override
     public void onBackPressed() {
-        goToShowElementActivity(accountToAdd, category);
+        if (blockBack) goToViewActivity();
+        else {
+            if (doubleBackToExitPressedOnce) {
+                super.onBackPressed();
+                goToMainActivity();
+            }
+            this.doubleBackToExitPressedOnce = true;
+            notifyUser(Html.fromHtml("Premi nuovamente <b> INDIETRO </b> per tornare alla schermata principale.", HtmlCompat.FROM_HTML_MODE_LEGACY).toString());
+
+            new Handler().postDelayed(new Runnable() {
+
+                @Override
+                public void run() {
+                    doubleBackToExitPressedOnce = false;
+                }
+            }, 2000);
+        }
     }
 
     private void notifyUser(String message) {
@@ -662,7 +672,7 @@ public class AddActivity extends AppCompatActivity {
         if (usr.getFinger() && biometricManager.canAuthenticate() == BiometricManager.BIOMETRIC_SUCCESS)
             biometricAuthentication(layoutAddActivity);
         else {
-            recheckPass();
+            goToMainActivity();
         }
     }
 
@@ -771,6 +781,7 @@ public class AddActivity extends AppCompatActivity {
     }
 
     public void recheckPass() {
+        blockBack = false;
         LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
         View popupViewCheck = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_security_password_match_parent, (ViewGroup) findViewById(R.id.passSecurityPopupMatchParent));
         final PopupWindow popupWindowCheck = new PopupWindow(popupViewCheck, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, true);
@@ -789,6 +800,7 @@ public class AddActivity extends AppCompatActivity {
                 } else {
                     if (popupText.getText().toString().equals(usr.getPassword())) {
                         layoutAddActivity.setVisibility(View.VISIBLE);
+                        blockBack = true;
                         attempts = 3;
                         popupWindowCheck.dismiss();
                     } else {

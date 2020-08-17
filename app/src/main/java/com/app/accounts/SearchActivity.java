@@ -14,6 +14,7 @@ import android.hardware.biometrics.BiometricPrompt;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CancellationSignal;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.Html;
 import android.text.InputType;
@@ -56,6 +57,9 @@ public class SearchActivity extends AppCompatActivity {
     private int j;
     private ImageButton showPass;
     private int attempts;
+    private boolean blockBack;
+    private boolean doubleBackToExitPressedOnce;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +72,7 @@ public class SearchActivity extends AppCompatActivity {
         ArrayList<User> listUser = mngUsr.deserializationListUser(this);
         usr = mngUsr.findUser(listUser, ((User) Objects.requireNonNull((Objects.requireNonNull(getIntent().getExtras())).get("owner"))).getUser());
         if (usr != null) {
+            blockBack = true;
             attempts = 3;
             mngCat = new ManageCategory();
             listCategory = mngCat.deserializationListCategory(this, usr.getUser());
@@ -208,11 +213,28 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     public void onBackPressed() {
-        if (((String) getIntent().getExtras().get("cat")).equals(""))
-            goToCategoryActivity();
-        else {
-            category = mngCat.findAndGetCategory(listCategory, ((Category) Objects.requireNonNull((Objects.requireNonNull(getIntent().getExtras())).get("category"))).getCat());
-            goToViewActivity();
+        if (blockBack) {
+            if (((String) getIntent().getExtras().get("cat")).equals(""))
+                goToCategoryActivity();
+            else {
+                category = mngCat.findAndGetCategory(listCategory, ((Category) Objects.requireNonNull((Objects.requireNonNull(getIntent().getExtras())).get("category"))).getCat());
+                goToViewActivity();
+            }
+        } else {
+            if (doubleBackToExitPressedOnce) {
+                super.onBackPressed();
+                goToMainActivity();
+            }
+            this.doubleBackToExitPressedOnce = true;
+            notifyUser(Html.fromHtml("Premi nuovamente <b> INDIETRO </b> per tornare alla schermata principale.", HtmlCompat.FROM_HTML_MODE_LEGACY).toString());
+
+            new Handler().postDelayed(new Runnable() {
+
+                @Override
+                public void run() {
+                    doubleBackToExitPressedOnce = false;
+                }
+            }, 2000);
         }
     }
 
@@ -237,7 +259,6 @@ public class SearchActivity extends AppCompatActivity {
         });
         return list;
     }
-
 
     @RequiresApi(api = Build.VERSION_CODES.P)
     @Override
@@ -357,6 +378,7 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     public void recheckPass() {
+        blockBack = false;
         LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
         View popupViewCheck = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_security_password_match_parent, (ViewGroup) findViewById(R.id.passSecurityPopupMatchParent));
         final PopupWindow popupWindowCheck = new PopupWindow(popupViewCheck, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, true);
@@ -375,6 +397,7 @@ public class SearchActivity extends AppCompatActivity {
                 } else {
                     if (popupText.getText().toString().equals(usr.getPassword())) {
                         layoutSearchActivity.setVisibility(View.VISIBLE);
+                        blockBack = true;
                         attempts = 3;
                         popupWindowCheck.dismiss();
                     } else {

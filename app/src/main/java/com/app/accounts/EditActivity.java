@@ -72,6 +72,9 @@ public class EditActivity extends AppCompatActivity {
     private boolean b;
     private ImageButton showPass;
     private int attempts;
+    private boolean blockBack;
+    private boolean doubleBackToExitPressedOnce;
+
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -89,6 +92,7 @@ public class EditActivity extends AppCompatActivity {
         ArrayList<User> listUser = mngUsr.deserializationListUser(this);
         usr = mngUsr.findUser(listUser, ((User) Objects.requireNonNull((Objects.requireNonNull(getIntent().getExtras())).get("owner"))).getUser());
         if (usr != null) {
+            blockBack = true;
             attempts = 3;
             mngCat = new ManageCategory();
             listCategory = mngCat.deserializationListCategory(this, usr.getUser());
@@ -615,7 +619,24 @@ public class EditActivity extends AppCompatActivity {
     }
 
     public void onBackPressed() {
-        goToShowElementActivity(accountToEdit, category);
+        if (blockBack) goToShowElementActivity(accountToEdit, category);
+        else {
+            if (doubleBackToExitPressedOnce) {
+                super.onBackPressed();
+                goToMainActivity();
+            }
+            this.doubleBackToExitPressedOnce = true;
+            notifyUser(Html.fromHtml("Premi nuovamente <b> INDIETRO </b> per tornare alla schermata principale.", HtmlCompat.FROM_HTML_MODE_LEGACY).toString());
+
+            new Handler().postDelayed(new Runnable() {
+
+                @Override
+                public void run() {
+                    doubleBackToExitPressedOnce = false;
+                }
+            }, 2000);
+        }
+
     }
 
     private void focusOnView(final RelativeLayout rel) {
@@ -1158,6 +1179,7 @@ public class EditActivity extends AppCompatActivity {
     }
 
     public void recheckPass() {
+        blockBack = false;
         LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
         View popupViewCheck = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_security_password_match_parent, (ViewGroup) findViewById(R.id.passSecurityPopupMatchParent));
         final PopupWindow popupWindowCheck = new PopupWindow(popupViewCheck, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, true);
@@ -1176,6 +1198,7 @@ public class EditActivity extends AppCompatActivity {
                 } else {
                     if (popupText.getText().toString().equals(usr.getPassword())) {
                         layoutEditActivity.setVisibility(View.VISIBLE);
+                        blockBack = true;
                         attempts = 3;
                         popupWindowCheck.dismiss();
                     } else {

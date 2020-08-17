@@ -23,7 +23,7 @@
         android:inputType="textPersonName"
         android:textColor="@color/rightText"
         android:textColorHighlight="@color/textSelection"
-        android:theme="@style/inputField"
+        android:theme="@style/AppTheme.EditText"
         tools:targetApi="o" />
 
     <TextView

@@ -14,6 +14,8 @@ import android.hardware.biometrics.BiometricPrompt;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CancellationSignal;
+import android.os.Handler;
+import android.text.Html;
 import android.text.InputType;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -41,6 +43,7 @@ import androidx.biometric.BiometricManager;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.text.HtmlCompat;
 
 import com.google.android.material.appbar.AppBarLayout;
 
@@ -68,6 +71,9 @@ public class ProfileActivity extends AppCompatActivity {
     private ArrayAdapter<String> adapterQuestion;
     private Switch flagProfApp;
     private int attempts;
+    private boolean blockBack;
+    private boolean doubleBackToExitPressedOnce;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +89,8 @@ public class ProfileActivity extends AppCompatActivity {
         listUser = mngUsr.deserializationListUser(this);
         usr = mngUsr.findUser(listUser, ((User) Objects.requireNonNull((Objects.requireNonNull(getIntent().getExtras())).get("owner"))).getUser());
         if (usr != null) {
+            blockBack = true;
+            attempts = 3;
             ArrayList<String> listQuestion = new ArrayList<>();
             listQuestion.add("Altro");
             listQuestion.add("Qual è il tuo colore preferito?");
@@ -414,9 +422,24 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     public void onBackPressed() {
-        goToSettingActivity();
-    }
+        if (blockBack) goToSettingActivity();
+        else {
+            if (doubleBackToExitPressedOnce) {
+                super.onBackPressed();
+                goToMainActivity();
+            }
+            this.doubleBackToExitPressedOnce = true;
+            notifyUser(Html.fromHtml("Premi nuovamente <b> INDIETRO </b> per tornare alla schermata principale.", HtmlCompat.FROM_HTML_MODE_LEGACY).toString());
 
+            new Handler().postDelayed(new Runnable() {
+
+                @Override
+                public void run() {
+                    doubleBackToExitPressedOnce = false;
+                }
+            }, 2000);
+        }
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.P)
     @Override
@@ -536,6 +559,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     public void recheckPass() {
+        blockBack = false;
         LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
         View popupViewCheck = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_security_password_match_parent, (ViewGroup) findViewById(R.id.passSecurityPopupMatchParent));
         final PopupWindow popupWindowCheck = new PopupWindow(popupViewCheck, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, true);
@@ -554,6 +578,7 @@ public class ProfileActivity extends AppCompatActivity {
                 } else {
                     if (popupText.getText().toString().equals(usr.getPassword())) {
                         layoutProfileActivity.setVisibility(View.VISIBLE);
+                        blockBack = true;
                         attempts = 3;
                         popupWindowCheck.dismiss();
                     } else {

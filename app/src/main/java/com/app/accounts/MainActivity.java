@@ -360,7 +360,6 @@ public class MainActivity extends AppCompatActivity {
                 Toast.LENGTH_SHORT).show();
     }
 
-
     private Boolean checkBiometricSupport() {
         KeyguardManager keyguardManager =
                 (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
