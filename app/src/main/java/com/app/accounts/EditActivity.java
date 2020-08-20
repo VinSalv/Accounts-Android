@@ -70,7 +70,6 @@ public class EditActivity extends AppCompatActivity {
     private AccountElement accountElementToEdit;
     private int i;
     private boolean b;
-    private ImageButton showPass;
     private int attempts;
     private boolean blockBack;
     private boolean doubleBackToExitPressedOnce;
@@ -89,13 +88,13 @@ public class EditActivity extends AppCompatActivity {
         ConstraintLayout constraintLayoutButtons = findViewById(R.id.constraintLayoutButtons);
         AccountElement specificAccountElement = (AccountElement) (Objects.requireNonNull(getIntent().getExtras())).get("accountElement");
         ManageUser mngUsr = new ManageUser();
-        ArrayList<User> listUser = mngUsr.deserializationListUser(this);
+        ArrayList<User> listUser = mngUsr.deserializationListUser();
         usr = mngUsr.findUser(listUser, ((User) Objects.requireNonNull((Objects.requireNonNull(getIntent().getExtras())).get("owner"))).getUser());
         if (usr != null) {
             blockBack = true;
             attempts = 3;
             mngCat = new ManageCategory();
-            listCategory = mngCat.deserializationListCategory(this, usr.getUser());
+            listCategory = mngCat.deserializationListCategory(usr.getUser());
             category = mngCat.findAndGetCategory(listCategory, ((Category) Objects.requireNonNull((Objects.requireNonNull(getIntent().getExtras())).get("category"))).getCat());
             listAccount = category.getListAcc();
             accountToEdit = mngCat.findAndGetAccount(listAccount, ((Account) Objects.requireNonNull(Objects.requireNonNull(getIntent().getExtras()).get("account"))).getName());
@@ -519,7 +518,7 @@ public class EditActivity extends AppCompatActivity {
                             listCategory.remove(category);
                             category.setListAcc(listAccount);
                             listCategory.add(category);
-                            mngCat.serializationListCategory(EditActivity.this, listCategory, usr.getUser());
+                            mngCat.serializationListCategory(listCategory, usr.getUser());
                             if (b)
                                 notifyUserShortWay("Gli elementi senza nessun campo compilato non verranno memorizzati.");
                             goToViewActivity();
@@ -1161,9 +1160,7 @@ public class EditActivity extends AppCompatActivity {
             recheckPass();
             return false;
         }
-        if (packageManager.hasSystemFeature(PackageManager.FEATURE_FINGERPRINT)) {
-            return true;
-        }
+        packageManager.hasSystemFeature(PackageManager.FEATURE_FINGERPRINT);
         return true;
     }
 
@@ -1216,7 +1213,7 @@ public class EditActivity extends AppCompatActivity {
                 }
             }
         });
-        showPass = popupViewCheck.findViewById(R.id.showPass);
+        ImageButton showPass = popupViewCheck.findViewById(R.id.showPass);
         showPass(popupText, showPass);
     }
 }

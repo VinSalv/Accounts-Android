@@ -78,7 +78,6 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     private ActionMode actionMode;
     private boolean isMultiSelect;
     private boolean b, a;
-    private ImageButton showPass;
     private int attempts;
     private boolean blockBack;
     private boolean doubleBackToExitPressedOnce;
@@ -98,16 +97,16 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         isMultiSelect = false;
         a = true;
         mngApp = new ManageApp();
-        log = mngApp.deserializationFlag(this);
+        log = mngApp.deserializationFlag();
         ManageUser mngUsr = new ManageUser();
-        ArrayList<User> listUser = mngUsr.deserializationListUser(this);
+        ArrayList<User> listUser = mngUsr.deserializationListUser();
         usr = mngUsr.findUser(listUser, ((User) Objects.requireNonNull((Objects.requireNonNull(getIntent().getExtras())).get("owner"))).getUser());
         if (usr != null) {
             blockBack = true;
             attempts = 3;
             b = false;
             mngCat = new ManageCategory();
-            listCategory = mngCat.deserializationListCategory(this, usr.getUser());
+            listCategory = mngCat.deserializationListCategory(usr.getUser());
             category = mngCat.findAndGetCategory(listCategory, ((Category) Objects.requireNonNull((Objects.requireNonNull(getIntent().getExtras())).get("category"))).getCat());
             if (category != null) {
                 if (category.getSort() == 1) {
@@ -115,14 +114,14 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                         listCategory.remove(category);
                         category.setListAcc(increasing(category.getListAcc()));
                         listCategory.add(category);
-                        mngCat.serializationListCategory(this, listCategory, category.getCat());
+                        mngCat.serializationListCategory(listCategory, category.getCat());
                     }
                 } else if (usr.getSort() == 2) {
                     if (category.getListAcc() != null) {
                         listCategory.remove(category);
                         category.setListAcc(decreasing(category.getListAcc()));
                         listCategory.add(category);
-                        mngCat.serializationListCategory(this, listCategory, category.getCat());
+                        mngCat.serializationListCategory(listCategory, category.getCat());
                     }
                 }
                 textView = findViewById(R.id.welcomeText);
@@ -403,7 +402,7 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                         category.setListAcc(listToRemove);
                         listCategory.add(category);
                         popupWindowSecurity.dismiss();
-                        mngCat.serializationListCategory(ViewActivity.this, listCategory, usr.getUser());
+                        mngCat.serializationListCategory(listCategory, usr.getUser());
                         refresh();
                     }
                 });
@@ -423,14 +422,12 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 for (Account singleAccount : category.getListAcc()) {
                     selectedIds.add(singleAccount.getName());
                 }
-                mAdapter.setSelectedIds(selectedIds);
-                Objects.requireNonNull(actionMode).setTitle(Html.fromHtml("Sel: <b>" + selectedIds.size() + "</b>", HtmlCompat.FROM_HTML_MODE_LEGACY));
             } else {
                 menuItem.setTitle("Tutti");
                 selectedIds.clear();
-                mAdapter.setSelectedIds(selectedIds);
-                Objects.requireNonNull(actionMode).setTitle(Html.fromHtml("Sel: <b>" + selectedIds.size() + "</b>", HtmlCompat.FROM_HTML_MODE_LEGACY));
             }
+            mAdapter.setSelectedIds(selectedIds);
+            Objects.requireNonNull(actionMode).setTitle(Html.fromHtml("Sel: <b>" + selectedIds.size() + "</b>", HtmlCompat.FROM_HTML_MODE_LEGACY));
         }
         if (menuItem.getItemId() == R.id.copy_id) {
             if (!selectedIds.isEmpty()) {
@@ -497,7 +494,7 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                         if (!mngCat.findCategory(listCategoryApp, popupRenameCategoryText.getText().toString())) {
                             category.setCat(fixName(popupRenameCategoryText.getText().toString()));
                             listCategoryApp.add(category);
-                            mngCat.serializationListCategory(ViewActivity.this, listCategoryApp, usr.getUser());
+                            mngCat.serializationListCategory(listCategoryApp, usr.getUser());
                             refresh();
                             popupWindowRenameCategory.dismiss();
                         } else {
@@ -542,7 +539,7 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 multiSelect(-1);
                 return true;
             case R.id.sort:
-                Category categoryApp = mngCat.findAndGetCategory(mngCat.deserializationListCategory(this, usr.getUser()), category.getCat());
+                Category categoryApp = mngCat.findAndGetCategory(mngCat.deserializationListCategory(usr.getUser()), category.getCat());
                 LayoutInflater layoutInflaterSort = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
                 View popupViewSort = Objects.requireNonNull(layoutInflaterSort).inflate(R.layout.popup_sort, (ViewGroup) findViewById(R.id.popupSort));
                 final PopupWindow popupWindowSort = new PopupWindow(popupViewSort, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
@@ -579,7 +576,7 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                             category.setSort(3);
                             listCategory.add(category);
                         }
-                        mngCat.serializationListCategory(ViewActivity.this, listCategory, usr.getUser());
+                        mngCat.serializationListCategory(listCategory, usr.getUser());
                         popupWindowSort.dismiss();
                         refresh();
                     }
@@ -590,7 +587,7 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 return true;
             case R.id.exit:
                 log = new LogApp();
-                mngApp.serializationFlag(this, log);
+                mngApp.serializationFlag(log);
                 goToMainActivity();
                 return true;
             default:
@@ -763,9 +760,7 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             recheckPass();
             return false;
         }
-        if (packageManager.hasSystemFeature(PackageManager.FEATURE_FINGERPRINT)) {
-            return true;
-        }
+        packageManager.hasSystemFeature(PackageManager.FEATURE_FINGERPRINT);
         return true;
     }
 
@@ -818,7 +813,7 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 }
             }
         });
-        showPass = popupViewCheck.findViewById(R.id.showPass);
+        ImageButton showPass = popupViewCheck.findViewById(R.id.showPass);
         showPass(popupText, showPass);
     }
 

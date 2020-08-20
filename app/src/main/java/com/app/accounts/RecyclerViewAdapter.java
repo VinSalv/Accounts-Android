@@ -68,7 +68,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public void onRowMoved(int fromPosition, int toPosition) {
-        ArrayList<Category> listCategory = mngCat.deserializationListCategory(context, usr.getUser());
+        ArrayList<Category> listCategory = mngCat.deserializationListCategory(usr.getUser());
         mngCat.removeFileCategory(context, usr.getUser());
 
         if (fromPosition < toPosition) {
@@ -89,13 +89,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 listCategory2.add(new Category(category.getCat(), listAccount, 3));
             }
         }
-        mngCat.serializationListCategory(context, listCategory2, usr.getUser());
+        mngCat.serializationListCategory(listCategory2, usr.getUser());
 
-        ArrayList<User> listUsr = mngUsr.deserializationListUser(context);
+        ArrayList<User> listUsr = mngUsr.deserializationListUser();
         listUsr.remove(usr);
         usr.setSort(3);
         listUsr.add(usr);
-        mngUsr.serializationListUser(context, listUsr);
+        mngUsr.serializationListUser(listUsr);
 
         notifyItemMoved(fromPosition, toPosition);
     }

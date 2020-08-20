@@ -45,7 +45,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Objects;
 
-@SuppressWarnings("SameParameterValue")
+@SuppressWarnings({"SameParameterValue", "deprecation"})
 public class SearchActivity extends AppCompatActivity {
     private LinearLayout layoutSearchActivity;
     private ManageCategory mngCat;
@@ -55,7 +55,6 @@ public class SearchActivity extends AppCompatActivity {
     private TextView accountFound;
     private int i;
     private int j;
-    private ImageButton showPass;
     private int attempts;
     private boolean blockBack;
     private boolean doubleBackToExitPressedOnce;
@@ -69,17 +68,17 @@ public class SearchActivity extends AppCompatActivity {
         setContentView(R.layout.activity_search);
         layoutSearchActivity = findViewById(R.id.contentSearchLayout);
         ManageUser mngUsr = new ManageUser();
-        ArrayList<User> listUser = mngUsr.deserializationListUser(this);
+        ArrayList<User> listUser = mngUsr.deserializationListUser();
         usr = mngUsr.findUser(listUser, ((User) Objects.requireNonNull((Objects.requireNonNull(getIntent().getExtras())).get("owner"))).getUser());
         if (usr != null) {
             blockBack = true;
             attempts = 3;
             mngCat = new ManageCategory();
-            listCategory = mngCat.deserializationListCategory(this, usr.getUser());
+            listCategory = mngCat.deserializationListCategory(usr.getUser());
             accountFound = findViewById(R.id.elemFind);
             EditText name = findViewById(R.id.nameSerched);
             name.addTextChangedListener(new TextWatcher() {
-                @SuppressLint("SetTextI18n")
+                @SuppressLint({"SetTextI18n", "UseCompatLoadingForDrawables"})
                 @Override
                 public void afterTextChanged(Editable s) {
                     layoutSearchActivity.removeAllViews();
@@ -214,7 +213,7 @@ public class SearchActivity extends AppCompatActivity {
 
     public void onBackPressed() {
         if (blockBack) {
-            if (((String) getIntent().getExtras().get("cat")).equals(""))
+            if (Objects.equals(Objects.requireNonNull(getIntent().getExtras()).get("cat"), ""))
                 goToCategoryActivity();
             else {
                 category = mngCat.findAndGetCategory(listCategory, ((Category) Objects.requireNonNull((Objects.requireNonNull(getIntent().getExtras())).get("category"))).getCat());
@@ -360,9 +359,7 @@ public class SearchActivity extends AppCompatActivity {
             recheckPass();
             return false;
         }
-        if (packageManager.hasSystemFeature(PackageManager.FEATURE_FINGERPRINT)) {
-            return true;
-        }
+        packageManager.hasSystemFeature(PackageManager.FEATURE_FINGERPRINT);
         return true;
     }
 
@@ -415,7 +412,7 @@ public class SearchActivity extends AppCompatActivity {
                 }
             }
         });
-        showPass = popupViewCheck.findViewById(R.id.showPass);
+        ImageButton showPass = popupViewCheck.findViewById(R.id.showPass);
         showPass(popupText, showPass);
     }
 }

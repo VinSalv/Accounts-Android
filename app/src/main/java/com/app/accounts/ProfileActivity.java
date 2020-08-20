@@ -58,7 +58,6 @@ public class ProfileActivity extends AppCompatActivity {
     private ManageCategory mngCat;
     private LogApp log;
     private User usr;
-    private Category category;
     private ArrayList<User> listUser;
     private ArrayList<Category> listCategory;
     private TextView profile;
@@ -69,6 +68,7 @@ public class ProfileActivity extends AppCompatActivity {
     private EditText questionEdit;
     private EditText answerEdit;
     private ArrayAdapter<String> adapterQuestion;
+    @SuppressLint("UseSwitchCompatOrMaterialCode")
     private Switch flagProfApp;
     private int attempts;
     private boolean blockBack;
@@ -86,7 +86,7 @@ public class ProfileActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         layoutProfileActivity = findViewById(R.id.profileActivityLay);
         mngUsr = new ManageUser();
-        listUser = mngUsr.deserializationListUser(this);
+        listUser = mngUsr.deserializationListUser();
         usr = mngUsr.findUser(listUser, ((User) Objects.requireNonNull((Objects.requireNonNull(getIntent().getExtras())).get("owner"))).getUser());
         if (usr != null) {
             blockBack = true;
@@ -114,7 +114,7 @@ public class ProfileActivity extends AppCompatActivity {
                                 listUser.remove(usr);
                                 usr.setFinger(false);
                                 listUser.add(usr);
-                                mngUsr.serializationListUser(ProfileActivity.this, listUser);
+                                mngUsr.serializationListUser(listUser);
                                 return;
                             case BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE:
                                 notifyUserShortWay("Il sensore biometrico non è attualmente disponibile.");
@@ -122,7 +122,7 @@ public class ProfileActivity extends AppCompatActivity {
                                 listUser.remove(usr);
                                 usr.setFinger(false);
                                 listUser.add(usr);
-                                mngUsr.serializationListUser(ProfileActivity.this, listUser);
+                                mngUsr.serializationListUser(listUser);
                                 return;
                             case BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED:
                                 notifyUserShortWay("Imposta la tua impronta nelle impostazioni del dispositivo.");
@@ -130,19 +130,19 @@ public class ProfileActivity extends AppCompatActivity {
                                 listUser.remove(usr);
                                 usr.setFinger(false);
                                 listUser.add(usr);
-                                mngUsr.serializationListUser(ProfileActivity.this, listUser);
+                                mngUsr.serializationListUser(listUser);
                                 return;
                         }
                         listUser.remove(usr);
                         usr.setFinger(true);
                         listUser.add(usr);
-                        mngUsr.serializationListUser(ProfileActivity.this, listUser);
+                        mngUsr.serializationListUser(listUser);
                         notifyUserShortWay("Autenticazione biometrica abilitata.");
                     } else {
                         listUser.remove(usr);
                         usr.setFinger(false);
                         listUser.add(usr);
-                        mngUsr.serializationListUser(ProfileActivity.this, listUser);
+                        mngUsr.serializationListUser(listUser);
                         notifyUserShortWay("Autenticazione biometrica disabilitata.");
                     }
                 }
@@ -194,18 +194,18 @@ public class ProfileActivity extends AppCompatActivity {
                                 return;
                             }
                             if (mngUsr.notFindUser(new User(popupText.getText().toString(), "", false, 0), listUser)) {
-                                listCategory = mngCat.deserializationListCategory(ProfileActivity.this, usrApp.getUser());
+                                listCategory = mngCat.deserializationListCategory(usrApp.getUser());
                                 mngCat.removeFileCategory(ProfileActivity.this, usrApp.getUser());
                                 listUser.remove(usrApp);
                                 usr.setUser(fixName(popupText.getText().toString()));
-                                mngCat.serializationListCategory(ProfileActivity.this, listCategory, usr.getUser());
+                                mngCat.serializationListCategory(listCategory, usr.getUser());
                                 listUser.add(usr);
-                                mngUsr.serializationListUser(ProfileActivity.this, listUser);
+                                mngUsr.serializationListUser(listUser);
                                 mngApp = new ManageApp();
-                                log = mngApp.deserializationFlag(ProfileActivity.this);
+                                log = mngApp.deserializationFlag();
                                 if (log.getFlagApp()) {
                                     log.setUser(usr.getUser());
-                                    mngApp.serializationFlag(ProfileActivity.this, log);
+                                    mngApp.serializationFlag(log);
                                 }
                                 notifyUserShortWay("Username cambiato con successo.");
                                 popupWindowUser.dismiss();
@@ -250,7 +250,7 @@ public class ProfileActivity extends AppCompatActivity {
                             listUser.remove(usr);
                             usr.setPassword(password.getText().toString());
                             listUser.add(usr);
-                            mngUsr.serializationListUser(ProfileActivity.this, listUser);
+                            mngUsr.serializationListUser(listUser);
                             notifyUserShortWay("Password cambiata con successo.");
                             popupWindowPassword.dismiss();
                         }
@@ -338,17 +338,16 @@ public class ProfileActivity extends AppCompatActivity {
                                     return;
                                 }
                                 usr.setQuestion(questionEdit.getText().toString());
-                                usr.setAnswer(answerEdit.getText().toString());
                             } else {
                                 if (answerEdit.getText().toString().isEmpty()) {
                                     answerEdit.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(ProfileActivity.this, R.color.errorEditText)));
                                     return;
                                 }
                                 usr.setQuestion(questionSpinner.getSelectedItem().toString());
-                                usr.setAnswer(answerEdit.getText().toString());
                             }
+                            usr.setAnswer(answerEdit.getText().toString());
                             listUser.add(usr);
-                            mngUsr.serializationListUser(ProfileActivity.this, listUser);
+                            mngUsr.serializationListUser(listUser);
                             notifyUserShortWay("Domanda di sicurezza cambiata con successo.");
                             popupWindowQuestion.dismiss();
                         }
@@ -376,11 +375,11 @@ public class ProfileActivity extends AppCompatActivity {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("owner", usr);
-        if (((String) getIntent().getExtras().get("cat")).equals(""))
+        if (Objects.equals(Objects.requireNonNull(getIntent().getExtras()).get("cat"), ""))
             intent.putExtra("cat", "");
         else {
-            listCategory = mngCat.deserializationListCategory(this, usr.getUser());
-            category = mngCat.findAndGetCategory(listCategory, ((Category) Objects.requireNonNull((Objects.requireNonNull(getIntent().getExtras())).get("category"))).getCat());
+            listCategory = mngCat.deserializationListCategory(usr.getUser());
+            Category category = mngCat.findAndGetCategory(listCategory, ((Category) Objects.requireNonNull((Objects.requireNonNull(getIntent().getExtras())).get("category"))).getCat());
             intent.putExtra("category", category);
             intent.putExtra("cat", category.getCat());
         }
@@ -541,9 +540,7 @@ public class ProfileActivity extends AppCompatActivity {
             recheckPass();
             return false;
         }
-        if (packageManager.hasSystemFeature(PackageManager.FEATURE_FINGERPRINT)) {
-            return true;
-        }
+        packageManager.hasSystemFeature(PackageManager.FEATURE_FINGERPRINT);
         return true;
     }
 

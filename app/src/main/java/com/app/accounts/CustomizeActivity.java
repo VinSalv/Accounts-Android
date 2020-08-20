@@ -46,18 +46,14 @@ import com.google.android.material.appbar.AppBarLayout;
 import java.util.ArrayList;
 import java.util.Objects;
 
-@SuppressWarnings("SameParameterValue")
+@SuppressWarnings({"SameParameterValue", "deprecation"})
 public class CustomizeActivity extends AppCompatActivity {
     private CoordinatorLayout layoutCustomizeActivity;
     private ManageUser mngUsr;
-    private ManageCategory mngCat;
     private ArrayList<User> listUser;
-    private ArrayList<Category> listCategory;
     private User usr;
-    private Category category;
     private TextView customize;
     private TextView customizeToolbar;
-    private ImageButton showPass;
     private int attempts;
     private boolean blockBack;
     private boolean doubleBackToExitPressedOnce;
@@ -73,7 +69,7 @@ public class CustomizeActivity extends AppCompatActivity {
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
         mngUsr = new ManageUser();
-        listUser = mngUsr.deserializationListUser(this);
+        listUser = mngUsr.deserializationListUser();
         usr = mngUsr.findUser(listUser, ((User) Objects.requireNonNull((Objects.requireNonNull(getIntent().getExtras())).get("owner"))).getUser());
         if (usr != null) {
             blockBack = true;
@@ -116,7 +112,7 @@ public class CustomizeActivity extends AppCompatActivity {
                     listUser.remove(usr);
                     usr.setColCat(Integer.parseInt(number));
                     listUser.add(usr);
-                    mngUsr.serializationListUser(CustomizeActivity.this, listUser);
+                    mngUsr.serializationListUser(listUser);
                 }
 
                 @Override
@@ -138,7 +134,7 @@ public class CustomizeActivity extends AppCompatActivity {
                     listUser.remove(usr);
                     usr.setColAcc(Integer.parseInt(number));
                     listUser.add(usr);
-                    mngUsr.serializationListUser(CustomizeActivity.this, listUser);
+                    mngUsr.serializationListUser(listUser);
                 }
 
                 @Override
@@ -166,12 +162,12 @@ public class CustomizeActivity extends AppCompatActivity {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("owner", usr);
-        if (((String) getIntent().getExtras().get("cat")).equals(""))
+        if ((Objects.requireNonNull(Objects.requireNonNull(getIntent().getExtras()).get("cat"))).equals(""))
             intent.putExtra("cat", "");
         else {
-            mngCat = new ManageCategory();
-            listCategory = mngCat.deserializationListCategory(this, usr.getUser());
-            category = mngCat.findAndGetCategory(listCategory, ((Category) Objects.requireNonNull((Objects.requireNonNull(getIntent().getExtras())).get("category"))).getCat());
+            ManageCategory mngCat = new ManageCategory();
+            ArrayList<Category> listCategory = mngCat.deserializationListCategory(usr.getUser());
+            Category category = mngCat.findAndGetCategory(listCategory, ((Category) Objects.requireNonNull((Objects.requireNonNull(getIntent().getExtras())).get("category"))).getCat());
             intent.putExtra("category", category);
             intent.putExtra("cat", category.getCat());
         }
@@ -311,9 +307,7 @@ public class CustomizeActivity extends AppCompatActivity {
             recheckPass();
             return false;
         }
-        if (packageManager.hasSystemFeature(PackageManager.FEATURE_FINGERPRINT)) {
-            return true;
-        }
+        packageManager.hasSystemFeature(PackageManager.FEATURE_FINGERPRINT);
         return true;
     }
 
@@ -366,7 +360,7 @@ public class CustomizeActivity extends AppCompatActivity {
                 }
             }
         });
-        showPass = popupViewCheck.findViewById(R.id.showPass);
+        ImageButton showPass = popupViewCheck.findViewById(R.id.showPass);
         showPass(popupText, showPass);
     }
 }

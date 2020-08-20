@@ -43,6 +43,7 @@ public class SignActivity extends AppCompatActivity {
     private EditText userEdit;
     private EditText passEdit;
     private EditText passEdit2;
+    @SuppressLint("UseSwitchCompatOrMaterialCode")
     private Switch flagFinger;
     private Spinner questionSpinner;
     private EditText questionEdit;
@@ -58,7 +59,7 @@ public class SignActivity extends AppCompatActivity {
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
         mngUsr = new ManageUser();
-        listUser = mngUsr.deserializationListUser(this);
+        listUser = mngUsr.deserializationListUser();
         signText = findViewById(R.id.signText);
         signTextToolbar = findViewById(R.id.signTextToolbar);
         signTextToolbar.setVisibility(View.INVISIBLE);
@@ -180,7 +181,6 @@ public class SignActivity extends AppCompatActivity {
                         return;
                     }
                     usr.setQuestion(questionEdit.getText().toString());
-                    usr.setAnswer(answerEdit.getText().toString());
                 } else {
                     if (answerEdit.getText().toString().isEmpty()) {
                         answerEdit.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(SignActivity.this, R.color.errorEditText)));
@@ -188,8 +188,8 @@ public class SignActivity extends AppCompatActivity {
                         return;
                     }
                     usr.setQuestion(questionSpinner.getSelectedItem().toString());
-                    usr.setAnswer(answerEdit.getText().toString());
                 }
+                usr.setAnswer(answerEdit.getText().toString());
                 if (!fieldCheck(usr)) return;
                 if (!passEdit.getText().toString().equals(passEdit2.getText().toString())) {
                     passEdit.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(SignActivity.this, R.color.errorEditText)));
@@ -199,11 +199,11 @@ public class SignActivity extends AppCompatActivity {
                 }
                 if (mngUsr.notFindUser(usr, listUser)) {
                     listUser.add(usr);
-                    mngUsr.serializationListUser(SignActivity.this, listUser);
+                    mngUsr.serializationListUser(listUser);
                     listCategory.add(new Category("Siti", 1));
                     listCategory.add(new Category("Social", 1));
                     listCategory.add(new Category("Giochi", 1));
-                    mngCat.serializationListCategory(SignActivity.this, listCategory, usr.getUser());
+                    mngCat.serializationListCategory(listCategory, usr.getUser());
                     goToCategoryActivity(usr);
                 } else {
                     userEdit.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(SignActivity.this, R.color.errorEditText)));

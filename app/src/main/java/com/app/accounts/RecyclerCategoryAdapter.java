@@ -75,12 +75,12 @@ public class RecyclerCategoryAdapter extends RecyclerView.Adapter<RecyclerCatego
                 Collections.swap(listCategory, i, i - 1);
             }
         }
-        mngCat.serializationListCategory(context, listCategory, usr.getUser());
-        ArrayList<User> listUsr = mngUsr.deserializationListUser(context);
+        mngCat.serializationListCategory(listCategory, usr.getUser());
+        ArrayList<User> listUsr = mngUsr.deserializationListUser();
         listUsr.remove(usr);
         usr.setSort(3);
         listUsr.add(usr);
-        mngUsr.serializationListUser(context, listUsr);
+        mngUsr.serializationListUser(listUsr);
         notifyItemMoved(fromPosition, toPosition);
     }
 

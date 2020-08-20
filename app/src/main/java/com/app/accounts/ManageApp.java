@@ -1,6 +1,6 @@
 package com.app.accounts;
 
-import android.content.Context;
+import android.annotation.SuppressLint;
 import android.os.Environment;
 
 import java.io.File;
@@ -20,16 +20,17 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.SecretKeySpec;
 
+@SuppressWarnings("ResultOfMethodCallIgnored")
 class ManageApp implements Serializable {
 
     ManageApp() {
     }
 
-    private static void execCryptDecrypt(int cipherMode, String key,
+    private static void execCryptDecrypt(int cipherMode,
                                          File inputFile, File outputFile) {
         try {
-            Key secretKey = new SecretKeySpec(key.getBytes(), "AES");
-            Cipher cipher = Cipher.getInstance("AES");
+            Key secretKey = new SecretKeySpec("dfgfdgdfgfdlwerknwkfjewh".getBytes(), "AES");
+            @SuppressLint("GetInstance") Cipher cipher = Cipher.getInstance("AES");
             cipher.init(cipherMode, secretKey);
             byte[] inputBytes;
             try (FileInputStream inputStream = new FileInputStream(inputFile)) {
@@ -47,7 +48,7 @@ class ManageApp implements Serializable {
         }
     }
 
-    void serializationFlag(Context context, LogApp logApp) {
+    void serializationFlag(LogApp logApp) {
         try {
             String rootPath = Environment.getExternalStorageDirectory()
                     .getAbsolutePath() + "/Accounts/LogApp";
@@ -70,20 +71,19 @@ class ManageApp implements Serializable {
             e.printStackTrace();
         } finally {
             execCryptDecrypt(Cipher.ENCRYPT_MODE,
-                    "dfgfdgdfgfdlwerknwkfjewh",
                     new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Accounts/LogApp/LogApp.txt"),
                     new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Accounts/LogApp/LogApp.txt"));
         }
     }
 
-    LogApp deserializationFlag(Context context) {
+    LogApp deserializationFlag() {
         try {
             File f = new File(Environment.getExternalStorageDirectory()
                     .getAbsolutePath() + "/Accounts/LogApp/LogApp.txt");
-            execCryptDecrypt(Cipher.DECRYPT_MODE, "dfgfdgdfgfdlwerknwkfjewh", f, f);
+            execCryptDecrypt(Cipher.DECRYPT_MODE, f, f);
             FileInputStream fis = new FileInputStream(f);
             ObjectInputStream is = new ObjectInputStream(fis);
-            @SuppressWarnings("unchecked") LogApp x = (LogApp) is.readObject();
+            LogApp x = (LogApp) is.readObject();
             is.close();
             fis.close();
             return x;
@@ -92,7 +92,6 @@ class ManageApp implements Serializable {
             return new LogApp();
         } finally {
             execCryptDecrypt(Cipher.ENCRYPT_MODE,
-                    "dfgfdgdfgfdlwerknwkfjewh",
                     new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Accounts/LogApp/LogApp.txt"),
                     new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Accounts/LogApp/LogApp.txt"));
         }

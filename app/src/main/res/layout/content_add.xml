@@ -35,6 +35,7 @@
                     android:layout_height="wrap_content"
                     android:autofillHints=""
                     android:hint="@string/nameHint"
+                    android:inputType="text"
                     android:maxLength="12"
                     android:textColor="@color/rightText"
                     android:textColorHighlight="@color/textSelection"

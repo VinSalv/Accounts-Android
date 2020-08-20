@@ -59,7 +59,6 @@ public class ShowElementActivity extends AppCompatActivity implements PopupMenu.
     private Account account;
     private TextView name;
     private TextView nameToolbar;
-    private ImageButton showPass;
     private int attempts;
     private boolean blockBack;
     private boolean doubleBackToExitPressedOnce;
@@ -77,13 +76,13 @@ public class ShowElementActivity extends AppCompatActivity implements PopupMenu.
         layoutShowElementActivity = findViewById(R.id.coordinatorLayShow);
         LinearLayout layoutShowElement = findViewById(R.id.linearLayoutShowElements);
         ManageUser mngUsr = new ManageUser();
-        ArrayList<User> listUsr = mngUsr.deserializationListUser(this);
+        ArrayList<User> listUsr = mngUsr.deserializationListUser();
         usr = mngUsr.findUser(listUsr, ((User) Objects.requireNonNull((Objects.requireNonNull(getIntent().getExtras())).get("owner"))).getUser());
         if (usr != null) {
             blockBack = true;
             attempts = 3;
             mngCat = new ManageCategory();
-            listCategory = mngCat.deserializationListCategory(this, usr.getUser());
+            listCategory = mngCat.deserializationListCategory(usr.getUser());
             category = mngCat.findAndGetCategory(listCategory, ((Category) Objects.requireNonNull((Objects.requireNonNull(getIntent().getExtras())).get("category"))).getCat());
             listAccount = category.getListAcc();
             account = mngCat.findAndGetAccount(listAccount, ((Account) Objects.requireNonNull(Objects.requireNonNull(getIntent().getExtras()).get("account"))).getName());
@@ -461,7 +460,7 @@ public class ShowElementActivity extends AppCompatActivity implements PopupMenu.
                                     listCategory.remove(category);
                                     category.setListAcc(listAccount);
                                     listCategory.add(category);
-                                    mngCat.serializationListCategory(ShowElementActivity.this, listCategory, usr.getUser());
+                                    mngCat.serializationListCategory(listCategory, usr.getUser());
                                     refresh();
                                     popupWindowSecurity.dismiss();
                                 }
@@ -520,7 +519,7 @@ public class ShowElementActivity extends AppCompatActivity implements PopupMenu.
                         listCategory.remove(category);
                         category.setListAcc(listAccount);
                         listCategory.add(category);
-                        mngCat.serializationListCategory(ShowElementActivity.this, listCategory, usr.getUser());
+                        mngCat.serializationListCategory(listCategory, usr.getUser());
                         goToViewActivity(category);
                         popupWindowDeleteAccount.dismiss();
                     }
@@ -766,9 +765,7 @@ public class ShowElementActivity extends AppCompatActivity implements PopupMenu.
             recheckPass();
             return false;
         }
-        if (packageManager.hasSystemFeature(PackageManager.FEATURE_FINGERPRINT)) {
-            return true;
-        }
+        packageManager.hasSystemFeature(PackageManager.FEATURE_FINGERPRINT);
         return true;
     }
 
@@ -821,7 +818,7 @@ public class ShowElementActivity extends AppCompatActivity implements PopupMenu.
                 }
             }
         });
-        showPass = popupViewCheck.findViewById(R.id.showPass);
+        ImageButton showPass = popupViewCheck.findViewById(R.id.showPass);
         showPass(popupText, showPass);
     }
 }

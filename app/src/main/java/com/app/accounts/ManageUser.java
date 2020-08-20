@@ -1,6 +1,6 @@
 package com.app.accounts;
 
-import android.content.Context;
+import android.annotation.SuppressLint;
 import android.os.Environment;
 
 import java.io.File;
@@ -23,16 +23,17 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.SecretKeySpec;
 
+@SuppressWarnings("ResultOfMethodCallIgnored")
 class ManageUser implements Serializable {
 
     public ManageUser() {
     }
 
-    private static void execCryptDecrypt(int cipherMode, String key,
+    private static void execCryptDecrypt(int cipherMode,
                                          File inputFile, File outputFile) {
         try {
-            Key secretKey = new SecretKeySpec(key.getBytes(), "AES");
-            Cipher cipher = Cipher.getInstance("AES");
+            Key secretKey = new SecretKeySpec("dfgfdgdfgfdlwerknwkfjewh".getBytes(), "AES");
+            @SuppressLint("GetInstance") Cipher cipher = Cipher.getInstance("AES");
             cipher.init(cipherMode, secretKey);
             byte[] inputBytes;
             try (FileInputStream inputStream = new FileInputStream(inputFile)) {
@@ -65,7 +66,7 @@ class ManageUser implements Serializable {
         return false;
     }
 
-    void serializationListUser(Context context, ArrayList<User> list) {
+    void serializationListUser(ArrayList<User> list) {
         try {
             String rootPath = Environment.getExternalStorageDirectory()
                     .getAbsolutePath() + "/Accounts/Utenti";
@@ -88,18 +89,17 @@ class ManageUser implements Serializable {
             e.printStackTrace();
         } finally {
             execCryptDecrypt(Cipher.ENCRYPT_MODE,
-                    "dfgfdgdfgfdlwerknwkfjewh",
                     new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Accounts/Utenti/Users.txt"),
                     new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Accounts/Utenti/Users.txt"));
         }
 
     }
 
-    public ArrayList<User> deserializationListUser(Context context) {
+    public ArrayList<User> deserializationListUser() {
         try {
             File f = new File(Environment.getExternalStorageDirectory()
                     .getAbsolutePath() + "/Accounts/Utenti/Users.txt");
-            execCryptDecrypt(Cipher.DECRYPT_MODE, "dfgfdgdfgfdlwerknwkfjewh", f, f);
+            execCryptDecrypt(Cipher.DECRYPT_MODE, f, f);
             FileInputStream fis = new FileInputStream(f);
             ObjectInputStream is = new ObjectInputStream(fis);
             @SuppressWarnings("unchecked") ArrayList<User> x = (ArrayList<User>) is.readObject();
@@ -111,7 +111,6 @@ class ManageUser implements Serializable {
             return new ArrayList<>();
         } finally {
             execCryptDecrypt(Cipher.ENCRYPT_MODE,
-                    "dfgfdgdfgfdlwerknwkfjewh",
                     new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Accounts/Utenti/Users.txt"),
                     new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Accounts/Utenti/Users.txt"));
         }

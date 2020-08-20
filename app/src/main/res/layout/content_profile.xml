@@ -60,7 +60,8 @@
             android:text="@string/editFlagFinger"
             android:textColor="@color/rightText"
             android:textSize="20sp"
-            android:theme="@style/SelectionSwitch" />
+            android:theme="@style/SelectionSwitch"
+            tools:ignore="UseSwitchCompatOrMaterialXml" />
 
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

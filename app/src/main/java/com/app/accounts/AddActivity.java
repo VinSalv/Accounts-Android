@@ -68,7 +68,6 @@ public class AddActivity extends AppCompatActivity {
     private int i;
     private boolean b;
     private int attempts;
-    private ImageButton showPass;
     private boolean blockBack;
     private boolean doubleBackToExitPressedOnce;
 
@@ -83,13 +82,13 @@ public class AddActivity extends AppCompatActivity {
         layoutAddActivity = findViewById(R.id.addActivityLay);
         layoutContentAddToAddOtherAccount = findViewById(R.id.linearLayAdd);
         ManageUser mngUsr = new ManageUser();
-        ArrayList<User> listUser = mngUsr.deserializationListUser(this);
+        ArrayList<User> listUser = mngUsr.deserializationListUser();
         usr = mngUsr.findUser(listUser, ((User) Objects.requireNonNull((Objects.requireNonNull(getIntent().getExtras())).get("owner"))).getUser());
         if (usr != null) {
             blockBack = true;
             attempts = 3;
             mngCat = new ManageCategory();
-            listCategory = mngCat.deserializationListCategory(this, usr.getUser());
+            listCategory = mngCat.deserializationListCategory(usr.getUser());
             category = mngCat.findAndGetCategory(listCategory, ((Category) Objects.requireNonNull((Objects.requireNonNull(getIntent().getExtras())).get("category"))).getCat());
             toolbar.setSubtitle(Html.fromHtml("Aggiungi account alla categoria <b>" + category.getCat() + "</b>", HtmlCompat.FROM_HTML_MODE_LEGACY));
             setSupportActionBar(toolbar);
@@ -144,7 +143,7 @@ public class AddActivity extends AppCompatActivity {
                         listCategory.remove(category);
                         category.setListAcc(listAccount);
                         listCategory.add(category);
-                        mngCat.serializationListCategory(AddActivity.this, listCategory, usr.getUser());
+                        mngCat.serializationListCategory(listCategory, usr.getUser());
                         if (b)
                             notifyUserShortWay("Gli elementi senza nessun campo compilato non verranno memorizzati.");
                         goToViewActivity();
@@ -818,7 +817,7 @@ public class AddActivity extends AppCompatActivity {
                 }
             }
         });
-        showPass = popupViewCheck.findViewById(R.id.showPass);
+        ImageButton showPass = popupViewCheck.findViewById(R.id.showPass);
         showPass(popupText, showPass);
     }
 }

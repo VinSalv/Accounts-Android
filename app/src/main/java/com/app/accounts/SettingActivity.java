@@ -94,9 +94,9 @@ public class SettingActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         layoutSettingActivity = findViewById(R.id.settingActivityLay);
         mngApp = new ManageApp();
-        log = mngApp.deserializationFlag(this);
+        log = mngApp.deserializationFlag();
         mngUsr = new ManageUser();
-        listUser = mngUsr.deserializationListUser(this);
+        listUser = mngUsr.deserializationListUser();
         usr = mngUsr.findUser(listUser, ((User) Objects.requireNonNull((Objects.requireNonNull(getIntent().getExtras())).get("owner"))).getUser());
         if (usr != null) {
             blockBack = true;
@@ -196,7 +196,7 @@ public class SettingActivity extends AppCompatActivity {
                                 popupWindowChoseCat.showAtLocation(parent, Gravity.CENTER, 0, 0);
                                 final Button selectAll = popupViewChoseCat.findViewById(R.id.select_all_cat_pdf);
                                 int i = 0;
-                                for (Category singleCategory : mngCat.deserializationListCategory(SettingActivity.this, usr.getUser())) {
+                                for (Category singleCategory : mngCat.deserializationListCategory(usr.getUser())) {
                                     CheckBox checkBox = new CheckBox(SettingActivity.this);
                                     checkBox.setId(i);
                                     checkBox.setText(singleCategory.getCat());
@@ -204,7 +204,7 @@ public class SettingActivity extends AppCompatActivity {
                                         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                                             boolean bool = true;
                                             int i = 0;
-                                            for (Category ignored : mngCat.deserializationListCategory(SettingActivity.this, usr.getUser())) {
+                                            for (Category ignored : mngCat.deserializationListCategory(usr.getUser())) {
                                                 CheckBox checkBox = popupViewChoseCat.findViewById(i);
                                                 if (!checkBox.isChecked()) bool = false;
                                                 i++;
@@ -224,14 +224,14 @@ public class SettingActivity extends AppCompatActivity {
                                     public void onClick(View view) {
                                         int i = 0;
                                         if (selectAll.getText().toString().toLowerCase().equals("seleziona tutto")) {
-                                            for (Category ignored : mngCat.deserializationListCategory(SettingActivity.this, usr.getUser())) {
+                                            for (Category ignored : mngCat.deserializationListCategory(usr.getUser())) {
                                                 CheckBox checkBox = popupViewChoseCat.findViewById(i);
                                                 checkBox.setChecked(true);
                                                 i++;
                                             }
                                             selectAll.setText("Deseleziona tutto");
                                         } else {
-                                            for (Category ignored : mngCat.deserializationListCategory(SettingActivity.this, usr.getUser())) {
+                                            for (Category ignored : mngCat.deserializationListCategory(usr.getUser())) {
                                                 CheckBox checkBox = popupViewChoseCat.findViewById(i);
                                                 checkBox.setChecked(false);
                                                 i++;
@@ -253,10 +253,10 @@ public class SettingActivity extends AppCompatActivity {
                                     public void onClick(View view) {
                                         int i = 0;
                                         listCategoryPdf = new ArrayList<>();
-                                        for (Category ignored : mngCat.deserializationListCategory(SettingActivity.this, usr.getUser())) {
+                                        for (Category ignored : mngCat.deserializationListCategory(usr.getUser())) {
                                             CheckBox checkBox = popupViewChoseCat.findViewById(i);
                                             if (checkBox.isChecked())
-                                                listCategoryPdf.add(mngCat.findAndGetCategory(mngCat.deserializationListCategory(SettingActivity.this, usr.getUser()), checkBox.getText().toString()));
+                                                listCategoryPdf.add(mngCat.findAndGetCategory(mngCat.deserializationListCategory(usr.getUser()), checkBox.getText().toString()));
                                             i++;
                                         }
                                         if (listCategoryPdf.isEmpty()) {
@@ -357,9 +357,9 @@ public class SettingActivity extends AppCompatActivity {
                             popupText.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(SettingActivity.this, R.color.colorAccent)));
                             if (popupText.getText().toString().equals(usr.getPassword())) {
                                 log = new LogApp();
-                                mngApp.serializationFlag(SettingActivity.this, log);
+                                mngApp.serializationFlag(log);
                                 listUser.remove(usr);
-                                mngUsr.serializationListUser(SettingActivity.this, listUser);
+                                mngUsr.serializationListUser(listUser);
                                 mngCat.removeFileCategory(SettingActivity.this, usr.getUser());
                                 goToMainActivity();
                                 popupWindowDeleteProfile.dismiss();
@@ -405,10 +405,10 @@ public class SettingActivity extends AppCompatActivity {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("owner", usr);
-        if (((String) getIntent().getExtras().get("cat")).equals(""))
+        if (Objects.equals(Objects.requireNonNull(getIntent().getExtras()).get("cat"), ""))
             intent.putExtra("cat", "");
         else {
-            listCategory = mngCat.deserializationListCategory(this, usr.getUser());
+            listCategory = mngCat.deserializationListCategory(usr.getUser());
             category = mngCat.findAndGetCategory(listCategory, ((Category) Objects.requireNonNull((Objects.requireNonNull(getIntent().getExtras())).get("category"))).getCat());
             intent.putExtra("category", category);
             intent.putExtra("cat", category.getCat());
@@ -423,10 +423,10 @@ public class SettingActivity extends AppCompatActivity {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("owner", usr);
-        if (((String) getIntent().getExtras().get("cat")).equals(""))
+        if (Objects.equals(Objects.requireNonNull(getIntent().getExtras()).get("cat"), ""))
             intent.putExtra("cat", "");
         else {
-            listCategory = mngCat.deserializationListCategory(this, usr.getUser());
+            listCategory = mngCat.deserializationListCategory(usr.getUser());
             category = mngCat.findAndGetCategory(listCategory, ((Category) Objects.requireNonNull((Objects.requireNonNull(getIntent().getExtras())).get("category"))).getCat());
             intent.putExtra("category", category);
             intent.putExtra("cat", category.getCat());
@@ -448,10 +448,10 @@ public class SettingActivity extends AppCompatActivity {
 
     public void onBackPressed() {
         if (blockBack) {
-            if (((String) getIntent().getExtras().get("cat")).equals(""))
+            if (Objects.equals(Objects.requireNonNull(getIntent().getExtras()).get("cat"), ""))
                 goToCategoryActivity();
             else {
-                listCategory = mngCat.deserializationListCategory(this, usr.getUser());
+                listCategory = mngCat.deserializationListCategory(usr.getUser());
                 category = mngCat.findAndGetCategory(listCategory, ((Category) Objects.requireNonNull((Objects.requireNonNull(getIntent().getExtras())).get("category"))).getCat());
                 goToViewActivity();
             }
@@ -822,9 +822,7 @@ public class SettingActivity extends AppCompatActivity {
             recheckPass();
             return false;
         }
-        if (packageManager.hasSystemFeature(PackageManager.FEATURE_FINGERPRINT)) {
-            return true;
-        }
+        packageManager.hasSystemFeature(PackageManager.FEATURE_FINGERPRINT);
         return true;
     }
 

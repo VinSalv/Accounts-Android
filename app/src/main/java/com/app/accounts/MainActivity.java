@@ -42,7 +42,6 @@ import java.util.Objects;
 
 @SuppressWarnings("deprecation")
 public class MainActivity extends AppCompatActivity {
-    private static final int PERMISSION_REQUEST_CODE = 200;
     private RelativeLayout layoutMainActivity;
     private ManageApp mngApp;
     private ManageUser mngUsr;
@@ -51,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
     private User usr;
     private Spinner userApp;
     private EditText passApp;
+    @SuppressLint("UseSwitchCompatOrMaterialCode")
     private Switch flagApp;
     private String u;
     private ArrayAdapter<String> adapterUser;
@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
         TextView sign = findViewById(R.id.signButton);
         ImageButton showPass = findViewById(R.id.showPass);
         mngUsr = new ManageUser();
-        listUser = mngUsr.deserializationListUser(this);
+        listUser = mngUsr.deserializationListUser();
         ArrayList<String> listUsr = new ArrayList<>();
         listUsr.add("Utente");
         for (User us : listUser)
@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         mngApp = new ManageApp();
-        log = mngApp.deserializationFlag(this);
+        log = mngApp.deserializationFlag();
         if (log.getFlagApp()) {
             flagApp.setChecked(true);
             usr = mngUsr.findUser(listUser, log.getUser());
@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
                         biometricAuthentication(layoutMainActivity);
                     } else {
                         log = new LogApp(flagApp.isChecked(), u);
-                        mngApp.serializationFlag(MainActivity.this, log);
+                        mngApp.serializationFlag(log);
                         goToCategoryActivity();
                     }
                 } else {
@@ -265,7 +265,7 @@ public class MainActivity extends AppCompatActivity {
                 notifyUser("Autenticazione errore: " + errString + ".");
                 super.onAuthenticationError(errorCode, errString);
                 log = new LogApp();
-                mngApp.serializationFlag(MainActivity.this, log);
+                mngApp.serializationFlag(log);
                 goToMainActivity();
                 passApp.setText("");
             }
@@ -286,13 +286,11 @@ public class MainActivity extends AppCompatActivity {
                 super.onAuthenticationSucceeded(result);
                 if (flagApp.isChecked()) {
                     log = new LogApp(flagApp.isChecked(), usr.getUser());
-                    mngApp.serializationFlag(MainActivity.this, log);
-                    goToCategoryActivity();
                 } else {
                     log = new LogApp();
-                    mngApp.serializationFlag(MainActivity.this, log);
-                    goToCategoryActivity();
                 }
+                mngApp.serializationFlag(log);
+                goToCategoryActivity();
             }
         };
     }
@@ -309,7 +307,7 @@ public class MainActivity extends AppCompatActivity {
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 notifyUserShortWay("Autenticazione annullata.");
                                 log = new LogApp();
-                                mngApp.serializationFlag(MainActivity.this, log);
+                                mngApp.serializationFlag(log);
                                 goToMainActivity();
                                 passApp.setText("");
                             }
@@ -373,9 +371,7 @@ public class MainActivity extends AppCompatActivity {
             notifyUser("Permesso impronte digitali non abilitato.");
             return false;
         }
-        if (packageManager.hasSystemFeature(PackageManager.FEATURE_FINGERPRINT)) {
-            return true;
-        }
+        packageManager.hasSystemFeature(PackageManager.FEATURE_FINGERPRINT);
         return true;
     }
 

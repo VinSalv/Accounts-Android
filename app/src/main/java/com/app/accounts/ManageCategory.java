@@ -1,5 +1,6 @@
 package com.app.accounts;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Environment;
 
@@ -20,15 +21,16 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.SecretKeySpec;
 
+@SuppressWarnings("ResultOfMethodCallIgnored")
 public class ManageCategory {
     ManageCategory() {
     }
 
-    private static void execCryptDecrypt(int cipherMode, String key,
+    private static void execCryptDecrypt(int cipherMode,
                                          File inputFile, File outputFile) {
         try {
-            Key secretKey = new SecretKeySpec(key.getBytes(), "AES");
-            Cipher cipher = Cipher.getInstance("AES");
+            Key secretKey = new SecretKeySpec("dfgfdgdfgfdlwerknwkfjewh".getBytes(), "AES");
+            @SuppressLint("GetInstance") Cipher cipher = Cipher.getInstance("AES");
             cipher.init(cipherMode, secretKey);
             byte[] inputBytes;
             try (FileInputStream inputStream = new FileInputStream(inputFile)) {
@@ -46,7 +48,7 @@ public class ManageCategory {
         }
     }
 
-    void serializationListCategory(Context context, ArrayList<Category> list, String owner) {
+    void serializationListCategory(ArrayList<Category> list, String owner) {
         try {
             String rootPath = Environment.getExternalStorageDirectory()
                     .getAbsolutePath() + "/Accounts/Categorie";
@@ -68,17 +70,16 @@ public class ManageCategory {
             e.printStackTrace();
         } finally {
             execCryptDecrypt(Cipher.ENCRYPT_MODE,
-                    "dfgfdgdfgfdlwerknwkfjewh",
                     new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Accounts/Categorie/" + owner + ".txt"),
                     new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Accounts/Categorie/" + owner + ".txt"));
         }
     }
 
-    ArrayList<Category> deserializationListCategory(Context context, String owner) {
+    ArrayList<Category> deserializationListCategory(String owner) {
         try {
             File f = new File(Environment.getExternalStorageDirectory()
                     .getAbsolutePath() + "/Accounts/Categorie/" + owner + ".txt");
-            execCryptDecrypt(Cipher.DECRYPT_MODE, "dfgfdgdfgfdlwerknwkfjewh", f, f);
+            execCryptDecrypt(Cipher.DECRYPT_MODE, f, f);
             FileInputStream fis = new FileInputStream(f);
             ObjectInputStream is = new ObjectInputStream(fis);
             @SuppressWarnings("unchecked") ArrayList<Category> x = (ArrayList<Category>) is.readObject();
@@ -90,7 +91,6 @@ public class ManageCategory {
             return new ArrayList<>();
         } finally {
             execCryptDecrypt(Cipher.ENCRYPT_MODE,
-                    "dfgfdgdfgfdlwerknwkfjewh",
                     new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Accounts/Categorie/" + owner + ".txt"),
                     new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Accounts/Categorie/" + owner + ".txt"));
         }
