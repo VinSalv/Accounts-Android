@@ -12,8 +12,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
-        android:shadowColor="@color/rightText"
         android:text="@string/questionText"
+        android:textColor="@color/rightText"
         android:textSize="16sp" />
 
     <ImageView
@@ -22,18 +22,17 @@
         android:layout_height="20dp"
         android:layout_alignTop="@id/questionSpinner"
         android:layout_alignBottom="@id/questionSpinner"
-        android:layout_alignParentStart="true"
-        android:contentDescription="@string/userImage"
+        android:contentDescription="@string/questionImage"
         android:src="@drawable/questionmark" />
 
     <Spinner
         android:id="@+id/questionSpinner"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:layout_below="@id/questionText"
-        android:layout_marginStart="5dp"
-        android:layout_marginBottom="5dp"
-        android:layout_toEndOf="@id/questionMarkImage" />
+        android:layout_alignStart="@id/questionText"
+        android:layout_marginStart="30sp"
+        android:layout_marginBottom="5dp" />
 
     <EditText
         android:id="@+id/questionEdit"
@@ -77,6 +76,6 @@
         android:text="@string/changeQuestionAnsware"
         android:textAlignment="center"
         android:textColor="@color/colorPrimaryClear"
-        android:textSize="18sp" />
+        android:textSize="16sp" />
 </RelativeLayout>
 

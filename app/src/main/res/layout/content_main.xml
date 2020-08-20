@@ -13,6 +13,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:fontFamily="@font/fredoka_one"
+        android:paddingTop="10dp"
         android:text="@string/uppercaseAppName"
         android:textAlignment="center"
         android:textColor="@color/rightText"
@@ -53,7 +54,7 @@
         <Spinner
             android:id="@+id/userApp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:layout_marginStart="30dp"
             android:layout_marginBottom="5dp"
             android:autofillHints=""

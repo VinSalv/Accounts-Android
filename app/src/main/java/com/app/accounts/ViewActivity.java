@@ -327,7 +327,7 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 goToMainActivity();
             }
             this.doubleBackToExitPressedOnce = true;
-            notifyUser(Html.fromHtml("Premi nuovamente <b> INDIETRO </b> per tornare alla schermata principale.", HtmlCompat.FROM_HTML_MODE_LEGACY).toString());
+            notifyUser(Html.fromHtml("Premi nuovamente <b>INDIETRO</b> per tornare alla schermata principale.", HtmlCompat.FROM_HTML_MODE_LEGACY).toString());
 
             new Handler().postDelayed(new Runnable() {
 
@@ -374,7 +374,7 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             if (!selectedIds.isEmpty()) {
                 LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
                 View popupViewSecurity = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_security, (ViewGroup) findViewById(R.id.popupSecurity));
-                final PopupWindow popupWindowSecurity = new PopupWindow(popupViewSecurity, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+                final PopupWindow popupWindowSecurity = new PopupWindow(popupViewSecurity, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
                 popupWindowSecurity.setOutsideTouchable(true);
                 popupWindowSecurity.setFocusable(true);
                 popupWindowSecurity.setBackgroundDrawable(new BitmapDrawable());
@@ -474,7 +474,7 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             case (R.id.rename):
                 LayoutInflater layoutInflaterRename = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
                 View popupViewRenameCategory = Objects.requireNonNull(layoutInflaterRename).inflate(R.layout.popup_rename_category, (ViewGroup) findViewById(R.id.categoryRenamePopup));
-                final PopupWindow popupWindowRenameCategory = new PopupWindow(popupViewRenameCategory, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+                final PopupWindow popupWindowRenameCategory = new PopupWindow(popupViewRenameCategory, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
                 popupWindowRenameCategory.setOutsideTouchable(true);
                 popupWindowRenameCategory.setFocusable(true);
                 popupWindowRenameCategory.setBackgroundDrawable(new BitmapDrawable());
@@ -545,7 +545,7 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 Category categoryApp = mngCat.findAndGetCategory(mngCat.deserializationListCategory(this, usr.getUser()), category.getCat());
                 LayoutInflater layoutInflaterSort = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
                 View popupViewSort = Objects.requireNonNull(layoutInflaterSort).inflate(R.layout.popup_sort, (ViewGroup) findViewById(R.id.popupSort));
-                final PopupWindow popupWindowSort = new PopupWindow(popupViewSort, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+                final PopupWindow popupWindowSort = new PopupWindow(popupViewSort, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
                 popupWindowSort.setOutsideTouchable(true);
                 popupWindowSort.setFocusable(true);
                 popupWindowSort.setBackgroundDrawable(new BitmapDrawable());

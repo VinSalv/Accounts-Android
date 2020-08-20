@@ -237,15 +237,15 @@ public class SignActivity extends AppCompatActivity {
         if (isInvalidWord(usr.getUser()) && isInvalidWord(usr.getPassword())) {
             userEdit.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(SignActivity.this, R.color.errorEditText)));
             passEdit.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(SignActivity.this, R.color.errorEditText)));
-            notifyUser("Campi Utente e Password non validi. Caratteri validi: A-Z a-z 0-9 @#$%^&+=!?._");
+            notifyUser("Campi Utente e Password non validi. Caratteri validi: A-Z SelectedStateRadioButton-z 0-9 @#$%^&+=!?._");
             return false;
         } else if (isInvalidWord(usr.getUser())) {
             userEdit.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(SignActivity.this, R.color.errorEditText)));
-            notifyUser("Campo Utente non valido. Caratteri validi: A-Z a-z 0-9 @#$%^&+=!?._");
+            notifyUser("Campo Utente non valido. Caratteri validi: A-Z SelectedStateRadioButton-z 0-9 @#$%^&+=!?._");
             return false;
         } else if (isInvalidWord(usr.getPassword())) {
             passEdit.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(SignActivity.this, R.color.errorEditText)));
-            notifyUser("Campo Password non valido. Caratteri validi: A-Z a-z 0-9 @#$%^&+=!?._");
+            notifyUser("Campo Password non valido. Caratteri validi: A-Z SelectedStateRadioButton-z 0-9 @#$%^&+=!?._");
             return false;
         }
         return true;

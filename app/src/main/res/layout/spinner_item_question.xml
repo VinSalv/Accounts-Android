@@ -5,4 +5,4 @@
     android:background="@drawable/selection_stroke"
     android:gravity="center"
     android:textColor="@color/rightText"
-    android:textSize="14sp" />
+    android:textSize="16sp" />

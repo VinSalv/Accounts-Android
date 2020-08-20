@@ -176,7 +176,7 @@ public class ProfileActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
                     View popupViewUser = Objects.requireNonNull(layoutInflater).inflate(R.layout.edit_user, (ViewGroup) findViewById(R.id.editUserLayout));
-                    final PopupWindow popupWindowUser = new PopupWindow(popupViewUser, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+                    final PopupWindow popupWindowUser = new PopupWindow(popupViewUser, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
                     popupWindowUser.setOutsideTouchable(true);
                     popupWindowUser.setFocusable(true);
                     popupWindowUser.setBackgroundDrawable(new BitmapDrawable());
@@ -223,7 +223,7 @@ public class ProfileActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
                     View popupViewPassword = Objects.requireNonNull(layoutInflater).inflate(R.layout.edit_password, (ViewGroup) findViewById(R.id.edit_password_layout));
-                    final PopupWindow popupWindowPassword = new PopupWindow(popupViewPassword, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+                    final PopupWindow popupWindowPassword = new PopupWindow(popupViewPassword, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
                     popupWindowPassword.setOutsideTouchable(true);
                     popupWindowPassword.setFocusable(true);
                     popupWindowPassword.setBackgroundDrawable(new BitmapDrawable());
@@ -399,7 +399,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     public boolean notFieldCheck(String s) {
         if (isInvalidWord(s)) {
-            notifyUser("Campo non valido. Caratteri validi: A-Z a-z 0-9 @#$%^&+=!?._");
+            notifyUser("Campo non valido. Caratteri validi: A-Z SelectedStateRadioButton-z 0-9 @#$%^&+=!?._");
             return true;
         }
         return false;
@@ -429,7 +429,7 @@ public class ProfileActivity extends AppCompatActivity {
                 goToMainActivity();
             }
             this.doubleBackToExitPressedOnce = true;
-            notifyUser(Html.fromHtml("Premi nuovamente <b> INDIETRO </b> per tornare alla schermata principale.", HtmlCompat.FROM_HTML_MODE_LEGACY).toString());
+            notifyUser(Html.fromHtml("Premi nuovamente <b>INDIETRO</b> per tornare alla schermata principale.", HtmlCompat.FROM_HTML_MODE_LEGACY).toString());
 
             new Handler().postDelayed(new Runnable() {
 

@@ -14,6 +14,8 @@ import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -79,7 +81,7 @@ class ManageUser implements Serializable {
 
             FileOutputStream out = new FileOutputStream(f);
             ObjectOutputStream os = new ObjectOutputStream(out);
-            os.writeObject(list);
+            os.writeObject(increasing(list));
             out.flush();
             out.close();
         } catch (Exception e) {
@@ -119,5 +121,15 @@ class ManageUser implements Serializable {
         for (User u : list)
             if (u.getUser().toLowerCase().equals(user.toLowerCase())) return u;
         return null;
+    }
+
+    public ArrayList<User> increasing(ArrayList<User> list) {
+        Collections.sort(list, new Comparator<User>() {
+            @Override
+            public int compare(User lhs, User rhs) {
+                return lhs.getUser().toLowerCase().compareTo(rhs.getUser().toLowerCase());
+            }
+        });
+        return list;
     }
 }

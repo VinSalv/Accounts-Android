@@ -34,7 +34,9 @@
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
             android:layout_weight="0.7"
+            android:buttonTint="@color/rightText"
             android:text="@string/increasing"
+            android:textColor="@color/rightText"
             android:textSize="14sp" />
 
         <RadioButton
@@ -44,7 +46,9 @@
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
             android:layout_weight="0.75"
+            android:buttonTint="@color/rightText"
             android:text="@string/decreasing"
+            android:textColor="@color/rightText"
             android:textSize="14sp" />
 
         <RadioButton
@@ -54,7 +58,9 @@
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
             android:layout_weight="0.8"
+            android:buttonTint="@color/rightText"
             android:text="@string/customized"
+            android:textColor="@color/rightText"
             android:textSize="14sp" />
     </RadioGroup>
 
@@ -86,7 +92,9 @@
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
             android:layout_weight="0.7"
+            android:buttonTint="@color/rightText"
             android:text="@string/increasing"
+            android:textColor="@color/rightText"
             android:textSize="14sp" />
 
         <RadioButton
@@ -96,7 +104,9 @@
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
             android:layout_weight="0.75"
+            android:buttonTint="@color/rightText"
             android:text="@string/decreasing"
+            android:textColor="@color/rightText"
             android:textSize="14sp" />
 
         <RadioButton
@@ -106,7 +116,9 @@
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
             android:layout_weight="0.8"
+            android:buttonTint="@color/rightText"
             android:text="@string/customized"
+            android:textColor="@color/rightText"
             android:textSize="14sp" />
     </RadioGroup>
 
@@ -137,7 +149,9 @@
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
             android:layout_weight="1"
+            android:buttonTint="@color/rightText"
             android:text="@string/horizontal"
+            android:textColor="@color/rightText"
             android:textSize="14sp" />
 
         <RadioButton
@@ -147,7 +161,9 @@
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
             android:layout_weight="1"
+            android:buttonTint="@color/rightText"
             android:text="@string/vertical"
+            android:textColor="@color/rightText"
             android:textSize="14sp" />
     </RadioGroup>
 

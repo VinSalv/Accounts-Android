@@ -133,7 +133,7 @@ public class SettingActivity extends AppCompatActivity {
                 public void onClick(View view) {
                     LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
                     View popupViewProfile = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_security_password, (ViewGroup) findViewById(R.id.passSecurityPopup));
-                    final PopupWindow popupWindowProfile = new PopupWindow(popupViewProfile, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+                    final PopupWindow popupWindowProfile = new PopupWindow(popupViewProfile, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
                     popupWindowProfile.setOutsideTouchable(true);
                     popupWindowProfile.setFocusable(true);
                     popupWindowProfile.setBackgroundDrawable(new BitmapDrawable());
@@ -171,7 +171,7 @@ public class SettingActivity extends AppCompatActivity {
                 public void onClick(View view) {
                     LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
                     final View popupViewPdf = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_security_password, (ViewGroup) findViewById(R.id.passSecurityPopup));
-                    final PopupWindow popupWindowPdf = new PopupWindow(popupViewPdf, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+                    final PopupWindow popupWindowPdf = new PopupWindow(popupViewPdf, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
                     popupWindowPdf.setOutsideTouchable(true);
                     popupWindowPdf.setFocusable(true);
                     popupWindowPdf.setBackgroundDrawable(new BitmapDrawable());
@@ -180,6 +180,7 @@ public class SettingActivity extends AppCompatActivity {
                     final EditText popupText = popupViewPdf.findViewById(R.id.passSecurityEditText);
                     Button conf = popupViewPdf.findViewById(R.id.confirmation);
                     conf.setOnClickListener(new View.OnClickListener() {
+                        @SuppressLint("UseCompatLoadingForDrawables")
                         @Override
                         public void onClick(View view) {
                             popupText.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(SettingActivity.this, R.color.colorAccent)));
@@ -187,7 +188,7 @@ public class SettingActivity extends AppCompatActivity {
                                 popupWindowPdf.dismiss();
                                 LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
                                 final View popupViewChoseCat = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_pdf_chose_category, (ViewGroup) findViewById(R.id.pdfChoseCategoryPopup));
-                                final PopupWindow popupWindowChoseCat = new PopupWindow(popupViewChoseCat, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+                                final PopupWindow popupWindowChoseCat = new PopupWindow(popupViewChoseCat, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
                                 popupWindowChoseCat.setOutsideTouchable(true);
                                 popupWindowChoseCat.setFocusable(true);
                                 popupWindowChoseCat.setBackgroundDrawable(new BitmapDrawable());
@@ -215,7 +216,7 @@ public class SettingActivity extends AppCompatActivity {
                                             }
                                         }
                                     });
-                                    ((LinearLayout) popupViewChoseCat.findViewById(R.id.pdfChoseCategoryPopupElem)).addView(checkBox, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+                                    ((LinearLayout) popupViewChoseCat.findViewById(R.id.pdfChoseCategoryPopupElem)).addView(checkBox, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
                                     i++;
                                 }
                                 selectAll.setOnClickListener(new View.OnClickListener() {
@@ -342,7 +343,7 @@ public class SettingActivity extends AppCompatActivity {
                 public void onClick(View view) {
                     LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
                     View popupViewDeleteProfile = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_security_password, (ViewGroup) findViewById(R.id.passSecurityPopup));
-                    final PopupWindow popupWindowDeleteProfile = new PopupWindow(popupViewDeleteProfile, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+                    final PopupWindow popupWindowDeleteProfile = new PopupWindow(popupViewDeleteProfile, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
                     popupWindowDeleteProfile.setOutsideTouchable(true);
                     popupWindowDeleteProfile.setFocusable(true);
                     popupWindowDeleteProfile.setBackgroundDrawable(new BitmapDrawable());
@@ -460,7 +461,7 @@ public class SettingActivity extends AppCompatActivity {
                 goToMainActivity();
             }
             this.doubleBackToExitPressedOnce = true;
-            notifyUser(Html.fromHtml("Premi nuovamente <b> INDIETRO </b> per tornare alla schermata principale.", HtmlCompat.FROM_HTML_MODE_LEGACY).toString());
+            notifyUser(Html.fromHtml("Premi nuovamente <b>INDIETRO</b> per tornare alla schermata principale.", HtmlCompat.FROM_HTML_MODE_LEGACY).toString());
 
             new Handler().postDelayed(new Runnable() {
 

@@ -29,24 +29,27 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
+            android:buttonTint="@color/rightText"
             android:text="@string/customizedPopup"
             android:textColor="@color/rightText"
             android:textSize="16sp" />
 
         <RadioButton
             android:id="@+id/increasing"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
+            android:buttonTint="@color/rightText"
             android:text="@string/increasing"
             android:textColor="@color/rightText"
             android:textSize="16sp" />
 
         <RadioButton
             android:id="@+id/decreasing"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
+            android:buttonTint="@color/rightText"
             android:text="@string/decreasing"
             android:textColor="@color/rightText"
             android:textSize="16sp" />

@@ -151,7 +151,7 @@ public class CategoryChoseActivity extends AppCompatActivity {
                     categoryAdapterPosition = mAdapter.getItem(position);
                     LayoutInflater layoutInflaterDone = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
                     View popupViewDone = Objects.requireNonNull(layoutInflaterDone).inflate(R.layout.popup_done, (ViewGroup) findViewById(R.id.popupDone));
-                    final PopupWindow popupWindowDone = new PopupWindow(popupViewDone, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+                    final PopupWindow popupWindowDone = new PopupWindow(popupViewDone, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
                     popupWindowDone.setOutsideTouchable(false);
                     popupWindowDone.setFocusable(false);
                     popupWindowDone.setBackgroundDrawable(new BitmapDrawable());
@@ -191,7 +191,7 @@ public class CategoryChoseActivity extends AppCompatActivity {
                         if (mngCat.findAccount(categoryAdapterPosition.getListAcc(), singleAccountTake.getName())) {
                             LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
                             View popupViewChose = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_equals, (ViewGroup) findViewById(R.id.popupEquals));
-                            final PopupWindow popupWindowChose = new PopupWindow(popupViewChose, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+                            final PopupWindow popupWindowChose = new PopupWindow(popupViewChose, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
                             popupWindowChose.setFocusable(false);
                             popupWindowChose.setOutsideTouchable(false);
                             popupWindowChose.setBackgroundDrawable(new BitmapDrawable());
@@ -217,7 +217,7 @@ public class CategoryChoseActivity extends AppCompatActivity {
                                 public void onClick(View view) {
                                     LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
                                     View popupViewRename = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_rename, (ViewGroup) findViewById(R.id.popupRename));
-                                    final PopupWindow popupWindowRename = new PopupWindow(popupViewRename, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+                                    final PopupWindow popupWindowRename = new PopupWindow(popupViewRename, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
                                     popupWindowRename.setOutsideTouchable(true);
                                     popupWindowRename.setFocusable(true);
                                     popupWindowRename.setBackgroundDrawable(new BitmapDrawable());
@@ -289,7 +289,7 @@ public class CategoryChoseActivity extends AppCompatActivity {
                     addNewCategory.setVisibility(View.GONE);
                     LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
                     final View popupViewAddNewCategory = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_category, (ViewGroup) findViewById(R.id.categoryPopup));
-                    final PopupWindow popupWindowAddNewCategory = new PopupWindow(popupViewAddNewCategory, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+                    final PopupWindow popupWindowAddNewCategory = new PopupWindow(popupViewAddNewCategory, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
                     popupWindowAddNewCategory.setOutsideTouchable(true);
                     popupWindowAddNewCategory.setFocusable(true);
                     popupWindowAddNewCategory.setBackgroundDrawable(new BitmapDrawable());
@@ -391,7 +391,7 @@ public class CategoryChoseActivity extends AppCompatActivity {
                 goToMainActivity();
             }
             this.doubleBackToExitPressedOnce = true;
-            notifyUser(Html.fromHtml("Premi nuovamente <b> INDIETRO </b> per tornare alla schermata principale.", HtmlCompat.FROM_HTML_MODE_LEGACY).toString());
+            notifyUser(Html.fromHtml("Premi nuovamente <b>INDIETRO</b> per tornare alla schermata principale.", HtmlCompat.FROM_HTML_MODE_LEGACY).toString());
 
             new Handler().postDelayed(new Runnable() {
 

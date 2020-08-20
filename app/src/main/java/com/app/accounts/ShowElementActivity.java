@@ -120,7 +120,7 @@ public class ShowElementActivity extends AppCompatActivity implements PopupMenu.
                     final String nameText = i + "." + account.getName();
                     LayoutInflater inflater = LayoutInflater.from(ShowElementActivity.this);
                     @SuppressLint("InflateParams") final RelativeLayout layoutToAdd = (RelativeLayout) inflater.inflate(R.layout.fragment_show_element, null);
-                    final RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                    final RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                     params.setMargins(0, 0, 0, 15);
                     layoutToAdd.setLayoutParams(params);
                     ((TextView) layoutToAdd.findViewById(R.id.cardinalityElements)).setText(nameText);
@@ -442,7 +442,7 @@ public class ShowElementActivity extends AppCompatActivity implements PopupMenu.
                         public void onClick(View v) {
                             LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
                             View popupViewSecurity = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_security, (ViewGroup) findViewById(R.id.popupSecurity));
-                            final PopupWindow popupWindowSecurity = new PopupWindow(popupViewSecurity, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+                            final PopupWindow popupWindowSecurity = new PopupWindow(popupViewSecurity, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
                             popupWindowSecurity.setOutsideTouchable(true);
                             popupWindowSecurity.setFocusable(true);
                             popupWindowSecurity.setBackgroundDrawable(new BitmapDrawable());
@@ -502,7 +502,7 @@ public class ShowElementActivity extends AppCompatActivity implements PopupMenu.
             case R.id.delete:
                 LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
                 View popupViewDeleteAccount = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_security, (ViewGroup) findViewById(R.id.popupSecurity));
-                final PopupWindow popupWindowDeleteAccount = new PopupWindow(popupViewDeleteAccount, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+                final PopupWindow popupWindowDeleteAccount = new PopupWindow(popupViewDeleteAccount, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
                 popupWindowDeleteAccount.setOutsideTouchable(true);
                 popupWindowDeleteAccount.setFocusable(true);
                 //noinspection deprecation
@@ -617,7 +617,7 @@ public class ShowElementActivity extends AppCompatActivity implements PopupMenu.
                 goToMainActivity();
             }
             this.doubleBackToExitPressedOnce = true;
-            notifyUser(Html.fromHtml("Premi nuovamente <b> INDIETRO </b> per tornare alla schermata principale.", HtmlCompat.FROM_HTML_MODE_LEGACY).toString());
+            notifyUser(Html.fromHtml("Premi nuovamente <b>INDIETRO</b> per tornare alla schermata principale.", HtmlCompat.FROM_HTML_MODE_LEGACY).toString());
 
             new Handler().postDelayed(new Runnable() {
 

@@ -161,7 +161,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
                 View popupViewRecovery = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_recovery, (ViewGroup) findViewById(R.id.popupRecovery));
-                final PopupWindow popupWindowRecovery = new PopupWindow(popupViewRecovery, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+                final PopupWindow popupWindowRecovery = new PopupWindow(popupViewRecovery, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
                 popupWindowRecovery.setFocusable(true);
                 popupWindowRecovery.setOutsideTouchable(true);
                 popupWindowRecovery.setBackgroundDrawable(new BitmapDrawable());
@@ -198,7 +198,7 @@ public class MainActivity extends AppCompatActivity {
                                     popupWindowAnswer.dismiss();
                                     LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
                                     View popupViewPassRec = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_pass_recovery, (ViewGroup) findViewById(R.id.popupPassRecovery));
-                                    final PopupWindow popupWindowPassRec = new PopupWindow(popupViewPassRec, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+                                    final PopupWindow popupWindowPassRec = new PopupWindow(popupViewPassRec, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
                                     popupWindowPassRec.setFocusable(true);
                                     popupWindowPassRec.setOutsideTouchable(true);
                                     popupWindowPassRec.setBackgroundDrawable(new BitmapDrawable());
@@ -330,15 +330,15 @@ public class MainActivity extends AppCompatActivity {
         if (isInvalidWord(usr.getUser()) && isInvalidWord(usr.getPassword())) {
             userApp.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(MainActivity.this, R.color.errorEditText)));
             passApp.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(MainActivity.this, R.color.errorEditText)));
-            notifyUser("Campi Utente e Password non validi. Caratteri validi: A-Z a-z 0-9 @#$%^&+=!?._");
+            notifyUser("Campi Utente e Password non validi. Caratteri validi: A-Z SelectedStateRadioButton-z 0-9 @#$%^&+=!?._");
             return false;
         } else if (isInvalidWord(usr.getUser())) {
             userApp.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(MainActivity.this, R.color.errorEditText)));
-            notifyUser("Campo Utente non valido. Caratteri validi: A-Z a-z 0-9 @#$%^&+=!?._");
+            notifyUser("Campo Utente non valido. Caratteri validi: A-Z SelectedStateRadioButton-z 0-9 @#$%^&+=!?._");
             return false;
         } else if (isInvalidWord(usr.getPassword())) {
             passApp.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(MainActivity.this, R.color.errorEditText)));
-            notifyUser("Campo Password non valido. Caratteri validi: A-Z a-z 0-9 @#$%^&+=!?._");
+            notifyUser("Campo Password non valido. Caratteri validi: A-Z SelectedStateRadioButton-z 0-9 @#$%^&+=!?._");
             return false;
         }
         return true;

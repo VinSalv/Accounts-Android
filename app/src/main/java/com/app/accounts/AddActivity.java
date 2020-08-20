@@ -161,14 +161,14 @@ public class AddActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
                     View popupViewSecurity = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_security, (ViewGroup) findViewById(R.id.popupSecurity));
-                    final PopupWindow popupWindowSecurity = new PopupWindow(popupViewSecurity, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+                    final PopupWindow popupWindowSecurity = new PopupWindow(popupViewSecurity, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
                     popupWindowSecurity.setOutsideTouchable(false);
                     popupWindowSecurity.setFocusable(false);
                     popupWindowSecurity.setBackgroundDrawable(new BitmapDrawable());
                     View parent = layoutAddActivity.getRootView();
                     popupWindowSecurity.showAtLocation(parent, Gravity.CENTER, 0, 0);
                     TextView popupText = popupViewSecurity.findViewById(R.id.securityText);
-                    popupText.setText(Html.fromHtml("Sei sicuro di voler resettare <b> TUTTI </b> i campi?", HtmlCompat.FROM_HTML_MODE_LEGACY));
+                    popupText.setText(Html.fromHtml("Sei sicuro di voler resettare <b>TUTTI</b> i campi?", HtmlCompat.FROM_HTML_MODE_LEGACY));
                     Button yes = popupViewSecurity.findViewById(R.id.yes);
                     Button no = popupViewSecurity.findViewById(R.id.no);
                     yes.setOnClickListener(new View.OnClickListener() {
@@ -238,7 +238,7 @@ public class AddActivity extends AppCompatActivity {
                 goToMainActivity();
             }
             this.doubleBackToExitPressedOnce = true;
-            notifyUser(Html.fromHtml("Premi nuovamente <b> INDIETRO </b> per tornare alla schermata principale.", HtmlCompat.FROM_HTML_MODE_LEGACY).toString());
+            notifyUser(Html.fromHtml("Premi nuovamente <b>INDIETRO</b> per tornare alla schermata principale.", HtmlCompat.FROM_HTML_MODE_LEGACY).toString());
 
             new Handler().postDelayed(new Runnable() {
 
@@ -314,7 +314,7 @@ public class AddActivity extends AppCompatActivity {
     public void addInflaterLayout(View v) {
         LayoutInflater inflater = LayoutInflater.from(AddActivity.this);
         @SuppressLint("InflateParams") final RelativeLayout layoutToAdd = (RelativeLayout) inflater.inflate(R.layout.more_add_lay, null);
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         params.setMargins(0, 20, 0, 0);
         layoutToAdd.setLayoutParams(params);
         listInflaterLayout.add(layoutToAdd);
@@ -617,7 +617,7 @@ public class AddActivity extends AppCompatActivity {
             public void onClick(View v) {
                 LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
                 View popupViewSecurityToDeleteOneInflater = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_security, (ViewGroup) findViewById(R.id.popupSecurity));
-                final PopupWindow popupWindowSecurityToDeleteOneInflater = new PopupWindow(popupViewSecurityToDeleteOneInflater, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+                final PopupWindow popupWindowSecurityToDeleteOneInflater = new PopupWindow(popupViewSecurityToDeleteOneInflater, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
                 popupWindowSecurityToDeleteOneInflater.setOutsideTouchable(true);
                 popupWindowSecurityToDeleteOneInflater.setFocusable(true);
                 popupWindowSecurityToDeleteOneInflater.setBackgroundDrawable(new BitmapDrawable());
@@ -672,7 +672,7 @@ public class AddActivity extends AppCompatActivity {
         if (usr.getFinger() && biometricManager.canAuthenticate() == BiometricManager.BIOMETRIC_SUCCESS)
             biometricAuthentication(layoutAddActivity);
         else {
-            goToMainActivity();
+            recheckPass();
         }
     }
 
