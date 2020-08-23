@@ -34,6 +34,7 @@
                 android:layout_marginStart="30dp"
                 android:autofillHints=""
                 android:hint="@string/userHint"
+                android:inputType="text"
                 android:maxLength="12"
                 android:textColor="@color/rightText"
                 android:textColorHighlight="@color/textSelection"
@@ -162,7 +163,8 @@
                 android:textSize="14sp"
                 android:textStyle="normal"
                 android:theme="@style/SelectionSwitch"
-                app:titleTextColor="@color/rightText" />
+                app:titleTextColor="@color/rightText"
+                tools:ignore="UseSwitchCompatOrMaterialXml" />
         </RelativeLayout>
 
         <TextView
@@ -216,6 +218,7 @@
                 android:layout_below="@id/questionSpinner"
                 android:autofillHints=""
                 android:hint="@string/questionEditText"
+                android:inputType="text"
                 android:textColor="@color/rightText"
                 android:textColorHighlight="@color/textSelection"
                 android:textSize="16sp"
@@ -230,11 +233,12 @@
                 android:autofillHints=""
                 android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890"
                 android:hint="@string/answerEditText"
+                android:inputType="text"
                 android:textColor="@color/rightText"
                 android:textColorHighlight="@color/textSelection"
                 android:textSize="16sp"
                 android:theme="@style/AppTheme.EditText"
-                tools:targetApi="o" />
+                tools:targetApi="o" />/>
         </RelativeLayout>
 
     </LinearLayout>
