@@ -54,6 +54,8 @@ public class EditActivity extends AppCompatActivity {
     private LinearLayout layoutContentEditToAddOtherAccount;
     private ScrollView scrollViewContentEdit;
     private ArrayList<RelativeLayout> listInflaterLayout;
+    private ManageUser mngUsr;
+    private ArrayList<User> listUser;
     private ManageCategory mngCat;
     private ArrayList<Category> listCategory;
     private ArrayList<Account> listAccount;
@@ -73,6 +75,7 @@ public class EditActivity extends AppCompatActivity {
     private int attempts;
     private boolean blockBack;
     private boolean doubleBackToExitPressedOnce;
+    private PopupWindow popupWindowCheck;
 
 
     @SuppressLint("SetTextI18n")
@@ -87,8 +90,8 @@ public class EditActivity extends AppCompatActivity {
         layoutContentEditToAddOtherAccount = findViewById(R.id.linearLayEdit);
         ConstraintLayout constraintLayoutButtons = findViewById(R.id.constraintLayoutButtons);
         AccountElement specificAccountElement = (AccountElement) (Objects.requireNonNull(getIntent().getExtras())).get("accountElement");
-        ManageUser mngUsr = new ManageUser();
-        ArrayList<User> listUser = mngUsr.deserializationListUser();
+        mngUsr = new ManageUser();
+        listUser = mngUsr.deserializationListUser();
         usr = mngUsr.findUser(listUser, ((User) Objects.requireNonNull((Objects.requireNonNull(getIntent().getExtras())).get("owner"))).getUser());
         if (usr != null) {
             blockBack = true;
@@ -1064,6 +1067,8 @@ public class EditActivity extends AppCompatActivity {
     @Override
     public void onRestart() {
         super.onRestart();
+        if (!blockBack)
+            popupWindowCheck.dismiss();
         layoutEditActivity.setVisibility(View.INVISIBLE);
         BiometricManager biometricManager = BiometricManager.from(EditActivity.this);
         if (usr.getFinger() && biometricManager.canAuthenticate() == BiometricManager.BIOMETRIC_SUCCESS)
@@ -1179,7 +1184,7 @@ public class EditActivity extends AppCompatActivity {
         blockBack = false;
         LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
         View popupViewCheck = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_security_password_match_parent, (ViewGroup) findViewById(R.id.passSecurityPopupMatchParent));
-        final PopupWindow popupWindowCheck = new PopupWindow(popupViewCheck, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, true);
+        popupWindowCheck = new PopupWindow(popupViewCheck, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, true);
         popupWindowCheck.setBackgroundDrawable(new BitmapDrawable());
         View parent = layoutEditActivity.getRootView();
         popupWindowCheck.showAtLocation(parent, Gravity.CENTER, 0, 0);
@@ -1207,6 +1212,10 @@ public class EditActivity extends AppCompatActivity {
                             notifyUserShortWay("Password errata. Hai un ultimo tenativo");
                         else {
                             notifyUserShortWay("Password errata");
+                            listUser.remove(usr);
+                            usr.setFinger(false);
+                            listUser.add(usr);
+                            mngUsr.serializationListUser(listUser);
                             goToMainActivity();
                         }
                     }
@@ -1215,5 +1224,16 @@ public class EditActivity extends AppCompatActivity {
         });
         ImageButton showPass = popupViewCheck.findViewById(R.id.showPass);
         showPass(popupText, showPass);
+        ImageButton cancel = popupViewCheck.findViewById(R.id.cancel);
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listUser.remove(usr);
+                usr.setFinger(false);
+                listUser.add(usr);
+                mngUsr.serializationListUser(listUser);
+                goToMainActivity();
+            }
+        });
     }
 }

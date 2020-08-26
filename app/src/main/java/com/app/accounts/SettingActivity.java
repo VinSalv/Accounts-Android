@@ -81,6 +81,7 @@ public class SettingActivity extends AppCompatActivity {
     private int attempts;
     private boolean blockBack;
     private boolean doubleBackToExitPressedOnce;
+    private PopupWindow popupWindowCheck;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -726,6 +727,8 @@ public class SettingActivity extends AppCompatActivity {
     @Override
     public void onRestart() {
         super.onRestart();
+        if (!blockBack)
+            popupWindowCheck.dismiss();
         layoutSettingActivity.setVisibility(View.INVISIBLE);
         BiometricManager biometricManager = BiometricManager.from(SettingActivity.this);
         if (usr.getFinger() && biometricManager.canAuthenticate() == BiometricManager.BIOMETRIC_SUCCESS)
@@ -841,7 +844,7 @@ public class SettingActivity extends AppCompatActivity {
         blockBack = false;
         LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
         View popupViewCheck = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_security_password_match_parent, (ViewGroup) findViewById(R.id.passSecurityPopupMatchParent));
-        final PopupWindow popupWindowCheck = new PopupWindow(popupViewCheck, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, true);
+        popupWindowCheck = new PopupWindow(popupViewCheck, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, true);
         popupWindowCheck.setBackgroundDrawable(new BitmapDrawable());
         View parent = layoutSettingActivity.getRootView();
         popupWindowCheck.showAtLocation(parent, Gravity.CENTER, 0, 0);
@@ -869,6 +872,10 @@ public class SettingActivity extends AppCompatActivity {
                             notifyUserShortWay("Password errata. Hai un ultimo tenativo");
                         else {
                             notifyUserShortWay("Password errata");
+                            listUser.remove(usr);
+                            usr.setFinger(false);
+                            listUser.add(usr);
+                            mngUsr.serializationListUser(listUser);
                             goToMainActivity();
                         }
                     }

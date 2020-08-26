@@ -1,7 +1,9 @@
 package com.app.accounts;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -45,5 +47,21 @@ public class AboutActivity extends AppCompatActivity {
                 }
             }
         });
+        ImageButton back = findViewById(R.id.back);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                goToMainActivity();
+            }
+        });
+    }
+
+    public void goToMainActivity() {
+        Intent intent = new Intent(AboutActivity.this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish();
     }
 }

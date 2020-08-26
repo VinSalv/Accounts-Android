@@ -51,6 +51,8 @@ import java.util.Objects;
 @SuppressWarnings("deprecation")
 public class ShowElementActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
     private CoordinatorLayout layoutShowElementActivity;
+    private ManageUser mngUsr;
+    private ArrayList<User> listUser;
     private ManageCategory mngCat;
     private ArrayList<Account> listAccount;
     private ArrayList<Category> listCategory;
@@ -62,6 +64,7 @@ public class ShowElementActivity extends AppCompatActivity implements PopupMenu.
     private int attempts;
     private boolean blockBack;
     private boolean doubleBackToExitPressedOnce;
+    private PopupWindow popupWindowCheck;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -75,9 +78,9 @@ public class ShowElementActivity extends AppCompatActivity implements PopupMenu.
         setSupportActionBar(showToolbar);
         layoutShowElementActivity = findViewById(R.id.coordinatorLayShow);
         LinearLayout layoutShowElement = findViewById(R.id.linearLayoutShowElements);
-        ManageUser mngUsr = new ManageUser();
-        ArrayList<User> listUsr = mngUsr.deserializationListUser();
-        usr = mngUsr.findUser(listUsr, ((User) Objects.requireNonNull((Objects.requireNonNull(getIntent().getExtras())).get("owner"))).getUser());
+        mngUsr = new ManageUser();
+        listUser = mngUsr.deserializationListUser();
+        usr = mngUsr.findUser(listUser, ((User) Objects.requireNonNull((Objects.requireNonNull(getIntent().getExtras())).get("owner"))).getUser());
         if (usr != null) {
             blockBack = true;
             attempts = 3;
@@ -669,6 +672,8 @@ public class ShowElementActivity extends AppCompatActivity implements PopupMenu.
     @Override
     public void onRestart() {
         super.onRestart();
+        if (!blockBack)
+            popupWindowCheck.dismiss();
         layoutShowElementActivity.setVisibility(View.INVISIBLE);
         BiometricManager biometricManager = BiometricManager.from(ShowElementActivity.this);
         if (usr.getFinger() && biometricManager.canAuthenticate() == BiometricManager.BIOMETRIC_SUCCESS)
@@ -784,7 +789,7 @@ public class ShowElementActivity extends AppCompatActivity implements PopupMenu.
         blockBack = false;
         LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
         View popupViewCheck = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_security_password_match_parent, (ViewGroup) findViewById(R.id.passSecurityPopupMatchParent));
-        final PopupWindow popupWindowCheck = new PopupWindow(popupViewCheck, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, true);
+        popupWindowCheck = new PopupWindow(popupViewCheck, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, true);
         popupWindowCheck.setBackgroundDrawable(new BitmapDrawable());
         View parent = layoutShowElementActivity.getRootView();
         popupWindowCheck.showAtLocation(parent, Gravity.CENTER, 0, 0);
@@ -812,6 +817,10 @@ public class ShowElementActivity extends AppCompatActivity implements PopupMenu.
                             notifyUserShortWay("Password errata. Hai un ultimo tenativo");
                         else {
                             notifyUserShortWay("Password errata");
+                            listUser.remove(usr);
+                            usr.setFinger(false);
+                            listUser.add(usr);
+                            mngUsr.serializationListUser(listUser);
                             goToMainActivity();
                         }
                     }
@@ -820,5 +829,16 @@ public class ShowElementActivity extends AppCompatActivity implements PopupMenu.
         });
         ImageButton showPass = popupViewCheck.findViewById(R.id.showPass);
         showPass(popupText, showPass);
+        ImageButton cancel = popupViewCheck.findViewById(R.id.cancel);
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listUser.remove(usr);
+                usr.setFinger(false);
+                listUser.add(usr);
+                mngUsr.serializationListUser(listUser);
+                goToMainActivity();
+            }
+        });
     }
 }

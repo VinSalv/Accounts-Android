@@ -92,7 +92,7 @@ public class SignActivity extends AppCompatActivity {
         showPass(passEdit, showPass);
         showPass(passEdit2, showPass2);
         questionEdit = findViewById(R.id.questionEdit);
-        answerEdit = (EditText) findViewById(R.id.answerEdit);
+        answerEdit = findViewById(R.id.answerEdit);
         questionSpinner = findViewById(R.id.questionSpinner);
         ArrayList<String> listQuestion = new ArrayList<>();
         listQuestion.add("Altro");

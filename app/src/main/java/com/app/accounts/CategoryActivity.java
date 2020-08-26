@@ -82,6 +82,8 @@ public class CategoryActivity extends AppCompatActivity implements PopupMenu.OnM
     private boolean b;
     private int attempts;
     private boolean blockBack;
+    private PopupWindow popupWindowCheck;
+
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -574,6 +576,8 @@ public class CategoryActivity extends AppCompatActivity implements PopupMenu.OnM
     @Override
     public void onRestart() {
         super.onRestart();
+        if (!blockBack)
+            popupWindowCheck.dismiss();
         layoutCategoryActivity.setVisibility(View.INVISIBLE);
         BiometricManager biometricManager = BiometricManager.from(CategoryActivity.this);
         if (usr.getFinger() && biometricManager.canAuthenticate() == BiometricManager.BIOMETRIC_SUCCESS)
@@ -691,7 +695,7 @@ public class CategoryActivity extends AppCompatActivity implements PopupMenu.OnM
         blockBack = false;
         LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
         View popupViewCheck = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_security_password_match_parent, (ViewGroup) findViewById(R.id.passSecurityPopupMatchParent));
-        final PopupWindow popupWindowCheck = new PopupWindow(popupViewCheck, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, true);
+        popupWindowCheck = new PopupWindow(popupViewCheck, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, true);
         popupWindowCheck.setBackgroundDrawable(new BitmapDrawable());
         View parent = layoutCategoryActivity.getRootView();
         popupWindowCheck.showAtLocation(parent, Gravity.CENTER, 0, 0);
@@ -719,6 +723,10 @@ public class CategoryActivity extends AppCompatActivity implements PopupMenu.OnM
                             notifyUserShortWay("Password errata. Hai un ultimo tenativo");
                         else {
                             notifyUserShortWay("Password errata");
+                            listUser.remove(usr);
+                            usr.setFinger(false);
+                            listUser.add(usr);
+                            mngUsr.serializationListUser(listUser);
                             goToMainActivity();
                         }
                     }
@@ -727,5 +735,16 @@ public class CategoryActivity extends AppCompatActivity implements PopupMenu.OnM
         });
         ImageButton showPass = popupViewCheck.findViewById(R.id.showPass);
         showPass(popupText, showPass);
+        ImageButton cancel = popupViewCheck.findViewById(R.id.cancel);
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listUser.remove(usr);
+                usr.setFinger(false);
+                listUser.add(usr);
+                mngUsr.serializationListUser(listUser);
+                goToMainActivity();
+            }
+        });
     }
 }

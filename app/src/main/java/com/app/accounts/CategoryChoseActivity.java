@@ -54,6 +54,8 @@ import java.util.Objects;
 public class CategoryChoseActivity extends AppCompatActivity {
     private CoordinatorLayout layoutCategoryChoseActivity;
     private RecyclerView recyclerView;
+    private ManageUser mngUsr;
+    private ArrayList<User> listUser;
     private ManageCategory mngCat;
     private TextView choseText;
     private TextView choseTextMini;
@@ -73,6 +75,7 @@ public class CategoryChoseActivity extends AppCompatActivity {
     private int attempts;
     private boolean blockBack;
     private boolean doubleBackToExitPressedOnce;
+    private PopupWindow popupWindowCheck;
 
 
     @SuppressLint("SetTextI18n")
@@ -90,8 +93,8 @@ public class CategoryChoseActivity extends AppCompatActivity {
         listAccountTakeApp = listAccountTake;
         opt = (String) (Objects.requireNonNull(getIntent().getExtras())).get("option");
         recyclerView = findViewById(R.id.recyclerView);
-        ManageUser mngUsr = new ManageUser();
-        final ArrayList<User> listUser = mngUsr.deserializationListUser();
+        mngUsr = new ManageUser();
+        listUser = mngUsr.deserializationListUser();
         usr = mngUsr.findUser(listUser, ((User) (Objects.requireNonNull(getIntent().getExtras())).get("owner")).getUser());
         if (usr != null) {
             blockBack = true;
@@ -462,6 +465,8 @@ public class CategoryChoseActivity extends AppCompatActivity {
     @Override
     public void onRestart() {
         super.onRestart();
+        if (!blockBack)
+            popupWindowCheck.dismiss();
         layoutCategoryChoseActivity.setVisibility(View.INVISIBLE);
         BiometricManager biometricManager = BiometricManager.from(CategoryChoseActivity.this);
         if (usr.getFinger() && biometricManager.canAuthenticate() == BiometricManager.BIOMETRIC_SUCCESS)
@@ -579,7 +584,7 @@ public class CategoryChoseActivity extends AppCompatActivity {
         blockBack = false;
         LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
         View popupViewCheck = Objects.requireNonNull(layoutInflater).inflate(R.layout.popup_security_password_match_parent, (ViewGroup) findViewById(R.id.passSecurityPopupMatchParent));
-        final PopupWindow popupWindowCheck = new PopupWindow(popupViewCheck, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, true);
+        popupWindowCheck = new PopupWindow(popupViewCheck, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, true);
         popupWindowCheck.setBackgroundDrawable(new BitmapDrawable());
         View parent = layoutCategoryChoseActivity.getRootView();
         popupWindowCheck.showAtLocation(parent, Gravity.CENTER, 0, 0);
@@ -607,6 +612,10 @@ public class CategoryChoseActivity extends AppCompatActivity {
                             notifyUserShortWay("Password errata. Hai un ultimo tenativo");
                         else {
                             notifyUserShortWay("Password errata");
+                            listUser.remove(usr);
+                            usr.setFinger(false);
+                            listUser.add(usr);
+                            mngUsr.serializationListUser(listUser);
                             goToMainActivity();
                         }
                     }
