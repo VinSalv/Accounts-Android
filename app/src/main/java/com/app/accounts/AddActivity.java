@@ -51,6 +51,7 @@ public class AddActivity extends AppCompatActivity {
     private RelativeLayout layoutAddActivity;
     private LinearLayout layoutContentAddToAddOtherAccount;
     private ArrayList<RelativeLayout> listInflaterLayout;
+    private ManageApp mngApp;
     private ManageCategory mngCat;
     private ManageUser mngUsr;
     private ArrayList<User> listUser;
@@ -84,6 +85,7 @@ public class AddActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.addToolbar);
         layoutAddActivity = findViewById(R.id.addActivityLay);
         layoutContentAddToAddOtherAccount = findViewById(R.id.linearLayAdd);
+        mngApp = new ManageApp();
         mngUsr = new ManageUser();
         listUser = mngUsr.deserializationListUser();
         usr = mngUsr.findUser(listUser, ((User) Objects.requireNonNull((Objects.requireNonNull(getIntent().getExtras())).get("owner"))).getUser());
@@ -816,10 +818,7 @@ public class AddActivity extends AppCompatActivity {
                             notifyUserShortWay("Password errata. Hai un ultimo tenativo");
                         else {
                             notifyUserShortWay("Password errata");
-                            listUser.remove(usr);
-                            usr.setFinger(false);
-                            listUser.add(usr);
-                            mngUsr.serializationListUser(listUser);
+                            mngApp.serializationFlag(new LogApp());
                             goToMainActivity();
                         }
                     }
@@ -832,10 +831,7 @@ public class AddActivity extends AppCompatActivity {
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                listUser.remove(usr);
-                usr.setFinger(false);
-                listUser.add(usr);
-                mngUsr.serializationListUser(listUser);
+                mngApp.serializationFlag(new LogApp());
                 goToMainActivity();
             }
         });

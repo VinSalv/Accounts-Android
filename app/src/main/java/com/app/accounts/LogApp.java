@@ -20,6 +20,10 @@ public class LogApp implements Serializable {
         return this.flagApp;
     }
 
+    public void setFlagApp(boolean flagApp) {
+        this.flagApp = flagApp;
+    }
+
     public String getUser() {
         return this.user;
     }

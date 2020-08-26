@@ -723,10 +723,7 @@ public class CategoryActivity extends AppCompatActivity implements PopupMenu.OnM
                             notifyUserShortWay("Password errata. Hai un ultimo tenativo");
                         else {
                             notifyUserShortWay("Password errata");
-                            listUser.remove(usr);
-                            usr.setFinger(false);
-                            listUser.add(usr);
-                            mngUsr.serializationListUser(listUser);
+                            mngApp.serializationFlag(new LogApp());
                             goToMainActivity();
                         }
                     }
@@ -739,10 +736,7 @@ public class CategoryActivity extends AppCompatActivity implements PopupMenu.OnM
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                listUser.remove(usr);
-                usr.setFinger(false);
-                listUser.add(usr);
-                mngUsr.serializationListUser(listUser);
+                mngApp.serializationFlag(new LogApp());
                 goToMainActivity();
             }
         });

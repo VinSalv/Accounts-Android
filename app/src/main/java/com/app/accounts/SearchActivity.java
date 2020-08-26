@@ -48,6 +48,7 @@ import java.util.Objects;
 @SuppressWarnings({"SameParameterValue", "deprecation"})
 public class SearchActivity extends AppCompatActivity {
     private LinearLayout layoutSearchActivity;
+    private ManageApp mngApp;
     private ManageUser mngUsr;
     private ArrayList<User> listUser;
     private ManageCategory mngCat;
@@ -70,6 +71,7 @@ public class SearchActivity extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_SECURE);
         setContentView(R.layout.activity_search);
         layoutSearchActivity = findViewById(R.id.contentSearchLayout);
+        mngApp = new ManageApp();
         mngUsr = new ManageUser();
         listUser = mngUsr.deserializationListUser();
         usr = mngUsr.findUser(listUser, ((User) Objects.requireNonNull((Objects.requireNonNull(getIntent().getExtras())).get("owner"))).getUser());
@@ -411,10 +413,7 @@ public class SearchActivity extends AppCompatActivity {
                             notifyUserShortWay("Password errata. Hai un ultimo tenativo");
                         else {
                             notifyUserShortWay("Password errata");
-                            listUser.remove(usr);
-                            usr.setFinger(false);
-                            listUser.add(usr);
-                            mngUsr.serializationListUser(listUser);
+                            mngApp.serializationFlag(new LogApp());
                             goToMainActivity();
                         }
                     }
@@ -427,10 +426,7 @@ public class SearchActivity extends AppCompatActivity {
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                listUser.remove(usr);
-                usr.setFinger(false);
-                listUser.add(usr);
-                mngUsr.serializationListUser(listUser);
+                mngApp.serializationFlag(new LogApp());
                 goToMainActivity();
             }
         });

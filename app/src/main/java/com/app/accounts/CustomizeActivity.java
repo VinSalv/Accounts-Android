@@ -49,6 +49,7 @@ import java.util.Objects;
 @SuppressWarnings({"SameParameterValue", "deprecation"})
 public class CustomizeActivity extends AppCompatActivity {
     private CoordinatorLayout layoutCustomizeActivity;
+    private ManageApp mngApp;
     private ManageUser mngUsr;
     private ArrayList<User> listUser;
     private User usr;
@@ -69,6 +70,7 @@ public class CustomizeActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.customizeToolbar);
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
+        mngApp = new ManageApp();
         mngUsr = new ManageUser();
         listUser = mngUsr.deserializationListUser();
         usr = mngUsr.findUser(listUser, ((User) Objects.requireNonNull((Objects.requireNonNull(getIntent().getExtras())).get("owner"))).getUser());
@@ -357,10 +359,7 @@ public class CustomizeActivity extends AppCompatActivity {
                             notifyUserShortWay("Password errata. Hai un ultimo tenativo");
                         else {
                             notifyUserShortWay("Password errata");
-                            listUser.remove(usr);
-                            usr.setFinger(false);
-                            listUser.add(usr);
-                            mngUsr.serializationListUser(listUser);
+                            mngApp.serializationFlag(new LogApp());
                             goToMainActivity();
                         }
                     }
@@ -373,10 +372,7 @@ public class CustomizeActivity extends AppCompatActivity {
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                listUser.remove(usr);
-                usr.setFinger(false);
-                listUser.add(usr);
-                mngUsr.serializationListUser(listUser);
+                mngApp.serializationFlag(new LogApp());
                 goToMainActivity();
             }
         });
