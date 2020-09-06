@@ -98,11 +98,11 @@ public class ProfileActivity extends AppCompatActivity {
             listQuestion.add("Qual era il tuo soprannome da bambino?");
             listQuestion.add("Qual è il nome del tuo primo animale domestico?");
             adapterQuestion = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, listQuestion);
+            flagProfApp = findViewById(R.id.flagProfApp);
             mngCat = new ManageCategory();
             if (usr.getFinger()) {
                 flagProfApp.setChecked(true);
             }
-            flagProfApp = findViewById(R.id.flagProfApp);
             flagProfApp.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @SuppressLint("SwitchIntDef")
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
