@@ -7,6 +7,7 @@ android {
         applicationId "com.app.accounts"
         maxSdkVersion 28
         minSdkVersion 26
+        //noinspection OldTargetApi
         targetSdkVersion 28
         versionCode 7
         versionName "3.1.2"
