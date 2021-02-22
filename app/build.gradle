@@ -5,11 +5,10 @@ android {
     buildToolsVersion '29.0.3'
     defaultConfig {
         applicationId "com.app.accounts"
-        maxSdkVersion 28
+        maxSdkVersion 29
         minSdkVersion 26
-        //noinspection OldTargetApi
-        targetSdkVersion 28
-        versionCode 7
+        targetSdkVersion 29
+        versionCode 8
         versionName "3.1.2"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
