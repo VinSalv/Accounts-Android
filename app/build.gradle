@@ -1,14 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion '29.0.3'
+    compileSdkVersion 32
     defaultConfig {
         applicationId "com.app.accounts"
-        maxSdkVersion 29
+        maxSdkVersion 31
         minSdkVersion 26
-        targetSdkVersion 29
-        versionCode 8
+        targetSdkVersion 32
+        versionCode 9
         versionName "3.1.2"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
