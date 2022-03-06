@@ -59,7 +59,7 @@ public class SignActivity extends AppCompatActivity {
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
         mngUsr = new ManageUser();
-        listUser = mngUsr.deserializationListUser();
+        listUser = mngUsr.deserializationListUser(SignActivity.this);
         signText = findViewById(R.id.signText);
         signTextToolbar = findViewById(R.id.signTextToolbar);
         signTextToolbar.setVisibility(View.INVISIBLE);
@@ -199,11 +199,11 @@ public class SignActivity extends AppCompatActivity {
                 }
                 if (mngUsr.notFindUser(usr, listUser)) {
                     listUser.add(usr);
-                    mngUsr.serializationListUser(listUser);
+                    mngUsr.serializationListUser(SignActivity.this, listUser);
                     listCategory.add(new Category("Siti", 1));
                     listCategory.add(new Category("Social", 1));
                     listCategory.add(new Category("Giochi", 1));
-                    mngCat.serializationListCategory(listCategory, usr.getUser());
+                    mngCat.serializationListCategory(SignActivity.this, listCategory, usr.getUser());
                     goToCategoryActivity(usr);
                 } else {
                     userEdit.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(SignActivity.this, R.color.errorEditText)));

@@ -1,6 +1,7 @@
 package com.app.accounts;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Environment;
 
 import java.io.File;
@@ -66,10 +67,9 @@ class ManageUser implements Serializable {
         return false;
     }
 
-    void serializationListUser(ArrayList<User> list) {
+    void serializationListUser(Context context, ArrayList<User> list) {
         try {
-            String rootPath = Environment.getExternalStorageDirectory()
-                    .getAbsolutePath() + "/Accounts/Utenti";
+            String rootPath = context.getExternalFilesDir(null) + "/Accounts/Utenti";
             File root = new File(rootPath);
             if (!root.exists()) {
                 root.mkdirs();
@@ -89,16 +89,15 @@ class ManageUser implements Serializable {
             e.printStackTrace();
         } finally {
             execCryptDecrypt(Cipher.ENCRYPT_MODE,
-                    new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Accounts/Utenti/Users.txt"),
-                    new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Accounts/Utenti/Users.txt"));
+                    new File(context.getExternalFilesDir(null), "/Accounts/Utenti/Users.txt"),
+                    new File(context.getExternalFilesDir(null), "/Accounts/Utenti/Users.txt"));
         }
 
     }
 
-    public ArrayList<User> deserializationListUser() {
+    public ArrayList<User> deserializationListUser(Context context) {
         try {
-            File f = new File(Environment.getExternalStorageDirectory()
-                    .getAbsolutePath() + "/Accounts/Utenti/Users.txt");
+            File f = new File(context.getExternalFilesDir(null) + "/Accounts/Utenti/Users.txt");
             execCryptDecrypt(Cipher.DECRYPT_MODE, f, f);
             FileInputStream fis = new FileInputStream(f);
             ObjectInputStream is = new ObjectInputStream(fis);
@@ -111,8 +110,8 @@ class ManageUser implements Serializable {
             return new ArrayList<>();
         } finally {
             execCryptDecrypt(Cipher.ENCRYPT_MODE,
-                    new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Accounts/Utenti/Users.txt"),
-                    new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Accounts/Utenti/Users.txt"));
+                    new File(context.getExternalFilesDir(null), "/Accounts/Utenti/Users.txt"),
+                    new File(context.getExternalFilesDir(null), "/Accounts/Utenti/Users.txt"));
         }
     }
 

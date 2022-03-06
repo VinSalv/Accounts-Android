@@ -72,7 +72,7 @@ public class CustomizeActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         mngApp = new ManageApp();
         mngUsr = new ManageUser();
-        listUser = mngUsr.deserializationListUser();
+        listUser = mngUsr.deserializationListUser(CustomizeActivity.this);
         usr = mngUsr.findUser(listUser, ((User) Objects.requireNonNull((Objects.requireNonNull(getIntent().getExtras())).get("owner"))).getUser());
         if (usr != null) {
             blockBack = true;
@@ -115,7 +115,7 @@ public class CustomizeActivity extends AppCompatActivity {
                     listUser.remove(usr);
                     usr.setColCat(Integer.parseInt(number));
                     listUser.add(usr);
-                    mngUsr.serializationListUser(listUser);
+                    mngUsr.serializationListUser(CustomizeActivity.this, listUser);
                 }
 
                 @Override
@@ -137,7 +137,7 @@ public class CustomizeActivity extends AppCompatActivity {
                     listUser.remove(usr);
                     usr.setColAcc(Integer.parseInt(number));
                     listUser.add(usr);
-                    mngUsr.serializationListUser(listUser);
+                    mngUsr.serializationListUser(CustomizeActivity.this, listUser);
                 }
 
                 @Override
@@ -169,7 +169,7 @@ public class CustomizeActivity extends AppCompatActivity {
             intent.putExtra("cat", "");
         else {
             ManageCategory mngCat = new ManageCategory();
-            ArrayList<Category> listCategory = mngCat.deserializationListCategory(usr.getUser());
+            ArrayList<Category> listCategory = mngCat.deserializationListCategory(CustomizeActivity.this, usr.getUser());
             Category category = mngCat.findAndGetCategory(listCategory, ((Category) Objects.requireNonNull((Objects.requireNonNull(getIntent().getExtras())).get("category"))).getCat());
             intent.putExtra("category", category);
             intent.putExtra("cat", category.getCat());
@@ -359,7 +359,7 @@ public class CustomizeActivity extends AppCompatActivity {
                             notifyUserShortWay("Password errata. Hai un ultimo tenativo");
                         else {
                             notifyUserShortWay("Password errata");
-                            mngApp.serializationFlag(new LogApp());
+                            mngApp.serializationFlag(CustomizeActivity.this, new LogApp());
                             goToMainActivity();
                         }
                     }
@@ -372,7 +372,7 @@ public class CustomizeActivity extends AppCompatActivity {
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mngApp.serializationFlag(new LogApp());
+                mngApp.serializationFlag(CustomizeActivity.this, new LogApp());
                 goToMainActivity();
             }
         });

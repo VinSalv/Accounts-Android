@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
         TextView sign = findViewById(R.id.signButton);
         ImageButton showPass = findViewById(R.id.showPass);
         mngUsr = new ManageUser();
-        listUser = mngUsr.deserializationListUser();
+        listUser = mngUsr.deserializationListUser(MainActivity.this);
         ArrayList<String> listUsr = new ArrayList<>();
         listUsr.add("Utente");
         for (User us : listUser)
@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         mngApp = new ManageApp();
-        log = mngApp.deserializationFlag();
+        log = mngApp.deserializationFlag(MainActivity.this);
         if (log.getFlagApp()) {
             flagApp.setChecked(true);
             usr = mngUsr.findUser(listUser, log.getUser());
@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
                         biometricAuthentication(layoutMainActivity);
                     } else {
                         log = new LogApp(flagApp.isChecked(), u);
-                        mngApp.serializationFlag(log);
+                        mngApp.serializationFlag(MainActivity.this, log);
                         goToCategoryActivity();
                     }
                 } else {
@@ -265,7 +265,7 @@ public class MainActivity extends AppCompatActivity {
                 notifyUser("Autenticazione errore: " + errString + ".");
                 super.onAuthenticationError(errorCode, errString);
                 log = new LogApp();
-                mngApp.serializationFlag(log);
+                mngApp.serializationFlag(MainActivity.this, log);
                 goToMainActivity();
                 passApp.setText("");
             }
@@ -289,7 +289,7 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     log = new LogApp();
                 }
-                mngApp.serializationFlag(log);
+                mngApp.serializationFlag(MainActivity.this, log);
                 goToCategoryActivity();
             }
         };
@@ -307,7 +307,7 @@ public class MainActivity extends AppCompatActivity {
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 notifyUserShortWay("Autenticazione annullata.");
                                 log = new LogApp();
-                                mngApp.serializationFlag(log);
+                                mngApp.serializationFlag(MainActivity.this, log);
                                 goToMainActivity();
                                 passApp.setText("");
                             }

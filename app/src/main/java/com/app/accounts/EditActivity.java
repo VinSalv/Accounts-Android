@@ -93,13 +93,13 @@ public class EditActivity extends AppCompatActivity {
         AccountElement specificAccountElement = (AccountElement) (Objects.requireNonNull(getIntent().getExtras())).get("accountElement");
         mngApp = new ManageApp();
         mngUsr = new ManageUser();
-        listUser = mngUsr.deserializationListUser();
+        listUser = mngUsr.deserializationListUser(EditActivity.this);
         usr = mngUsr.findUser(listUser, ((User) Objects.requireNonNull((Objects.requireNonNull(getIntent().getExtras())).get("owner"))).getUser());
         if (usr != null) {
             blockBack = true;
             attempts = 3;
             mngCat = new ManageCategory();
-            listCategory = mngCat.deserializationListCategory(usr.getUser());
+            listCategory = mngCat.deserializationListCategory(EditActivity.this, usr.getUser());
             category = mngCat.findAndGetCategory(listCategory, ((Category) Objects.requireNonNull((Objects.requireNonNull(getIntent().getExtras())).get("category"))).getCat());
             listAccount = category.getListAcc();
             accountToEdit = mngCat.findAndGetAccount(listAccount, ((Account) Objects.requireNonNull(Objects.requireNonNull(getIntent().getExtras()).get("account"))).getName());
@@ -523,7 +523,7 @@ public class EditActivity extends AppCompatActivity {
                             listCategory.remove(category);
                             category.setListAcc(listAccount);
                             listCategory.add(category);
-                            mngCat.serializationListCategory(listCategory, usr.getUser());
+                            mngCat.serializationListCategory(EditActivity.this, listCategory, usr.getUser());
                             if (b)
                                 notifyUserShortWay("Gli elementi senza nessun campo compilato non verranno memorizzati.");
                             goToViewActivity();
@@ -1214,7 +1214,7 @@ public class EditActivity extends AppCompatActivity {
                             notifyUserShortWay("Password errata. Hai un ultimo tenativo");
                         else {
                             notifyUserShortWay("Password errata");
-                            mngApp.serializationFlag(new LogApp());
+                            mngApp.serializationFlag(EditActivity.this, new LogApp());
                             goToMainActivity();
                         }
                     }
@@ -1227,7 +1227,7 @@ public class EditActivity extends AppCompatActivity {
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mngApp.serializationFlag(new LogApp());
+                mngApp.serializationFlag(EditActivity.this, new LogApp());
                 goToMainActivity();
             }
         });

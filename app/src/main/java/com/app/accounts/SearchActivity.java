@@ -73,13 +73,13 @@ public class SearchActivity extends AppCompatActivity {
         layoutSearchActivity = findViewById(R.id.contentSearchLayout);
         mngApp = new ManageApp();
         mngUsr = new ManageUser();
-        listUser = mngUsr.deserializationListUser();
+        listUser = mngUsr.deserializationListUser(SearchActivity.this);
         usr = mngUsr.findUser(listUser, ((User) Objects.requireNonNull((Objects.requireNonNull(getIntent().getExtras())).get("owner"))).getUser());
         if (usr != null) {
             blockBack = true;
             attempts = 3;
             mngCat = new ManageCategory();
-            listCategory = mngCat.deserializationListCategory(usr.getUser());
+            listCategory = mngCat.deserializationListCategory(SearchActivity.this, usr.getUser());
             accountFound = findViewById(R.id.elemFind);
             EditText name = findViewById(R.id.nameSerched);
             name.addTextChangedListener(new TextWatcher() {
@@ -413,7 +413,7 @@ public class SearchActivity extends AppCompatActivity {
                             notifyUserShortWay("Password errata. Hai un ultimo tenativo");
                         else {
                             notifyUserShortWay("Password errata");
-                            mngApp.serializationFlag(new LogApp());
+                            mngApp.serializationFlag(SearchActivity.this, new LogApp());
                             goToMainActivity();
                         }
                     }
@@ -426,7 +426,7 @@ public class SearchActivity extends AppCompatActivity {
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mngApp.serializationFlag(new LogApp());
+                mngApp.serializationFlag(SearchActivity.this, new LogApp());
                 goToMainActivity();
             }
         });

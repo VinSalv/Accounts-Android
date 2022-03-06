@@ -1,6 +1,7 @@
 package com.app.accounts;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Environment;
 
 import java.io.File;
@@ -48,10 +49,9 @@ class ManageApp implements Serializable {
         }
     }
 
-    void serializationFlag(LogApp logApp) {
+    void serializationFlag(Context context, LogApp logApp) {
         try {
-            String rootPath = Environment.getExternalStorageDirectory()
-                    .getAbsolutePath() + "/Accounts/LogApp";
+            String rootPath = context.getExternalFilesDir(null) + "/Accounts/LogApp";
             File root = new File(rootPath);
             if (!root.exists()) {
                 root.mkdirs();
@@ -71,15 +71,14 @@ class ManageApp implements Serializable {
             e.printStackTrace();
         } finally {
             execCryptDecrypt(Cipher.ENCRYPT_MODE,
-                    new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Accounts/LogApp/LogApp.txt"),
-                    new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Accounts/LogApp/LogApp.txt"));
+                    new File(context.getExternalFilesDir(null), "/Accounts/LogApp/LogApp.txt"),
+                    new File(context.getExternalFilesDir(null), "/Accounts/LogApp/LogApp.txt"));
         }
     }
 
-    LogApp deserializationFlag() {
+    LogApp deserializationFlag(Context context) {
         try {
-            File f = new File(Environment.getExternalStorageDirectory()
-                    .getAbsolutePath() + "/Accounts/LogApp/LogApp.txt");
+            File f = new File(context.getExternalFilesDir(null) + "/Accounts/LogApp/LogApp.txt");
             execCryptDecrypt(Cipher.DECRYPT_MODE, f, f);
             FileInputStream fis = new FileInputStream(f);
             ObjectInputStream is = new ObjectInputStream(fis);
@@ -92,8 +91,8 @@ class ManageApp implements Serializable {
             return new LogApp();
         } finally {
             execCryptDecrypt(Cipher.ENCRYPT_MODE,
-                    new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Accounts/LogApp/LogApp.txt"),
-                    new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Accounts/LogApp/LogApp.txt"));
+                    new File(context.getExternalFilesDir(null), "/Accounts/LogApp/LogApp.txt"),
+                    new File(context.getExternalFilesDir(null), "/Accounts/LogApp/LogApp.txt"));
         }
     }
 }

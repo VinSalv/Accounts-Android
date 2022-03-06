@@ -3,14 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.app.accounts">
 
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.USE_BIOMETRIC" />
 
     <uses-sdk
-        android:maxSdkVersion="32"
+        android:maxSdkVersion="31"
         android:minSdkVersion="26"
-        android:targetSdkVersion="32"
+        android:targetSdkVersion="31"
         tools:ignore="GradleOverrides,OldTargetApi" />
 
     <!--suppress AndroidUnknownAttribute -->
@@ -93,9 +92,9 @@
             tools:ignore="LockedOrientationActivity" />
         <activity
             android:name="com.app.accounts.WelcomeActivity"
+            android:exported="true"
             android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity"
-            android:exported="true">
+            tools:ignore="LockedOrientationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

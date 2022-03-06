@@ -1,5 +1,7 @@
 package com.app.accounts;
 
+import static androidx.core.content.ContextCompat.getDrawable;
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,8 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.Collections;
-
-import static androidx.core.content.ContextCompat.getDrawable;
 
 public class RecyclerCategoryAdapter extends RecyclerView.Adapter<RecyclerCategoryAdapter.MyViewHolder> implements ItemMoveCategoryCallback.ItemTouchHelperContract {
     private ManageUser mngUsr = new ManageUser();
@@ -75,12 +75,12 @@ public class RecyclerCategoryAdapter extends RecyclerView.Adapter<RecyclerCatego
                 Collections.swap(listCategory, i, i - 1);
             }
         }
-        mngCat.serializationListCategory(listCategory, usr.getUser());
-        ArrayList<User> listUsr = mngUsr.deserializationListUser();
+        mngCat.serializationListCategory(RecyclerCategoryAdapter.this.context,listCategory, usr.getUser());
+        ArrayList<User> listUsr = mngUsr.deserializationListUser(RecyclerCategoryAdapter.this.context);
         listUsr.remove(usr);
         usr.setSort(3);
         listUsr.add(usr);
-        mngUsr.serializationListUser(listUsr);
+        mngUsr.serializationListUser(RecyclerCategoryAdapter.this.context, listUsr);
         notifyItemMoved(fromPosition, toPosition);
     }
 

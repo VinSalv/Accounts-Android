@@ -100,16 +100,16 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         isMultiSelect = false;
         a = true;
         mngApp = new ManageApp();
-        log = mngApp.deserializationFlag();
+        log = mngApp.deserializationFlag(ViewActivity.this);
         mngUsr = new ManageUser();
-        listUser = mngUsr.deserializationListUser();
+        listUser = mngUsr.deserializationListUser(ViewActivity.this);
         usr = mngUsr.findUser(listUser, ((User) Objects.requireNonNull((Objects.requireNonNull(getIntent().getExtras())).get("owner"))).getUser());
         if (usr != null) {
             blockBack = true;
             attempts = 3;
             b = false;
             mngCat = new ManageCategory();
-            listCategory = mngCat.deserializationListCategory(usr.getUser());
+            listCategory = mngCat.deserializationListCategory(ViewActivity.this, usr.getUser());
             category = mngCat.findAndGetCategory(listCategory, ((Category) Objects.requireNonNull((Objects.requireNonNull(getIntent().getExtras())).get("category"))).getCat());
             if (category != null) {
                 if (category.getSort() == 1) {
@@ -117,14 +117,14 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                         listCategory.remove(category);
                         category.setListAcc(increasing(category.getListAcc()));
                         listCategory.add(category);
-                        mngCat.serializationListCategory(listCategory, category.getCat());
+                        mngCat.serializationListCategory(ViewActivity.this, listCategory, category.getCat());
                     }
                 } else if (usr.getSort() == 2) {
                     if (category.getListAcc() != null) {
                         listCategory.remove(category);
                         category.setListAcc(decreasing(category.getListAcc()));
                         listCategory.add(category);
-                        mngCat.serializationListCategory(listCategory, category.getCat());
+                        mngCat.serializationListCategory(ViewActivity.this, listCategory, category.getCat());
                     }
                 }
                 textView = findViewById(R.id.welcomeText);
@@ -405,7 +405,7 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                         category.setListAcc(listToRemove);
                         listCategory.add(category);
                         popupWindowSecurity.dismiss();
-                        mngCat.serializationListCategory(listCategory, usr.getUser());
+                        mngCat.serializationListCategory(ViewActivity.this, listCategory, usr.getUser());
                         refresh();
                     }
                 });
@@ -497,7 +497,7 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                         if (!mngCat.findCategory(listCategoryApp, popupRenameCategoryText.getText().toString())) {
                             category.setCat(fixName(popupRenameCategoryText.getText().toString()));
                             listCategoryApp.add(category);
-                            mngCat.serializationListCategory(listCategoryApp, usr.getUser());
+                            mngCat.serializationListCategory(ViewActivity.this, listCategoryApp, usr.getUser());
                             refresh();
                             popupWindowRenameCategory.dismiss();
                         } else {
@@ -542,7 +542,7 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 multiSelect(-1);
                 return true;
             case R.id.sort:
-                Category categoryApp = mngCat.findAndGetCategory(mngCat.deserializationListCategory(usr.getUser()), category.getCat());
+                Category categoryApp = mngCat.findAndGetCategory(mngCat.deserializationListCategory(ViewActivity.this, usr.getUser()), category.getCat());
                 LayoutInflater layoutInflaterSort = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
                 View popupViewSort = Objects.requireNonNull(layoutInflaterSort).inflate(R.layout.popup_sort, (ViewGroup) findViewById(R.id.popupSort));
                 final PopupWindow popupWindowSort = new PopupWindow(popupViewSort, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
@@ -579,7 +579,7 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                             category.setSort(3);
                             listCategory.add(category);
                         }
-                        mngCat.serializationListCategory(listCategory, usr.getUser());
+                        mngCat.serializationListCategory(ViewActivity.this, listCategory, usr.getUser());
                         popupWindowSort.dismiss();
                         refresh();
                     }
@@ -590,7 +590,7 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 return true;
             case R.id.exit:
                 log = new LogApp();
-                mngApp.serializationFlag(log);
+                mngApp.serializationFlag(ViewActivity.this, log);
                 goToMainActivity();
                 return true;
             default:
@@ -812,7 +812,7 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                             notifyUserShortWay("Password errata. Hai un ultimo tenativo");
                         else {
                             notifyUserShortWay("Password errata");
-                            mngApp.serializationFlag(new LogApp());
+                            mngApp.serializationFlag(ViewActivity.this, new LogApp());
                             goToMainActivity();
                         }
                     }
@@ -825,7 +825,7 @@ public class ViewActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mngApp.serializationFlag(new LogApp());
+                mngApp.serializationFlag(ViewActivity.this, new LogApp());
                 goToMainActivity();
             }
         });

@@ -96,13 +96,13 @@ public class CategoryChoseActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerView);
         mngApp = new ManageApp();
         mngUsr = new ManageUser();
-        listUser = mngUsr.deserializationListUser();
+        listUser = mngUsr.deserializationListUser(CategoryChoseActivity.this);
         usr = mngUsr.findUser(listUser, ((User) (Objects.requireNonNull(getIntent().getExtras())).get("owner")).getUser());
         if (usr != null) {
             blockBack = true;
             attempts = 3;
             mngCat = new ManageCategory();
-            listCategory = mngCat.deserializationListCategory(usr.getUser());
+            listCategory = mngCat.deserializationListCategory(CategoryChoseActivity.this, usr.getUser());
             category = mngCat.findAndGetCategory(listCategory, ((Category) Objects.requireNonNull((Objects.requireNonNull(getIntent().getExtras())).get("category"))).getCat());
             listCategoryString = new ArrayList<>();
             for (Category singleCategory : listCategory)
@@ -183,13 +183,13 @@ public class CategoryChoseActivity extends AppCompatActivity {
                             for (String singleStringCategory : listCategoryString) {
                                 listCategoryApp.add(mngCat.findAndGetCategory(listCategory, singleStringCategory));
                             }
-                            mngCat.serializationListCategory(listCategoryApp, usr.getUser());
+                            mngCat.serializationListCategory(CategoryChoseActivity.this, listCategoryApp, usr.getUser());
                             goToCategoryActivity();
                             popupWindowDone.dismiss();
                         }
                     });
                     popupViewDone.setVisibility(View.INVISIBLE);
-                    listCategory = mngCat.deserializationListCategory(usr.getUser());
+                    listCategory = mngCat.deserializationListCategory(CategoryChoseActivity.this, usr.getUser());
                     listCategory.remove(categoryAdapterPosition);
                     listAccountToSet = new ArrayList<>();
                     for (final Account singleAccountTake : listAccountTake) {
@@ -332,7 +332,7 @@ public class CategoryChoseActivity extends AppCompatActivity {
                                     listCategoryApp = increasing(listCategoryApp);
                                 else if (usr.getSort() == 2)
                                     listCategoryApp = decreasing(listCategoryApp);
-                                mngCat.serializationListCategory(listCategoryApp, usr.getUser());
+                                mngCat.serializationListCategory(CategoryChoseActivity.this, listCategoryApp, usr.getUser());
                                 goToCategoryActivity();
                                 popupWindowAddNewCategory.dismiss();
                             } else {
@@ -614,7 +614,7 @@ public class CategoryChoseActivity extends AppCompatActivity {
                             notifyUserShortWay("Password errata. Hai un ultimo tenativo");
                         else {
                             notifyUserShortWay("Password errata");
-                            mngApp.serializationFlag(new LogApp());
+                            mngApp.serializationFlag(CategoryChoseActivity.this, new LogApp());
                             goToMainActivity();
                         }
                     }
@@ -627,7 +627,7 @@ public class CategoryChoseActivity extends AppCompatActivity {
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mngApp.serializationFlag(new LogApp());
+                mngApp.serializationFlag(CategoryChoseActivity.this, new LogApp());
                 goToMainActivity();
             }
         });

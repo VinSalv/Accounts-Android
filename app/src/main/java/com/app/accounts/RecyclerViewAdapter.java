@@ -1,5 +1,7 @@
 package com.app.accounts;
 
+import static androidx.core.content.ContextCompat.getDrawable;
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,8 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.Collections;
-
-import static androidx.core.content.ContextCompat.getDrawable;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyViewHolder> implements ItemMoveCallback.ItemTouchHelperContract {
     private ManageUser mngUsr = new ManageUser();
@@ -68,7 +68,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public void onRowMoved(int fromPosition, int toPosition) {
-        ArrayList<Category> listCategory = mngCat.deserializationListCategory(usr.getUser());
+        ArrayList<Category> listCategory = mngCat.deserializationListCategory(RecyclerViewAdapter.this.context, usr.getUser());
         mngCat.removeFileCategory(context, usr.getUser());
 
         if (fromPosition < toPosition) {
@@ -89,13 +89,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 listCategory2.add(new Category(category.getCat(), listAccount, 3));
             }
         }
-        mngCat.serializationListCategory(listCategory2, usr.getUser());
+        mngCat.serializationListCategory(RecyclerViewAdapter.this.context, listCategory2, usr.getUser());
 
-        ArrayList<User> listUsr = mngUsr.deserializationListUser();
+        ArrayList<User> listUsr = mngUsr.deserializationListUser(RecyclerViewAdapter.this.context);
         listUsr.remove(usr);
         usr.setSort(3);
         listUsr.add(usr);
-        mngUsr.serializationListUser(listUsr);
+        mngUsr.serializationListUser(RecyclerViewAdapter.this.context, listUsr);
 
         notifyItemMoved(fromPosition, toPosition);
     }

@@ -48,10 +48,9 @@ public class ManageCategory {
         }
     }
 
-    void serializationListCategory(ArrayList<Category> list, String owner) {
+    void serializationListCategory(Context context, ArrayList<Category> list, String owner) {
         try {
-            String rootPath = Environment.getExternalStorageDirectory()
-                    .getAbsolutePath() + "/Accounts/Categorie";
+            String rootPath = context.getExternalFilesDir(null) + "/Accounts/Categorie";
             File root = new File(rootPath);
             if (!root.exists()) {
                 root.mkdirs();
@@ -70,15 +69,14 @@ public class ManageCategory {
             e.printStackTrace();
         } finally {
             execCryptDecrypt(Cipher.ENCRYPT_MODE,
-                    new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Accounts/Categorie/" + owner + ".txt"),
-                    new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Accounts/Categorie/" + owner + ".txt"));
+                    new File(context.getExternalFilesDir(null), "/Accounts/Categorie/" + owner + ".txt"),
+                    new File(context.getExternalFilesDir(null), "/Accounts/Categorie/" + owner + ".txt"));
         }
     }
 
-    ArrayList<Category> deserializationListCategory(String owner) {
+    ArrayList<Category> deserializationListCategory(Context context, String owner) {
         try {
-            File f = new File(Environment.getExternalStorageDirectory()
-                    .getAbsolutePath() + "/Accounts/Categorie/" + owner + ".txt");
+            File f = new File(context.getExternalFilesDir(null) + "/Accounts/Categorie/" + owner + ".txt");
             execCryptDecrypt(Cipher.DECRYPT_MODE, f, f);
             FileInputStream fis = new FileInputStream(f);
             ObjectInputStream is = new ObjectInputStream(fis);
@@ -91,8 +89,8 @@ public class ManageCategory {
             return new ArrayList<>();
         } finally {
             execCryptDecrypt(Cipher.ENCRYPT_MODE,
-                    new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Accounts/Categorie/" + owner + ".txt"),
-                    new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Accounts/Categorie/" + owner + ".txt"));
+                    new File(context.getExternalFilesDir(null), "/Accounts/Categorie/" + owner + ".txt"),
+                    new File(context.getExternalFilesDir(null), "/Accounts/Categorie/" + owner + ".txt"));
         }
     }
 
