@@ -379,7 +379,7 @@ public class ProfileActivity extends AppCompatActivity {
         if (Objects.equals(Objects.requireNonNull(getIntent().getExtras()).get("cat"), ""))
             intent.putExtra("cat", "");
         else {
-            listCategory = mngCat.deserializationListCategory(ProfileActivity.this,usr.getUser());
+            listCategory = mngCat.deserializationListCategory(ProfileActivity.this, usr.getUser());
             Category category = mngCat.findAndGetCategory(listCategory, ((Category) Objects.requireNonNull((Objects.requireNonNull(getIntent().getExtras())).get("category"))).getCat());
             intent.putExtra("category", category);
             intent.putExtra("cat", category.getCat());

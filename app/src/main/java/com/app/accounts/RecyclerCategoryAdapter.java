@@ -75,7 +75,7 @@ public class RecyclerCategoryAdapter extends RecyclerView.Adapter<RecyclerCatego
                 Collections.swap(listCategory, i, i - 1);
             }
         }
-        mngCat.serializationListCategory(RecyclerCategoryAdapter.this.context,listCategory, usr.getUser());
+        mngCat.serializationListCategory(RecyclerCategoryAdapter.this.context, listCategory, usr.getUser());
         ArrayList<User> listUsr = mngUsr.deserializationListUser(RecyclerCategoryAdapter.this.context);
         listUsr.remove(usr);
         usr.setSort(3);

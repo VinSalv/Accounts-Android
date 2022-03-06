@@ -109,12 +109,12 @@ public class CategoryActivity extends AppCompatActivity implements PopupMenu.OnM
             blockBack = true;
             attempts = 3;
             mngCat = new ManageCategory();
-            listCategory = mngCat.deserializationListCategory(CategoryActivity.this,usr.getUser());
+            listCategory = mngCat.deserializationListCategory(CategoryActivity.this, usr.getUser());
             if (usr.getSort() == 1)
-                mngCat.serializationListCategory(CategoryActivity.this,increasing(listCategory), usr.getUser());
+                mngCat.serializationListCategory(CategoryActivity.this, increasing(listCategory), usr.getUser());
             else if (usr.getSort() == 2)
-                mngCat.serializationListCategory(CategoryActivity.this,decreasing(listCategory), usr.getUser());
-            listCategory = mngCat.deserializationListCategory(CategoryActivity.this,usr.getUser());
+                mngCat.serializationListCategory(CategoryActivity.this, decreasing(listCategory), usr.getUser());
+            listCategory = mngCat.deserializationListCategory(CategoryActivity.this, usr.getUser());
             welcome = findViewById(R.id.welcomeText);
             welcome.setText(Html.fromHtml("Benvenuto <b>" + usr.getUser() + "</b>", HtmlCompat.FROM_HTML_MODE_LEGACY));
             welcomeMini = findViewById(R.id.wellcomeMiniText);
@@ -203,7 +203,7 @@ public class CategoryActivity extends AppCompatActivity implements PopupMenu.OnM
                             }
                             if (!mngCat.findCategory(listCategory, popupNewCategoryText.getText().toString())) {
                                 listCategory.add(new Category(fixName(popupNewCategoryText.getText().toString()), 1));
-                                mngCat.serializationListCategory(CategoryActivity.this,listCategory, usr.getUser());
+                                mngCat.serializationListCategory(CategoryActivity.this, listCategory, usr.getUser());
                                 refresh();
                                 popupWindowAddNewCategory.dismiss();
                             } else {
@@ -343,7 +343,7 @@ public class CategoryActivity extends AppCompatActivity implements PopupMenu.OnM
                                 notifyUser(Html.fromHtml("Categoria <b>" + singleCategoryString + "</b> non rimossa. Non è stato rilevato nella lista delle tue categorie.", HtmlCompat.FROM_HTML_MODE_LEGACY).toString());
                         }
                         popupWindowSecurityToDeleteCategory.dismiss();
-                        mngCat.serializationListCategory(CategoryActivity.this,listCategory, usr.getUser());
+                        mngCat.serializationListCategory(CategoryActivity.this, listCategory, usr.getUser());
                         startActivity(getIntent());
                         finish();
                     }
@@ -444,13 +444,13 @@ public class CategoryActivity extends AppCompatActivity implements PopupMenu.OnM
                             usr.setSort(1);
                             listUser.add(usr);
                             mngUsr.serializationListUser(CategoryActivity.this, listUser);
-                            mngCat.serializationListCategory(CategoryActivity.this,increasing(listCategory), usr.getUser());
+                            mngCat.serializationListCategory(CategoryActivity.this, increasing(listCategory), usr.getUser());
                         } else if (checkedId == decreasingRadioButton.getId()) {
                             listUser.remove(usr);
                             usr.setSort(2);
                             listUser.add(usr);
                             mngUsr.serializationListUser(CategoryActivity.this, listUser);
-                            mngCat.serializationListCategory(CategoryActivity.this,decreasing(listCategory), usr.getUser());
+                            mngCat.serializationListCategory(CategoryActivity.this, decreasing(listCategory), usr.getUser());
                         } else {
                             listUser.remove(usr);
                             usr.setSort(3);
@@ -467,7 +467,7 @@ public class CategoryActivity extends AppCompatActivity implements PopupMenu.OnM
                 return true;
             case R.id.exit:
                 logApp = new LogApp();
-                mngApp.serializationFlag(CategoryActivity.this,logApp);
+                mngApp.serializationFlag(CategoryActivity.this, logApp);
                 goToMainActivity();
                 return true;
             default:
@@ -723,7 +723,7 @@ public class CategoryActivity extends AppCompatActivity implements PopupMenu.OnM
                             notifyUserShortWay("Password errata. Hai un ultimo tenativo");
                         else {
                             notifyUserShortWay("Password errata");
-                            mngApp.serializationFlag(CategoryActivity.this,new LogApp());
+                            mngApp.serializationFlag(CategoryActivity.this, new LogApp());
                             goToMainActivity();
                         }
                     }
@@ -736,7 +736,7 @@ public class CategoryActivity extends AppCompatActivity implements PopupMenu.OnM
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mngApp.serializationFlag(CategoryActivity.this,new LogApp());
+                mngApp.serializationFlag(CategoryActivity.this, new LogApp());
                 goToMainActivity();
             }
         });
